@@ -17,35 +17,31 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram.session.auth import Auth
+from pyrogram.session.session import Session
 
 
-class GetMe:
-    async def get_me(
-        self: "pyrogram.Client"
-    ) -> "types.User":
-        """Get your own user identity.
+class MigrateDC:
+    async def migrate_dc(
+        self: "pyrogram.Client", dc_id: int
+    ) -> bool:
+        await self.session_pool.aclose()
+        await self.storage.dc_id(dc_id)
 
-        .. include:: /_includes/usable-by/users-bots.rst
+        dc_id = await self.storage.dc_id()
+        test_mode = await self.storage.test_mode()
 
-        Returns:
-            :obj:`~pyrogram.types.User`: Information about the own logged in user/bot.
-
-        Example:
-            .. code-block:: python
-
-                me = await app.get_me()
-                print(me)
-        """
-
-        r = await self.invoke(
-            raw.functions.users.GetFullUser(
-                id=raw.types.InputUserSelf()
-            )
+        auth_key = await Auth(
+            client=self,
+            dc_id=dc_id,
+            test_mode=self.test_mode,
+        ).create()
+        await self.storage.auth_key(auth_key)
+        main_simple_session = Session(
+            client=self,
+            dc_id=dc_id,
+            auth_key=auth_key,
+            test_mode=test_mode,
         )
-
-        users = {u.id: u for u in r.users}
-
-        self.me = types.User._parse(self, users[r.full_user.id])
-        return self.me
+        await main_simple_session.start()
+        self.session_pool.set_main_simple_session(main_simple_session)

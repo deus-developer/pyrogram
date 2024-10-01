@@ -1,5 +1,6 @@
 import asyncio
 import ipaddress
+import logging
 import socket
 from typing import (
     Optional,
@@ -12,6 +13,7 @@ from .errors import (
     ConnectorError,
     ConnectorTimeoutError,
 )
+log = logging.getLogger(__name__)
 
 
 class DirectConnector(Connector):
@@ -27,6 +29,8 @@ class DirectConnector(Connector):
             is_ipv6 = isinstance(ip_address, ipaddress.IPv6Address)
 
         family = socket.AF_INET6 if is_ipv6 else socket.AF_INET
+
+        log.debug("DirectConnector is_ipv6=%s, family=%s, host=%s, port=%s",is_ipv6,  family, host, port)
 
         try:
             reader, writer = await asyncio.wait_for(

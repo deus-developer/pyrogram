@@ -27,9 +27,17 @@ from typing import Optional
 import pyrogram
 from pyrogram import raw
 from pyrogram.connection import Connection
-from pyrogram.crypto import aes, rsa, prime
+from pyrogram.crypto import (
+    aes,
+    prime,
+    rsa,
+)
 from pyrogram.errors import SecurityCheckMismatch
-from pyrogram.raw.core import TLObject, Long, Int
+from pyrogram.raw.core import (
+    Int,
+    Long,
+    TLObject,
+)
 from .internals import MsgId
 
 log = logging.getLogger(__name__)
@@ -281,11 +289,10 @@ class Auth:
             except Exception as e:
                 log.info("Retrying due to %s: %s", type(e).__name__, e)
 
-                if retries_left:
-                    retries_left -= 1
-                else:
-                    raise e
+                if retries_left < 1:
+                    raise
 
+                retries_left -= 1
                 await asyncio.sleep(1)
                 continue
             else:

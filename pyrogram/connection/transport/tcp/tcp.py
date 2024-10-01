@@ -49,6 +49,8 @@ class TCP:
         data = b""
 
         while len(data) < length:
+            log.debug("Recv length: %d / %d bytes", len(data), length)
+
             try:
                 chunk = await asyncio.wait_for(
                     self.connector.read(length - len(data)),
