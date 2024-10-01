@@ -26,7 +26,6 @@ from pyrogram import raw, enums
 from pyrogram import types
 from pyrogram import utils
 from pyrogram.errors import ChannelPrivate, MessageIdsEmpty, PeerIdInvalid, ChannelForumMissing
-from pyrogram.errors import MessageIdsEmpty, PeerIdInvalid, ChannelPrivate, BotMethodInvalid, ChannelForumMissing
 from pyrogram.parser import utils as parser_utils, Parser
 from ..object import Object
 from ..update import Update

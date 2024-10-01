@@ -18,7 +18,6 @@
 
 from datetime import datetime
 from typing import Union, AsyncGenerator, Optional
-from typing import Union, AsyncGenerator
 
 import pyrogram
 from pyrogram import types, raw, utils

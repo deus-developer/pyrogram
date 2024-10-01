@@ -37,13 +37,7 @@ from mimetypes import MimeTypes
 from pathlib import Path
 from typing import Union, List, Optional, Callable, AsyncGenerator, Type, Tuple
 from typing import (
-    AsyncGenerator,
-    Callable,
     Dict,
-    List,
-    Optional,
-    Type,
-    Union,
 )
 
 import pyrogram
@@ -56,16 +50,10 @@ from pyrogram import (
 )
 from pyrogram.crypto import aes
 from pyrogram.errors import (
-    BadRequest,
     CDNFileHashMismatch,
-    ChannelPrivate,
-    FloodPremiumWait,
-    FloodWait,
     SessionPasswordNeeded,
-    VolumeLocNotFound,
     VolumeLocNotFound, ChannelPrivate,
-    BadRequest, AuthBytesInvalid,
-    FloodWait, FloodPremiumWait,
+    BadRequest, FloodWait, FloodPremiumWait,
     ChannelInvalid, PersistentTimestampInvalid, PersistentTimestampOutdated
 )
 from pyrogram.handlers.handler import Handler
