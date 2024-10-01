@@ -6,6 +6,7 @@ from typing import (
 import pyrogram
 from pyrogram.handlers import (
     CallbackQueryHandler,
+    ChatBoostHandler,
     ChatJoinRequestHandler,
     ChatMemberUpdatedHandler,
     ChosenInlineResultHandler,
@@ -13,8 +14,12 @@ from pyrogram.handlers import (
     EditedMessageHandler,
     InlineQueryHandler,
     MessageHandler,
+    MessageReactionCountHandler,
+    MessageReactionHandler,
     PollHandler,
     PreCheckoutQueryHandler,
+    PurchasedPaidMediaHandler,
+    ShippingQueryHandler,
     StoryHandler,
     UserStatusHandler,
 )
@@ -27,13 +32,19 @@ from pyrogram.raw.types import (
     ChatEmpty,
     ChatForbidden,
     UpdateBotCallbackQuery,
+    UpdateBotChatBoost,
     UpdateBotChatInviteRequester,
     UpdateBotDeleteBusinessMessage,
     UpdateBotEditBusinessMessage,
     UpdateBotInlineQuery,
     UpdateBotInlineSend,
+    UpdateBotMessageReaction,
+    UpdateBotMessageReactions,
     UpdateBotNewBusinessMessage,
     UpdateBotPrecheckoutQuery,
+    UpdateBotPurchasedPaidMedia,
+    UpdateBotShippingQuery,
+    UpdateBusinessBotCallbackQuery,
     UpdateChannelParticipant,
     UpdateChatParticipant,
     UpdateDeleteChannelMessages,
@@ -59,7 +70,7 @@ NewMessageType = Union[
     UpdateNewMessage,
     UpdateNewChannelMessage,
     UpdateNewScheduledMessage,
-    UpdateBotNewBusinessMessage,
+    UpdateBotNewBusinessMessage
 ]
 EditMessageType = Union[
     UpdateEditMessage, UpdateEditChannelMessage, UpdateBotEditBusinessMessage
@@ -69,7 +80,7 @@ DeleteMessageType = Union[
     UpdateDeleteChannelMessages,
     UpdateBotDeleteBusinessMessage,
 ]
-CallbackQueryUpdateType = Union[UpdateBotCallbackQuery, UpdateInlineBotCallbackQuery]
+CallbackQueryUpdateType = Union[UpdateBotCallbackQuery, UpdateInlineBotCallbackQuery, UpdateBusinessBotCallbackQuery]
 ChatMemberUpdateType = Union[UpdateChatParticipant, UpdateChannelParticipant]
 UserStatusUpdateType = Union[UpdateUserStatus]
 InlineQueryUpdateType = Union[UpdateBotInlineQuery]
@@ -77,16 +88,23 @@ PollUpdateType = Union[UpdateMessagePoll]
 ChosenInlineResultUpdateType = Union[UpdateBotInlineSend]
 ChatJoinRequestUpdateType = Union[UpdateBotChatInviteRequester]
 NewStoryUpdateType = Union[UpdateStory]
+
 BotPreCheckoutQueryUpdateType = Union[UpdateBotPrecheckoutQuery]
+BotShippingQueryUpdateType = Union[UpdateBotShippingQuery]
+MessageReactionUpdateType = Union[UpdateBotMessageReaction]
+MessageReactionCountUpdateType = Union[UpdateBotMessageReactions,]
+ChatBoostUpdateType = Union[UpdateBotChatBoost]
+PurchasedPaidMediaUpdateType = Union[UpdateBotPurchasedPaidMedia]
 
 
 async def message_parser(
     client: "pyrogram.Client",
-    update: NewMessageType,
+    update: Union[NewMessageType, EditMessageType],
     users: UsersType,
     chats: ChatsType,
 ):
     is_scheduled = isinstance(update, UpdateNewScheduledMessage)
+    business_connection_id = getattr(update, "connection_id", None)
 
     # noinspection PyProtectedMember
     update = await pyrogram.types.Message._parse(
@@ -95,13 +113,13 @@ async def message_parser(
         users=users,
         chats=chats,
         is_scheduled=is_scheduled,
-        business_connection_id=getattr(update, "connection_id", None),
-        reply_to_message=getattr(update, "reply_to_message", None),
+        replies=0 if business_connection_id else 1,
+        business_connection_id=business_connection_id,
+        raw_reply_to_message=getattr(update, "reply_to_message", None),
     )
 
     return (
         update,
-        "message",
         MessageHandler,
     )
 
@@ -112,20 +130,14 @@ async def edited_message_parser(
     users: UsersType,
     chats: ChatsType,
 ):
-    is_scheduled = isinstance(update, UpdateNewScheduledMessage)
-
-    # noinspection PyProtectedMember
-    update = await pyrogram.types.Message._parse(
+    update, _ = await message_parser(
         client=client,
-        message=update.message,
+        update=update,
         users=users,
         chats=chats,
-        is_scheduled=is_scheduled,
-        business_connection_id=getattr(update, "connection_id", None),
-        reply_to_message=getattr(update, "reply_to_message", None),
     )
 
-    return update, "edited_message", EditedMessageHandler
+    return update, EditedMessageHandler
 
 
 def deleted_messages_parser(
@@ -138,25 +150,26 @@ def deleted_messages_parser(
         client=client, update=update, users=users, chats=chats
     )
 
-    return update, "deleted_messages", DeletedMessagesHandler
+    return update, DeletedMessagesHandler
 
 
 async def callback_query_parser(
-    client: "pyrogram.Client", update: CallbackQueryUpdateType, users: UsersType
+    client: "pyrogram.Client", update: CallbackQueryUpdateType, users: UsersType,
+    chats: ChatsType,
 ):
     # noinspection PyProtectedMember
     update = await pyrogram.types.CallbackQuery._parse(
-        client=client, callback_query=update, users=users
+        client=client, callback_query=update, users=users, chats=chats
     )
 
-    return update, "callback_query", CallbackQueryHandler
+    return update, CallbackQueryHandler
 
 
 def user_status_parser(client: "pyrogram.Client", update: UserStatusUpdateType):
     # noinspection PyProtectedMember
     update = pyrogram.types.User._parse_user_status(client=client, user_status=update)
 
-    return update, "user_status", UserStatusHandler
+    return update, UserStatusHandler
 
 
 def inline_query_parser(
@@ -165,14 +178,14 @@ def inline_query_parser(
     # noinspection PyProtectedMember
     update = pyrogram.types.InlineQuery._parse(client=client, inline_query=update, users=users)
 
-    return update, "inline_query", InlineQueryHandler
+    return update, InlineQueryHandler
 
 
 def poll_parser(client: "pyrogram.Client", update: PollUpdateType):
     # noinspection PyProtectedMember
     update = pyrogram.types.Poll._parse_update(client=client, update=update)
 
-    return update, "poll", PollHandler
+    return update, PollHandler
 
 
 def chosen_inline_result_parser(
@@ -187,7 +200,7 @@ def chosen_inline_result_parser(
         users=users,
     )
 
-    return update, "chosen_inline_result", ChosenInlineResultHandler
+    return update, ChosenInlineResultHandler
 
 
 def chat_member_updated_parser(
@@ -201,7 +214,7 @@ def chat_member_updated_parser(
         client=client, update=update, users=users, chats=chats
     )
 
-    return update, "chat_member_updated", ChatMemberUpdatedHandler
+    return update, ChatMemberUpdatedHandler
 
 
 def chat_join_request_parser(
@@ -215,7 +228,7 @@ def chat_join_request_parser(
         client=client, update=update, users=users, chats=chats
     )
 
-    return update, "chat_join_request", ChatJoinRequestHandler
+    return update, ChatJoinRequestHandler
 
 
 async def story_parser(
@@ -232,13 +245,13 @@ async def story_parser(
         chats=chats,
         peer=update.peer,
     )
-    return update, "story", StoryHandler
+    return update, StoryHandler
 
 
 async def pre_checkout_query_parser(
     client: "pyrogram.Client",
     update: BotPreCheckoutQueryUpdateType,
-    users: UsersType,
+    users: UsersType
 ):
     # noinspection PyProtectedMember
     update = await pyrogram.types.PreCheckoutQuery._parse(
@@ -246,15 +259,73 @@ async def pre_checkout_query_parser(
         pre_checkout_query=update,
         users=users,
     )
-    return update, "pre_checkout_query", PreCheckoutQueryHandler
+    return update, PreCheckoutQueryHandler
 
+
+async def shipping_query_parser(
+    client: "pyrogram.Client",
+    update: BotShippingQueryUpdateType,
+    users: UsersType
+):
+    # noinspection PyProtectedMember
+    update = await pyrogram.types.ShippingQuery._parse(client, update, users),
+    return update, ShippingQueryHandler
+
+
+async def message_reaction_parser(
+    client: "pyrogram.Client",
+    update: MessageReactionUpdateType,
+    users: UsersType,
+    chats: ChatsType
+):
+    # noinspection PyProtectedMember
+    update = pyrogram.types.MessageReactionUpdated._parse(client, update, users, chats),
+    return update, MessageReactionHandler
+
+
+async def message_reaction_count_parser(
+    client: "pyrogram.Client",
+    update: MessageReactionCountUpdateType,
+    users: UsersType,
+    chats: ChatsType
+):
+    # noinspection PyProtectedMember
+    update = pyrogram.types.MessageReactionCountUpdated._parse(client, update, users, chats),
+    return update, MessageReactionCountHandler
+
+
+async def chat_boost_parser(
+    client: "pyrogram.Client",
+    update: ChatBoostUpdateType,
+    users: UsersType,
+    chats: ChatsType
+):
+    # noinspection PyProtectedMember
+    update = pyrogram.types.ChatBoostUpdated._parse(client, update, users, chats),
+    return (
+        update,
+        ChatBoostHandler
+    )
+
+
+async def purchased_paid_media_parser(
+    client: "pyrogram.Client",
+    update: PurchasedPaidMediaUpdateType,
+    users: UsersType
+):
+    # noinspection PyProtectedMember
+    update = pyrogram.types.PurchasedPaidMedia._parse(client, update, users),
+    return (
+        update,
+        PurchasedPaidMediaHandler
+    )
 
 async def parse_update(
     client: "pyrogram.Client",
     update: TLObject,
     users: UsersType,
     chats: ChatsType,
-) -> tuple[Any | None, str | None, type[Handler] | None]:
+) -> tuple[Any | None, type[Handler] | None]:
     if isinstance(update, NewMessageType):
         return await message_parser(client, update, users, chats)
     elif isinstance(update, EditMessageType):
@@ -262,7 +333,7 @@ async def parse_update(
     elif isinstance(update, DeleteMessageType):
         return deleted_messages_parser(client, update, users, chats)
     elif isinstance(update, CallbackQueryUpdateType):
-        return await callback_query_parser(client, update, users)
+        return await callback_query_parser(client, update, users, chats)
     elif isinstance(update, ChatMemberUpdateType):
         return chat_member_updated_parser(client, update, users, chats)
     elif isinstance(update, UserStatusUpdateType):
@@ -279,5 +350,15 @@ async def parse_update(
         return await story_parser(client, update, users, chats)
     elif isinstance(update, BotPreCheckoutQueryUpdateType):
         return await pre_checkout_query_parser(client, update, users)
+    elif isinstance(update, BotShippingQueryUpdateType):
+        return await shipping_query_parser(client, update, users)
+    elif isinstance(update, MessageReactionUpdateType):
+        return await message_reaction_parser(client, update, users, chats)
+    elif isinstance(update, MessageReactionCountUpdateType):
+        return await message_reaction_count_parser(client, update, users, chats)
+    elif isinstance(update, ChatBoostUpdateType):
+        return await chat_boost_parser(client, update, users, chats)
+    elif isinstance(update, PurchasedPaidMediaUpdateType):
+        return await purchased_paid_media_parser(client, update, users)
     else:
-        return None, None, None
+        return None, None

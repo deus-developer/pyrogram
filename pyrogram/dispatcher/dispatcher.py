@@ -225,7 +225,7 @@ class Dispatcher:
         asyncio.create_task(fn(), name="dispatcher-remove-handler")
 
     async def handle_packet(self, update: TLObject, users: UsersType, chats: ChatsType):
-        parsed_update, update_type, handler_type = await parse_update(
+        parsed_update, handler_type = await parse_update(
             client=self.client,
             update=update,
             users=users,
