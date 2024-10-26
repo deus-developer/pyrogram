@@ -87,7 +87,7 @@ class AuthData:
         if not self.is_valid_inbound_msg_id(
             message_id=message_id, now=now
         ):
-            raise SecurityCheckMismatch("The msg_id is equal to any of the stored values")
+            raise SecurityCheckMismatch("The message id out of range when checking inbound")
 
         return None
 

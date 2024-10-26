@@ -441,13 +441,13 @@ class Session:
     async def handle_message(self, message: raw.core.Message) -> None:
         log.debug("handle message: %s", message)
 
+        if message.seq_no % 2:
+            self.pending_acks.add(message.msg_id)
+
         self.auth_data.check_packet(
             message_id=message.msg_id,
             now=self.auth_data.get_client_time()
         )
-
-        if message.seq_no % 2:
-            self.pending_acks.add(message.msg_id)
 
         handler = self.handler_by_constructor_id.get(message.body.ID)
         if handler is None:
