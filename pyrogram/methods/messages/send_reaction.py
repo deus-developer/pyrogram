@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, List
 
 import pyrogram
 from pyrogram import raw
@@ -25,11 +24,11 @@ from pyrogram import raw
 class SendReaction:
     async def send_reaction(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        message_id: int = None,
-        emoji: Union[int, str, List[Union[int, str]]] = None,
-        story_id: int = None,
-        big: bool = False
+        chat_id: int | str,
+        message_id: int | None = None,
+        emoji: int | str | list[int | str] | None = None,
+        story_id: int | None = None,
+        big: bool = False,
     ) -> bool:
         """Send a reaction to a message or story.
 
@@ -64,10 +63,14 @@ class SendReaction:
                 await app.send_reaction(chat_id, message_id=message_id, emoji="🔥")
 
                 # Send a multiple reactions
-                await app.send_reaction(chat_id, message_id=message_id, emoji=["🔥", "❤️"])
+                await app.send_reaction(
+                    chat_id, message_id=message_id, emoji=["🔥", "❤️"]
+                )
 
                 # Send a reaction with premium emoji
-                await app.send_reaction(chat_id, message_id=message_id, emoji=5319161050128459957)
+                await app.send_reaction(
+                    chat_id, message_id=message_id, emoji=5319161050128459957
+                )
 
                 # Send a reaction to story
                 await app.send_reaction(chat_id, story_id=story_id, emoji="❤️")
@@ -76,17 +79,20 @@ class SendReaction:
                 await app.send_reaction(chat_id, message_id=message_id)
         """
         if isinstance(emoji, list):
-            emoji = [
+            emoji = (
+                [
                     raw.types.ReactionCustomEmoji(document_id=i)
                     if isinstance(i, int)
                     else raw.types.ReactionEmoji(emoticon=i)
                     for i in emoji
-            ] if emoji else None
+                ]
+                if emoji
+                else None
+            )
+        elif isinstance(emoji, int):
+            emoji = [raw.types.ReactionCustomEmoji(document_id=emoji)]
         else:
-            if isinstance(emoji, int):
-                emoji = [raw.types.ReactionCustomEmoji(document_id=emoji)]
-            else:
-                emoji = [raw.types.ReactionEmoji(emoticon=emoji)] if emoji else None
+            emoji = [raw.types.ReactionEmoji(emoticon=emoji)] if emoji else None
 
         if story_id:
             rpc = raw.functions.stories.SendReaction(
@@ -99,7 +105,7 @@ class SendReaction:
                 peer=await self.resolve_peer(chat_id),
                 msg_id=message_id,
                 reaction=emoji,
-                big=big
+                big=big,
             )
 
         await self.invoke(rpc)

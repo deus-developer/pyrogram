@@ -17,8 +17,7 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 from .inline_query_result import InlineQueryResult
 
@@ -60,14 +59,14 @@ class InlineQueryResultArticle(InlineQueryResult):
         self,
         title: str,
         input_message_content: "types.InputMessageContent",
-        id: str = None,
-        url: str = None,
-        description: str = None,
+        id: str | None = None,
+        url: str | None = None,
+        description: str | None = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        thumb_url: str = None,
+        thumb_url: str | None = None,
         thumb_width: int = 0,
-        thumb_height: int = 0
-    ):
+        thumb_height: int = 0,
+    ) -> None:
         super().__init__("article", id, input_message_content, reply_markup)
 
         self.title = title
@@ -81,7 +80,10 @@ class InlineQueryResultArticle(InlineQueryResult):
         return raw.types.InputBotInlineResult(
             id=self.id,
             type=self.type,
-            send_message=await self.input_message_content.write(client, self.reply_markup),
+            send_message=await self.input_message_content.write(
+                client,
+                self.reply_markup,
+            ),
             title=self.title,
             description=self.description,
             url=self.url,
@@ -92,8 +94,10 @@ class InlineQueryResultArticle(InlineQueryResult):
                 attributes=[
                     raw.types.DocumentAttributeImageSize(
                         w=self.thumb_width,
-                        h=self.thumb_height
-                    )
-                ]
-            ) if self.thumb_url else None
+                        h=self.thumb_height,
+                    ),
+                ],
+            )
+            if self.thumb_url
+            else None,
         )

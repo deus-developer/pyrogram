@@ -19,8 +19,8 @@
 from datetime import datetime
 
 import pyrogram
-from pyrogram import types, raw, utils
-from ..object import Object
+from pyrogram import raw, types, utils
+from pyrogram.types.object import Object
 
 
 class ForumTopic(Object):
@@ -80,22 +80,22 @@ class ForumTopic(Object):
         self,
         *,
         id: int,
-        title: str = None,
-        date: datetime = None,
-        icon_color: str = None,
-        icon_emoji_id: int = None,
+        title: str | None = None,
+        date: datetime | None = None,
+        icon_color: str | None = None,
+        icon_emoji_id: int | None = None,
         creator: "types.Chat" = None,
         top_message: "types.Message" = None,
-        unread_count: int = None,
-        unread_mentions_count: int = None,
-        unread_reactions_count: int = None,
-        is_my: bool = None,
-        is_closed: bool = None,
-        is_pinned: bool = None,
-        is_short: bool = None,
-        is_hidden: bool = None,
-        is_deleted: bool = None
-    ):
+        unread_count: int | None = None,
+        unread_mentions_count: int | None = None,
+        unread_reactions_count: int | None = None,
+        is_my: bool | None = None,
+        is_closed: bool | None = None,
+        is_pinned: bool | None = None,
+        is_short: bool | None = None,
+        is_hidden: bool | None = None,
+        is_deleted: bool | None = None,
+    ) -> None:
         super().__init__()
 
         self.id = id
@@ -116,7 +116,19 @@ class ForumTopic(Object):
         self.is_deleted = is_deleted
 
     @staticmethod
-    def _parse(client: "pyrogram.Client", forum_topic: "raw.types.ForumTopic", messages: dict = {},  users: dict = {}, chats: dict = {}) -> "ForumTopic":
+    def _parse(
+        client: "pyrogram.Client",
+        forum_topic: "raw.types.ForumTopic",
+        messages: dict | None = None,
+        users: dict | None = None,
+        chats: dict | None = None,
+    ) -> "ForumTopic":
+        if chats is None:
+            chats = {}
+        if users is None:
+            users = {}
+        if messages is None:
+            messages = {}
         if not forum_topic:
             return None
 
@@ -139,7 +151,9 @@ class ForumTopic(Object):
             id=forum_topic.id,
             title=forum_topic.title,
             date=utils.timestamp_to_datetime(forum_topic.date),
-            icon_color=format(forum_topic.icon_color, "x") if getattr(forum_topic, "icon_color", None) else None,
+            icon_color=format(forum_topic.icon_color, "x")
+            if getattr(forum_topic, "icon_color", None)
+            else None,
             icon_emoji_id=getattr(forum_topic, "icon_emoji_id", None),
             creator=creator,
             top_message=messages.get(getattr(forum_topic, "top_message", None)),

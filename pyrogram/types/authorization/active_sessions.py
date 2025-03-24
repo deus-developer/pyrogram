@@ -16,11 +16,9 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import List
 
 from pyrogram import raw, types
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class ActiveSessions(Object):
@@ -37,9 +35,9 @@ class ActiveSessions(Object):
     def __init__(
         self,
         *,
-        inactive_session_ttl_days: int = None,
-        active_sessions: List["types.ActiveSession"] = None
-    ):
+        inactive_session_ttl_days: int | None = None,
+        active_sessions: list["types.ActiveSession"] | None = None,
+    ) -> None:
         super().__init__()
 
         self.inactive_session_ttl_days = inactive_session_ttl_days
@@ -49,8 +47,10 @@ class ActiveSessions(Object):
     def _parse(authorizations: "raw.types.account.Authorizations") -> "ActiveSessions":
         return ActiveSessions(
             inactive_session_ttl_days=authorizations.authorization_ttl_days,
-            active_sessions=types.List([
-                types.ActiveSession._parse(active)
-                for active in authorizations.authorizations
-            ])
+            active_sessions=types.List(
+                [
+                    types.ActiveSession._parse(active)
+                    for active in authorizations.authorizations
+                ],
+            ),
         )

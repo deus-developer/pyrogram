@@ -16,22 +16,21 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, List, AsyncGenerator, Optional
+from collections.abc import AsyncGenerator
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class GetChatEventLog:
     async def get_chat_event_log(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         query: str = "",
         offset_id: int = 0,
         limit: int = 0,
         filters: "types.ChatEventFilter" = None,
-        user_ids: List[Union[int, str]] = None
+        user_ids: list[int | str] | None = None,
     ) -> AsyncGenerator["types.ChatEvent", None]:
         """Get the actions taken by chat members and administrators in the last 48h.
 
@@ -90,8 +89,8 @@ class GetChatEventLog:
                         [await self.resolve_peer(i) for i in user_ids]
                         if user_ids is not None
                         else user_ids
-                    )
-                )
+                    ),
+                ),
             )
 
             if not r.events:

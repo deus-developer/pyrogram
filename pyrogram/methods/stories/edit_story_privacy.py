@@ -16,19 +16,19 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import List, Union
 
 import pyrogram
 from pyrogram import enums, raw, types
 
+
 class EditStoryPrivacy:
     async def edit_story_privacy(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         story_id: int,
         privacy: "enums.StoriesPrivacyRules" = enums.StoriesPrivacyRules.PUBLIC,
-        allowed_users: List[Union[int, str]] = None,
-        disallowed_users: List[Union[int, str]] = None,
+        allowed_users: list[int | str] | None = None,
+        disallowed_users: list[int | str] | None = None,
     ) -> "types.Story":
         """Edit the privacy of story.
 
@@ -64,14 +64,16 @@ class EditStoryPrivacy:
             .. code-block:: python
 
                 # Edit story privacy to public
-                await app.edit_story_privacy(chat_id, story_id, enums.StoriesPrivacyRules.PUBLIC)
+                await app.edit_story_privacy(
+                    chat_id, story_id, enums.StoriesPrivacyRules.PUBLIC
+                )
 
                 # Edit the privacy of the story to allow selected users to view the story
                 await app.edit_story_privacy(
                     chat_id,
                     story_id,
                     enums.StoriesPrivacyRules.SELECTED_USERS,
-                    allowed_users=[123, 456]
+                    allowed_users=[123, 456],
                 )
         """
         privacy_rules = []
@@ -82,13 +84,21 @@ class EditStoryPrivacy:
         if privacy == enums.StoriesPrivacyRules.PUBLIC:
             privacy_rules.append(raw.types.InputPrivacyValueAllowAll())
             if disallowed_users:
-                users = [await self.resolve_peer(user_id) for user_id in disallowed_users]
-                privacy_rules.append(raw.types.InputPrivacyValueDisallowUsers(users=users))
+                users = [
+                    await self.resolve_peer(user_id) for user_id in disallowed_users
+                ]
+                privacy_rules.append(
+                    raw.types.InputPrivacyValueDisallowUsers(users=users),
+                )
         elif privacy == enums.StoriesPrivacyRules.CONTACTS:
             privacy_rules = [raw.types.InputPrivacyValueAllowContacts()]
             if disallowed_users:
-                users = [await self.resolve_peer(user_id) for user_id in disallowed_users]
-                privacy_rules.append(raw.types.InputPrivacyValueDisallowUsers(users=users))
+                users = [
+                    await self.resolve_peer(user_id) for user_id in disallowed_users
+                ]
+                privacy_rules.append(
+                    raw.types.InputPrivacyValueDisallowUsers(users=users),
+                )
         elif privacy == enums.StoriesPrivacyRules.CLOSE_FRIENDS:
             privacy_rules = [raw.types.InputPrivacyValueAllowCloseFriends()]
             if allowed_users:
@@ -102,21 +112,29 @@ class EditStoryPrivacy:
                 peer = await self.resolve_peer(user)
                 if isinstance(peer, raw.types.InputPeerUser):
                     _allowed_users.append(peer)
-                elif isinstance(peer, (raw.types.InputPeerChat, raw.types.InputPeerChannel)):
+                elif isinstance(
+                    peer,
+                    raw.types.InputPeerChat | raw.types.InputPeerChannel,
+                ):
                     _allowed_chats.append(peer)
 
             if _allowed_users:
-                privacy_rules.append(raw.types.InputPrivacyValueAllowUsers(users=_allowed_users))
+                privacy_rules.append(
+                    raw.types.InputPrivacyValueAllowUsers(users=_allowed_users),
+                )
             if _allowed_chats:
-                privacy_rules.append(raw.types.InputPrivacyValueAllowChatParticipants(chats=_allowed_chats))
-
+                privacy_rules.append(
+                    raw.types.InputPrivacyValueAllowChatParticipants(
+                        chats=_allowed_chats,
+                    ),
+                )
 
         r = await self.invoke(
             raw.functions.stories.EditStory(
                 peer=await self.resolve_peer(chat_id),
                 id=story_id,
                 privacy_rules=privacy_rules,
-            )
+            ),
         )
 
         for i in r.updates:
@@ -126,5 +144,6 @@ class EditStoryPrivacy:
                     i.story,
                     {i.id: i for i in r.users},
                     {i.id: i for i in r.chats},
-                    i.peer
+                    i.peer,
                 )
+        return None

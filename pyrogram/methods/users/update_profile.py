@@ -23,9 +23,9 @@ from pyrogram import raw
 class UpdateProfile:
     async def update_profile(
         self: "pyrogram.Client",
-        first_name: str = None,
-        last_name: str = None,
-        bio: str = None
+        first_name: str | None = None,
+        last_name: str | None = None,
+        bio: str | None = None,
     ) -> bool:
         """Update your profile details such as first name, last name and bio.
 
@@ -55,7 +55,9 @@ class UpdateProfile:
                 await app.update_profile(first_name="Pyrogram")
 
                 # Update first name and bio
-                await app.update_profile(first_name="Pyrogram", bio="https://docs.pyrogram.org/")
+                await app.update_profile(
+                    first_name="Pyrogram", bio="https://docs.pyrogram.org/"
+                )
 
                 # Remove the last name
                 await app.update_profile(last_name="")
@@ -66,7 +68,7 @@ class UpdateProfile:
                 raw.functions.account.UpdateProfile(
                     first_name=first_name,
                     last_name=last_name,
-                    about=bio
-                )
-            )
+                    about=bio,
+                ),
+            ),
         )

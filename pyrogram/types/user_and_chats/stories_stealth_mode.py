@@ -19,7 +19,7 @@
 from datetime import datetime
 
 from pyrogram import raw, utils
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class StoriesStealthMode(Object):
@@ -33,7 +33,12 @@ class StoriesStealthMode(Object):
             The date starting from which the user will be allowed to re-enable stealth mode again.
     """
 
-    def __init__(self, *, active_until_date: datetime = None, cooldown_until_date: datetime = None):
+    def __init__(
+        self,
+        *,
+        active_until_date: datetime | None = None,
+        cooldown_until_date: datetime | None = None,
+    ) -> None:
         super().__init__(None)
 
         self.active_until_date = active_until_date
@@ -42,6 +47,10 @@ class StoriesStealthMode(Object):
     @staticmethod
     def _parse(ssm: "raw.types.StoriesStealthMode") -> "StoriesStealthMode":
         return StoriesStealthMode(
-            active_until_date=utils.timestamp_to_datetime(getattr(ssm, "active_until_date", None)),
-            cooldown_until_date=utils.timestamp_to_datetime(getattr(ssm, "cooldown_until_date", None)),
+            active_until_date=utils.timestamp_to_datetime(
+                getattr(ssm, "active_until_date", None),
+            ),
+            cooldown_until_date=utils.timestamp_to_datetime(
+                getattr(ssm, "cooldown_until_date", None),
+            ),
         )

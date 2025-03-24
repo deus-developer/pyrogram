@@ -26,7 +26,8 @@ import pyrogram
 from pyrogram import raw
 from pyrogram.enums import MessageEntityType
 from pyrogram.errors import PeerIdInvalid
-from . import utils
+
+from .utils import add_surrogates, remove_surrogates
 
 log = logging.getLogger(__name__)
 
@@ -34,7 +35,7 @@ log = logging.getLogger(__name__)
 class Parser(HTMLParser):
     MENTION_RE = re.compile(r"tg://user\?id=(\d+)")
 
-    def __init__(self, client: "pyrogram.Client"):
+    def __init__(self, client: "pyrogram.Client") -> None:
         super().__init__()
 
         self.client = client
@@ -43,7 +44,7 @@ class Parser(HTMLParser):
         self.entities = []
         self.tag_entities = {}
 
-    def handle_starttag(self, tag, attrs):
+    def handle_starttag(self, tag, attrs) -> None:
         attrs = dict(attrs)
         extra = {}
 
@@ -88,7 +89,7 @@ class Parser(HTMLParser):
 
         self.tag_entities[tag].append(entity(offset=len(self.text), length=0, **extra))
 
-    def handle_data(self, data):
+    def handle_data(self, data) -> None:
         data = html.unescape(data)
 
         for entities in self.tag_entities.values():
@@ -97,7 +98,7 @@ class Parser(HTMLParser):
 
         self.text += data
 
-    def handle_endtag(self, tag):
+    def handle_endtag(self, tag) -> None:
         try:
             self.entities.append(self.tag_entities[tag].pop())
         except (KeyError, IndexError):
@@ -109,12 +110,12 @@ class Parser(HTMLParser):
             if not self.tag_entities[tag]:
                 self.tag_entities.pop(tag)
 
-    def error(self, message):
+    def error(self, message) -> None:
         pass
 
 
 class HTML:
-    def __init__(self, client: Optional["pyrogram.Client"]):
+    def __init__(self, client: Optional["pyrogram.Client"]) -> None:
         self.client = client
 
     async def parse(self, text: str) -> dict:
@@ -123,7 +124,7 @@ class HTML:
         text = re.sub(r"\s*(</[\w</>]*>)\s*$", r"\1", text)
 
         parser = Parser(self.client)
-        parser.feed(utils.add_surrogates(text))
+        parser.feed(add_surrogates(text))
         parser.close()
 
         if parser.tag_entities:
@@ -150,8 +151,8 @@ class HTML:
         entities = list(filter(lambda x: x.length > 0, entities))
 
         return {
-            "message": utils.remove_surrogates(parser.text),
-            "entities": sorted(entities, key=lambda e: e.offset) or None
+            "message": remove_surrogates(parser.text),
+            "entities": sorted(entities, key=lambda e: e.offset) or None,
         }
 
     @staticmethod
@@ -176,12 +177,14 @@ class HTML:
             elif entity_type == MessageEntityType.PRE:
                 name = entity_type.name.lower()
                 language = getattr(entity, "language", "") or ""
-                start_tag = f'<{name} language="{language}">' if language else f"<{name}>"
+                start_tag = (
+                    f'<{name} language="{language}">' if language else f"<{name}>"
+                )
                 end_tag = f"</{name}>"
             elif entity_type == MessageEntityType.BLOCKQUOTE:
                 name = entity_type.name.lower()
                 expandable = getattr(entity, "expandable", False)
-                start_tag = f'<{name}{" expandable" if expandable else ""}>'
+                start_tag = f"<{name}{' expandable' if expandable else ''}>"
                 end_tag = f"</{name}>"
             elif entity_type in (
                 MessageEntityType.CODE,
@@ -203,7 +206,7 @@ class HTML:
                 start_tag = f'<emoji id="{custom_emoji_id}">'
                 end_tag = "</emoji>"
             else:
-                return
+                return None
 
             return (start_tag, start), (end_tag, end)
 
@@ -226,7 +229,7 @@ class HTML:
             entities_offsets.append((end_tag, end))
             return internal_i - entity_i
 
-        text = utils.add_surrogates(text)
+        text = add_surrogates(text)
 
         entities_offsets = []
 
@@ -242,7 +245,12 @@ class HTML:
             last_offset = entities_offsets[-1][1]
             # no need to sort, but still add entities starting from the end
             for entity, offset in reversed(entities_offsets):
-                text = text[:offset] + entity + html.escape(text[offset:last_offset]) + text[last_offset:]
+                text = (
+                    text[:offset]
+                    + entity
+                    + html.escape(text[offset:last_offset])
+                    + text[last_offset:]
+                )
                 last_offset = offset
 
-        return utils.remove_surrogates(text)
+        return remove_surrogates(text)

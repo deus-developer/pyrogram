@@ -17,8 +17,7 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrogram import types
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class RequestChatInfo(Object):
@@ -54,15 +53,16 @@ class RequestChatInfo(Object):
     """
 
     def __init__(
-        self, *,
+        self,
+        *,
         button_id: int,
-        is_creator: bool = None,
-        is_bot_participant: bool = None,
-        has_username: bool = None,
-        has_forum: bool = None,
+        is_creator: bool | None = None,
+        is_bot_participant: bool | None = None,
+        has_username: bool | None = None,
+        has_forum: bool | None = None,
         user_privileges: "types.ChatPrivileges" = None,
-        bot_privileges: "types.ChatPrivileges" = None
-    ):
+        bot_privileges: "types.ChatPrivileges" = None,
+    ) -> None:
         super().__init__()
 
         self.button_id = button_id

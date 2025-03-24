@@ -17,7 +17,7 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrogram import raw
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class ForumTopicEdited(Object):
@@ -42,13 +42,14 @@ class ForumTopicEdited(Object):
     """
 
     def __init__(
-        self, *,
-        title: str = None,
-        icon_color: int = None,
-        custom_emoji_id: int = None,
-        is_closed: bool = None,
-        is_hidden: bool = None
-    ):
+        self,
+        *,
+        title: str | None = None,
+        icon_color: int | None = None,
+        custom_emoji_id: int | None = None,
+        is_closed: bool | None = None,
+        is_hidden: bool | None = None,
+    ) -> None:
         super().__init__()
 
         self.title = title
@@ -64,5 +65,5 @@ class ForumTopicEdited(Object):
             icon_color=getattr(action, "icon_color", None),
             custom_emoji_id=getattr(action, "icon_emoji_id", None),
             is_closed=getattr(action, "closed", None),
-            is_hidden=getattr(action, "hidden", None)
+            is_hidden=getattr(action, "hidden", None),
         )

@@ -16,7 +16,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class ForumTopicClosed(Object):
@@ -25,5 +25,5 @@ class ForumTopicClosed(Object):
     Currently holds no information.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()

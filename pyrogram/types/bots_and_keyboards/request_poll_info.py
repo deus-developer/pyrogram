@@ -16,7 +16,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class RequestPollInfo(Object):
@@ -27,10 +27,7 @@ class RequestPollInfo(Object):
             If True, the requested poll will be sent as quiz.
     """
 
-    def __init__(
-        self, *,
-        is_quiz: bool = None
-    ):
+    def __init__(self, *, is_quiz: bool | None = None) -> None:
         super().__init__()
 
         self.is_quiz = is_quiz

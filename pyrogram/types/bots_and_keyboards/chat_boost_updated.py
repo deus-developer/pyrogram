@@ -16,13 +16,11 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Dict
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
-from ..object import Object
-from ..update import Update
+from pyrogram import raw, types, utils
+from pyrogram.types.object import Object
+from pyrogram.types.update import Update
 
 
 class ChatBoostUpdated(Object, Update):
@@ -41,8 +39,8 @@ class ChatBoostUpdated(Object, Update):
         *,
         client: "pyrogram.Client" = None,
         chat: "types.Chat",
-        boost: "types.ChatBoost"
-    ):
+        boost: "types.ChatBoost",
+    ) -> None:
         super().__init__(client)
 
         self.chat = chat
@@ -52,11 +50,14 @@ class ChatBoostUpdated(Object, Update):
     def _parse(
         client: "pyrogram.Client",
         update: "raw.types.UpdateBotChatBoost",
-        users: Dict[int, "raw.types.User"],
-        chats: Dict[int, "raw.types.Channel"],
+        users: dict[int, "raw.types.User"],
+        chats: dict[int, "raw.types.Channel"],
     ) -> "ChatBoostUpdated":
         return ChatBoostUpdated(
-            chat=types.Chat._parse_channel_chat(client, chats.get(utils.get_raw_peer_id(update.peer))),
+            chat=types.Chat._parse_channel_chat(
+                client,
+                chats.get(utils.get_raw_peer_id(update.peer)),
+            ),
             boost=types.ChatBoost._parse(client, update.boost, users),
-            client=client
+            client=client,
         )

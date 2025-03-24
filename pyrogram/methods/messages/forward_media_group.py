@@ -17,27 +17,25 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Union, List
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
+from pyrogram import raw, types, utils
 
 
 class ForwardMediaGroup:
     async def forward_media_group(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        from_chat_id: Union[int, str],
+        chat_id: int | str,
+        from_chat_id: int | str,
         message_id: int,
-        message_thread_id: int = None,
-        disable_notification: bool = None,
-        schedule_date: datetime = None,
-        hide_sender_name: bool = None,
-        hide_captions: bool = None,
-        protect_content: bool = None,
-        allow_paid_broadcast: bool = None
-    ) -> List["types.Message"]:
+        message_thread_id: int | None = None,
+        disable_notification: bool | None = None,
+        schedule_date: datetime | None = None,
+        hide_sender_name: bool | None = None,
+        hide_captions: bool | None = None,
+        protect_content: bool | None = None,
+        allow_paid_broadcast: bool | None = None,
+    ) -> list["types.Message"]:
         """Forward a media group by providing one of the message ids.
 
         .. include:: /_includes/usable-by/users-bots.rst
@@ -91,7 +89,9 @@ class ForwardMediaGroup:
                 # Forward a media group
                 await app.forward_media_group(to_chat, from_chat, 123)
         """
-        message_ids = [i.id for i in await self.get_media_group(from_chat_id, message_id)]
+        message_ids = [
+            i.id for i in await self.get_media_group(from_chat_id, message_id)
+        ]
 
         r = await self.invoke(
             raw.functions.messages.ForwardMessages(
@@ -105,8 +105,8 @@ class ForwardMediaGroup:
                 drop_media_captions=hide_captions,
                 noforwards=protect_content,
                 allow_paid_floodskip=allow_paid_broadcast,
-                top_msg_id=message_thread_id
-            )
+                top_msg_id=message_thread_id,
+            ),
         )
 
         forwarded_messages = []
@@ -115,14 +115,14 @@ class ForwardMediaGroup:
         chats = {i.id: i for i in r.chats}
 
         for i in r.updates:
-            if isinstance(i, (raw.types.UpdateNewMessage,
-                              raw.types.UpdateNewChannelMessage,
-                              raw.types.UpdateNewScheduledMessage)):
+            if isinstance(
+                i,
+                raw.types.UpdateNewMessage
+                | raw.types.UpdateNewChannelMessage
+                | raw.types.UpdateNewScheduledMessage,
+            ):
                 forwarded_messages.append(
-                    await types.Message._parse(
-                        self, i.message,
-                        users, chats
-                    )
+                    await types.Message._parse(self, i.message, users, chats),
                 )
 
         return types.List(forwarded_messages)

@@ -16,15 +16,14 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class CreateSupergroup:
     async def create_supergroup(
         self: "pyrogram.Client",
         title: str,
-        description: str = ""
+        description: str = "",
     ) -> "types.Chat":
         """Create a new supergroup.
 
@@ -47,14 +46,16 @@ class CreateSupergroup:
         Example:
             .. code-block:: python
 
-                await app.create_supergroup("Supergroup Title", "Supergroup Description")
+                await app.create_supergroup(
+                    "Supergroup Title", "Supergroup Description"
+                )
         """
         r = await self.invoke(
             raw.functions.channels.CreateChannel(
                 title=title,
                 about=description,
-                megagroup=True
-            )
+                megagroup=True,
+            ),
         )
 
         return types.Chat._parse_chat(self, r.chats[0])

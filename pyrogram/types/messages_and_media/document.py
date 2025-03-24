@@ -17,13 +17,11 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import List
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
+from pyrogram import raw, types, utils
 from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class Document(Object):
@@ -59,12 +57,12 @@ class Document(Object):
         client: "pyrogram.Client" = None,
         file_id: str,
         file_unique_id: str,
-        file_name: str = None,
-        mime_type: str = None,
-        file_size: int = None,
-        date: datetime = None,
-        thumbs: List["types.Thumbnail"] = None
-    ):
+        file_name: str | None = None,
+        mime_type: str | None = None,
+        file_size: int | None = None,
+        date: datetime | None = None,
+        thumbs: list["types.Thumbnail"] | None = None,
+    ) -> None:
         super().__init__(client)
 
         self.file_id = file_id
@@ -83,16 +81,16 @@ class Document(Object):
                 dc_id=document.dc_id,
                 media_id=document.id,
                 access_hash=document.access_hash,
-                file_reference=document.file_reference
+                file_reference=document.file_reference,
             ).encode(),
             file_unique_id=FileUniqueId(
                 file_unique_type=FileUniqueType.DOCUMENT,
-                media_id=document.id
+                media_id=document.id,
             ).encode(),
             file_name=file_name,
             mime_type=document.mime_type,
             file_size=document.size,
             date=utils.timestamp_to_datetime(document.date),
             thumbs=types.Thumbnail._parse(client, document),
-            client=client
+            client=client,
         )

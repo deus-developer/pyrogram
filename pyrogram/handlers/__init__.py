@@ -21,9 +21,8 @@ from .chat_boost_handler import ChatBoostHandler
 from .chat_join_request_handler import ChatJoinRequestHandler
 from .chat_member_updated_handler import ChatMemberUpdatedHandler
 from .chosen_inline_result_handler import ChosenInlineResultHandler
-from .deleted_messages_handler import DeletedMessagesHandler
-from .disconnect_handler import DisconnectHandler
 from .edited_message_handler import EditedMessageHandler
+from .handler import Handler
 from .inline_query_handler import InlineQueryHandler
 from .message_handler import MessageHandler
 from .message_reaction_count_handler import MessageReactionCountHandler
@@ -35,3 +34,24 @@ from .raw_update_handler import RawUpdateHandler
 from .shipping_query_handler import ShippingQueryHandler
 from .story_handler import StoryHandler
 from .user_status_handler import UserStatusHandler
+
+__all__ = [
+    "CallbackQueryHandler",
+    "ChatBoostHandler",
+    "ChatJoinRequestHandler",
+    "ChatMemberUpdatedHandler",
+    "ChosenInlineResultHandler",
+    "EditedMessageHandler",
+    "Handler",
+    "InlineQueryHandler",
+    "MessageHandler",
+    "MessageReactionCountHandler",
+    "MessageReactionHandler",
+    "PollHandler",
+    "PreCheckoutQueryHandler",
+    "PurchasedPaidMediaHandler",
+    "RawUpdateHandler",
+    "ShippingQueryHandler",
+    "StoryHandler",
+    "UserStatusHandler",
+]

@@ -16,19 +16,17 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, List
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class VotePoll:
     async def vote_poll(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         message_id: int,
-        options: Union[int, List[int]]
+        options: int | list[int],
     ) -> "types.Poll":
         """Vote a poll.
 
@@ -62,8 +60,8 @@ class VotePoll:
             raw.functions.messages.SendVote(
                 peer=await self.resolve_peer(chat_id),
                 msg_id=message_id,
-                options=[poll.options[option].data for option in options]
-            )
+                options=[poll.options[option].data for option in options],
+            ),
         )
 
         return types.Poll._parse(self, r.updates[0])

@@ -17,7 +17,7 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrogram import raw
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class Restriction(Object):
@@ -34,7 +34,7 @@ class Restriction(Object):
             The restriction text.
     """
 
-    def __init__(self, *, platform: str, reason: str, text: str):
+    def __init__(self, *, platform: str, reason: str, text: str) -> None:
         super().__init__(None)
 
         self.platform = platform
@@ -46,5 +46,5 @@ class Restriction(Object):
         return Restriction(
             platform=restriction.platform,
             reason=restriction.reason,
-            text=restriction.text
+            text=restriction.text,
         )

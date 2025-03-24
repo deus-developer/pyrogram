@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -27,7 +26,7 @@ class SetBotInfoDescription:
         self: "pyrogram.Client",
         description: str,
         language_code: str = "",
-        for_my_bot: Union[int, str] = None,
+        for_my_bot: int | str | None = None,
     ) -> bool:
         """Use this method to change the bot's description, which is shown in the chat with the bot if the chat is empty.
 
@@ -61,6 +60,6 @@ class SetBotInfoDescription:
             raw.functions.bots.SetBotInfo(
                 bot=await self.resolve_peer(for_my_bot) if for_my_bot else None,
                 lang_code=language_code,
-                description=description
-            )
+                description=description,
+            ),
         )

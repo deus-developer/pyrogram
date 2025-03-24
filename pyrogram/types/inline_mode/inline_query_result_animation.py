@@ -16,10 +16,11 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional, List
+from typing import Optional
 
 import pyrogram
-from pyrogram import raw, types, utils, enums
+from pyrogram import enums, raw, types, utils
+
 from .inline_query_result import InlineQueryResult
 
 
@@ -82,17 +83,17 @@ class InlineQueryResultAnimation(InlineQueryResult):
         animation_width: int = 0,
         animation_height: int = 0,
         animation_duration: int = 0,
-        thumb_url: str = None,
+        thumb_url: str | None = None,
         thumb_mime_type: str = "image/jpeg",
-        id: str = None,
-        title: str = None,
-        description: str = None,
+        id: str | None = None,
+        title: str | None = None,
+        description: str | None = None,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        input_message_content: "types.InputMessageContent" = None
-    ):
+        input_message_content: "types.InputMessageContent" = None,
+    ) -> None:
         super().__init__("gif", id, input_message_content, reply_markup)
 
         self.animation_url = animation_url
@@ -118,9 +119,9 @@ class InlineQueryResultAnimation(InlineQueryResult):
                 raw.types.DocumentAttributeVideo(
                     w=self.animation_width,
                     h=self.animation_height,
-                    duration=self.animation_duration
-                )
-            ]
+                    duration=self.animation_duration,
+                ),
+            ],
         )
 
         if self.thumb_url is None:
@@ -130,12 +131,17 @@ class InlineQueryResultAnimation(InlineQueryResult):
                 url=self.thumb_url,
                 size=0,
                 mime_type=self.thumb_mime_type,
-                attributes=[]
+                attributes=[],
             )
 
-        message, entities = (await utils.parse_text_entities(
-            client, self.caption, self.parse_mode, self.caption_entities
-        )).values()
+        message, entities = (
+            await utils.parse_text_entities(
+                client,
+                self.caption,
+                self.parse_mode,
+                self.caption_entities,
+            )
+        ).values()
 
         return raw.types.InputBotInlineResult(
             id=self.id,
@@ -147,9 +153,11 @@ class InlineQueryResultAnimation(InlineQueryResult):
                 await self.input_message_content.write(client, self.reply_markup)
                 if self.input_message_content
                 else raw.types.InputBotInlineMessageMediaAuto(
-                    reply_markup=await self.reply_markup.write(client) if self.reply_markup else None,
+                    reply_markup=await self.reply_markup.write(client)
+                    if self.reply_markup
+                    else None,
                     message=message,
-                    entities=entities
+                    entities=entities,
                 )
-            )
+            ),
         )

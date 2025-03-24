@@ -19,7 +19,7 @@
 from datetime import datetime
 
 from pyrogram import raw, types, utils
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class CheckedGiftCode(Object):
@@ -53,12 +53,12 @@ class CheckedGiftCode(Object):
         *,
         date: datetime,
         months: int,
-        via_giveaway: bool = None,
+        via_giveaway: bool | None = None,
         from_chat: "types.Chat" = None,
         winner: "types.User" = None,
-        giveaway_message_id: int = None,
-        used_date: datetime = None
-    ):
+        giveaway_message_id: int | None = None,
+        used_date: datetime | None = None,
+    ) -> None:
         super().__init__()
 
         self.date = date
@@ -70,13 +70,19 @@ class CheckedGiftCode(Object):
         self.used_date = used_date
 
     @staticmethod
-    def _parse(client, checked_gift_code: "raw.types.payments.CheckedGiftCode", users, chats):
+    def _parse(
+        client,
+        checked_gift_code: "raw.types.payments.CheckedGiftCode",
+        users,
+        chats,
+    ):
         from_chat = None
         winner = None
 
         if getattr(checked_gift_code, "from_id", None):
             from_chat = types.Chat._parse_chat(
-                client, chats.get(utils.get_raw_peer_id(checked_gift_code.from_id))
+                client,
+                chats.get(utils.get_raw_peer_id(checked_gift_code.from_id)),
             )
         if getattr(checked_gift_code, "to_id", None):
             winner = types.User._parse(client, users.get(checked_gift_code.to_id))
@@ -88,5 +94,7 @@ class CheckedGiftCode(Object):
             from_chat=from_chat,
             winner=winner,
             giveaway_message_id=getattr(checked_gift_code, "giveaway_msg_id", None),
-            used_date=utils.timestamp_to_datetime(checked_gift_code.used_date) if getattr(checked_gift_code, "used_date") else None,
+            used_date=utils.timestamp_to_datetime(checked_gift_code.used_date)
+            if checked_gift_code.used_date
+            else None,
         )

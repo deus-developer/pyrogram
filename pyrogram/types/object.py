@@ -25,10 +25,10 @@ import pyrogram
 
 
 class Object:
-    def __init__(self, client: "pyrogram.Client" = None):
+    def __init__(self, client: "pyrogram.Client" = None) -> None:
         self._client = client
 
-    def bind(self, client: "pyrogram.Client"):
+    def bind(self, client: "pyrogram.Client") -> None:
         """Bind a Client instance to this and to all nested Pyrogram objects.
 
         Parameters:
@@ -60,9 +60,7 @@ class Object:
         if isinstance(obj, datetime):
             return str(obj)
 
-        attributes_to_hide = [
-            "raw"
-        ]
+        attributes_to_hide = ["raw"]
 
         filtered_attributes = {
             attr: ("*" * 9 if attr == "phone_number" else getattr(obj, attr))
@@ -73,10 +71,7 @@ class Object:
             if getattr(obj, attr) is not None
         }
 
-        return {
-            "_": obj.__class__.__name__,
-            **filtered_attributes
-        }
+        return {"_": obj.__class__.__name__, **filtered_attributes}
 
     def __str__(self) -> str:
         return dumps(self, indent=4, default=Object.default, ensure_ascii=False)
@@ -85,10 +80,10 @@ class Object:
         return "pyrogram.types.{}({})".format(
             self.__class__.__name__,
             ", ".join(
-                f"{attr}={repr(getattr(self, attr))}"
+                f"{attr}={getattr(self, attr)!r}"
                 for attr in filter(lambda x: not x.startswith("_"), self.__dict__)
                 if getattr(self, attr) is not None
-            )
+            ),
         )
 
     def __eq__(self, other: "Object") -> bool:

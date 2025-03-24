@@ -19,7 +19,7 @@
 from typing import Union
 
 from pyrogram import raw, types
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class KeyboardButton(Object):
@@ -56,12 +56,16 @@ class KeyboardButton(Object):
     def __init__(
         self,
         text: str,
-        request_contact: bool = None,
-        request_location: bool = None,
+        request_contact: bool | None = None,
+        request_location: bool | None = None,
         request_poll: "types.RequestPollInfo" = None,
-        request_peer: Union["types.RequestChannelInfo", "types.RequestChatInfo", "types.RequestUserInfo"] = None,
+        request_peer: Union[
+            "types.RequestChannelInfo",
+            "types.RequestChatInfo",
+            "types.RequestUserInfo",
+        ] = None,
         web_app: "types.WebAppInfo" = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.text = str(text)
@@ -77,21 +81,15 @@ class KeyboardButton(Object):
             return b.text
 
         if isinstance(b, raw.types.KeyboardButtonRequestPhone):
-            return KeyboardButton(
-                text=b.text,
-                request_contact=True
-            )
+            return KeyboardButton(text=b.text, request_contact=True)
 
         if isinstance(b, raw.types.KeyboardButtonRequestGeoLocation):
-            return KeyboardButton(
-                text=b.text,
-                request_location=True
-            )
+            return KeyboardButton(text=b.text, request_location=True)
 
         if isinstance(b, raw.types.KeyboardButtonRequestPoll):
             return KeyboardButton(
                 text=b.text,
-                request_poll=types.RequestPollInfo(is_quiz=b.quiz)
+                request_poll=types.RequestPollInfo(is_quiz=b.quiz),
             )
 
         if isinstance(b, raw.types.KeyboardButtonRequestPeer):
@@ -105,9 +103,13 @@ class KeyboardButton(Object):
                         button_id=b.button_id,
                         is_creator=getattr(b.peer_type, "creator", None),
                         has_username=getattr(b.peer_type, "has_username", None),
-                        user_privileges=types.ChatPrivileges._parse(user_privileges) if user_privileges else None,
-                        bot_privileges=types.ChatPrivileges._parse(bot_privileges) if bot_privileges else None
-                    )
+                        user_privileges=types.ChatPrivileges._parse(user_privileges)
+                        if user_privileges
+                        else None,
+                        bot_privileges=types.ChatPrivileges._parse(bot_privileges)
+                        if bot_privileges
+                        else None,
+                    ),
                 )
 
             if isinstance(b.peer_type, raw.types.RequestPeerTypeChat):
@@ -119,12 +121,20 @@ class KeyboardButton(Object):
                     request_peer=types.RequestChatInfo(
                         button_id=b.button_id,
                         is_creator=getattr(b.peer_type, "creator", None),
-                        is_bot_participant=getattr(b.peer_type, "bot_participant", None),
+                        is_bot_participant=getattr(
+                            b.peer_type,
+                            "bot_participant",
+                            None,
+                        ),
                         has_username=getattr(b.peer_type, "has_username", None),
                         has_forum=getattr(b.peer_type, "forum", None),
-                        user_privileges=types.ChatPrivileges._parse(user_privileges) if user_privileges else None,
-                        bot_privileges=types.ChatPrivileges._parse(bot_privileges) if bot_privileges else None
-                    )
+                        user_privileges=types.ChatPrivileges._parse(user_privileges)
+                        if user_privileges
+                        else None,
+                        bot_privileges=types.ChatPrivileges._parse(bot_privileges)
+                        if bot_privileges
+                        else None,
+                    ),
                 )
 
             if isinstance(b.peer_type, raw.types.RequestPeerTypeUser):
@@ -134,66 +144,70 @@ class KeyboardButton(Object):
                         button_id=b.button_id,
                         is_bot=getattr(b.peer_type, "bot", None),
                         is_premium=getattr(b.peer_type, "premium", None),
-                        max_quantity=getattr(b, "max_quantity", None)
-                    )
+                        max_quantity=getattr(b, "max_quantity", None),
+                    ),
                 )
 
         if isinstance(b, raw.types.KeyboardButtonSimpleWebView):
-            return KeyboardButton(
-                text=b.text,
-                web_app=types.WebAppInfo(
-                    url=b.url
-                )
-            )
+            return KeyboardButton(text=b.text, web_app=types.WebAppInfo(url=b.url))
+        return None
 
     def write(self):
         if self.request_contact:
             return raw.types.KeyboardButtonRequestPhone(text=self.text)
-        elif self.request_location:
+        if self.request_location:
             return raw.types.KeyboardButtonRequestGeoLocation(text=self.text)
-        elif self.request_poll:
+        if self.request_poll:
             return raw.types.KeyboardButtonRequestPoll(
                 text=self.text,
-                quiz=self.request_poll.is_quiz
+                quiz=self.request_poll.is_quiz,
             )
-        elif self.request_peer:
+        if self.request_peer:
             if isinstance(self.request_peer, types.RequestChannelInfo):
                 user_privileges = self.request_peer.user_privileges
                 bot_privileges = self.request_peer.bot_privileges
 
-                user_admin_rights = raw.types.ChatAdminRights(
-                    change_info=user_privileges.can_change_info,
-                    post_messages=user_privileges.can_post_messages,
-                    post_stories=user_privileges.can_post_stories,
-                    edit_messages=user_privileges.can_edit_messages,
-                    edit_stories=user_privileges.can_post_stories,
-                    delete_messages=user_privileges.can_delete_messages,
-                    delete_stories=user_privileges.can_delete_stories,
-                    ban_users=user_privileges.can_restrict_members,
-                    invite_users=user_privileges.can_invite_users,
-                    pin_messages=user_privileges.can_pin_messages,
-                    add_admins=user_privileges.can_promote_members,
-                    anonymous=user_privileges.is_anonymous,
-                    manage_call=user_privileges.can_manage_video_chats,
-                    other=user_privileges.can_manage_chat
-                ) if user_privileges else None
+                user_admin_rights = (
+                    raw.types.ChatAdminRights(
+                        change_info=user_privileges.can_change_info,
+                        post_messages=user_privileges.can_post_messages,
+                        post_stories=user_privileges.can_post_stories,
+                        edit_messages=user_privileges.can_edit_messages,
+                        edit_stories=user_privileges.can_post_stories,
+                        delete_messages=user_privileges.can_delete_messages,
+                        delete_stories=user_privileges.can_delete_stories,
+                        ban_users=user_privileges.can_restrict_members,
+                        invite_users=user_privileges.can_invite_users,
+                        pin_messages=user_privileges.can_pin_messages,
+                        add_admins=user_privileges.can_promote_members,
+                        anonymous=user_privileges.is_anonymous,
+                        manage_call=user_privileges.can_manage_video_chats,
+                        other=user_privileges.can_manage_chat,
+                    )
+                    if user_privileges
+                    else None
+                )
 
-                bot_admin_rights = raw.types.ChatAdminRights(
-                    change_info=bot_privileges.can_change_info,
-                    post_messages=bot_privileges.can_post_messages,
-                    post_stories=bot_privileges.can_post_stories,
-                    edit_messages=bot_privileges.can_edit_messages,
-                    edit_stories=bot_privileges.can_post_stories,
-                    delete_messages=bot_privileges.can_delete_messages,
-                    delete_stories=bot_privileges.can_delete_stories,
-                    ban_users=bot_privileges.can_restrict_members,
-                    invite_users=bot_privileges.can_invite_users,
-                    pin_messages=bot_privileges.can_pin_messages,
-                    add_admins=bot_privileges.can_promote_members,
-                    anonymous=bot_privileges.is_anonymous,
-                    manage_call=bot_privileges.can_manage_video_chats,
-                    other=bot_privileges.can_manage_chat
-                ) if bot_privileges else None
+                bot_admin_rights = (
+                    raw.types.ChatAdminRights(
+                        change_info=bot_privileges.can_change_info,
+                        post_messages=bot_privileges.can_post_messages,
+                        post_stories=bot_privileges.can_post_stories,
+                        edit_messages=bot_privileges.can_edit_messages,
+                        edit_stories=bot_privileges.can_post_stories,
+                        delete_messages=bot_privileges.can_delete_messages,
+                        delete_stories=bot_privileges.can_delete_stories,
+                        ban_users=bot_privileges.can_restrict_members,
+                        invite_users=bot_privileges.can_invite_users,
+                        pin_messages=bot_privileges.can_pin_messages,
+                        add_admins=bot_privileges.can_promote_members,
+                        anonymous=bot_privileges.is_anonymous,
+                        manage_call=bot_privileges.can_manage_video_chats,
+                        other=bot_privileges.can_manage_chat,
+                    )
+                    if bot_privileges
+                    else None
+                )
 
                 return raw.types.KeyboardButtonRequestPeer(
                     text=self.text,
@@ -202,48 +216,56 @@ class KeyboardButton(Object):
                         creator=self.request_peer.is_creator,
                         has_username=self.request_peer.has_username,
                         user_admin_rights=user_admin_rights,
-                        bot_admin_rights=bot_admin_rights
+                        bot_admin_rights=bot_admin_rights,
                     ),
-                    max_quantity=1
+                    max_quantity=1,
                 )
 
             if isinstance(self.request_peer, types.RequestChatInfo):
                 user_privileges = self.request_peer.user_privileges
                 bot_privileges = self.request_peer.bot_privileges
 
-                user_admin_rights = raw.types.ChatAdminRights(
-                    change_info=user_privileges.can_change_info,
-                    post_messages=user_privileges.can_post_messages,
-                    post_stories=user_privileges.can_post_stories,
-                    edit_messages=user_privileges.can_edit_messages,
-                    edit_stories=user_privileges.can_post_stories,
-                    delete_messages=user_privileges.can_delete_messages,
-                    delete_stories=user_privileges.can_delete_stories,
-                    ban_users=user_privileges.can_restrict_members,
-                    invite_users=user_privileges.can_invite_users,
-                    pin_messages=user_privileges.can_pin_messages,
-                    add_admins=user_privileges.can_promote_members,
-                    anonymous=user_privileges.is_anonymous,
-                    manage_call=user_privileges.can_manage_video_chats,
-                    other=user_privileges.can_manage_chat
-                ) if user_privileges else None
+                user_admin_rights = (
+                    raw.types.ChatAdminRights(
+                        change_info=user_privileges.can_change_info,
+                        post_messages=user_privileges.can_post_messages,
+                        post_stories=user_privileges.can_post_stories,
+                        edit_messages=user_privileges.can_edit_messages,
+                        edit_stories=user_privileges.can_post_stories,
+                        delete_messages=user_privileges.can_delete_messages,
+                        delete_stories=user_privileges.can_delete_stories,
+                        ban_users=user_privileges.can_restrict_members,
+                        invite_users=user_privileges.can_invite_users,
+                        pin_messages=user_privileges.can_pin_messages,
+                        add_admins=user_privileges.can_promote_members,
+                        anonymous=user_privileges.is_anonymous,
+                        manage_call=user_privileges.can_manage_video_chats,
+                        other=user_privileges.can_manage_chat,
+                    )
+                    if user_privileges
+                    else None
+                )
 
-                bot_admin_rights = raw.types.ChatAdminRights(
-                    change_info=bot_privileges.can_change_info,
-                    post_messages=bot_privileges.can_post_messages,
-                    post_stories=bot_privileges.can_post_stories,
-                    edit_messages=bot_privileges.can_edit_messages,
-                    edit_stories=bot_privileges.can_post_stories,
-                    delete_messages=bot_privileges.can_delete_messages,
-                    delete_stories=bot_privileges.can_delete_stories,
-                    ban_users=bot_privileges.can_restrict_members,
-                    invite_users=bot_privileges.can_invite_users,
-                    pin_messages=bot_privileges.can_pin_messages,
-                    add_admins=bot_privileges.can_promote_members,
-                    anonymous=bot_privileges.is_anonymous,
-                    manage_call=bot_privileges.can_manage_video_chats,
-                    other=bot_privileges.can_manage_chat
-                ) if bot_privileges else None
+                bot_admin_rights = (
+                    raw.types.ChatAdminRights(
+                        change_info=bot_privileges.can_change_info,
+                        post_messages=bot_privileges.can_post_messages,
+                        post_stories=bot_privileges.can_post_stories,
+                        edit_messages=bot_privileges.can_edit_messages,
+                        edit_stories=bot_privileges.can_post_stories,
+                        delete_messages=bot_privileges.can_delete_messages,
+                        delete_stories=bot_privileges.can_delete_stories,
+                        ban_users=bot_privileges.can_restrict_members,
+                        invite_users=bot_privileges.can_invite_users,
+                        pin_messages=bot_privileges.can_pin_messages,
+                        add_admins=bot_privileges.can_promote_members,
+                        anonymous=bot_privileges.is_anonymous,
+                        manage_call=bot_privileges.can_manage_video_chats,
+                        other=bot_privileges.can_manage_chat,
+                    )
+                    if bot_privileges
+                    else None
+                )
 
                 return raw.types.KeyboardButtonRequestPeer(
                     text=self.text,
@@ -254,9 +276,9 @@ class KeyboardButton(Object):
                         has_username=self.request_peer.has_username,
                         forum=self.request_peer.has_forum,
                         user_admin_rights=user_admin_rights,
-                        bot_admin_rights=bot_admin_rights
+                        bot_admin_rights=bot_admin_rights,
                     ),
-                    max_quantity=1
+                    max_quantity=1,
                 )
 
             if isinstance(self.request_peer, types.RequestUserInfo):
@@ -265,12 +287,15 @@ class KeyboardButton(Object):
                     button_id=self.request_peer.button_id,
                     peer_type=raw.types.RequestPeerTypeUser(
                         bot=self.request_peer.is_bot,
-                        premium=self.request_peer.is_premium
+                        premium=self.request_peer.is_premium,
                     ),
-                    max_quantity=self.request_peer.max_quantity
+                    max_quantity=self.request_peer.max_quantity,
                 )
+            return None
 
-        elif self.web_app:
-            return raw.types.KeyboardButtonSimpleWebView(text=self.text, url=self.web_app.url)
-        else:
-            return raw.types.KeyboardButton(text=self.text)
+        if self.web_app:
+            return raw.types.KeyboardButtonSimpleWebView(
+                text=self.text,
+                url=self.web_app.url,
+            )
+        return raw.types.KeyboardButton(text=self.text)

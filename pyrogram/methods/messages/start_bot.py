@@ -16,18 +16,16 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class StartBot:
     async def start_bot(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        param: str = ""
+        chat_id: int | str,
+        param: str = "",
     ) -> "types.Message":
         """Start bot
 
@@ -64,14 +62,16 @@ class StartBot:
                 bot=peer,
                 peer=peer,
                 random_id=self.rnd_id(),
-                start_param=param
-            )
+                start_param=param,
+            ),
         )
 
         for i in r.updates:
             if isinstance(i, raw.types.UpdateNewMessage):
                 return await types.Message._parse(
-                    self, i.message,
+                    self,
+                    i.message,
                     {i.id: i for i in r.users},
-                    {i.id: i for i in r.chats}
+                    {i.id: i for i in r.chats},
                 )
+        return None

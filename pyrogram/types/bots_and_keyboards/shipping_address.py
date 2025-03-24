@@ -17,8 +17,7 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrogram import raw
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class ShippingAddress(Object):
@@ -53,8 +52,8 @@ class ShippingAddress(Object):
         city: str,
         street_line1: str,
         street_line2: str,
-        post_code: str
-    ):
+        post_code: str,
+    ) -> None:
         super().__init__()
 
         self.country_code = country_code
@@ -77,5 +76,5 @@ class ShippingAddress(Object):
             city=shipping_address.city,
             street_line1=shipping_address.street_line1,
             street_line2=shipping_address.street_line2,
-            post_code=shipping_address.post_code
+            post_code=shipping_address.post_code,
         )

@@ -16,10 +16,9 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import List, Optional
 
 from pyrogram import raw, types
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class PrivacyRule(Object):
@@ -49,15 +48,16 @@ class PrivacyRule(Object):
     """
 
     def __init__(
-        self, *,
-        allow_all: Optional[bool] = None,
-        allow_chats: Optional[bool] = None,
-        allow_contacts: Optional[bool] = None,
-        allow_premium: Optional[bool] = None,
-        allow_users: Optional[bool] = None,
-        users: Optional[List["types.User"]] = None,
-        chats: Optional[List["types.Chat"]] = None
-    ):
+        self,
+        *,
+        allow_all: bool | None = None,
+        allow_chats: bool | None = None,
+        allow_contacts: bool | None = None,
+        allow_premium: bool | None = None,
+        allow_users: bool | None = None,
+        users: list["types.User"] | None = None,
+        chats: list["types.Chat"] | None = None,
+    ) -> None:
         super().__init__(None)
 
         self.allow_all = allow_all
@@ -73,18 +73,47 @@ class PrivacyRule(Object):
         parsed_users = None
         parsed_chats = None
 
-        if isinstance(rule, (raw.types.PrivacyValueAllowUsers, raw.types.PrivacyValueDisallowUsers)):
-            parsed_users = types.List(types.User._parse(client, users.get(i)) for i in rule.users)
+        if isinstance(
+            rule,
+            raw.types.PrivacyValueAllowUsers | raw.types.PrivacyValueDisallowUsers,
+        ):
+            parsed_users = types.List(
+                types.User._parse(client, users.get(i)) for i in rule.users
+            )
 
-        if isinstance(rule, (raw.types.PrivacyValueAllowChatParticipants, raw.types.PrivacyValueDisallowChatParticipants)):
-            parsed_chats = types.List(types.Chat._parse_chat(client, chats.get(i)) for i in rule.chats)
+        if isinstance(
+            rule,
+            raw.types.PrivacyValueAllowChatParticipants
+            | raw.types.PrivacyValueDisallowChatParticipants,
+        ):
+            parsed_chats = types.List(
+                types.Chat._parse_chat(client, chats.get(i)) for i in rule.chats
+            )
 
         return PrivacyRule(
-            allow_all=True if isinstance(rule, raw.types.PrivacyValueAllowAll) else False if isinstance(rule, raw.types.PrivacyValueDisallowAll) else None,
-            allow_chats=True if isinstance(rule, raw.types.PrivacyValueAllowChatParticipants) else False if isinstance(rule, raw.types.PrivacyValueDisallowChatParticipants) else None,
-            allow_contacts=True if isinstance(rule, raw.types.PrivacyValueAllowContacts) else False if isinstance(rule, raw.types.PrivacyValueDisallowContacts) else None,
-            allow_premium=True if isinstance(rule, raw.types.PrivacyValueAllowPremium) else None,
-            allow_users=True if isinstance(rule, raw.types.PrivacyValueAllowUsers) else False if isinstance(rule, raw.types.PrivacyValueDisallowUsers) else None,
+            allow_all=True
+            if isinstance(rule, raw.types.PrivacyValueAllowAll)
+            else False
+            if isinstance(rule, raw.types.PrivacyValueDisallowAll)
+            else None,
+            allow_chats=True
+            if isinstance(rule, raw.types.PrivacyValueAllowChatParticipants)
+            else False
+            if isinstance(rule, raw.types.PrivacyValueDisallowChatParticipants)
+            else None,
+            allow_contacts=True
+            if isinstance(rule, raw.types.PrivacyValueAllowContacts)
+            else False
+            if isinstance(rule, raw.types.PrivacyValueDisallowContacts)
+            else None,
+            allow_premium=True
+            if isinstance(rule, raw.types.PrivacyValueAllowPremium)
+            else None,
+            allow_users=True
+            if isinstance(rule, raw.types.PrivacyValueAllowUsers)
+            else False
+            if isinstance(rule, raw.types.PrivacyValueDisallowUsers)
+            else None,
             users=parsed_users or None,
-            chats=parsed_chats or None
+            chats=parsed_chats or None,
         )

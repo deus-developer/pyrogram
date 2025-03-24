@@ -16,9 +16,10 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-import pyrogram
+from typing import NoReturn
 
-from ..object import Object
+import pyrogram
+from pyrogram.types.object import Object
 
 """- :obj:`~pyrogram.types.InputLocationMessageContent`
     - :obj:`~pyrogram.types.InputVenueMessageContent`
@@ -33,8 +34,8 @@ class InputMessageContent(Object):
     - :obj:`~pyrogram.types.InputTextMessageContent`
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
-    async def write(self, client: "pyrogram.Client", reply_markup):
+    async def write(self, client: "pyrogram.Client", reply_markup) -> NoReturn:
         raise NotImplementedError

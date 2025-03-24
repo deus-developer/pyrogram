@@ -16,13 +16,12 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import List, Match
+from re import Match
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types, enums
-from ..object import Object
-from ..update import Update
+from pyrogram import enums, raw, types
+from pyrogram.types.object import Object
+from pyrogram.types.update import Update
 
 
 class InlineQuery(Object, Update):
@@ -64,8 +63,8 @@ class InlineQuery(Object, Update):
         offset: str,
         chat_type: "enums.ChatType",
         location: "types.Location" = None,
-        matches: List[Match] = None
-    ):
+        matches: list[Match] | None = None,
+    ) -> None:
         super().__init__(client)
 
         self.id = id
@@ -77,7 +76,11 @@ class InlineQuery(Object, Update):
         self.matches = matches
 
     @staticmethod
-    def _parse(client, inline_query: raw.types.UpdateBotInlineQuery, users: dict) -> "InlineQuery":
+    def _parse(
+        client,
+        inline_query: raw.types.UpdateBotInlineQuery,
+        users: dict,
+    ) -> "InlineQuery":
         peer_type = inline_query.peer_type
         chat_type = None
 
@@ -101,20 +104,22 @@ class InlineQuery(Object, Update):
             location=types.Location(
                 longitude=inline_query.geo.long,
                 latitude=inline_query.geo.lat,
-                client=client
-            ) if inline_query.geo else None,
-            client=client
+                client=client,
+            )
+            if inline_query.geo
+            else None,
+            client=client,
         )
 
     async def answer(
         self,
-        results: List["types.InlineQueryResult"],
+        results: list["types.InlineQueryResult"],
         cache_time: int = 300,
         is_gallery: bool = False,
         is_personal: bool = False,
         next_offset: str = "",
         switch_pm_text: str = "",
-        switch_pm_parameter: str = ""
+        switch_pm_parameter: str = "",
     ):
         """Bound method *answer* of :obj:`~pyrogram.types.InlineQuery`.
 
@@ -122,10 +127,7 @@ class InlineQuery(Object, Update):
 
         .. code-block:: python
 
-            await client.answer_inline_query(
-                inline_query.id,
-                results=[...]
-            )
+            await client.answer_inline_query(inline_query.id, results=[...])
 
         Example:
             .. code-block:: python
@@ -177,5 +179,5 @@ class InlineQuery(Object, Update):
             is_personal=is_personal,
             next_offset=next_offset,
             switch_pm_text=switch_pm_text,
-            switch_pm_parameter=switch_pm_parameter
+            switch_pm_parameter=switch_pm_parameter,
         )

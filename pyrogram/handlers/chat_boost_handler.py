@@ -16,7 +16,13 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Callable
+from collections.abc import Awaitable, Callable
+from typing import (
+    Any,
+    ClassVar,
+)
+
+import pyrogram
 
 from .handler import Handler
 
@@ -41,9 +47,18 @@ class ChatBoostHandler(Handler):
         client (:obj:`~pyrogram.Client`):
             The Client itself, useful when you want to call other API methods inside the handler.
 
-        boost (:obj:`~pyrogram.types.ChatBoost`):
+        boost (:obj:`~pyrogram.types.ChatBoostUpdated`):
             The applied chat boost.
     """
 
-    def __init__(self, callback: Callable, filters=None):
+    event_type: ClassVar[str] = "chat_boost"
+
+    def __init__(
+        self,
+        callback: Callable[
+            ["pyrogram.Client", "pyrogram.types.ChatBoostUpdated"],
+            Awaitable[Any],
+        ],
+        filters: "pyrogram.filters.Filter | None" = None,
+    ) -> None:
         super().__init__(callback, filters)

@@ -20,10 +20,7 @@ import pyrogram
 
 
 class Restart:
-    async def restart(
-        self: "pyrogram.Client",
-        block: bool = True
-    ):
+    async def restart(self: "pyrogram.Client", block: bool = True):
         """Restart the Client.
 
         This method will first call :meth:`~pyrogram.Client.stop` and then :meth:`~pyrogram.Client.start` in a row in
@@ -60,7 +57,7 @@ class Restart:
                 app.run(main())
         """
 
-        async def do_it():
+        async def do_it() -> None:
             await self.stop()
             await self.start()
 

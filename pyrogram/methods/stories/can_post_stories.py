@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -25,7 +24,7 @@ from pyrogram import raw
 class CanPostStories:
     async def can_post_stories(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
     ) -> bool:
         """Check whether we can post stories as the specified chat.
 
@@ -44,10 +43,8 @@ class CanPostStories:
                 # Check if you can send story to chat id
                 app.can_post_stories(chat_id)
         """
-        r = await self.invoke(
+        return await self.invoke(
             raw.functions.stories.CanSendStory(
                 peer=await self.resolve_peer(chat_id),
-            )
+            ),
         )
-
-        return r

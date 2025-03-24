@@ -24,7 +24,10 @@ from .chat_member_status import ChatMemberStatus
 from .chat_members_filter import ChatMembersFilter
 from .chat_type import ChatType
 from .client_platform import ClientPlatform
+from .event_type import EventType
 from .folder_color import FolderColor
+from .gift_attribute_type import GiftAttributeType
+from .media_area_type import MediaAreaType
 from .message_entity_type import MessageEntityType
 from .message_media_type import MessageMediaType
 from .message_service_type import MessageServiceType
@@ -38,36 +41,35 @@ from .privacy_key import PrivacyKey
 from .profile_color import ProfileColor
 from .reply_color import ReplyColor
 from .sent_code_type import SentCodeType
-from .gift_attribute_type import GiftAttributeType
-from .media_area_type import MediaAreaType
 from .stories_privacy_rules import StoriesPrivacyRules
 from .user_status import UserStatus
 
 __all__ = [
-    'BusinessSchedule',
-    'ChatAction',
-    'ChatEventAction',
-    'ChatJoinType',
-    'ChatMemberStatus',
-    'ChatMembersFilter',
-    'ChatType',
-    'ClientPlatform',
-    'FolderColor',
-    'MessageEntityType',
-    'MessageMediaType',
-    'MessageServiceType',
-    'MessagesFilter',
-    'NextCodeType',
-    'PaidReactionPrivacy',
-    'ParseMode',
-    'PhoneCallDiscardReason',
-    'PollType',
-    'PrivacyKey',
-    'ProfileColor',
-    'ReplyColor',
-    'SentCodeType',
-    'GiftAttributeType',
-    'MediaAreaType',
-    'StoriesPrivacyRules',
-    'UserStatus'
+    "BusinessSchedule",
+    "ChatAction",
+    "ChatEventAction",
+    "ChatJoinType",
+    "ChatMemberStatus",
+    "ChatMembersFilter",
+    "ChatType",
+    "ClientPlatform",
+    "EventType",
+    "FolderColor",
+    "GiftAttributeType",
+    "MediaAreaType",
+    "MessageEntityType",
+    "MessageMediaType",
+    "MessageServiceType",
+    "MessagesFilter",
+    "NextCodeType",
+    "PaidReactionPrivacy",
+    "ParseMode",
+    "PhoneCallDiscardReason",
+    "PollType",
+    "PrivacyKey",
+    "ProfileColor",
+    "ReplyColor",
+    "SentCodeType",
+    "StoriesPrivacyRules",
+    "UserStatus",
 ]

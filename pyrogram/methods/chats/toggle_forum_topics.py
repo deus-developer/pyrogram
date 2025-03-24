@@ -16,18 +16,16 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import errors
+from pyrogram import errors, raw
 
 
 class ToggleForumTopics:
     async def toggle_forum_topics(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        enabled: bool = False
+        chat_id: int | str,
+        enabled: bool = False,
     ) -> bool:
         """Enable or disable forum functionality in a supergroup.
 
@@ -56,8 +54,8 @@ class ToggleForumTopics:
             r = await self.invoke(
                 raw.functions.channels.ToggleForum(
                     channel=await self.resolve_peer(chat_id),
-                    enabled=enabled
-                )
+                    enabled=enabled,
+                ),
             )
 
             return bool(r)

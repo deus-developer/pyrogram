@@ -17,23 +17,21 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from typing import Union, BinaryIO
+from typing import BinaryIO
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import utils
-from pyrogram import types
+from pyrogram import raw, types, utils
 from pyrogram.file_id import FileType
 
 
 class SetChatPhoto:
     async def set_chat_photo(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         *,
-        photo: Union[str, BinaryIO] = None,
-        video: Union[str, BinaryIO] = None,
-        video_start_ts: float = None,
+        photo: str | BinaryIO | None = None,
+        video: str | BinaryIO | None = None,
+        video_start_ts: float | None = None,
     ) -> "types.Message":
         """Set a new chat photo or video (H.264/MPEG-4 AVC video, max 5 seconds).
 
@@ -107,27 +105,29 @@ class SetChatPhoto:
                 raw.functions.messages.EditChatPhoto(
                     chat_id=peer.chat_id,
                     photo=photo,
-                )
+                ),
             )
         elif isinstance(peer, raw.types.InputPeerChannel):
             r = await self.invoke(
-                raw.functions.channels.EditPhoto(
-                    channel=peer,
-                    photo=photo
-                )
+                raw.functions.channels.EditPhoto(channel=peer, photo=photo),
             )
         else:
             raise ValueError(f'The chat_id "{chat_id}" belongs to a user')
 
         for i in r.updates:
-            if isinstance(i, (raw.types.UpdateNewMessage,
-                              raw.types.UpdateNewChannelMessage,
-                              raw.types.UpdateNewScheduledMessage,
-                              raw.types.UpdateBotNewBusinessMessage)):
+            if isinstance(
+                i,
+                raw.types.UpdateNewMessage
+                | raw.types.UpdateNewChannelMessage
+                | raw.types.UpdateNewScheduledMessage
+                | raw.types.UpdateBotNewBusinessMessage,
+            ):
                 return await types.Message._parse(
-                    self, i.message,
+                    self,
+                    i.message,
                     {i.id: i for i in r.users},
                     {i.id: i for i in r.chats},
                     is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
-                    business_connection_id=getattr(i, "connection_id", None)
+                    business_connection_id=getattr(i, "connection_id", None),
                 )
+        return None

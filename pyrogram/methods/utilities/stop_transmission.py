@@ -16,11 +16,13 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
+from typing import NoReturn
+
 import pyrogram
 
 
 class StopTransmission:
-    def stop_transmission(self):
+    def stop_transmission(self) -> NoReturn:
         """Stop downloading or uploading a file.
 
         This method must be called inside a progress callback function in order to stop the transmission at the
@@ -34,10 +36,10 @@ class StopTransmission:
                     if (current * 100 / total) > 50:
                         client.stop_transmission()
 
+
                 async with app:
                     await app.send_document(
-                        "me", "file.zip",
-                        progress=progress,
-                        progress_args=(app,))
+                        "me", "file.zip", progress=progress, progress_args=(app,)
+                    )
         """
         raise pyrogram.StopTransmission

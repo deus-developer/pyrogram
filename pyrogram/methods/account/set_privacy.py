@@ -16,27 +16,29 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import List, Union
+from typing import Union
 
 import pyrogram
-from pyrogram import raw, types, enums
+from pyrogram import enums, raw, types
 
 
 class SetPrivacy:
     async def set_privacy(
         self: "pyrogram.Client",
         key: "enums.PrivacyKey",
-        rules: List[Union[
-            "types.InputPrivacyRuleAllowAll",
-            "types.InputPrivacyRuleAllowContacts",
-            "types.InputPrivacyRuleAllowPremium",
-            "types.InputPrivacyRuleAllowUsers",
-            "types.InputPrivacyRuleAllowChats",
-            "types.InputPrivacyRuleDisallowAll",
-            "types.InputPrivacyRuleDisallowContacts",
-            "types.InputPrivacyRuleDisallowUsers",
-            "types.InputPrivacyRuleDisallowChats",
-        ]],
+        rules: list[
+            Union[
+                "types.InputPrivacyRuleAllowAll",
+                "types.InputPrivacyRuleAllowContacts",
+                "types.InputPrivacyRuleAllowPremium",
+                "types.InputPrivacyRuleAllowUsers",
+                "types.InputPrivacyRuleAllowChats",
+                "types.InputPrivacyRuleDisallowAll",
+                "types.InputPrivacyRuleDisallowContacts",
+                "types.InputPrivacyRuleDisallowUsers",
+                "types.InputPrivacyRuleDisallowChats",
+            ]
+        ],
     ):
         """Set account privacy rules.
 
@@ -58,16 +60,20 @@ class SetPrivacy:
                 from pyrogram import enums, types
 
                 # Prevent everyone from seeing your phone number
-                await app.set_privacy(enums.PrivacyKey.PHONE_NUMBER, [types.InputPrivacyRuleDisallowAll()])
+                await app.set_privacy(
+                    enums.PrivacyKey.PHONE_NUMBER, [types.InputPrivacyRuleDisallowAll()]
+                )
         """
         r = await self.invoke(
             raw.functions.account.SetPrivacy(
                 key=key.value(),
-                rules=[await rule.write(self) for rule in rules]
-            )
+                rules=[await rule.write(self) for rule in rules],
+            ),
         )
 
         users = {i.id: i for i in r.users}
         chats = {i.id: i for i in r.chats}
 
-        return types.List(types.PrivacyRule._parse(self, rule, users, chats) for rule in r.rules)
+        return types.List(
+            types.PrivacyRule._parse(self, rule, users, chats) for rule in r.rules
+        )

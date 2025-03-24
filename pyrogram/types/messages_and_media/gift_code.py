@@ -16,10 +16,10 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional, List
+from typing import Optional
 
 from pyrogram import raw, types, utils
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class GiftCode(Object):
@@ -69,16 +69,16 @@ class GiftCode(Object):
         *,
         id: str,
         premium_subscription_month_count: int,
-        caption: Optional[str] = None,
-        caption_entities: List["types.MessageEntity"] = None,
-        via_giveaway: Optional[bool] = None,
-        is_unclaimed: Optional[bool] = None,
+        caption: str | None = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
+        via_giveaway: bool | None = None,
+        is_unclaimed: bool | None = None,
         boosted_chat: Optional["types.Chat"] = None,
-        currency: Optional[str] = None,
-        amount: Optional[int] = None,
-        cryptocurrency: Optional[str] = None,
-        cryptocurrency_amount: Optional[int] = None
-    ):
+        currency: str | None = None,
+        amount: int | None = None,
+        cryptocurrency: str | None = None,
+        cryptocurrency_amount: int | None = None,
+    ) -> None:
         super().__init__()
 
         self.id = id
@@ -95,22 +95,29 @@ class GiftCode(Object):
 
     @staticmethod
     def _parse(client, giftcode: "raw.types.MessageActionGiftCode", users, chats):
-        peer = chats.get(utils.get_raw_peer_id(getattr(giftcode, "boost_peer")))
+        peer = chats.get(utils.get_raw_peer_id(giftcode.boost_peer))
 
-        message, entities = (utils.parse_text_with_entities(client, getattr(giftcode, "message", None), users)).values()
+        message, entities = (
+            utils.parse_text_with_entities(
+                client,
+                getattr(giftcode, "message", None),
+                users,
+            )
+        ).values()
 
         return GiftCode(
             id=giftcode.slug,
             premium_subscription_month_count=giftcode.months,
             caption=message or None,
             caption_entities=entities or None,
-            via_giveaway=getattr(giftcode, "via_giveaway"),
-            is_unclaimed=getattr(giftcode, "unclaimed"),
+            via_giveaway=giftcode.via_giveaway,
+            is_unclaimed=giftcode.unclaimed,
             boosted_chat=types.Chat._parse_chat(client, peer) if peer else None,
             currency=getattr(giftcode, "currency", None) or None,
             amount=getattr(giftcode, "amount", None) or None,
             cryptocurrency=getattr(giftcode, "cryptocurrency", None) or None,
-            cryptocurrency_amount=getattr(giftcode, "cryptocurrency_amount", None) or None
+            cryptocurrency_amount=getattr(giftcode, "cryptocurrency_amount", None)
+            or None,
         )
 
     @property

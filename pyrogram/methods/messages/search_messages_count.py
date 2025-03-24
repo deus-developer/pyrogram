@@ -16,20 +16,20 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, Optional
+from typing import Optional
 
 import pyrogram
-from pyrogram import raw, enums
+from pyrogram import enums, raw
 
 
 class SearchMessagesCount:
     async def search_messages_count(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        query: Optional[str] = "",
+        chat_id: int | str,
+        query: str | None = "",
         filter: Optional["enums.MessagesFilter"] = enums.MessagesFilter.EMPTY,
-        from_user: Optional[Union[int, str]] = None,
-        message_thread_id: Optional[int] = None
+        from_user: int | str | None = None,
+        message_thread_id: int | None = None,
     ) -> int:
         """Get the count of messages resulting from a search inside a chat.
 
@@ -74,17 +74,12 @@ class SearchMessagesCount:
                 limit=1,
                 min_id=0,
                 max_id=0,
-                from_id=(
-                    await self.resolve_peer(from_user)
-                    if from_user
-                    else None
-                ),
+                from_id=(await self.resolve_peer(from_user) if from_user else None),
                 top_msg_id=message_thread_id,
-                hash=0
-            )
+                hash=0,
+            ),
         )
 
         if hasattr(r, "count"):
             return r.count
-        else:
-            return len(r.messages)
+        return len(r.messages)

@@ -16,10 +16,11 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional, List
+from typing import Optional
 
 import pyrogram
-from pyrogram import raw, types, utils, enums
+from pyrogram import enums, raw, types, utils
+
 from .input_message_content import InputMessageContent
 
 
@@ -45,9 +46,9 @@ class InputTextMessageContent(InputMessageContent):
         self,
         message_text: str,
         parse_mode: Optional["enums.ParseMode"] = None,
-        entities: List["types.MessageEntity"] = None,
-        disable_web_page_preview: bool = None
-    ):
+        entities: list["types.MessageEntity"] | None = None,
+        disable_web_page_preview: bool | None = None,
+    ) -> None:
         super().__init__()
 
         self.message_text = message_text
@@ -56,13 +57,18 @@ class InputTextMessageContent(InputMessageContent):
         self.disable_web_page_preview = disable_web_page_preview
 
     async def write(self, client: "pyrogram.Client", reply_markup):
-        message, entities = (await utils.parse_text_entities(
-            client, self.message_text, self.parse_mode, self.entities
-        )).values()
+        message, entities = (
+            await utils.parse_text_entities(
+                client,
+                self.message_text,
+                self.parse_mode,
+                self.entities,
+            )
+        ).values()
 
         return raw.types.InputBotInlineMessageText(
             no_webpage=self.disable_web_page_preview or None,
             reply_markup=await reply_markup.write(client) if reply_markup else None,
             message=message,
-            entities=entities
+            entities=entities,
         )

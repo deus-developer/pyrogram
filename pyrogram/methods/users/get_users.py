@@ -17,18 +17,18 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import asyncio
-from typing import Union, List, Iterable
+from collections.abc import Iterable
+from typing import Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class GetUsers:
     async def get_users(
         self: "pyrogram.Client",
-        user_ids: Union[int, str, Iterable[Union[int, str]]]
-    ) -> Union["types.User", List["types.User"]]:
+        user_ids: int | str | Iterable[int | str],
+    ) -> Union["types.User", list["types.User"]]:
         """Get information about a user.
         You can retrieve up to 200 users at once.
 
@@ -53,15 +53,11 @@ class GetUsers:
                 await app.get_users([user_id1, user_id2, user_id3])
         """
 
-        is_iterable = not isinstance(user_ids, (int, str))
+        is_iterable = not isinstance(user_ids, int | str)
         user_ids = list(user_ids) if is_iterable else [user_ids]
         user_ids = await asyncio.gather(*[self.resolve_peer(i) for i in user_ids])
 
-        r = await self.invoke(
-            raw.functions.users.GetUsers(
-                id=user_ids
-            )
-        )
+        r = await self.invoke(raw.functions.users.GetUsers(id=user_ids))
 
         users = types.List()
 

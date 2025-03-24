@@ -16,17 +16,18 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, List, AsyncGenerator, Optional
+from collections.abc import AsyncGenerator
 from datetime import datetime
+from typing import Optional
 
 import pyrogram
-from pyrogram import raw, types, utils, enums
+from pyrogram import enums, raw, types, utils
 
 
 # noinspection PyShadowingBuiltins
 async def get_chunk(
     client,
-    chat_id: Union[int, str],
+    chat_id: int | str,
     query: str = "",
     filter: "enums.MessagesFilter" = enums.MessagesFilter.EMPTY,
     offset: int = 0,
@@ -36,30 +37,26 @@ async def get_chunk(
     limit: int = 100,
     min_id: int = 0,
     max_id: int = 0,
-    from_user: Union[int, str] = None,
-    message_thread_id: Optional[int] = None
-) -> List["types.Message"]:
+    from_user: int | str | None = None,
+    message_thread_id: int | None = None,
+) -> list["types.Message"]:
     r = await client.invoke(
         raw.functions.messages.Search(
             peer=await client.resolve_peer(chat_id),
             q=query,
             filter=filter.value(),
             min_date=utils.datetime_to_timestamp(min_date),
-            max_date= utils.datetime_to_timestamp(max_date),
+            max_date=utils.datetime_to_timestamp(max_date),
             offset_id=offset_id,
             add_offset=offset,
             limit=limit,
             min_id=min_id,
             max_id=max_id,
-            from_id=(
-                await client.resolve_peer(from_user)
-                if from_user
-                else None
-            ),
+            from_id=(await client.resolve_peer(from_user) if from_user else None),
             top_msg_id=message_thread_id,
-            hash=0
+            hash=0,
         ),
-        sleep_threshold=60
+        sleep_threshold=60,
     )
 
     return await utils.parse_messages(client, r, replies=0)
@@ -69,18 +66,18 @@ class SearchMessages:
     # noinspection PyShadowingBuiltins
     async def search_messages(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        query: Optional[str] = "",
-        offset: Optional[int] = 0,
-        offset_id: Optional[int] = 0,
-        min_date: Optional[datetime] = utils.zero_datetime(),
-        max_date: Optional[datetime] = utils.zero_datetime(),
-        min_id: Optional[int] = 0,
-        max_id: Optional[int] = 0,
+        chat_id: int | str,
+        query: str | None = "",
+        offset: int | None = 0,
+        offset_id: int | None = 0,
+        min_date: datetime | None = utils.zero_datetime(),
+        max_date: datetime | None = utils.zero_datetime(),
+        min_id: int | None = 0,
+        max_id: int | None = 0,
         filter: Optional["enums.MessagesFilter"] = enums.MessagesFilter.EMPTY,
-        limit: Optional[int] = 0,
-        from_user: Union[int, str] = None,
-        message_thread_id: Optional[int] = None
+        limit: int | None = 0,
+        from_user: int | str | None = None,
+        message_thread_id: int | None = None,
     ) -> AsyncGenerator["types.Message", None]:
         """Search for text and media messages inside a specific chat.
 
@@ -143,11 +140,15 @@ class SearchMessages:
                 from pyrogram import enums
 
                 # Search for text messages in chat. Get the last 120 results
-                async for message in app.search_messages(chat_id, query="hello", limit=120):
+                async for message in app.search_messages(
+                    chat_id, query="hello", limit=120
+                ):
                     print(message.text)
 
                 # Search for pinned messages in chat
-                async for message in app.search_messages(chat_id, filter=enums.MessagesFilter.PINNED):
+                async for message in app.search_messages(
+                    chat_id, filter=enums.MessagesFilter.PINNED
+                ):
                     print(message.text)
 
                 # Search for messages containing "hello" sent by yourself in chat
@@ -173,7 +174,7 @@ class SearchMessages:
                 max_id=max_id,
                 limit=limit,
                 from_user=from_user,
-                message_thread_id=message_thread_id
+                message_thread_id=message_thread_id,
             )
 
             if not messages:

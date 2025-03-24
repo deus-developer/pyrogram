@@ -17,7 +17,7 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrogram import raw
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class Username(Object):
@@ -34,7 +34,13 @@ class Username(Object):
             True, if the collectible username is active.
     """
 
-    def __init__(self, *, username: str, editable: bool = None, active: bool = None):
+    def __init__(
+        self,
+        *,
+        username: str,
+        editable: bool | None = None,
+        active: bool | None = None,
+    ) -> None:
         super().__init__(None)
 
         self.username = username
@@ -46,5 +52,5 @@ class Username(Object):
         return Username(
             username=username.username,
             editable=username.editable,
-            active=username.active
+            active=username.active,
         )

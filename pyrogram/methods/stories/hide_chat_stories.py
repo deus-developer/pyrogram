@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -25,7 +24,7 @@ from pyrogram import raw
 class HideChatStories:
     async def hide_chat_stories(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
     ) -> bool:
         """Hide the active stories of a user, preventing them from being displayed on the action bar on the homescreen.
 
@@ -46,11 +45,9 @@ class HideChatStories:
                 # Hide stories from specific chat
                 app.hide_chat_stories(chat_id)
         """
-        r = await self.invoke(
+        return await self.invoke(
             raw.functions.stories.TogglePeerStoriesHidden(
                 peer=await self.resolve_peer(chat_id),
-                hidden=True
-            )
+                hidden=True,
+            ),
         )
-
-        return r

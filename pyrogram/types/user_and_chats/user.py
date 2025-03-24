@@ -18,21 +18,21 @@
 
 import html
 from datetime import datetime
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 import pyrogram
-from pyrogram import enums, utils
-from pyrogram import raw
-from pyrogram import types
-from ..object import Object
-from ..update import Update
+from pyrogram import enums, raw, types, utils
+from pyrogram.types.object import Object
+from pyrogram.types.update import Update
 
 
 class Link(str):
+    __slots__ = ("style", "text", "url")
+
     HTML = "<a href={url}>{text}</a>"
     MARKDOWN = "[{text}]({url})"
 
-    def __init__(self, url: str, text: str, style: enums.ParseMode):
+    def __init__(self, url: str, text: str, style: enums.ParseMode) -> None:
         super().__init__()
 
         self.url = url
@@ -41,10 +41,7 @@ class Link(str):
 
     @staticmethod
     def format(url: str, text: str, style: enums.ParseMode):
-        if style == enums.ParseMode.MARKDOWN:
-            fmt = Link.MARKDOWN
-        else:
-            fmt = Link.HTML
+        fmt = Link.MARKDOWN if style == enums.ParseMode.MARKDOWN else Link.HTML
 
         return fmt.format(url=url, text=html.escape(text))
 
@@ -52,10 +49,10 @@ class Link(str):
     def __new__(cls, url, text, style):
         return str.__new__(cls, Link.format(url, text, style))
 
-    def __call__(self, other: str = None, *, style: str = None):
+    def __call__(self, other: str | None = None, *, style: str | None = None):
         return Link.format(self.url, other or self.text, style or self.style)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return Link.format(self.url, self.text, self.style)
 
 
@@ -209,48 +206,48 @@ class User(Object, Update):
         *,
         client: "pyrogram.Client" = None,
         id: int,
-        is_self: bool = None,
-        is_contact: bool = None,
-        is_mutual_contact: bool = None,
-        is_deleted: bool = None,
-        is_bot: bool = None,
-        is_verified: bool = None,
-        is_restricted: bool = None,
-        is_scam: bool = None,
-        is_fake: bool = None,
-        is_support: bool = None,
-        is_premium: bool = None,
-        is_contact_require_premium: bool = None,
-        is_close_friend: bool = None,
-        is_stories_hidden: bool = None,
-        is_stories_unavailable: bool = None,
-        is_business_bot: bool = None,
-        first_name: str = None,
-        last_name: str = None,
+        is_self: bool | None = None,
+        is_contact: bool | None = None,
+        is_mutual_contact: bool | None = None,
+        is_deleted: bool | None = None,
+        is_bot: bool | None = None,
+        is_verified: bool | None = None,
+        is_restricted: bool | None = None,
+        is_scam: bool | None = None,
+        is_fake: bool | None = None,
+        is_support: bool | None = None,
+        is_premium: bool | None = None,
+        is_contact_require_premium: bool | None = None,
+        is_close_friend: bool | None = None,
+        is_stories_hidden: bool | None = None,
+        is_stories_unavailable: bool | None = None,
+        is_business_bot: bool | None = None,
+        first_name: str | None = None,
+        last_name: str | None = None,
         status: "enums.UserStatus" = None,
-        last_online_date: datetime = None,
-        next_offline_date: datetime = None,
-        username: str = None,
-        usernames: List["types.Username"] = None,
-        language_code: str = None,
+        last_online_date: datetime | None = None,
+        next_offline_date: datetime | None = None,
+        username: str | None = None,
+        usernames: list["types.Username"] | None = None,
+        language_code: str | None = None,
         emoji_status: Optional["types.EmojiStatus"] = None,
-        dc_id: int = None,
-        phone_number: str = None,
+        dc_id: int | None = None,
+        phone_number: str | None = None,
         photo: "types.ChatPhoto" = None,
-        restrictions: List["types.Restriction"] = None,
+        restrictions: list["types.Restriction"] | None = None,
         reply_color: "types.ChatColor" = None,
         profile_color: "types.ChatColor" = None,
-        added_to_attachment_menu: bool = None,
-        active_users_count: int = None,
-        inline_need_location: bool = None,
-        inline_query_placeholder: str = None,
-        can_be_edited: bool = None,
-        can_be_added_to_attachment_menu: bool = None,
-        can_join_groups: bool = None,
-        can_read_all_group_messages: bool = None,
-        has_main_web_app: bool = None,
-        raw: Union["raw.base.User", "raw.base.UserStatus"] = None
-    ):
+        added_to_attachment_menu: bool | None = None,
+        active_users_count: int | None = None,
+        inline_need_location: bool | None = None,
+        inline_query_placeholder: str | None = None,
+        can_be_edited: bool | None = None,
+        can_be_added_to_attachment_menu: bool | None = None,
+        can_join_groups: bool | None = None,
+        can_read_all_group_messages: bool | None = None,
+        has_main_web_app: bool | None = None,
+        raw: Union["raw.base.User", "raw.base.UserStatus"] = None,
+    ) -> None:
         super().__init__(client)
 
         self.id = id
@@ -305,7 +302,7 @@ class User(Object, Update):
         return Link(
             f"tg://user?id={self.id}",
             self.first_name or "Deleted Account",
-            self._client.parse_mode
+            self._client.parse_mode,
         )
 
     @staticmethod
@@ -334,16 +331,23 @@ class User(Object, Update):
             first_name=user.first_name,
             last_name=user.last_name,
             **User._parse_status(user.status, user.bot),
-            username=user.username or (user.usernames[0].username if user.usernames else None),
-            usernames=types.List([types.Username._parse(r) for r in user.usernames]) or None,
+            username=user.username
+            or (user.usernames[0].username if user.usernames else None),
+            usernames=types.List([types.Username._parse(r) for r in user.usernames])
+            or None,
             language_code=user.lang_code,
             emoji_status=types.EmojiStatus._parse(client, user.emoji_status),
             dc_id=getattr(user.photo, "dc_id", None),
             phone_number=user.phone,
             photo=types.ChatPhoto._parse(client, user.photo, user.id, user.access_hash),
-            restrictions=types.List([types.Restriction._parse(r) for r in user.restriction_reason]) or None,
+            restrictions=types.List(
+                [types.Restriction._parse(r) for r in user.restriction_reason],
+            )
+            or None,
             reply_color=types.ChatColor._parse(getattr(user, "color", None)),
-            profile_color=types.ChatColor._parse_profile_color(getattr(user, "profile_color", None)),
+            profile_color=types.ChatColor._parse_profile_color(
+                getattr(user, "profile_color", None),
+            ),
             added_to_attachment_menu=getattr(user, "attach_menu_enabled", None),
             active_users_count=getattr(user, "bot_active_users", None),
             inline_need_location=getattr(user, "bot_inline_geo", None),
@@ -354,7 +358,7 @@ class User(Object, Update):
             can_read_all_group_messages=getattr(user, "bot_chat_history", None),
             has_main_web_app=getattr(user, "bot_has_main_app", None),
             raw=user,
-            client=client
+            client=client,
         )
 
     @staticmethod
@@ -387,7 +391,7 @@ class User(Object, Update):
         return {
             "status": status,
             "last_online_date": last_online_date,
-            "next_offline_date": next_offline_date
+            "next_offline_date": next_offline_date,
         }
 
     @staticmethod
@@ -396,7 +400,7 @@ class User(Object, Update):
             id=user_status.user_id,
             **User._parse_status(user_status.status),
             raw=user_status,
-            client=client
+            client=client,
         )
 
     async def archive(self):

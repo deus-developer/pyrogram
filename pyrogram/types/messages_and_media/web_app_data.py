@@ -17,7 +17,7 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrogram import raw
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class WebAppData(Object):
@@ -37,7 +37,7 @@ class WebAppData(Object):
         *,
         data: str,
         button_text: str,
-    ):
+    ) -> None:
         super().__init__()
 
         self.data = data
@@ -45,7 +45,4 @@ class WebAppData(Object):
 
     @staticmethod
     def _parse(action: "raw.types.MessageActionWebViewDataSentMe"):
-        return WebAppData(
-            data=action.data,
-            button_text=action.text
-        )
+        return WebAppData(data=action.data, button_text=action.text)

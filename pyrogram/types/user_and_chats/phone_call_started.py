@@ -17,7 +17,7 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrogram import raw
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class PhoneCallStarted(Object):
@@ -31,11 +31,7 @@ class PhoneCallStarted(Object):
             True, if call was a video call.
     """
 
-    def __init__(
-        self, *,
-        id: int,
-        is_video: bool
-    ):
+    def __init__(self, *, id: int, is_video: bool) -> None:
         super().__init__()
 
         self.id = id
@@ -43,7 +39,4 @@ class PhoneCallStarted(Object):
 
     @staticmethod
     def _parse(action: "raw.types.MessageActionPhoneCall") -> "PhoneCallStarted":
-        return PhoneCallStarted(
-            id=action.call_id,
-            is_video=action.video
-        )
+        return PhoneCallStarted(id=action.call_id, is_video=action.video)

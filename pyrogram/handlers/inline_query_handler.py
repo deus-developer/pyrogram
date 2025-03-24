@@ -16,7 +16,13 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Callable
+from collections.abc import Awaitable, Callable
+from typing import (
+    Any,
+    ClassVar,
+)
+
+import pyrogram
 
 from .handler import Handler
 
@@ -45,5 +51,14 @@ class InlineQueryHandler(Handler):
             The received inline query.
     """
 
-    def __init__(self, callback: Callable, filters=None):
+    event_type: ClassVar[str] = "inline_query"
+
+    def __init__(
+        self,
+        callback: Callable[
+            ["pyrogram.Client", "pyrogram.types.InlineQuery"],
+            Awaitable[Any],
+        ],
+        filters: "pyrogram.filters.Filter | None" = None,
+    ) -> None:
         super().__init__(callback, filters)

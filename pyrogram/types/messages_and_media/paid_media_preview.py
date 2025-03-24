@@ -17,8 +17,7 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrogram import types
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class PaidMediaPreview(Object):
@@ -42,11 +41,11 @@ class PaidMediaPreview(Object):
     def __init__(
         self,
         *,
-        width: int = None,
-        height: int = None,
-        duration: int = None,
-        thumbnail: "types.StrippedThumbnail" = None
-    ):
+        width: int | None = None,
+        height: int | None = None,
+        duration: int | None = None,
+        thumbnail: "types.StrippedThumbnail" = None,
+    ) -> None:
         super().__init__()
 
         self.width = width

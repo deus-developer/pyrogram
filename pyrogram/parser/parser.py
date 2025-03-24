@@ -20,30 +20,26 @@ from typing import Optional
 
 import pyrogram
 from pyrogram import enums
+
 from .html import HTML
-from .markdown import Markdown
 
 
 class Parser:
-    def __init__(self, client: Optional["pyrogram.Client"]):
+    def __init__(self, client: Optional["pyrogram.Client"]) -> None:
         self.client = client
         self.html = HTML(client)
-        self.markdown = Markdown(client)
 
-    async def parse(self, text: str, mode: Optional[enums.ParseMode] = None) -> dict:
+    async def parse(self, text: str, mode: enums.ParseMode | None = None) -> dict:
         text = str(text or "").strip()
 
         if mode is None:
-            if self.client:
-                mode = self.client.parse_mode
-            else:
-                mode = enums.ParseMode.DEFAULT
+            mode = self.client.parse_mode if self.client else enums.ParseMode.DEFAULT
 
         if mode == enums.ParseMode.DEFAULT:
-            return await self.markdown.parse(text)
+            return {"message": text, "entities": None}
 
         if mode == enums.ParseMode.MARKDOWN:
-            return await self.markdown.parse(text, True)
+            raise NotImplementedError
 
         if mode == enums.ParseMode.HTML:
             return await self.html.parse(text)
@@ -57,5 +53,4 @@ class Parser:
     def unparse(text: str, entities: list, is_html: bool) -> str:
         if is_html:
             return HTML.unparse(text, entities)
-        else:
-            return Markdown.unparse(text, entities)
+        raise NotImplementedError

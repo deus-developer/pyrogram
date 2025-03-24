@@ -17,7 +17,7 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrogram import raw
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class WriteAccessAllowed(Object):
@@ -29,7 +29,7 @@ class WriteAccessAllowed(Object):
 
         web_app_name (``str``, *optional*):
             Name of the Web App, if the access was granted when the Web App was launched from a link
-        
+
         from_attachment_menu (``bool``, *optional*):
             True, if the access was granted when the bot was added to the attachment or side menu
 
@@ -38,10 +38,10 @@ class WriteAccessAllowed(Object):
     def __init__(
         self,
         *,
-        from_request: bool = None,
-        web_app_name: str = None,
-        from_attachment_menu: bool = None,
-    ):
+        from_request: bool | None = None,
+        web_app_name: str | None = None,
+        from_attachment_menu: bool | None = None,
+    ) -> None:
         super().__init__()
 
         self.from_request = from_request

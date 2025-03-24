@@ -16,12 +16,10 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import AsyncGenerator, Optional
+from collections.abc import AsyncGenerator
 
 import pyrogram
-from pyrogram import raw, enums
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import enums, raw, types, utils
 
 
 class SearchGlobal:
@@ -29,9 +27,9 @@ class SearchGlobal:
         self: "pyrogram.Client",
         query: str = "",
         filter: "enums.MessagesFilter" = enums.MessagesFilter.EMPTY,
-        channels_only: Optional[bool] = None,
-        groups_only: Optional[bool] = None,
-        users_only: Optional[bool] = None,
+        channels_only: bool | None = None,
+        groups_only: bool | None = None,
+        users_only: bool | None = None,
         limit: int = 0,
     ) -> AsyncGenerator["types.Message", None]:
         """Search messages globally from all of your chats.
@@ -80,7 +78,9 @@ class SearchGlobal:
                     print(message.text)
 
                 # Search for recent photos from Global. Get the first 20 results
-                async for message in app.search_global(filter=enums.MessagesFilter.PHOTO, limit=20):
+                async for message in app.search_global(
+                    filter=enums.MessagesFilter.PHOTO, limit=20
+                ):
                     print(message.photo)
         """
         current = 0
@@ -107,11 +107,11 @@ class SearchGlobal:
                         broadcasts_only=channels_only,
                         groups_only=groups_only,
                         users_only=users_only,
-                        limit=limit
+                        limit=limit,
                     ),
-                    sleep_threshold=60
+                    sleep_threshold=60,
                 ),
-                replies=0
+                replies=0,
             )
 
             if not messages:

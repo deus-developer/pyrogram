@@ -20,7 +20,7 @@ import os
 
 import pyrogram
 from pyrogram import raw
-from pyrogram.utils import compute_password_hash, compute_password_check, btoi, itob
+from pyrogram.utils import btoi, compute_password_check, compute_password_hash, itob
 
 
 class ChangeCloudPassword:
@@ -28,7 +28,7 @@ class ChangeCloudPassword:
         self: "pyrogram.Client",
         current_password: str,
         new_password: str,
-        new_hint: str = ""
+        new_hint: str = "",
     ) -> bool:
         """Change your Two-Step Verification password (Cloud Password) with a new one.
 
@@ -57,7 +57,9 @@ class ChangeCloudPassword:
                 await app.change_cloud_password("current_password", "new_password")
 
                 # Change password and hint
-                await app.change_cloud_password("current_password", "new_password", new_hint="hint")
+                await app.change_cloud_password(
+                    "current_password", "new_password", new_hint="hint"
+                )
         """
         r = await self.invoke(raw.functions.account.GetPassword())
 
@@ -74,9 +76,9 @@ class ChangeCloudPassword:
                 new_settings=raw.types.account.PasswordInputSettings(
                     new_algo=r.new_algo,
                     new_password_hash=new_hash,
-                    hint=new_hint
-                )
-            )
+                    hint=new_hint,
+                ),
+            ),
         )
 
         return True

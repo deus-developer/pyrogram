@@ -15,10 +15,11 @@
 #
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
+from typing import Final
 
 # From https://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types.
 # Extended with extra mime types specific to Telegram.
-mime_types = """
+mime_types: Final[str] = """
 # This file maps Internet media types to unique file extension(s).
 # Although created for httpd, this file is used by many software systems
 # and has been placed in the public domain for unlimited redistribution.

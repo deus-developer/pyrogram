@@ -16,24 +16,23 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
+from collections.abc import AsyncGenerator
 from datetime import datetime
-from typing import Union, AsyncGenerator, Optional
 
 import pyrogram
-from pyrogram import types, raw, utils
+from pyrogram import raw, types, utils
 
 
 class GetChatPhotos:
     async def get_chat_photos(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         limit: int = 0,
-    ) -> Optional[
-        Union[
-            AsyncGenerator["types.Photo", None],
-            AsyncGenerator["types.Animation", None]
-        ]
-    ]:
+    ) -> (
+        AsyncGenerator["types.Photo", None]
+        | AsyncGenerator["types.Animation", None]
+        | None
+    ):
         """Get a chat or a user profile photos sequentially.
 
         .. include:: /_includes/usable-by/users-bots.rst
@@ -61,16 +60,18 @@ class GetChatPhotos:
 
         if isinstance(peer_id, raw.types.InputPeerChannel):
             r = await self.invoke(
-                raw.functions.channels.GetFullChannel(
-                    channel=peer_id
-                )
+                raw.functions.channels.GetFullChannel(channel=peer_id),
             )
 
-            current = types.Animation._parse_chat_animation(
-                self,
-                r.full_chat.chat_photo,
-                f"photo_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.mp4"
-            ) or types.Photo._parse(self, r.full_chat.chat_photo) or []
+            current = (
+                types.Animation._parse_chat_animation(
+                    self,
+                    r.full_chat.chat_photo,
+                    f"photo_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.mp4",
+                )
+                or types.Photo._parse(self, r.full_chat.chat_photo)
+                or []
+            )
 
             if current:
                 current = [current]
@@ -90,23 +91,26 @@ class GetChatPhotos:
                             limit=limit,
                             max_id=0,
                             min_id=0,
-                            hash=0
-                        )
-                    )
+                            hash=0,
+                        ),
+                    ),
                 )
 
                 extra = [message.new_chat_photo for message in r]
 
                 if extra:
                     if current:
-                        photos = (current + extra) if current[0].file_id != extra[0].file_id else extra
+                        photos = (
+                            (current + extra)
+                            if current[0].file_id != extra[0].file_id
+                            else extra
+                        )
                     else:
                         photos = extra
+                elif current:
+                    photos = current
                 else:
-                    if current:
-                        photos = current
-                    else:
-                        photos = []
+                    photos = []
 
             if not photos:
                 return
@@ -132,16 +136,17 @@ class GetChatPhotos:
                         user_id=peer_id,
                         offset=offset,
                         max_id=0,
-                        limit=limit
-                    )
+                        limit=limit,
+                    ),
                 )
 
                 photos = [
                     types.Animation._parse_chat_animation(
                         self,
                         photo,
-                        f"photo_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.mp4"
-                    ) or types.Photo._parse(self, photo)
+                        f"photo_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.mp4",
+                    )
+                    or types.Photo._parse(self, photo)
                     for photo in r.photos
                 ]
 

@@ -18,6 +18,7 @@
 
 import pyrogram
 from pyrogram import raw, types
+
 from .inline_query_result import InlineQueryResult
 
 
@@ -78,17 +79,17 @@ class InlineQueryResultVenue(InlineQueryResult):
         address: str,
         latitude: float,
         longitude: float,
-        id: str = None,
-        foursquare_id: str = None,
-        foursquare_type: str = None,
-        google_place_id: str = None,
-        google_place_type: str = None,
+        id: str | None = None,
+        foursquare_id: str | None = None,
+        foursquare_type: str | None = None,
+        google_place_id: str | None = None,
+        google_place_type: str | None = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
         input_message_content: "types.InputMessageContent" = None,
-        thumb_url: str = None,
+        thumb_url: str | None = None,
         thumb_width: int = 0,
-        thumb_height: int = 0
-    ):
+        thumb_height: int = 0,
+    ) -> None:
         super().__init__("venue", id, input_message_content, reply_markup)
 
         self.title = title
@@ -114,18 +115,22 @@ class InlineQueryResultVenue(InlineQueryResult):
                 else raw.types.InputBotInlineMessageMediaVenue(
                     geo_point=raw.types.InputGeoPoint(
                         lat=self.latitude,
-                        long=self.longitude
+                        long=self.longitude,
                     ),
                     title=self.title,
                     address=self.address,
                     provider=(
-                        "foursquare" if self.foursquare_id or self.foursquare_type
-                        else "google" if self.google_place_id or self.google_place_type
+                        "foursquare"
+                        if self.foursquare_id or self.foursquare_type
+                        else "google"
+                        if self.google_place_id or self.google_place_type
                         else ""
                     ),
                     venue_id=self.foursquare_id or self.google_place_id or "",
                     venue_type=self.foursquare_type or self.google_place_type or "",
-                    reply_markup=await self.reply_markup.write(client) if self.reply_markup else None
+                    reply_markup=await self.reply_markup.write(client)
+                    if self.reply_markup
+                    else None,
                 )
-            )
+            ),
         )

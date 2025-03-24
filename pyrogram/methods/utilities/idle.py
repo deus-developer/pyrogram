@@ -19,18 +19,20 @@
 import asyncio
 import logging
 import signal
-from signal import signal as signal_fn, SIGINT, SIGTERM, SIGABRT
+from signal import SIGABRT, SIGINT, SIGTERM
+from signal import signal as signal_fn
 
 log = logging.getLogger(__name__)
 
 # Signal number to name
 signals = {
-    k: v for v, k in signal.__dict__.items()
+    k: v
+    for v, k in signal.__dict__.items()
     if v.startswith("SIG") and not v.startswith("SIG_")
 }
 
 
-async def idle():
+async def idle() -> None:
     """Block the main script execution until a signal is received.
 
     This function will run indefinitely in order to block the main script execution and prevent it from
@@ -50,11 +52,7 @@ async def idle():
 
 
             async def main():
-                apps = [
-                    Client("account1"),
-                    Client("account2"),
-                    Client("account3")
-                ]
+                apps = [Client("account1"), Client("account2"), Client("account3")]
 
                 ...  # Set up handlers
 
@@ -71,8 +69,8 @@ async def idle():
     """
     task = None
 
-    def signal_handler(signum, __):
-        logging.info(f"Stop signal received ({signals[signum]}). Exiting...")
+    def signal_handler(signum, __) -> None:
+        log.info(f"Stop signal received ({signals[signum]}). Exiting...")
         task.cancel()
 
     for s in (SIGINT, SIGTERM, SIGABRT):

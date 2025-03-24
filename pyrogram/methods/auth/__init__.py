@@ -54,6 +54,6 @@ class Auth(
     SignIn,
     SignInBot,
     SignUp,
-    Terminate
+    Terminate,
 ):
     pass

@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional
 
 import pyrogram
 from pyrogram import raw, types
@@ -25,8 +24,8 @@ from pyrogram import raw, types
 class EnableStealthMode:
     async def enable_stealth_mode(
         self: "pyrogram.Client",
-        past: Optional[bool] = None,
-        future: Optional[bool] = None
+        past: bool | None = None,
+        future: bool | None = None,
     ) -> "types.StoriesStealthMode":
         """Activates stories stealth mode.
 
@@ -56,12 +55,10 @@ class EnableStealthMode:
         """
 
         r = await self.invoke(
-            raw.functions.stories.ActivateStealthMode(
-                past=past,
-                future=future
-            )
+            raw.functions.stories.ActivateStealthMode(past=past, future=future),
         )
 
         for i in r.updates:
             if isinstance(i, raw.types.UpdateStoriesStealthMode):
                 return types.StoriesStealthMode._parse(i.stealth_mode)
+        return None

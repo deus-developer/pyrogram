@@ -23,8 +23,8 @@ from .boosts_status import BoostsStatus
 from .business_message import BusinessMessage
 from .chat_boost import ChatBoost
 from .checked_gift_code import CheckedGiftCode
-from .contact_registered import ContactRegistered
 from .contact import Contact
+from .contact_registered import ContactRegistered
 from .dice import Dice
 from .document import Document
 from .forum_topic import ForumTopic
@@ -35,12 +35,14 @@ from .forum_topic_reopened import ForumTopicReopened
 from .game import Game
 from .general_forum_topic_hidden import GeneralTopicHidden
 from .general_forum_topic_unhidden import GeneralTopicUnhidden
+from .gift import Gift
+from .gift_attribute import GiftAttribute
 from .gift_code import GiftCode
-from .invoice import Invoice
 from .giveaway import Giveaway
 from .giveaway_completed import GiveawayCompleted
 from .giveaway_created import GiveawayCreated
 from .giveaway_winners import GiveawayWinners
+from .invoice import Invoice
 from .location import Location
 from .media_area import MediaArea
 from .message import Message
@@ -56,8 +58,6 @@ from .poll_option import PollOption
 from .reaction import Reaction
 from .refunded_payment import RefundedPayment
 from .screenshot_taken import ScreenshotTaken
-from .gift_attribute import GiftAttribute
-from .gift import Gift
 from .sticker import Sticker
 from .story import Story
 from .stripped_thumbnail import StrippedThumbnail
@@ -79,8 +79,8 @@ __all__ = [
     "BusinessMessage",
     "ChatBoost",
     "CheckedGiftCode",
-    "ContactRegistered",
     "Contact",
+    "ContactRegistered",
     "Dice",
     "Document",
     "ForumTopic",
@@ -91,12 +91,14 @@ __all__ = [
     "Game",
     "GeneralTopicHidden",
     "GeneralTopicUnhidden",
+    "Gift",
+    "GiftAttribute",
     "GiftCode",
     "Giveaway",
-    "Invoice",
     "GiveawayCompleted",
     "GiveawayCreated",
     "GiveawayWinners",
+    "Invoice",
     "Location",
     "MediaArea",
     "Message",
@@ -112,8 +114,6 @@ __all__ = [
     "Reaction",
     "RefundedPayment",
     "ScreenshotTaken",
-    "GiftAttribute",
-    "Gift",
     "Sticker",
     "Story",
     "StrippedThumbnail",

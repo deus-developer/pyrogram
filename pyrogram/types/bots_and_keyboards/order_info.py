@@ -19,8 +19,7 @@
 from typing import Optional
 
 from pyrogram import types
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class OrderInfo(Object):
@@ -44,11 +43,11 @@ class OrderInfo(Object):
     def __init__(
         self,
         *,
-        name: Optional[str] = None,
-        phone_number: Optional[str] = None,
-        email: Optional[str] = None,
-        shipping_address: Optional["types.ShippingAddress"] = None
-    ):
+        name: str | None = None,
+        phone_number: str | None = None,
+        email: str | None = None,
+        shipping_address: Optional["types.ShippingAddress"] = None,
+    ) -> None:
         super().__init__()
 
         self.name = name

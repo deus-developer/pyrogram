@@ -17,11 +17,10 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Dict
 
 import pyrogram
 from pyrogram import raw, types, utils
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class ChatJoiner(Object):
@@ -49,11 +48,11 @@ class ChatJoiner(Object):
         *,
         client: "pyrogram.Client",
         user: "types.User",
-        date: datetime = None,
-        bio: str = None,
-        pending: bool = None,
+        date: datetime | None = None,
+        bio: str | None = None,
+        pending: bool | None = None,
         approved_by: "types.User" = None,
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.user = user
@@ -66,7 +65,7 @@ class ChatJoiner(Object):
     def _parse(
         client: "pyrogram.Client",
         joiner: "raw.base.ChatInviteImporter",
-        users: Dict[int, "raw.base.User"],
+        users: dict[int, "raw.base.User"],
     ) -> "ChatJoiner":
         return ChatJoiner(
             user=types.User._parse(client, users[joiner.user_id]),
@@ -78,5 +77,5 @@ class ChatJoiner(Object):
                 if joiner.approved_by
                 else None
             ),
-            client=client
+            client=client,
         )

@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, Optional
 
 import pyrogram
 from pyrogram import raw, utils
@@ -25,11 +24,11 @@ from pyrogram import raw, utils
 class RequestCallbackAnswer:
     async def request_callback_answer(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         message_id: int,
-        callback_data: Union[str, bytes],
-        password: Optional[str] = None,
-        timeout: int = 10
+        callback_data: str | bytes,
+        password: str | None = None,
+        timeout: int = 10,
     ):
         """Request a callback answer from bots.
         This is the equivalent of clicking an inline button containing callback data.
@@ -71,12 +70,14 @@ class RequestCallbackAnswer:
         """
 
         # Telegram only wants bytes, but we are allowed to pass strings too.
-        data = bytes(callback_data, "utf-8") if isinstance(callback_data, str) else callback_data
+        data = (
+            bytes(callback_data, "utf-8")
+            if isinstance(callback_data, str)
+            else callback_data
+        )
 
         if password:
-            r = await self.invoke(
-                raw.functions.account.GetPassword()
-            )
+            r = await self.invoke(raw.functions.account.GetPassword())
             password = utils.compute_password_check(r, password)
 
         return await self.invoke(
@@ -84,8 +85,8 @@ class RequestCallbackAnswer:
                 peer=await self.resolve_peer(chat_id),
                 msg_id=message_id,
                 data=data,
-                password=password
+                password=password,
             ),
             retries=0,
-            timeout=timeout
+            timeout=timeout,
         )

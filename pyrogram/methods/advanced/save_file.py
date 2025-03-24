@@ -18,18 +18,17 @@
 
 import asyncio
 import functools
-import inspect
 import io
 import logging
 import math
 import os
+from collections.abc import Callable
 from hashlib import md5
 from pathlib import PurePath
-from typing import Union, BinaryIO, Callable
+from typing import BinaryIO
 
 import pyrogram
-from pyrogram import StopTransmission
-from pyrogram import raw
+from pyrogram import StopTransmission, raw
 from pyrogram.session import Session
 
 log = logging.getLogger(__name__)
@@ -38,11 +37,11 @@ log = logging.getLogger(__name__)
 class SaveFile:
     async def save_file(
         self: "pyrogram.Client",
-        path: Union[str, BinaryIO],
-        file_id: int = None,
+        path: str | BinaryIO,
+        file_id: int | None = None,
         file_part: int = 0,
-        progress: Callable = None,
-        progress_args: tuple = ()
+        progress: Callable | None = None,
+        progress_args: tuple = (),
     ):
         """Upload a file onto Telegram servers, without actually sending the message to anyone.
         Useful whenever an InputFile type is required.
@@ -94,11 +93,13 @@ class SaveFile:
         Raises:
             RPCError: In case of a Telegram RPC error.
         """
-        async with self.save_file_semaphore:
-            if path is None:
-                return None
 
-            async def worker(session):
+        if path is None:
+            return None
+
+        async with self.save_file_semaphore:
+
+            async def worker(session) -> None:
                 while True:
                     data = await queue.get()
 
@@ -112,12 +113,14 @@ class SaveFile:
 
             part_size = 512 * 1024
 
-            if isinstance(path, (str, PurePath)):
-                fp = open(path, "rb")
+            if isinstance(path, str | PurePath):
+                fp = open(path, "rb")  # TODO: thread pool
             elif isinstance(path, io.IOBase):
                 fp = path
             else:
-                raise ValueError("Invalid file. Expected a file path as string or a binary (not text) file pointer")
+                raise ValueError(
+                    "Invalid file. Expected a file path as string or a binary (not text) file pointer",
+                )
 
             file_name = getattr(fp, "name", "file.jpg")
 
@@ -128,15 +131,14 @@ class SaveFile:
             if file_size == 0:
                 raise ValueError("File size equals to 0 B")
 
-            if self.me and self.me.is_premium:
-                file_size_limit_mib = 4000
-            else:
-                file_size_limit_mib = 2000
+            file_size_limit_mib = 4000 if self.me and self.me.is_premium else 2000
 
             if file_size > file_size_limit_mib * 1024 * 1024:
-                raise ValueError(f"Can't upload files bigger than {file_size_limit_mib} MiB")
+                raise ValueError(
+                    f"Can't upload files bigger than {file_size_limit_mib} MiB",
+                )
 
-            file_total_parts = int(math.ceil(file_size / part_size))
+            file_total_parts = math.ceil(file_size / part_size)
             is_big = file_size > 10 * 1024 * 1024
             workers_count = 4 if is_big else 1
             is_missing_part = file_id is not None
@@ -147,12 +149,17 @@ class SaveFile:
             session = self.media_sessions.get(dc_id)
             if not session:
                 session = self.media_sessions[dc_id] = Session(
-                    self, dc_id, await self.storage.auth_key(),
-                    await self.storage.test_mode(), is_media=True
+                    self,
+                    dc_id,
+                    await self.storage.auth_key(),
+                    await self.storage.test_mode(),
+                    is_media=True,
                 )
                 await session.start()
 
-            workers = [self.loop.create_task(worker(session)) for _ in range(workers_count)]
+            workers = [
+                self.loop.create_task(worker(session)) for _ in range(workers_count)
+            ]
             queue = asyncio.Queue(1)
 
             try:
@@ -163,7 +170,9 @@ class SaveFile:
 
                     if not chunk:
                         if not is_big and not is_missing_part:
-                            md5_sum = "".join([hex(i)[2:].zfill(2) for i in md5_sum.digest()])
+                            md5_sum = "".join(
+                                [hex(i)[2:].zfill(2) for i in md5_sum.digest()],
+                            )
                         break
 
                     if is_big:
@@ -171,19 +180,19 @@ class SaveFile:
                             file_id=file_id,
                             file_part=file_part,
                             file_total_parts=file_total_parts,
-                            bytes=chunk
+                            bytes=chunk,
                         )
                     else:
                         rpc = raw.functions.upload.SaveFilePart(
                             file_id=file_id,
                             file_part=file_part,
-                            bytes=chunk
+                            bytes=chunk,
                         )
 
                     await queue.put(rpc)
 
                     if is_missing_part:
-                        return
+                        return None
 
                     if not is_big and not is_missing_part:
                         md5_sum.update(chunk)
@@ -195,13 +204,10 @@ class SaveFile:
                             progress,
                             min(file_part * part_size, file_size),
                             file_size,
-                            *progress_args
+                            *progress_args,
                         )
 
-                        if inspect.iscoroutinefunction(progress):
-                            await func()
-                        else:
-                            await self.loop.run_in_executor(self.executor, func)
+                        await func()
             except StopTransmission:
                 raise
             except Exception as e:
@@ -212,20 +218,18 @@ class SaveFile:
                         id=file_id,
                         parts=file_total_parts,
                         name=file_name,
-
                     )
-                else:
-                    return raw.types.InputFile(
-                        id=file_id,
-                        parts=file_total_parts,
-                        name=file_name,
-                        md5_checksum=md5_sum
-                    )
+                return raw.types.InputFile(
+                    id=file_id,
+                    parts=file_total_parts,
+                    name=file_name,
+                    md5_checksum=md5_sum,
+                )
             finally:
                 for _ in workers:
                     await queue.put(None)
 
                 await asyncio.gather(*workers)
 
-                if isinstance(path, (str, PurePath)):
+                if isinstance(path, str | PurePath):
                     fp.close()

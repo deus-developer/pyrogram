@@ -17,7 +17,6 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-import os
 import sqlite3
 from pathlib import Path
 
@@ -51,12 +50,12 @@ CREATE TABLE update_state
 class FileStorage(SQLiteStorage):
     FILE_EXTENSION = ".session"
 
-    def __init__(self, name: str, workdir: Path):
-        super().__init__(name)
+    def __init__(self, name: str, workdir: Path) -> None:
+        super().__init__(name.removesuffix(self.FILE_EXTENSION))
 
         self.database = workdir / (self.name + self.FILE_EXTENSION)
 
-    def update(self):
+    def update(self) -> None:
         version = self.version()
 
         if version == 1:
@@ -91,7 +90,7 @@ class FileStorage(SQLiteStorage):
 
         self.version(version)
 
-    async def open(self):
+    async def open(self) -> None:
         path = self.database
         file_exists = path.is_file()
 
@@ -105,5 +104,5 @@ class FileStorage(SQLiteStorage):
         with self.conn:
             self.conn.execute("VACUUM")
 
-    async def delete(self):
-        os.remove(self.database)
+    async def delete(self) -> None:
+        self.database.unlink(missing_ok=True)

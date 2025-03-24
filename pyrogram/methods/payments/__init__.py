@@ -19,18 +19,19 @@
 from .apply_gift_code import ApplyGiftCode
 from .check_gift_code import CheckGiftCode
 from .convert_gift import ConvertGift
+from .get_available_gifts import GetAvailableGifts
+from .get_chat_gifts import GetChatGifts
+from .get_chat_gifts_count import GetChatGiftsCount
 from .get_payment_form import GetPaymentForm
 from .get_stars_balance import GetStarsBalance
 from .get_upgraded_gift import GetUpgradedGift
-from .get_available_gifts import GetAvailableGifts
-from .get_chat_gifts_count import GetChatGiftsCount
-from .get_chat_gifts import GetChatGifts
 from .hide_gift import HideGift
-from .send_payment_form import SendPaymentForm
 from .send_gift import SendGift
+from .send_payment_form import SendPaymentForm
 from .show_gift import ShowGift
 from .transfer_gift import TransferGift
 from .upgrade_gift import UpgradeGift
+
 
 class Payments(
     ApplyGiftCode,
@@ -47,6 +48,6 @@ class Payments(
     SendGift,
     ShowGift,
     TransferGift,
-    UpgradeGift
+    UpgradeGift,
 ):
     pass

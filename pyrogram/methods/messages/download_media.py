@@ -16,14 +16,14 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-import asyncio
 import os
+from collections.abc import Callable
 from datetime import datetime
-from typing import Union, Optional, Callable, BinaryIO, List
+from typing import BinaryIO, Union
 
 import pyrogram
 from pyrogram import types, utils
-from pyrogram.file_id import FileId, FileType, PHOTO_TYPES
+from pyrogram.file_id import PHOTO_TYPES, FileId, FileType
 
 DEFAULT_DOWNLOAD_DIR = "downloads/"
 
@@ -46,14 +46,14 @@ class DownloadMedia:
             "types.PaidMediaInfo",
             "types.Thumbnail",
             "types.StrippedThumbnail",
-            "types.PaidMediaPreview"
+            "types.PaidMediaPreview",
         ],
         file_name: str = DEFAULT_DOWNLOAD_DIR,
         in_memory: bool = False,
         block: bool = True,
-        progress: Callable = None,
-        progress_args: tuple = ()
-    ) -> Optional[Union[Union[str, BinaryIO], List[Union[str, BinaryIO]]]]:
+        progress: Callable | None = None,
+        progress_args: tuple = (),
+    ) -> str | BinaryIO | list[str | BinaryIO] | None:
         """Download the media from a message.
 
         .. include:: /_includes/usable-by/users-bots.rst
@@ -124,9 +124,11 @@ class DownloadMedia:
                 # Download document of a message
                 await app.download_media(message.document)
 
+
                 # Keep track of the progress while downloading
                 async def progress(current, total):
                     print(f"{current * 100 / total:.1f}%")
+
 
                 await app.download_media(message, progress=progress)
 
@@ -139,8 +141,18 @@ class DownloadMedia:
                 file_name = file.name
                 file_bytes = bytes(file.getbuffer())
         """
-        available_media = ("audio", "document", "photo", "sticker", "animation", "video", "voice", "video_note",
-                           "new_chat_photo", "paid_media")
+        available_media = (
+            "audio",
+            "document",
+            "photo",
+            "sticker",
+            "animation",
+            "video",
+            "voice",
+            "video_note",
+            "new_chat_photo",
+            "paid_media",
+        )
 
         media = None
 
@@ -184,7 +196,10 @@ class DownloadMedia:
                 raise ValueError("Bots can't see and download stories")
 
             media = getattr(message, message.media.value, None)
-        elif isinstance(message, types.PaidMediaInfo) and not isinstance(message.media[0], types.PaidMediaPreview):
+        elif isinstance(message, types.PaidMediaInfo) and not isinstance(
+            message.media[0],
+            types.PaidMediaPreview,
+        ):
             results = []
 
             for item in message.media:
@@ -201,14 +216,14 @@ class DownloadMedia:
                     results.append(result)
 
             return results or None
-        elif isinstance(message, (types.StrippedThumbnail, types.PaidMediaPreview)):
-            data = message.data if isinstance(message, types.StrippedThumbnail) else message.thumbnail.data
-
-            thumb = utils.from_inline_bytes(
-                utils.expand_inline_bytes(
-                    data
-                )
+        elif isinstance(message, types.StrippedThumbnail | types.PaidMediaPreview):
+            data = (
+                message.data
+                if isinstance(message, types.StrippedThumbnail)
+                else message.thumbnail.data
             )
+
+            thumb = utils.from_inline_bytes(utils.expand_inline_bytes(data))
 
             if in_memory:
                 return thumb
@@ -221,22 +236,18 @@ class DownloadMedia:
 
             os.makedirs(directory, exist_ok=True) if not in_memory else None
 
+            # TODO: thread pool
             with open(os.path.join(directory, file_name), "wb") as file:
                 file.write(thumb.getbuffer())
 
             return os.path.join(directory, file_name)
-        elif isinstance(message, str):
-            media = message
-        elif hasattr(message, "file_id"):
+        elif isinstance(message, str) or hasattr(message, "file_id"):
             media = message
 
         if not media:
             raise ValueError("This message doesn't contain any downloadable media")
 
-        if isinstance(media, str):
-            file_id_str = media
-        else:
-            file_id_str = media.file_id
+        file_id_str = media if isinstance(media, str) else media.file_id
 
         file_id_obj = FileId.decode(file_id_str)
 
@@ -274,14 +285,17 @@ class DownloadMedia:
                 FileType(file_id_obj.file_type).name.lower(),
                 (date or datetime.now()).strftime("%Y-%m-%d_%H-%M-%S"),
                 self.rnd_id(),
-                extension
+                extension,
             )
 
-        downloader = self.handle_download(
-            (file_id_obj, directory, file_name, in_memory, file_size, progress, progress_args)
+        return await self.handle_download(
+            (
+                file_id_obj,
+                directory,
+                file_name,
+                in_memory,
+                file_size,
+                progress,
+                progress_args,
+            ),
         )
-
-        if block:
-            return await downloader
-        else:
-            asyncio.get_event_loop().create_task(downloader)

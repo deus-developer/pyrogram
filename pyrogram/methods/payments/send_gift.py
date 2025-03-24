@@ -17,22 +17,22 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from typing import Optional, Union, List
+from typing import Optional
 
 import pyrogram
-from pyrogram import raw, types, enums, utils
+from pyrogram import enums, raw, types, utils
 
 
 class SendGift:
     async def send_gift(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         gift_id: int,
-        text: Optional[str] = None,
+        text: str | None = None,
         parse_mode: Optional["enums.ParseMode"] = None,
-        entities: Optional[List["types.MessageEntity"]] = None,
-        hide_my_name: Optional[bool] = None,
-        pay_for_upgrade: Optional[bool] = None
+        entities: list["types.MessageEntity"] | None = None,
+        hide_my_name: bool | None = None,
+        pay_for_upgrade: bool | None = None,
     ) -> bool:
         """Send star gift.
 
@@ -79,27 +79,24 @@ class SendGift:
         """
         peer = await self.resolve_peer(chat_id)
 
-        text, entities = (await utils.parse_text_entities(self, text, parse_mode, entities)).values()
+        text, entities = (
+            await utils.parse_text_entities(self, text, parse_mode, entities)
+        ).values()
 
         invoice = raw.types.InputInvoiceStarGift(
             peer=peer,
             gift_id=gift_id,
             hide_name=hide_my_name,
             include_upgrade=pay_for_upgrade,
-            message=raw.types.TextWithEntities(text=text, entities=entities or []) if text else None
+            message=raw.types.TextWithEntities(text=text, entities=entities or [])
+            if text
+            else None,
         )
 
-        form = await self.invoke(
-            raw.functions.payments.GetPaymentForm(
-                invoice=invoice
-            )
-        )
+        form = await self.invoke(raw.functions.payments.GetPaymentForm(invoice=invoice))
 
         await self.invoke(
-            raw.functions.payments.SendStarsForm(
-                form_id=form.form_id,
-                invoice=invoice
-            )
+            raw.functions.payments.SendStarsForm(form_id=form.form_id, invoice=invoice),
         )
 
         return True

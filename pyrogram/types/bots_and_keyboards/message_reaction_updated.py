@@ -17,12 +17,11 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Optional, Dict, List
 
 import pyrogram
 from pyrogram import raw, types, utils
-from ..object import Object
-from ..update import Update
+from pyrogram.types.object import Object
+from pyrogram.types.update import Update
 
 
 class MessageReactionUpdated(Object, Update):
@@ -64,9 +63,9 @@ class MessageReactionUpdated(Object, Update):
         user: "types.User",
         actor_chat: "types.Chat",
         date: datetime,
-        old_reaction: List["types.Reaction"],
-        new_reaction: List["types.Reaction"]
-    ):
+        old_reaction: list["types.Reaction"],
+        new_reaction: list["types.Reaction"],
+    ) -> None:
         super().__init__(client)
 
         self.chat = chat
@@ -81,8 +80,8 @@ class MessageReactionUpdated(Object, Update):
     def _parse(
         client: "pyrogram.Client",
         update: "raw.types.UpdateBotMessageReaction",
-        users: Dict[int, "raw.types.User"],
-        chats: Dict[int, "raw.types.Chat"]
+        users: dict[int, "raw.types.User"],
+        chats: dict[int, "raw.types.Chat"],
     ) -> "MessageReactionUpdated":
         peer_id = utils.get_peer_id(update.peer)
         raw_peer_id = utils.get_raw_peer_id(update.peer)
@@ -101,7 +100,10 @@ class MessageReactionUpdated(Object, Update):
         if actor_peer_id > 0:
             user = types.User._parse(client, users[raw_actor_peer_id])
         else:
-            actor_chat = types.Chat._parse_channel_chat(client, chats[raw_actor_peer_id])
+            actor_chat = types.Chat._parse_channel_chat(
+                client,
+                chats[raw_actor_peer_id],
+            )
 
         return MessageReactionUpdated(
             client=client,
@@ -111,15 +113,11 @@ class MessageReactionUpdated(Object, Update):
             actor_chat=actor_chat,
             date=utils.timestamp_to_datetime(update.date),
             old_reaction=[
-                types.Reaction._parse(
-                    client,
-                    reaction
-                ) for reaction in update.old_reactions
+                types.Reaction._parse(client, reaction)
+                for reaction in update.old_reactions
             ],
             new_reaction=[
-                types.Reaction._parse(
-                    client,
-                    reaction
-                ) for reaction in update.new_reactions
-            ]
+                types.Reaction._parse(client, reaction)
+                for reaction in update.new_reactions
+            ],
         )

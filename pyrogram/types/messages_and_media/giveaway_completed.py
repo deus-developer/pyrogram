@@ -16,11 +16,11 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
+import contextlib
+
 import pyrogram
-
-from pyrogram import raw, types, errors
-from ..object import Object
-
+from pyrogram import errors, raw, types
+from pyrogram.types.object import Object
 
 
 class GiveawayCompleted(Object):
@@ -49,11 +49,11 @@ class GiveawayCompleted(Object):
         *,
         client: "pyrogram.Client" = None,
         winner_count: int,
-        unclaimed_prize_count: int = None,
-        giveaway_message_id: int = None,
+        unclaimed_prize_count: int | None = None,
+        giveaway_message_id: int | None = None,
         giveaway_message: "types.Message" = None,
-        is_star_giveaway: bool = None
-    ):
+        is_star_giveaway: bool | None = None,
+    ) -> None:
         super().__init__(client)
 
         self.winner_count = winner_count
@@ -62,28 +62,25 @@ class GiveawayCompleted(Object):
         self.giveaway_message = giveaway_message
         self.is_star_giveaway = is_star_giveaway
 
-
     @staticmethod
     async def _parse(
         client,
         giveaway_results: "raw.types.MessageActionGiveawayResults",
         chat: "types.Chat" = None,
-        message_id: int = None
+        message_id: int | None = None,
     ) -> "GiveawayCompleted":
         if not isinstance(giveaway_results, raw.types.MessageActionGiveawayResults):
-            return
+            return None
 
         giveaway_message = None
 
         if chat and message_id:
-            try:
+            with contextlib.suppress(errors.ChannelPrivate, errors.ChannelInvalid):
                 giveaway_message = await client.get_messages(
                     chat_id=chat.id,
                     message_ids=message_id,
-                    replies=0
+                    replies=0,
                 )
-            except (errors.ChannelPrivate, errors.ChannelInvalid):
-                pass
 
         return GiveawayCompleted(
             winner_count=giveaway_results.winners_count,

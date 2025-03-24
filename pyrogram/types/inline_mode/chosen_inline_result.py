@@ -17,11 +17,9 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
-from pyrogram import utils
-from ..object import Object
-from ..update import Update
+from pyrogram import raw, types, utils
+from pyrogram.types.object import Object
+from pyrogram.types.update import Update
 
 
 class ChosenInlineResult(Object, Update):
@@ -59,8 +57,8 @@ class ChosenInlineResult(Object, Update):
         from_user: "types.User",
         query: str,
         location: "types.Location" = None,
-        inline_message_id: str = None
-    ):
+        inline_message_id: str | None = None,
+    ) -> None:
         super().__init__(client)
 
         self.result_id = result_id
@@ -70,7 +68,11 @@ class ChosenInlineResult(Object, Update):
         self.inline_message_id = inline_message_id
 
     @staticmethod
-    def _parse(client, chosen_inline_result: raw.types.UpdateBotInlineSend, users) -> "ChosenInlineResult":
+    def _parse(
+        client,
+        chosen_inline_result: raw.types.UpdateBotInlineSend,
+        users,
+    ) -> "ChosenInlineResult":
         return ChosenInlineResult(
             result_id=str(chosen_inline_result.id),
             from_user=types.User._parse(client, users[chosen_inline_result.user_id]),
@@ -78,9 +80,11 @@ class ChosenInlineResult(Object, Update):
             location=types.Location(
                 longitude=chosen_inline_result.geo.long,
                 latitude=chosen_inline_result.geo.lat,
-                client=client
-            ) if chosen_inline_result.geo else None,
-            inline_message_id=utils.pack_inline_message_id(
-                chosen_inline_result.msg_id
-            ) if getattr(chosen_inline_result, "msg_id", None) else None
+                client=client,
+            )
+            if chosen_inline_result.geo
+            else None,
+            inline_message_id=utils.pack_inline_message_id(chosen_inline_result.msg_id)
+            if getattr(chosen_inline_result, "msg_id", None)
+            else None,
         )

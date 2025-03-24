@@ -16,11 +16,10 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Iterable
+from collections.abc import Iterable
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class AnswerInlineQuery:
@@ -33,7 +32,7 @@ class AnswerInlineQuery:
         is_personal: bool = False,
         next_offset: str = "",
         switch_pm_text: str = "",
-        switch_pm_parameter: str = ""
+        switch_pm_parameter: str = "",
     ):
         """Send answers to an inline query.
 
@@ -86,14 +85,19 @@ class AnswerInlineQuery:
         Example:
             .. code-block:: python
 
-                from pyrogram.types import InlineQueryResultArticle, InputTextMessageContent
+                from pyrogram.types import (
+                    InlineQueryResultArticle,
+                    InputTextMessageContent,
+                )
 
                 await app.answer_inline_query(
                     inline_query_id,
                     results=[
                         InlineQueryResultArticle(
-                            "Title",
-                            InputTextMessageContent("Message content"))])
+                            "Title", InputTextMessageContent("Message content")
+                        )
+                    ],
+                )
         """
 
         return await self.invoke(
@@ -106,7 +110,9 @@ class AnswerInlineQuery:
                 next_offset=next_offset or None,
                 switch_pm=raw.types.InlineBotSwitchPM(
                     text=switch_pm_text,
-                    start_param=switch_pm_parameter
-                ) if switch_pm_text else None
-            )
+                    start_param=switch_pm_parameter,
+                )
+                if switch_pm_text
+                else None,
+            ),
         )

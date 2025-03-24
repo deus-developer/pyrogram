@@ -19,9 +19,9 @@
 from typing import Optional
 
 import pyrogram
-from pyrogram import types, raw
-from ..object import Object
-from ..update import Update
+from pyrogram import raw, types
+from pyrogram.types.object import Object
+from pyrogram.types.update import Update
 
 
 class ShippingQuery(Object, Update):
@@ -48,8 +48,8 @@ class ShippingQuery(Object, Update):
         id: str,
         from_user: "types.User",
         invoice_payload: str,
-        shipping_address: Optional["types.ShippingAddress"] = None
-    ):
+        shipping_address: Optional["types.ShippingAddress"] = None,
+    ) -> None:
         super().__init__(client)
 
         self.id = id
@@ -61,7 +61,7 @@ class ShippingQuery(Object, Update):
     async def _parse(
         client: "pyrogram.Client",
         shipping_query: "raw.types.UpdateBotShippingQuery",
-        users: dict
+        users: dict,
     ) -> "ShippingQuery":
         # Try to decode shipping query payload into string. If that fails, fallback to bytes instead of decoding by
         # ignoring/replacing errors, this way, button clicks will still work.
@@ -74,15 +74,17 @@ class ShippingQuery(Object, Update):
             id=str(shipping_query.query_id),
             from_user=types.User._parse(client, users[shipping_query.user_id]),
             invoice_payload=payload,
-            shipping_address=types.ShippingAddress._parse(shipping_query.shipping_address),
-            client=client
+            shipping_address=types.ShippingAddress._parse(
+                shipping_query.shipping_address,
+            ),
+            client=client,
         )
 
     async def answer(
         self,
         ok: bool,
         shipping_options: "types.ShippingOptions" = None,
-        error_message: str = None
+        error_message: str | None = None,
     ):
         """Bound method *answer* of :obj:`~pyrogram.types.ShippingQuery`.
 
@@ -90,10 +92,7 @@ class ShippingQuery(Object, Update):
 
         .. code-block:: python
 
-            await client.answer_shipping_query(
-                shipping_query.id,
-                ok=True
-            )
+            await client.answer_shipping_query(shipping_query.id, ok=True)
 
         Example:
             .. code-block:: python
@@ -117,5 +116,5 @@ class ShippingQuery(Object, Update):
             shipping_query_id=self.id,
             ok=ok,
             shipping_options=shipping_options,
-            error_message=error_message
+            error_message=error_message,
         )

@@ -17,15 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+from collections.abc import Callable
 from datetime import datetime
-from typing import Union, BinaryIO, Optional, Callable, List
+from typing import BinaryIO, Optional, Union
 
 import pyrogram
-from pyrogram import StopTransmission
-from pyrogram import raw
-from pyrogram import types
-from pyrogram import utils
-from pyrogram import enums
+from pyrogram import StopTransmission, enums, raw, types, utils
 from pyrogram.errors import FilePartMissing
 from pyrogram.file_id import FileType
 
@@ -33,34 +30,34 @@ from pyrogram.file_id import FileType
 class SendVideoNote:
     async def send_video_note(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        video_note: Union[str, BinaryIO],
+        chat_id: int | str,
+        video_note: str | BinaryIO,
         duration: int = 0,
         length: int = 1,
-        thumb: Union[str, BinaryIO] = None,
-        disable_notification: bool = None,
-        message_thread_id: int = None,
-        effect_id: int = None,
-        reply_to_message_id: int = None,
-        reply_to_chat_id: Union[int, str] = None,
-        reply_to_story_id: int = None,
-        quote_text: str = None,
+        thumb: str | BinaryIO | None = None,
+        disable_notification: bool | None = None,
+        message_thread_id: int | None = None,
+        effect_id: int | None = None,
+        reply_to_message_id: int | None = None,
+        reply_to_chat_id: int | str | None = None,
+        reply_to_story_id: int | None = None,
+        quote_text: str | None = None,
         parse_mode: Optional["enums.ParseMode"] = None,
-        quote_entities: List["types.MessageEntity"] = None,
-        quote_offset: int = None,
-        schedule_date: datetime = None,
-        protect_content: bool = None,
-        view_once: bool = None,
-        business_connection_id: str = None,
-        allow_paid_broadcast: bool = None,
+        quote_entities: list["types.MessageEntity"] | None = None,
+        quote_offset: int | None = None,
+        schedule_date: datetime | None = None,
+        protect_content: bool | None = None,
+        view_once: bool | None = None,
+        business_connection_id: str | None = None,
+        allow_paid_broadcast: bool | None = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply"
+            "types.ForceReply",
         ] = None,
-        progress: Callable = None,
-        progress_args: tuple = ()
+        progress: Callable | None = None,
+        progress_args: tuple = (),
     ) -> Optional["types.Message"]:
         """Send video messages.
 
@@ -193,7 +190,11 @@ class SendVideoNote:
             if isinstance(video_note, str):
                 if os.path.isfile(video_note):
                     thumb = await self.save_file(thumb)
-                    file = await self.save_file(video_note, progress=progress, progress_args=progress_args)
+                    file = await self.save_file(
+                        video_note,
+                        progress=progress,
+                        progress_args=progress_args,
+                    )
                     media = raw.types.InputMediaUploadedDocument(
                         mime_type=self.guess_mime_type(video_note) or "video/mp4",
                         file=file,
@@ -203,16 +204,23 @@ class SendVideoNote:
                                 round_message=True,
                                 duration=duration,
                                 w=length,
-                                h=length
-                            )
+                                h=length,
+                            ),
                         ],
-                        ttl_seconds=(1 << 31) - 1 if view_once else None
+                        ttl_seconds=(1 << 31) - 1 if view_once else None,
                     )
                 else:
-                    media = utils.get_input_media_from_file_id(video_note, FileType.VIDEO_NOTE)
+                    media = utils.get_input_media_from_file_id(
+                        video_note,
+                        FileType.VIDEO_NOTE,
+                    )
             else:
                 thumb = await self.save_file(thumb)
-                file = await self.save_file(video_note, progress=progress, progress_args=progress_args)
+                file = await self.save_file(
+                    video_note,
+                    progress=progress,
+                    progress_args=progress_args,
+                )
                 media = raw.types.InputMediaUploadedDocument(
                     mime_type=self.guess_mime_type(video_note.name) or "video/mp4",
                     file=file,
@@ -222,13 +230,20 @@ class SendVideoNote:
                             round_message=True,
                             duration=duration,
                             w=length,
-                            h=length
-                        )
+                            h=length,
+                        ),
                     ],
-                    ttl_seconds=(1 << 31) - 1 if view_once else None
+                    ttl_seconds=(1 << 31) - 1 if view_once else None,
                 )
 
-            quote_text, quote_entities = (await utils.parse_text_entities(self, quote_text, parse_mode, quote_entities)).values()
+            quote_text, quote_entities = (
+                await utils.parse_text_entities(
+                    self,
+                    quote_text,
+                    parse_mode,
+                    quote_entities,
+                )
+            ).values()
 
             while True:
                 try:
@@ -241,7 +256,9 @@ class SendVideoNote:
                             reply_to=utils.get_reply_to(
                                 reply_to_message_id=reply_to_message_id,
                                 message_thread_id=message_thread_id,
-                                reply_to_peer=await self.resolve_peer(reply_to_chat_id) if reply_to_chat_id else None,
+                                reply_to_peer=await self.resolve_peer(reply_to_chat_id)
+                                if reply_to_chat_id
+                                else None,
                                 reply_to_story_id=reply_to_story_id,
                                 quote_text=quote_text,
                                 quote_entities=quote_entities,
@@ -251,26 +268,39 @@ class SendVideoNote:
                             schedule_date=utils.datetime_to_timestamp(schedule_date),
                             noforwards=protect_content,
                             allow_paid_floodskip=allow_paid_broadcast,
-                            reply_markup=await reply_markup.write(self) if reply_markup else None,
+                            reply_markup=await reply_markup.write(self)
+                            if reply_markup
+                            else None,
                             message="",
-                            effect=effect_id
+                            effect=effect_id,
                         ),
-                        business_connection_id=business_connection_id
+                        business_connection_id=business_connection_id,
                     )
                 except FilePartMissing as e:
                     await self.save_file(video_note, file_id=file.id, file_part=e.value)
                 else:
                     for i in r.updates:
-                        if isinstance(i, (raw.types.UpdateNewMessage,
-                                          raw.types.UpdateNewChannelMessage,
-                                          raw.types.UpdateNewScheduledMessage,
-                                          raw.types.UpdateBotNewBusinessMessage)):
+                        if isinstance(
+                            i,
+                            raw.types.UpdateNewMessage
+                            | raw.types.UpdateNewChannelMessage
+                            | raw.types.UpdateNewScheduledMessage
+                            | raw.types.UpdateBotNewBusinessMessage,
+                        ):
                             return await types.Message._parse(
-                                self, i.message,
+                                self,
+                                i.message,
                                 {i.id: i for i in r.users},
                                 {i.id: i for i in r.chats},
-                                is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
-                                business_connection_id=getattr(i, "connection_id", None)
+                                is_scheduled=isinstance(
+                                    i,
+                                    raw.types.UpdateNewScheduledMessage,
+                                ),
+                                business_connection_id=getattr(
+                                    i,
+                                    "connection_id",
+                                    None,
+                                ),
                             )
         except StopTransmission:
             return None

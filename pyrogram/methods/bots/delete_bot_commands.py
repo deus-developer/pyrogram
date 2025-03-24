@@ -58,5 +58,5 @@ class DeleteBotCommands:
             raw.functions.bots.ResetBotCommands(
                 scope=await scope.write(self),
                 lang_code=language_code,
-            )
+            ),
         )

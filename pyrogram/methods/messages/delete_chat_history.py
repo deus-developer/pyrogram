@@ -16,13 +16,11 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from datetime import datetime
 import logging
-from typing import Union
+from datetime import datetime
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import utils
+from pyrogram import raw, utils
 
 log = logging.getLogger(__name__)
 
@@ -30,12 +28,12 @@ log = logging.getLogger(__name__)
 class DeleteChatHistory:
     async def delete_chat_history(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         max_id: int = 0,
-        revoke: bool = None,
-        just_clear = None,
-        min_date: datetime = None,
-        max_date: datetime = None,
+        revoke: bool | None = None,
+        just_clear=None,
+        min_date: datetime | None = None,
+        max_date: datetime | None = None,
     ) -> int:
         """Delete the history of a chat.
 
@@ -80,11 +78,11 @@ class DeleteChatHistory:
                 raw.functions.channels.DeleteHistory(
                     channel=raw.types.InputChannel(
                         channel_id=peer.channel_id,
-                        access_hash=peer.access_hash
+                        access_hash=peer.access_hash,
                     ),
                     max_id=max_id,
-                    for_everyone=revoke
-                )
+                    for_everyone=revoke,
+                ),
             )
         else:
             r = await self.invoke(
@@ -94,8 +92,12 @@ class DeleteChatHistory:
                     just_clear=just_clear,
                     revoke=revoke,
                     min_date=utils.datetime_to_timestamp(min_date),
-                    max_date=utils.datetime_to_timestamp(max_date)
-                )
+                    max_date=utils.datetime_to_timestamp(max_date),
+                ),
             )
 
-        return len(r.updates[0].messages) if isinstance(peer, raw.types.InputPeerChannel) else r.pts_count
+        return (
+            len(r.updates[0].messages)
+            if isinstance(peer, raw.types.InputPeerChannel)
+            else r.pts_count
+        )

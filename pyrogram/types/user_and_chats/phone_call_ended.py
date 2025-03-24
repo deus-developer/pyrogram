@@ -16,10 +16,9 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional
 
-from pyrogram import raw, enums
-from ..object import Object
+from pyrogram import enums, raw
+from pyrogram.types.object import Object
 
 
 class PhoneCallEnded(Object):
@@ -40,12 +39,13 @@ class PhoneCallEnded(Object):
     """
 
     def __init__(
-        self, *,
+        self,
+        *,
         id: int,
         is_video: bool,
         reason: "enums.PhoneCallDiscardReason",
-        duration: Optional[int] = None
-    ):
+        duration: int | None = None,
+    ) -> None:
         super().__init__()
 
         self.id = id
@@ -59,5 +59,5 @@ class PhoneCallEnded(Object):
             id=action.call_id,
             is_video=action.video,
             reason=enums.PhoneCallDiscardReason(type(action.reason)),
-            duration=getattr(action, "duration", None)
+            duration=getattr(action, "duration", None),
         )

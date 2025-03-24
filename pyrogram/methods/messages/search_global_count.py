@@ -16,10 +16,9 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional
 
 import pyrogram
-from pyrogram import raw, enums
+from pyrogram import enums, raw
 
 
 class SearchGlobalCount:
@@ -27,9 +26,9 @@ class SearchGlobalCount:
         self: "pyrogram.Client",
         query: str = "",
         filter: "enums.MessagesFilter" = enums.MessagesFilter.EMPTY,
-        channels_only: Optional[bool] = None,
-        groups_only: Optional[bool] = None,
-        users_only: Optional[bool] = None,
+        channels_only: bool | None = None,
+        groups_only: bool | None = None,
+        users_only: bool | None = None,
     ) -> int:
         """Get the count of messages resulting from a global search.
 
@@ -69,11 +68,10 @@ class SearchGlobalCount:
                 broadcasts_only=channels_only,
                 groups_only=groups_only,
                 users_only=users_only,
-                limit=1
-            )
+                limit=1,
+            ),
         )
 
         if hasattr(r, "count"):
             return r.count
-        else:
-            return len(r.messages)
+        return len(r.messages)

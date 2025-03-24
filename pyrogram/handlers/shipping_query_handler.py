@@ -16,7 +16,13 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Callable
+from collections.abc import Awaitable, Callable
+from typing import (
+    Any,
+    ClassVar,
+)
+
+import pyrogram
 
 from .handler import Handler
 
@@ -42,9 +48,18 @@ class ShippingQueryHandler(Handler):
         client (:obj:`~pyrogram.Client`):
             The Client itself, useful when you want to call other API methods inside the shipping query handler.
 
-        query (:obj:`~pyrogram.types.ShippingQuery`):
+        shipping_query (:obj:`~pyrogram.types.ShippingQuery`):
             New incoming shipping query. Only for invoices with flexible price.
     """
 
-    def __init__(self, callback: Callable, filters=None):
+    event_type: ClassVar[str] = "shipping_query"
+
+    def __init__(
+        self,
+        callback: Callable[
+            ["pyrogram.Client", "pyrogram.types.ShippingOption"],
+            Awaitable[Any],
+        ],
+        filters: "pyrogram.filters.Filter | None" = None,
+    ) -> None:
         super().__init__(callback, filters)

@@ -16,14 +16,14 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, List, Match, Optional
+from re import Match
+from typing import Optional, Union
 
 import pyrogram
-from pyrogram import raw, enums, types
+from pyrogram import enums, raw, types, utils
 from pyrogram.errors import ChannelPrivate
-from ..object import Object
-from ..update import Update
-from ... import utils
+from pyrogram.types.object import Object
+from pyrogram.types.update import Update
 
 
 class CallbackQuery(Object, Update):
@@ -70,11 +70,11 @@ class CallbackQuery(Object, Update):
         from_user: "types.User",
         chat_instance: str,
         message: "types.Message" = None,
-        inline_message_id: str = None,
-        data: Union[str, bytes] = None,
-        game_short_name: str = None,
-        matches: List[Match] = None
-    ):
+        inline_message_id: str | None = None,
+        data: str | bytes | None = None,
+        game_short_name: str | None = None,
+        matches: list[Match] | None = None,
+    ) -> None:
         super().__init__(client)
 
         self.id = id
@@ -87,7 +87,12 @@ class CallbackQuery(Object, Update):
         self.matches = matches
 
     @staticmethod
-    async def _parse(client: "pyrogram.Client", callback_query, users, chats) -> "CallbackQuery":
+    async def _parse(
+        client: "pyrogram.Client",
+        callback_query,
+        users,
+        chats,
+    ) -> "CallbackQuery":
         message = None
         inline_message_id = None
 
@@ -101,17 +106,17 @@ class CallbackQuery(Object, Update):
                 try:
                     message = await client.get_messages(
                         chat_id=chat_id,
-                        message_ids=message_id
+                        message_ids=message_id,
                     )
                 except ChannelPrivate:
-                    channel = chats.get(utils.get_raw_peer_id(callback_query.peer), None)
+                    channel = chats.get(
+                        utils.get_raw_peer_id(callback_query.peer),
+                        None,
+                    )
                     if channel:
                         message = types.Message(
                             id=message_id,
-                            chat=types.Chat._parse_chat(
-                                client,
-                                channel
-                            )
+                            chat=types.Chat._parse_chat(client, channel),
                         )
         elif isinstance(callback_query, raw.types.UpdateInlineBotCallbackQuery):
             inline_message_id = utils.pack_inline_message_id(callback_query.msg_id)
@@ -124,17 +129,16 @@ class CallbackQuery(Object, Update):
                 is_scheduled=False,
                 replies=0,
                 business_connection_id=callback_query.connection_id,
-                raw_reply_to_message=getattr(callback_query, "reply_to_message", None)
+                raw_reply_to_message=getattr(callback_query, "reply_to_message", None),
             )
         # Try to decode callback query data into string. If that fails, fallback to bytes instead of decoding by
         # ignoring/replacing errors, this way, button clicks will still work.
         data = getattr(callback_query, "data", None)
 
-        if data:
-            try:
-                data = data.decode()
-            except (UnicodeDecodeError, AttributeError):
-                data = data
+        try:
+            callback_data = data.decode()
+        except (UnicodeDecodeError, AttributeError):
+            callback_data = data
 
         return CallbackQuery(
             id=str(callback_query.query_id),
@@ -142,12 +146,18 @@ class CallbackQuery(Object, Update):
             message=message,
             inline_message_id=inline_message_id,
             chat_instance=str(callback_query.chat_instance),
-            data=data,
+            data=callback_data,
             game_short_name=getattr(callback_query, "game_short_name", None),
-            client=client
+            client=client,
         )
 
-    async def answer(self, text: str = None, show_alert: bool = None, url: str = None, cache_time: int = 0):
+    async def answer(
+        self,
+        text: str | None = None,
+        show_alert: bool | None = None,
+        url: str | None = None,
+        cache_time: int = 0,
+    ):
         """Bound method *answer* of :obj:`~pyrogram.types.CallbackQuery`.
 
         Use this method as a shortcut for:
@@ -155,9 +165,7 @@ class CallbackQuery(Object, Update):
         .. code-block:: python
 
             await client.answer_callback_query(
-                callback_query.id,
-                text="Hello",
-                show_alert=True
+                callback_query.id, text="Hello", show_alert=True
             )
 
         Example:
@@ -188,15 +196,15 @@ class CallbackQuery(Object, Update):
             text=text,
             show_alert=show_alert,
             url=url,
-            cache_time=cache_time
+            cache_time=cache_time,
         )
 
     async def edit_message_text(
         self,
         text: str,
         parse_mode: Optional["enums.ParseMode"] = None,
-        disable_web_page_preview: bool = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None
+        disable_web_page_preview: bool | None = None,
+        reply_markup: "types.InlineKeyboardMarkup" = None,
     ) -> Union["types.Message", bool]:
         """Edit the text of messages attached to callback queries.
 
@@ -230,22 +238,21 @@ class CallbackQuery(Object, Update):
                 text=text,
                 parse_mode=parse_mode,
                 disable_web_page_preview=disable_web_page_preview,
-                reply_markup=reply_markup
+                reply_markup=reply_markup,
             )
-        else:
-            return await self._client.edit_inline_text(
-                inline_message_id=self.inline_message_id,
-                text=text,
-                parse_mode=parse_mode,
-                disable_web_page_preview=disable_web_page_preview,
-                reply_markup=reply_markup
-            )
+        return await self._client.edit_inline_text(
+            inline_message_id=self.inline_message_id,
+            text=text,
+            parse_mode=parse_mode,
+            disable_web_page_preview=disable_web_page_preview,
+            reply_markup=reply_markup,
+        )
 
     async def edit_message_caption(
         self,
         caption: str,
         parse_mode: Optional["enums.ParseMode"] = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None
+        reply_markup: "types.InlineKeyboardMarkup" = None,
     ) -> Union["types.Message", bool]:
         """Edit the caption of media messages attached to callback queries.
 
@@ -269,12 +276,16 @@ class CallbackQuery(Object, Update):
         Raises:
             RPCError: In case of a Telegram RPC error.
         """
-        return await self.edit_message_text(caption, parse_mode, reply_markup=reply_markup)
+        return await self.edit_message_text(
+            caption,
+            parse_mode,
+            reply_markup=reply_markup,
+        )
 
     async def edit_message_media(
         self,
         media: "types.InputMedia",
-        reply_markup: "types.InlineKeyboardMarkup" = None
+        reply_markup: "types.InlineKeyboardMarkup" = None,
     ) -> Union["types.Message", bool]:
         """Edit animation, audio, document, photo or video messages attached to callback queries.
 
@@ -299,18 +310,17 @@ class CallbackQuery(Object, Update):
                 chat_id=self.message.chat.id,
                 message_id=self.message.id,
                 media=media,
-                reply_markup=reply_markup
+                reply_markup=reply_markup,
             )
-        else:
-            return await self._client.edit_inline_media(
-                inline_message_id=self.inline_message_id,
-                media=media,
-                reply_markup=reply_markup
-            )
+        return await self._client.edit_inline_media(
+            inline_message_id=self.inline_message_id,
+            media=media,
+            reply_markup=reply_markup,
+        )
 
     async def edit_message_reply_markup(
         self,
-        reply_markup: "types.InlineKeyboardMarkup" = None
+        reply_markup: "types.InlineKeyboardMarkup" = None,
     ) -> Union["types.Message", bool]:
         """Edit only the reply markup of messages attached to callback queries.
 
@@ -331,10 +341,9 @@ class CallbackQuery(Object, Update):
             return await self._client.edit_message_reply_markup(
                 chat_id=self.message.chat.id,
                 message_id=self.message.id,
-                reply_markup=reply_markup
+                reply_markup=reply_markup,
             )
-        else:
-            return await self._client.edit_inline_reply_markup(
-                inline_message_id=self.inline_message_id,
-                reply_markup=reply_markup
-            )
+        return await self._client.edit_inline_reply_markup(
+            inline_message_id=self.inline_message_id,
+            reply_markup=reply_markup,
+        )

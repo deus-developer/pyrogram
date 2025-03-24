@@ -23,17 +23,22 @@ from pyrogram.session import Session
 from pyrogram.session.auth import Auth
 
 
-async def get_session(client: "pyrogram.Client", business_connection_id: str) -> Session:
+async def get_session(
+    client: "pyrogram.Client",
+    business_connection_id: str,
+) -> Session:
     dc_id = client.business_connections.get(business_connection_id)
 
     if dc_id is None:
         connection = await client.session.invoke(
             raw.functions.account.GetBotBusinessConnection(
-                connection_id=business_connection_id
-            )
+                connection_id=business_connection_id,
+            ),
         )
 
-        dc_id = client.business_connections[business_connection_id] = connection.updates[0].connection.dc_id
+        dc_id = client.business_connections[business_connection_id] = (
+            connection.updates[0].connection.dc_id
+        )
 
     if dc_id == await client.storage.dc_id():
         return client.session
@@ -43,26 +48,25 @@ async def get_session(client: "pyrogram.Client", business_connection_id: str) ->
             return client.sessions[dc_id]
 
         session = client.sessions[dc_id] = Session(
-            client, dc_id,
+            client,
+            dc_id,
             await Auth(client, dc_id, await client.storage.test_mode()).create(),
-            await client.storage.test_mode()
+            await client.storage.test_mode(),
         )
 
         await session.start()
 
         for _ in range(3):
             exported_auth = await client.invoke(
-                raw.functions.auth.ExportAuthorization(
-                    dc_id=dc_id
-                )
+                raw.functions.auth.ExportAuthorization(dc_id=dc_id),
             )
 
             try:
                 await session.invoke(
                     raw.functions.auth.ImportAuthorization(
                         id=exported_auth.id,
-                        bytes=exported_auth.bytes
-                    )
+                        bytes=exported_auth.bytes,
+                    ),
                 )
             except AuthBytesInvalid:
                 continue

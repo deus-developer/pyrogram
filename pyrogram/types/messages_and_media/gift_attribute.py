@@ -17,12 +17,11 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class GiftAttribute(Object):
@@ -86,19 +85,19 @@ class GiftAttribute(Object):
         *,
         client: "pyrogram.Client" = None,
         type: "enums.GiftAttributeType",
-        name: Optional[str] = None,
-        rarity: Optional[int] = None,
-        date: Optional[datetime] = None,
-        caption: Optional[str] = None,
-        caption_entities: Optional[List["types.MessageEntity"]] = None,
+        name: str | None = None,
+        rarity: int | None = None,
+        date: datetime | None = None,
+        caption: str | None = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
         from_user: Optional["types.User"] = None,
         to_user: Optional["types.User"] = None,
         sticker: Optional["types.Sticker"] = None,
-        center_color: Optional[int] = None,
-        edge_color: Optional[int] = None,
-        pattern_color: Optional[int] = None,
-        text_color: Optional[int] = None
-    ):
+        center_color: int | None = None,
+        edge_color: int | None = None,
+        pattern_color: int | None = None,
+        text_color: int | None = None,
+    ) -> None:
         super().__init__(client)
 
         self.name = name
@@ -120,7 +119,7 @@ class GiftAttribute(Object):
         client,
         attr: "raw.base.StarGiftAttribute",
         users: dict,
-        chats: dict
+        chats: dict,
     ) -> "GiftAttribute":
         caption = None
         caption_entities = None
@@ -134,9 +133,9 @@ class GiftAttribute(Object):
             sticker = await types.Sticker._parse(client, doc, attributes)
 
         if isinstance(attr, raw.types.StarGiftAttributeOriginalDetails):
-            caption, caption_entities = (utils.parse_text_with_entities(
-                client, attr.message, users
-            )).values()
+            caption, caption_entities = (
+                utils.parse_text_with_entities(client, attr.message, users)
+            ).values()
 
             sender_id = utils.get_raw_peer_id(attr.sender_id)
             recipient_id = utils.get_raw_peer_id(attr.recipient_id)
@@ -158,5 +157,5 @@ class GiftAttribute(Object):
             edge_color=getattr(attr, "edge_color", None),
             pattern_color=getattr(attr, "pattern_color", None),
             text_color=getattr(attr, "text_color", None),
-            client=client
+            client=client,
         )

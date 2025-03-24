@@ -17,8 +17,7 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrogram import raw
-
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class RefundedPayment(Object):
@@ -48,9 +47,8 @@ class RefundedPayment(Object):
         total_amount: str,
         invoice_payload: str,
         telegram_payment_charge_id: str,
-        provider_payment_charge_id: str
-    ):
-
+        provider_payment_charge_id: str,
+    ) -> None:
         super().__init__()
 
         self.currency = currency
@@ -61,7 +59,7 @@ class RefundedPayment(Object):
 
     @staticmethod
     def _parse(
-        refunded_payment: "raw.types.MessageActionPaymentRefunded"
+        refunded_payment: "raw.types.MessageActionPaymentRefunded",
     ) -> "RefundedPayment":
         invoice_payload = None
 
@@ -77,5 +75,5 @@ class RefundedPayment(Object):
             total_amount=refunded_payment.total_amount,
             invoice_payload=invoice_payload,
             telegram_payment_charge_id=refunded_payment.charge.id,
-            provider_payment_charge_id=refunded_payment.charge.provider_charge_id
+            provider_payment_charge_id=refunded_payment.charge.provider_charge_id,
         )

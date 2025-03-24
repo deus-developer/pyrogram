@@ -16,19 +16,17 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class StopPoll:
     async def stop_poll(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         message_id: int,
-        reply_markup: "types.InlineKeyboardMarkup" = None
+        reply_markup: "types.InlineKeyboardMarkup" = None,
     ) -> "types.Poll":
         """Stop a poll which was sent by you.
 
@@ -67,11 +65,11 @@ class StopPoll:
                         id=int(poll.id),
                         closed=True,
                         question=raw.types.TextWithEntities(text="", entities=[]),
-                        answers=[]
-                    )
+                        answers=[],
+                    ),
                 ),
-                reply_markup=await reply_markup.write(self) if reply_markup else None
-            )
+                reply_markup=await reply_markup.write(self) if reply_markup else None,
+            ),
         )
 
         return types.Poll._parse(self, r.updates[0])

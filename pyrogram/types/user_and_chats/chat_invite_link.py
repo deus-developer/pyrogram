@@ -17,13 +17,11 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Dict
 from typing import Optional
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
-from ..object import Object
+from pyrogram import raw, types, utils
+from pyrogram.types.object import Object
 
 
 class ChatInviteLink(Object):
@@ -70,20 +68,21 @@ class ChatInviteLink(Object):
     """
 
     def __init__(
-        self, *,
+        self,
+        *,
         invite_link: str,
         date: datetime,
-        is_primary: bool = None,
-        is_revoked: bool = None,
+        is_primary: bool | None = None,
+        is_revoked: bool | None = None,
         creator: "types.User" = None,
-        name: str = None,
-        creates_join_request: bool = None,
-        start_date: datetime = None,
-        expire_date: datetime = None,
-        member_limit: int = None,
-        member_count: int = None,
-        pending_join_request_count: int = None
-    ):
+        name: str | None = None,
+        creates_join_request: bool | None = None,
+        start_date: datetime | None = None,
+        expire_date: datetime | None = None,
+        member_limit: int | None = None,
+        member_count: int | None = None,
+        pending_join_request_count: int | None = None,
+    ) -> None:
         super().__init__()
 
         self.invite_link = invite_link
@@ -103,7 +102,7 @@ class ChatInviteLink(Object):
     def _parse(
         client: "pyrogram.Client",
         invite: "raw.base.ExportedChatInvite",
-        users: Dict[int, "raw.types.User"] = None
+        users: dict[int, "raw.types.User"] | None = None,
     ) -> Optional["ChatInviteLink"]:
         if not isinstance(invite, raw.types.ChatInviteExported):
             return None
@@ -126,5 +125,5 @@ class ChatInviteLink(Object):
             expire_date=utils.timestamp_to_datetime(invite.expire_date),
             member_limit=invite.usage_limit,
             member_count=invite.usage,
-            pending_join_request_count=invite.requested
+            pending_join_request_count=invite.requested,
         )

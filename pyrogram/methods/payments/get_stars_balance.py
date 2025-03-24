@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional, Union
 
 import pyrogram
 from pyrogram import raw
@@ -25,7 +24,7 @@ from pyrogram import raw
 class GetStarsBalance:
     async def get_stars_balance(
         self: "pyrogram.Client",
-        chat_id: Optional[Union[int, str]] = None,
+        chat_id: int | str | None = None,
     ) -> int:
         """Get the current Telegram Stars balance of the current account.
 
@@ -53,10 +52,6 @@ class GetStarsBalance:
         else:
             peer = await self.resolve_peer(chat_id)
 
-        r = await self.invoke(
-            raw.functions.payments.GetStarsStatus(
-                peer=peer
-            )
-        )
+        r = await self.invoke(raw.functions.payments.GetStarsStatus(peer=peer))
 
         return r.balance.amount

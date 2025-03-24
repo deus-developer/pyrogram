@@ -19,11 +19,11 @@
 from .add_chat_members import AddChatMembers
 from .archive_chats import ArchiveChats
 from .ban_chat_member import BanChatMember
+from .close_forum_topic import CloseForumTopic
 from .create_channel import CreateChannel
 from .create_forum_topic import CreateForumTopic
 from .create_group import CreateGroup
 from .create_supergroup import CreateSupergroup
-from .close_forum_topic import CloseForumTopic
 from .delete_channel import DeleteChannel
 from .delete_chat_photo import DeleteChatPhoto
 from .delete_folder import DeleteFolder
@@ -38,7 +38,6 @@ from .get_chat_member import GetChatMember
 from .get_chat_members import GetChatMembers
 from .get_chat_members_count import GetChatMembersCount
 from .get_chat_online_count import GetChatOnlineCount
-from .get_similar_channels import GetSimilarChannels
 from .get_dialogs import GetDialogs
 from .get_dialogs_count import GetDialogsCount
 from .get_folders import GetFolders
@@ -46,6 +45,7 @@ from .get_forum_topics import GetForumTopics
 from .get_forum_topics_by_id import GetForumTopicsByID
 from .get_personal_channels import GetPersonalChannels
 from .get_send_as_chats import GetSendAsChats
+from .get_similar_channels import GetSimilarChannels
 from .join_chat import JoinChat
 from .join_folder import JoinFolder
 from .leave_chat import LeaveChat
@@ -138,6 +138,6 @@ class Chats(
     GetSimilarChannels,
     GetSendAsChats,
     SetSendAsChat,
-    SetChatProtectedContent
+    SetChatProtectedContent,
 ):
     pass

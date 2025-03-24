@@ -17,7 +17,6 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import re
-from typing import Union
 
 import pyrogram
 from pyrogram import raw, types
@@ -25,10 +24,11 @@ from pyrogram import raw, types
 
 class GetPaymentForm:
     async def get_payment_form(
-        self: "pyrogram.Client", *,
-        chat_id: Union[int, str] = None,
-        message_id: int = None,
-        invoice_link: str = None
+        self: "pyrogram.Client",
+        *,
+        chat_id: int | str | None = None,
+        message_id: int | None = None,
+        invoice_link: str | None = None,
     ) -> "types.PaymentForm":
         """Get information about a invoice or paid media.
 
@@ -55,7 +55,9 @@ class GetPaymentForm:
                 app.get_payment_form(chat_id=chat_id, message_id=123)
 
                 # get payment form from link
-                app.get_payment_form(invoice_link="https://t.me/$xvbzUtt5sUlJCAAATqZrWRy9Yzk")
+                app.get_payment_form(
+                    invoice_link="https://t.me/$xvbzUtt5sUlJCAAATqZrWRy9Yzk"
+                )
         """
         if not any((all((chat_id, message_id)), invoice_link)):
             raise ValueError("You should pass at least one parameter to this method.")
@@ -65,24 +67,18 @@ class GetPaymentForm:
         if message_id:
             invoice = raw.types.InputInvoiceMessage(
                 peer=await self.resolve_peer(chat_id),
-                msg_id=message_id
+                msg_id=message_id,
             )
         elif invoice_link:
-            match = re.match(r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/\$)([\w-]+)$", invoice_link)
-
-            if match:
-                slug = match.group(1)
-            else:
-                slug = invoice_link
-
-            invoice = raw.types.InputInvoiceSlug(
-                slug=slug
+            match = re.match(
+                r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/\$)([\w-]+)$",
+                invoice_link,
             )
 
-        r = await self.invoke(
-            raw.functions.payments.GetPaymentForm(
-                invoice=invoice
-            )
-        )
+            slug = match.group(1) if match else invoice_link
+
+            invoice = raw.types.InputInvoiceSlug(slug=slug)
+
+        r = await self.invoke(raw.functions.payments.GetPaymentForm(invoice=invoice))
 
         return types.PaymentForm._parse(self, r)

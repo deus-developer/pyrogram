@@ -21,7 +21,7 @@ from datetime import datetime
 import pyrogram
 from pyrogram import raw, utils
 from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class Voice(Object):
@@ -61,12 +61,12 @@ class Voice(Object):
         file_id: str,
         file_unique_id: str,
         duration: int,
-        waveform: bytes = None,
-        mime_type: str = None,
-        file_size: int = None,
-        date: datetime = None,
-        ttl_seconds: int = None
-    ):
+        waveform: bytes | None = None,
+        mime_type: str | None = None,
+        file_size: int | None = None,
+        date: datetime | None = None,
+        ttl_seconds: int | None = None,
+    ) -> None:
         super().__init__(client)
 
         self.file_id = file_id
@@ -79,18 +79,23 @@ class Voice(Object):
         self.ttl_seconds = ttl_seconds
 
     @staticmethod
-    def _parse(client, voice: "raw.types.Document", attributes: "raw.types.DocumentAttributeAudio", ttl_seconds: int = None) -> "Voice":
+    def _parse(
+        client,
+        voice: "raw.types.Document",
+        attributes: "raw.types.DocumentAttributeAudio",
+        ttl_seconds: int | None = None,
+    ) -> "Voice":
         return Voice(
             file_id=FileId(
                 file_type=FileType.VOICE,
                 dc_id=voice.dc_id,
                 media_id=voice.id,
                 access_hash=voice.access_hash,
-                file_reference=voice.file_reference
+                file_reference=voice.file_reference,
             ).encode(),
             file_unique_id=FileUniqueId(
                 file_unique_type=FileUniqueType.DOCUMENT,
-                media_id=voice.id
+                media_id=voice.id,
             ).encode(),
             duration=attributes.duration,
             mime_type=voice.mime_type,
@@ -98,5 +103,5 @@ class Voice(Object):
             waveform=attributes.waveform,
             date=utils.timestamp_to_datetime(voice.date),
             ttl_seconds=ttl_seconds,
-            client=client
+            client=client,
         )

@@ -16,17 +16,15 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import List
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class SetBotCommands:
     async def set_bot_commands(
         self: "pyrogram.Client",
-        commands: List["types.BotCommand"],
+        commands: list["types.BotCommand"],
         scope: "types.BotCommandScope" = types.BotCommandScopeDefault(),
         language_code: str = "",
     ) -> bool:
@@ -59,9 +57,12 @@ class SetBotCommands:
                 from pyrogram.types import BotCommand
 
                 # Set new commands
-                await app.set_bot_commands([
-                    BotCommand("start", "Start the bot"),
-                    BotCommand("settings", "Bot settings")])
+                await app.set_bot_commands(
+                    [
+                        BotCommand("start", "Start the bot"),
+                        BotCommand("settings", "Bot settings"),
+                    ]
+                )
         """
 
         return await self.invoke(
@@ -69,5 +70,5 @@ class SetBotCommands:
                 commands=[c.write() for c in commands],
                 scope=await scope.write(self),
                 lang_code=language_code,
-            )
+            ),
         )

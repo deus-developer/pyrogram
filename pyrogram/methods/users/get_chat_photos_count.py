@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -25,7 +24,7 @@ from pyrogram import raw
 class GetChatPhotosCount:
     async def get_chat_photos_count(
         self: "pyrogram.Client",
-        chat_id: Union[int, str]
+        chat_id: int | str,
     ) -> int:
         """Get the total count of photos for a chat.
 
@@ -54,21 +53,19 @@ class GetChatPhotosCount:
                 raw.functions.messages.GetSearchCounters(
                     peer=peer_id,
                     filters=[raw.types.InputMessagesFilterChatPhotos()],
-                )
+                ),
             )
 
             return r[0].count
-        else:
-            r = await self.invoke(
-                raw.functions.photos.GetUserPhotos(
-                    user_id=peer_id,
-                    offset=0,
-                    max_id=0,
-                    limit=1
-                )
-            )
+        r = await self.invoke(
+            raw.functions.photos.GetUserPhotos(
+                user_id=peer_id,
+                offset=0,
+                max_id=0,
+                limit=1,
+            ),
+        )
 
-            if isinstance(r, raw.types.photos.Photos):
-                return len(r.photos)
-            else:
-                return r.count
+        if isinstance(r, raw.types.photos.Photos):
+            return len(r.photos)
+        return r.count

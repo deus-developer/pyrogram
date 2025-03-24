@@ -18,10 +18,10 @@
 
 import logging
 from datetime import datetime
-from typing import Union, List, Optional
+from typing import Optional, Union
 
 import pyrogram
-from pyrogram import types, enums, utils
+from pyrogram import enums, types
 
 log = logging.getLogger(__name__)
 
@@ -29,28 +29,28 @@ log = logging.getLogger(__name__)
 class CopyMessage:
     async def copy_message(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        from_chat_id: Union[int, str],
+        chat_id: int | str,
+        from_chat_id: int | str,
         message_id: int,
-        caption: str = None,
+        caption: str | None = None,
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
-        disable_notification: bool = None,
-        message_thread_id: int = None,
-        reply_to_message_id: int = None,
-        reply_to_chat_id: Union[int, str] = None,
-        schedule_date: datetime = None,
-        protect_content: bool = None,
-        has_spoiler: bool = None,
-        show_caption_above_media: bool = None,
-        business_connection_id: str = None,
-        allow_paid_broadcast: bool = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
+        disable_notification: bool | None = None,
+        message_thread_id: int | None = None,
+        reply_to_message_id: int | None = None,
+        reply_to_chat_id: int | str | None = None,
+        schedule_date: datetime | None = None,
+        protect_content: bool | None = None,
+        has_spoiler: bool | None = None,
+        show_caption_above_media: bool | None = None,
+        business_connection_id: str | None = None,
+        allow_paid_broadcast: bool | None = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply"
-        ] = None
+            "types.ForceReply",
+        ] = None,
     ) -> "types.Message":
         """Copy messages of any kind.
 
@@ -128,7 +128,10 @@ class CopyMessage:
                 await app.copy_message(to_chat, from_chat, 123)
 
         """
-        message: types.Message = await self.get_messages(chat_id=from_chat_id, message_ids=message_id)
+        message: types.Message = await self.get_messages(
+            chat_id=from_chat_id,
+            message_ids=message_id,
+        )
 
         return await message.copy(
             chat_id=chat_id,
@@ -145,5 +148,5 @@ class CopyMessage:
             show_caption_above_media=show_caption_above_media,
             allow_paid_broadcast=allow_paid_broadcast,
             reply_markup=reply_markup,
-            business_connection_id=business_connection_id
+            business_connection_id=business_connection_id,
         )

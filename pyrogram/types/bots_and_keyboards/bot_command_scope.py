@@ -18,7 +18,7 @@
 
 import pyrogram
 from pyrogram import raw
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class BotCommandScope(Object):
@@ -64,7 +64,7 @@ class BotCommandScope(Object):
     - BotCommandScopeDefault
     """
 
-    def __init__(self, type: str):
+    def __init__(self, type: str) -> None:
         super().__init__()
 
         self.type = type

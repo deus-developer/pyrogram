@@ -19,8 +19,8 @@
 from typing import Optional
 
 import pyrogram
-from pyrogram import types, raw
-from ..object import Object
+from pyrogram import raw, types
+from pyrogram.types.object import Object
 
 
 class PaymentForm(Object):
@@ -73,17 +73,17 @@ class PaymentForm(Object):
         description: str,
         invoice: "types.Invoice",
         provider: Optional["types.User"] = None,
-        url: Optional[str] = None,
-        can_save_credentials: Optional[bool] = None,
-        is_password_missing: Optional[bool] = None,
-        native_provider: Optional[str] = None,
+        url: str | None = None,
+        can_save_credentials: bool | None = None,
+        is_password_missing: bool | None = None,
+        native_provider: str | None = None,
         raw: "raw.base.payments.PaymentForm" = None,
         # TODO: Add support for other params:
         # native_params
         # additional_params
         # saved_info
         # saved_credentials
-    ):
+    ) -> None:
         super().__init__(client)
 
         self.id = id
@@ -108,10 +108,13 @@ class PaymentForm(Object):
             title=payment_form.title,
             description=payment_form.description,
             invoice=types.Invoice._parse(client, payment_form.invoice),
-            provider=types.User._parse(client, users.get(getattr(payment_form, "provider_id", None))),
+            provider=types.User._parse(
+                client,
+                users.get(getattr(payment_form, "provider_id", None)),
+            ),
             url=getattr(payment_form, "url", None),
             can_save_credentials=getattr(payment_form, "can_save_credentials", None),
             is_password_missing=getattr(payment_form, "password_missing", None),
             native_provider=getattr(payment_form, "native_provider", None),
-            raw=payment_form
+            raw=payment_form,
         )

@@ -20,9 +20,9 @@ import logging
 
 import pyrogram
 from pyrogram import raw
+from pyrogram.methods.messages.business_session import get_session
 from pyrogram.raw.core import TLObject
 from pyrogram.session import Session
-from pyrogram.methods.messages.business_session import get_session
 
 log = logging.getLogger(__name__)
 
@@ -33,8 +33,8 @@ class Invoke:
         query: TLObject,
         retries: int = Session.MAX_RETRIES,
         timeout: float = Session.WAIT_TIMEOUT,
-        sleep_threshold: float = None,
-        business_connection_id: str = None
+        sleep_threshold: float | None = None,
+        business_connection_id: str | None = None,
     ):
         """Invoke raw Telegram functions.
 
@@ -80,7 +80,7 @@ class Invoke:
         if business_connection_id:
             query = raw.functions.InvokeWithBusinessConnection(
                 connection_id=business_connection_id,
-                query=query
+                query=query,
             )
 
             session = await get_session(self, business_connection_id)
@@ -88,17 +88,18 @@ class Invoke:
         if self.no_updates:
             query = raw.functions.InvokeWithoutUpdates(query=query)
 
-        if self.takeout_id:
-            query = raw.functions.InvokeWithTakeout(takeout_id=self.takeout_id, query=query)
-
         r = await session.invoke(
-            query, retries, timeout,
-            (sleep_threshold
-             if sleep_threshold is not None
-             else self.sleep_threshold)
+            query,
+            retries,
+            timeout,
+            (sleep_threshold if sleep_threshold is not None else self.sleep_threshold),
         )
 
-        await self.fetch_peers(getattr(r, "users", []))
-        await self.fetch_peers(getattr(r, "chats", []))
+        peers: list[raw.base.User | raw.base.Chat] = []
+        peers.extend(getattr(r, "users", []))
+        peers.extend(getattr(r, "chats", []))
+
+        # TODO: recursive find peers in TLO
+        await self.fetch_peers(peers)
 
         return r

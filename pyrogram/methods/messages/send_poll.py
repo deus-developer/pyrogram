@@ -17,53 +17,51 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Union, List, Optional
+from typing import Optional, Union
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types, enums
+from pyrogram import enums, raw, types, utils
 
 
 class SendPoll:
     async def send_poll(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         question: str,
-        options: List[str],
+        options: list[str],
         is_anonymous: bool = True,
         type: "enums.PollType" = enums.PollType.REGULAR,
-        allows_multiple_answers: Optional[bool] = None,
-        correct_option_id: Optional[int] = None,
+        allows_multiple_answers: bool | None = None,
+        correct_option_id: int | None = None,
         question_parse_mode: Optional["enums.ParseMode"] = None,
-        question_entities: Optional[List["types.MessageEntity"]] = None,
-        explanation: Optional[str] = None,
+        question_entities: list["types.MessageEntity"] | None = None,
+        explanation: str | None = None,
         explanation_parse_mode: Optional["enums.ParseMode"] = None,
-        explanation_entities: Optional[List["types.MessageEntity"]] = None,
-        open_period: Optional[int] = None,
-        close_date: Optional[datetime] = None,
-        is_closed: Optional[bool] = None,
-        disable_notification: Optional[bool] = None,
-        protect_content: Optional[bool] = None,
-        message_thread_id: Optional[int] = None,
-        effect_id: Optional[int] = None,
-        reply_to_message_id: Optional[int] = None,
-        reply_to_chat_id: Optional[Union[int, str]] = None,
-        quote_text: Optional[str] = None,
+        explanation_entities: list["types.MessageEntity"] | None = None,
+        open_period: int | None = None,
+        close_date: datetime | None = None,
+        is_closed: bool | None = None,
+        disable_notification: bool | None = None,
+        protect_content: bool | None = None,
+        message_thread_id: int | None = None,
+        effect_id: int | None = None,
+        reply_to_message_id: int | None = None,
+        reply_to_chat_id: int | str | None = None,
+        quote_text: str | None = None,
         quote_parse_mode: Optional["enums.ParseMode"] = None,
-        quote_entities: Optional[List["types.MessageEntity"]] = None,
-        quote_offset: Optional[int] = None,
-        schedule_date: Optional[datetime] = None,
-        business_connection_id: Optional[str] = None,
+        quote_entities: list["types.MessageEntity"] | None = None,
+        quote_offset: int | None = None,
+        schedule_date: datetime | None = None,
+        business_connection_id: str | None = None,
         options_parse_mode: Optional["enums.ParseMode"] = None,
-        allow_paid_broadcast: bool = None,
-        reply_markup: Optional[
-            Union[
-                "types.InlineKeyboardMarkup",
-                "types.ReplyKeyboardMarkup",
-                "types.ReplyKeyboardRemove",
-                "types.ForceReply"
-            ]
-        ] = None
+        allow_paid_broadcast: bool | None = None,
+        reply_markup: Union[
+            "types.InlineKeyboardMarkup",
+            "types.ReplyKeyboardMarkup",
+            "types.ReplyKeyboardRemove",
+            "types.ForceReply",
+        ]
+        | None = None,
     ) -> "types.Message":
         """Send a new poll.
 
@@ -189,32 +187,52 @@ class SendPoll:
         Example:
             .. code-block:: python
 
-                await app.send_poll(chat_id, "Is this a poll question?", ["Yes", "No", "Maybe"])
+                await app.send_poll(
+                    chat_id, "Is this a poll question?", ["Yes", "No", "Maybe"]
+                )
         """
-        question, question_entities = (await utils.parse_text_entities(
-            self, question, question_parse_mode, question_entities
-        )).values()
+        question, question_entities = (
+            await utils.parse_text_entities(
+                self,
+                question,
+                question_parse_mode,
+                question_entities,
+            )
+        ).values()
 
-        solution, solution_entities = (await utils.parse_text_entities(
-            self, explanation, explanation_parse_mode, explanation_entities
-        )).values()
+        solution, solution_entities = (
+            await utils.parse_text_entities(
+                self,
+                explanation,
+                explanation_parse_mode,
+                explanation_entities,
+            )
+        ).values()
 
-        quote_text, quote_entities = (await utils.parse_text_entities(
-            self, quote_text, quote_parse_mode, quote_entities
-        )).values()
+        quote_text, quote_entities = (
+            await utils.parse_text_entities(
+                self,
+                quote_text,
+                quote_parse_mode,
+                quote_entities,
+            )
+        ).values()
 
         answers = []
 
         for i, opt in enumerate(options):
-            option, option_entities = (await utils.parse_text_entities(
-                self, opt, options_parse_mode, None
-            )).values()
+            option, option_entities = (
+                await utils.parse_text_entities(self, opt, options_parse_mode, None)
+            ).values()
 
             answers.append(
                 raw.types.PollAnswer(
-                    text=raw.types.TextWithEntities(text=option, entities=option_entities or []),
+                    text=raw.types.TextWithEntities(
+                        text=option,
+                        entities=option_entities or [],
+                    ),
                     option=bytes([i]),
-                )
+                ),
             )
 
         r = await self.invoke(
@@ -225,7 +243,7 @@ class SendPoll:
                         id=self.rnd_id(),
                         question=raw.types.TextWithEntities(
                             text=question,
-                            entities=question_entities or []
+                            entities=question_entities or [],
                         ),
                         answers=answers,
                         closed=is_closed,
@@ -233,18 +251,22 @@ class SendPoll:
                         multiple_choice=allows_multiple_answers,
                         quiz=type == enums.PollType.QUIZ or False,
                         close_period=open_period,
-                        close_date=utils.datetime_to_timestamp(close_date)
+                        close_date=utils.datetime_to_timestamp(close_date),
                     ),
-                    correct_answers=[bytes([correct_option_id])] if correct_option_id is not None else None,
+                    correct_answers=[bytes([correct_option_id])]
+                    if correct_option_id is not None
+                    else None,
                     solution=solution,
-                    solution_entities=solution_entities or []
+                    solution_entities=solution_entities or [],
                 ),
                 message="",
                 silent=disable_notification,
                 reply_to=utils.get_reply_to(
                     reply_to_message_id=reply_to_message_id,
                     message_thread_id=message_thread_id,
-                    reply_to_peer=await self.resolve_peer(reply_to_chat_id) if reply_to_chat_id else None,
+                    reply_to_peer=await self.resolve_peer(reply_to_chat_id)
+                    if reply_to_chat_id
+                    else None,
                     quote_text=quote_text,
                     quote_entities=quote_entities,
                     quote_offset=quote_offset,
@@ -254,20 +276,25 @@ class SendPoll:
                 noforwards=protect_content,
                 allow_paid_floodskip=allow_paid_broadcast,
                 reply_markup=await reply_markup.write(self) if reply_markup else None,
-                effect=effect_id
+                effect=effect_id,
             ),
-            business_connection_id=business_connection_id
+            business_connection_id=business_connection_id,
         )
 
         for i in r.updates:
-            if isinstance(i, (raw.types.UpdateNewMessage,
-                              raw.types.UpdateNewChannelMessage,
-                              raw.types.UpdateNewScheduledMessage,
-                              raw.types.UpdateBotNewBusinessMessage)):
+            if isinstance(
+                i,
+                raw.types.UpdateNewMessage
+                | raw.types.UpdateNewChannelMessage
+                | raw.types.UpdateNewScheduledMessage
+                | raw.types.UpdateBotNewBusinessMessage,
+            ):
                 return await types.Message._parse(
-                    self, i.message,
+                    self,
+                    i.message,
                     {i.id: i for i in r.users},
                     {i.id: i for i in r.chats},
                     is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
-                    business_connection_id=getattr(i, "connection_id", None)
+                    business_connection_id=getattr(i, "connection_id", None),
                 )
+        return None

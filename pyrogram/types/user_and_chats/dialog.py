@@ -17,10 +17,8 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
-from ..object import Object
-from ... import utils
+from pyrogram import raw, types, utils
+from pyrogram.types.object import Object
 
 
 class Dialog(Object):
@@ -69,10 +67,10 @@ class Dialog(Object):
         unread_reactions_count: int,
         unread_mark: bool,
         is_pinned: bool,
-        folder_id: int = None,
-        ttl_period: int = None,
-        raw: "raw.types.Dialog" = None
-    ):
+        folder_id: int | None = None,
+        ttl_period: int | None = None,
+        raw: "raw.types.Dialog" = None,
+    ) -> None:
         super().__init__(client)
 
         self.chat = chat
@@ -99,5 +97,5 @@ class Dialog(Object):
             folder_id=getattr(dialog, "folder_id", None),
             ttl_period=getattr(dialog, "ttl_period", None),
             raw=dialog,
-            client=client
+            client=client,
         )

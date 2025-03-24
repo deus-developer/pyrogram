@@ -16,18 +16,18 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import AsyncGenerator, Optional
+from collections.abc import AsyncGenerator
 
 import pyrogram
-from pyrogram import types, raw, utils
+from pyrogram import raw, types, utils
 
 
 class GetDialogs:
     async def get_dialogs(
         self: "pyrogram.Client",
         limit: int = 0,
-        exclude_pinned: Optional[bool] = None,
-        from_archive: Optional[bool] = None
+        exclude_pinned: bool | None = None,
+        from_archive: bool | None = None,
     ) -> AsyncGenerator["types.Dialog", None]:
         """Get a user's dialogs sequentially.
 
@@ -75,9 +75,13 @@ class GetDialogs:
                     limit=limit,
                     hash=0,
                     exclude_pinned=exclude_pinned,
-                    folder_id=None if from_archive is None else 1 if from_archive else 0
+                    folder_id=None
+                    if from_archive is None
+                    else 1
+                    if from_archive
+                    else 0,
                 ),
-                sleep_threshold=60
+                sleep_threshold=60,
             )
 
             users = {i.id: i for i in r.users}
@@ -91,7 +95,12 @@ class GetDialogs:
 
                 chat_id = utils.get_peer_id(message.peer_id)
 
-                messages[chat_id] = await types.Message._parse(self, message, users, chats)
+                messages[chat_id] = await types.Message._parse(
+                    self,
+                    message,
+                    users,
+                    chats,
+                )
 
             dialogs = []
 
@@ -99,7 +108,9 @@ class GetDialogs:
                 if not isinstance(dialog, raw.types.Dialog):
                     continue
 
-                dialogs.append(types.Dialog._parse(self, dialog, messages, users, chats))
+                dialogs.append(
+                    types.Dialog._parse(self, dialog, messages, users, chats),
+                )
 
             if not dialogs:
                 return

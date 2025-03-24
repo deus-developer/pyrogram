@@ -17,7 +17,6 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from typing import Optional, Union
 
 import pyrogram
 from pyrogram import raw
@@ -28,12 +27,12 @@ log = logging.getLogger(__name__)
 class GetChatGiftsCount:
     async def get_chat_gifts_count(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        exclude_unsaved: Optional[bool] = None,
-        exclude_saved: Optional[bool] = None,
-        exclude_unlimited: Optional[bool] = None,
-        exclude_limited: Optional[bool] = None,
-        exclude_upgraded: Optional[bool] = None
+        chat_id: int | str,
+        exclude_unsaved: bool | None = None,
+        exclude_saved: bool | None = None,
+        exclude_unlimited: bool | None = None,
+        exclude_limited: bool | None = None,
+        exclude_upgraded: bool | None = None,
     ) -> int:
         """Get the total count of owned gifts of specified chat.
 
@@ -79,8 +78,8 @@ class GetChatGiftsCount:
                 exclude_unlimited=exclude_unlimited,
                 exclude_limited=exclude_limited,
                 exclude_unique=exclude_upgraded,
-                limit=1
-            )
+                limit=1,
+            ),
         )
 
         return r.count

@@ -21,10 +21,7 @@ from pyrogram import raw, types
 
 
 class GetBusinessConnection:
-    async def get_business_connection(
-        self: "pyrogram.Client",
-        connection_id: str
-    ):
+    async def get_business_connection(self: "pyrogram.Client", connection_id: str):
         """Get a business connection information.
 
         .. include:: /_includes/usable-by/users-bots.rst
@@ -43,12 +40,9 @@ class GetBusinessConnection:
                 app.get_business_connection(connection_id)
         """
         r = await self.invoke(
-            raw.functions.account.GetBotBusinessConnection(
-                connection_id=connection_id
-            )
+            raw.functions.account.GetBotBusinessConnection(connection_id=connection_id),
         )
 
         users = {i.id: i for i in r.users}
-        chats = {i.id: i for i in r.chats}
 
         return types.BusinessConnection._parse(self, r.updates[0].connection, users)

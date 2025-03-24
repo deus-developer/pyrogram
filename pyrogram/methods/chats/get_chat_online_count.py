@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -25,7 +24,7 @@ from pyrogram import raw
 class GetChatOnlineCount:
     async def get_chat_online_count(
         self: "pyrogram.Client",
-        chat_id: Union[int, str]
+        chat_id: int | str,
     ) -> int:
         """Get the number of members that are currently online in a chat.
 
@@ -44,8 +43,10 @@ class GetChatOnlineCount:
                 online = await app.get_chat_online_count(chat_id)
                 print(online)
         """
-        return (await self.invoke(
-            raw.functions.messages.GetOnlines(
-                peer=await self.resolve_peer(chat_id)
+        return (
+            await self.invoke(
+                raw.functions.messages.GetOnlines(
+                    peer=await self.resolve_peer(chat_id),
+                ),
             )
-        )).onlines
+        ).onlines

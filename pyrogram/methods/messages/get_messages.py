@@ -17,8 +17,10 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from typing import Iterable, List, Optional, Union
 import re
+from collections.abc import Iterable
+from typing import Union
+
 import pyrogram
 from pyrogram import raw, types, utils
 
@@ -28,12 +30,12 @@ log = logging.getLogger(__name__)
 class GetMessages:
     async def get_messages(
         self: "pyrogram.Client",
-        chat_id: Optional[Union[int, str]] = None,
-        message_ids: Optional[Union[int, Iterable[int], str]] = None,
-        reply: Optional[bool] = None,
-        pinned: Optional[bool] = None,
-        replies: int = 1
-    ) -> Optional[Union["types.Message", List["types.Message"]]]:
+        chat_id: int | str | None = None,
+        message_ids: int | Iterable[int] | str | None = None,
+        reply: bool | None = None,
+        pinned: bool | None = None,
+        replies: int = 1,
+    ) -> Union["types.Message", list["types.Message"]] | None:
         """Get one or more messages from a chat by using message identifiers or link.
 
         You can retrieve up to 200 messages at once.
@@ -76,13 +78,19 @@ class GetMessages:
                 await app.get_messages(chat_id=chat_id, message_ids=[12345, 12346])
 
                 # Get message by ignoring any replied-to message
-                await app.get_messages(chat_id=chat_id, message_ids=message_id, replies=0)
+                await app.get_messages(
+                    chat_id=chat_id, message_ids=message_id, replies=0
+                )
 
                 # Get message with all chained replied-to messages
-                await app.get_messages(chat_id=chat_id, message_ids=message_id, replies=-1)
+                await app.get_messages(
+                    chat_id=chat_id, message_ids=message_id, replies=-1
+                )
 
                 # Get the replied-to message of a message
-                await app.get_messages(chat_id=chat_id, message_ids=message_id, reply=True)
+                await app.get_messages(
+                    chat_id=chat_id, message_ids=message_id, reply=True
+                )
 
                 # Get pinned message
                 await app.get_messages(chat_id=chat_id, pinned=True)
@@ -93,12 +101,21 @@ class GetMessages:
         Raises:
             ValueError: In case of invalid arguments.
         """
-        is_iterable = not isinstance(message_ids, (int, str))
-        ids = None if message_ids is None else list(message_ids) if is_iterable else [message_ids]
+        is_iterable = not isinstance(message_ids, int | str)
+        ids = (
+            None
+            if message_ids is None
+            else list(message_ids)
+            if is_iterable
+            else [message_ids]
+        )
         _type = raw.types.InputMessageReplyTo if reply else raw.types.InputMessageID
 
         if isinstance(message_ids, str):
-            match = re.match(r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/(?:c/)?)([\w]+)(?:/\d+)*/(\d+)/?$", message_ids.lower())
+            match = re.match(
+                r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/(?:c/)?)([\w]+)(?:/\d+)*/(\d+)/?$",
+                message_ids.lower(),
+            )
 
             if match:
                 try:

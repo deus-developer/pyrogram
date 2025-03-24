@@ -18,8 +18,9 @@
 
 import os
 import re
+from collections.abc import Callable
 from datetime import datetime
-from typing import BinaryIO, Callable, List, Optional, Union
+from typing import BinaryIO, Optional, Union
 
 import pyrogram
 from pyrogram import StopTransmission, enums, raw, types, utils
@@ -30,44 +31,44 @@ from pyrogram.file_id import FileType
 class SendVideo:
     async def send_video(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        video: Union[str, BinaryIO],
+        chat_id: int | str,
+        video: str | BinaryIO,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
-        has_spoiler: bool = None,
-        ttl_seconds: int = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
+        has_spoiler: bool | None = None,
+        ttl_seconds: int | None = None,
         duration: int = 0,
         width: int = 0,
         height: int = 0,
-        video_start_timestamp: int = None,
-        video_cover: Union[str, BinaryIO] = None,
-        thumb: Union[str, BinaryIO] = None,
-        file_name: str = None,
+        video_start_timestamp: int | None = None,
+        video_cover: str | BinaryIO | None = None,
+        thumb: str | BinaryIO | None = None,
+        file_name: str | None = None,
         supports_streaming: bool = True,
-        disable_notification: bool = None,
-        message_thread_id: int = None,
-        effect_id: int = None,
-        show_caption_above_media: bool = None,
-        reply_to_message_id: int = None,
-        reply_to_chat_id: Union[int, str] = None,
-        reply_to_story_id: int = None,
-        quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
-        quote_offset: int = None,
-        schedule_date: datetime = None,
-        protect_content: bool = None,
+        disable_notification: bool | None = None,
+        message_thread_id: int | None = None,
+        effect_id: int | None = None,
+        show_caption_above_media: bool | None = None,
+        reply_to_message_id: int | None = None,
+        reply_to_chat_id: int | str | None = None,
+        reply_to_story_id: int | None = None,
+        quote_text: str | None = None,
+        quote_entities: list["types.MessageEntity"] | None = None,
+        quote_offset: int | None = None,
+        schedule_date: datetime | None = None,
+        protect_content: bool | None = None,
         no_sound: bool = True,
-        business_connection_id: str = None,
-        allow_paid_broadcast: bool = None,
+        business_connection_id: str | None = None,
+        allow_paid_broadcast: bool | None = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply"
+            "types.ForceReply",
         ] = None,
-        progress: Callable = None,
-        progress_args: tuple = ()
+        progress: Callable | None = None,
+        progress_args: tuple = (),
     ) -> Optional["types.Message"]:
         """Send video files.
 
@@ -239,9 +240,11 @@ class SendVideo:
                 # Add video_cover to the video
                 await app.send_video(channel_id, "video.mp4", video_cover="photo.jpg")
 
+
                 # Keep track of the progress while uploading
                 async def progress(current, total):
                     print(f"{current * 100 / total:.1f}%")
+
 
                 await app.send_video("me", "video.mp4", progress=progress)
         """
@@ -258,42 +261,49 @@ class SendVideo:
                             raw.functions.messages.UploadMedia(
                                 peer=peer,
                                 media=raw.types.InputMediaUploadedPhoto(
-                                    file=await self.save_file(video_cover)
-                                )
-                            )
+                                    file=await self.save_file(video_cover),
+                                ),
+                            ),
                         )
                     elif re.match("^https?://", video_cover):
                         vcover_media = await self.invoke(
                             raw.functions.messages.UploadMedia(
                                 peer=peer,
                                 media=raw.types.InputMediaPhotoExternal(
-                                    url=video_cover
-                                )
-                            )
+                                    url=video_cover,
+                                ),
+                            ),
                         )
                     else:
-                        vcover_file = utils.get_input_media_from_file_id(video_cover, FileType.PHOTO).id
+                        vcover_file = utils.get_input_media_from_file_id(
+                            video_cover,
+                            FileType.PHOTO,
+                        ).id
                 else:
                     vcover_media = await self.invoke(
                         raw.functions.messages.UploadMedia(
                             peer=peer,
                             media=raw.types.InputMediaUploadedPhoto(
-                                file=await self.save_file(video_cover)
-                            )
-                        )
+                                file=await self.save_file(video_cover),
+                            ),
+                        ),
                     )
 
                 if vcover_media:
                     vcover_file = raw.types.InputPhoto(
                         id=vcover_media.photo.id,
                         access_hash=vcover_media.photo.access_hash,
-                        file_reference=vcover_media.photo.file_reference
+                        file_reference=vcover_media.photo.file_reference,
                     )
 
             if isinstance(video, str):
                 if os.path.isfile(video):
                     thumb = await self.save_file(thumb)
-                    file = await self.save_file(video, progress=progress, progress_args=progress_args)
+                    file = await self.save_file(
+                        video,
+                        progress=progress,
+                        progress_args=progress_args,
+                    )
                     media = raw.types.InputMediaUploadedDocument(
                         mime_type=self.guess_mime_type(video) or "video/mp4",
                         file=file,
@@ -308,10 +318,12 @@ class SendVideo:
                                 supports_streaming=supports_streaming or None,
                                 duration=duration,
                                 w=width,
-                                h=height
+                                h=height,
                             ),
-                            raw.types.DocumentAttributeFilename(file_name=file_name or os.path.basename(video))
-                        ]
+                            raw.types.DocumentAttributeFilename(
+                                file_name=file_name or os.path.basename(video),
+                            ),
+                        ],
                     )
                 elif re.match("^https?://", video):
                     media = raw.types.InputMediaDocumentExternal(
@@ -319,15 +331,25 @@ class SendVideo:
                         ttl_seconds=ttl_seconds,
                         spoiler=has_spoiler,
                         video_cover=vcover_file,
-                        video_timestamp=video_start_timestamp
+                        video_timestamp=video_start_timestamp,
                     )
                 else:
-                    media = utils.get_input_media_from_file_id(video, FileType.VIDEO, ttl_seconds=ttl_seconds, has_spoiler=has_spoiler)
+                    media = utils.get_input_media_from_file_id(
+                        video,
+                        FileType.VIDEO,
+                        ttl_seconds=ttl_seconds,
+                        has_spoiler=has_spoiler,
+                    )
             else:
                 thumb = await self.save_file(thumb)
-                file = await self.save_file(video, progress=progress, progress_args=progress_args)
+                file = await self.save_file(
+                    video,
+                    progress=progress,
+                    progress_args=progress_args,
+                )
                 media = raw.types.InputMediaUploadedDocument(
-                    mime_type=self.guess_mime_type(file_name or video.name) or "video/mp4",
+                    mime_type=self.guess_mime_type(file_name or video.name)
+                    or "video/mp4",
                     file=file,
                     ttl_seconds=ttl_seconds,
                     spoiler=has_spoiler,
@@ -340,13 +362,22 @@ class SendVideo:
                             supports_streaming=supports_streaming or None,
                             duration=duration,
                             w=width,
-                            h=height
+                            h=height,
                         ),
-                        raw.types.DocumentAttributeFilename(file_name=file_name or video.name)
-                    ]
+                        raw.types.DocumentAttributeFilename(
+                            file_name=file_name or video.name,
+                        ),
+                    ],
                 )
 
-            quote_text, quote_entities = (await utils.parse_text_entities(self, quote_text, parse_mode, quote_entities)).values()
+            quote_text, quote_entities = (
+                await utils.parse_text_entities(
+                    self,
+                    quote_text,
+                    parse_mode,
+                    quote_entities,
+                )
+            ).values()
 
             while True:
                 try:
@@ -359,7 +390,9 @@ class SendVideo:
                             reply_to=utils.get_reply_to(
                                 reply_to_message_id=reply_to_message_id,
                                 message_thread_id=message_thread_id,
-                                reply_to_peer=await self.resolve_peer(reply_to_chat_id) if reply_to_chat_id else None,
+                                reply_to_peer=await self.resolve_peer(reply_to_chat_id)
+                                if reply_to_chat_id
+                                else None,
                                 reply_to_story_id=reply_to_story_id,
                                 quote_text=quote_text,
                                 quote_entities=quote_entities,
@@ -369,26 +402,44 @@ class SendVideo:
                             schedule_date=utils.datetime_to_timestamp(schedule_date),
                             noforwards=protect_content,
                             allow_paid_floodskip=allow_paid_broadcast,
-                            reply_markup=await reply_markup.write(self) if reply_markup else None,
+                            reply_markup=await reply_markup.write(self)
+                            if reply_markup
+                            else None,
                             effect=effect_id,
-                            **await utils.parse_text_entities(self, caption, parse_mode, caption_entities)
+                            **await utils.parse_text_entities(
+                                self,
+                                caption,
+                                parse_mode,
+                                caption_entities,
+                            ),
                         ),
-                        business_connection_id=business_connection_id
+                        business_connection_id=business_connection_id,
                     )
                 except FilePartMissing as e:
                     await self.save_file(video, file_id=file.id, file_part=e.value)
                 else:
                     for i in r.updates:
-                        if isinstance(i, (raw.types.UpdateNewMessage,
-                                          raw.types.UpdateNewChannelMessage,
-                                          raw.types.UpdateNewScheduledMessage,
-                                          raw.types.UpdateBotNewBusinessMessage)):
+                        if isinstance(
+                            i,
+                            raw.types.UpdateNewMessage
+                            | raw.types.UpdateNewChannelMessage
+                            | raw.types.UpdateNewScheduledMessage
+                            | raw.types.UpdateBotNewBusinessMessage,
+                        ):
                             return await types.Message._parse(
-                                self, i.message,
+                                self,
+                                i.message,
                                 {i.id: i for i in r.users},
                                 {i.id: i for i in r.chats},
-                                is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
-                                business_connection_id=getattr(i, "connection_id", None)
+                                is_scheduled=isinstance(
+                                    i,
+                                    raw.types.UpdateNewScheduledMessage,
+                                ),
+                                business_connection_id=getattr(
+                                    i,
+                                    "connection_id",
+                                    None,
+                                ),
                             )
         except StopTransmission:
             return None

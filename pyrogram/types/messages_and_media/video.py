@@ -17,13 +17,11 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import List
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
+from pyrogram import raw, types, utils
 from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class Video(Object):
@@ -81,14 +79,14 @@ class Video(Object):
         height: int,
         codec: str,
         duration: int,
-        file_name: str = None,
-        mime_type: str = None,
-        file_size: int = None,
-        supports_streaming: bool = None,
-        ttl_seconds: int = None,
-        date: datetime = None,
-        thumbs: List["types.Thumbnail"] = None
-    ):
+        file_name: str | None = None,
+        mime_type: str | None = None,
+        file_size: int | None = None,
+        supports_streaming: bool | None = None,
+        ttl_seconds: int | None = None,
+        date: datetime | None = None,
+        thumbs: list["types.Thumbnail"] | None = None,
+    ) -> None:
         super().__init__(client)
 
         self.file_id = file_id
@@ -110,8 +108,8 @@ class Video(Object):
         client,
         video: "raw.types.Document",
         video_attributes: "raw.types.DocumentAttributeVideo",
-        file_name: str = None,
-        ttl_seconds: int = None
+        file_name: str | None = None,
+        ttl_seconds: int | None = None,
     ) -> "Video":
         return Video(
             file_id=FileId(
@@ -119,22 +117,23 @@ class Video(Object):
                 dc_id=video.dc_id,
                 media_id=video.id,
                 access_hash=video.access_hash,
-                file_reference=video.file_reference
+                file_reference=video.file_reference,
             ).encode(),
             file_unique_id=FileUniqueId(
                 file_unique_type=FileUniqueType.DOCUMENT,
-                media_id=video.id
+                media_id=video.id,
             ).encode(),
             width=getattr(video_attributes, "w", None),
             height=getattr(video_attributes, "h", None),
             codec=getattr(video_attributes, "video_codec", None),
             duration=video_attributes.duration,
-            file_name=file_name or f"video_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.mp4",
+            file_name=file_name
+            or f"video_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.mp4",
             mime_type=video.mime_type,
             supports_streaming=video_attributes.supports_streaming,
             file_size=video.size,
             date=utils.timestamp_to_datetime(video.date),
             ttl_seconds=ttl_seconds,
             thumbs=types.Thumbnail._parse(client, video),
-            client=client
+            client=client,
         )

@@ -19,10 +19,8 @@
 from typing import Optional
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import utils
-from pyrogram import types
-from ..object import Object
+from pyrogram import raw, types, utils
+from pyrogram.types.object import Object
 
 
 class FoundContacts(Object):
@@ -41,8 +39,8 @@ class FoundContacts(Object):
         *,
         client: "pyrogram.Client" = None,
         my_results: Optional["types.Chat"] = None,
-        global_results: Optional["types.Chat"] = None
-    ):
+        global_results: Optional["types.Chat"] = None,
+    ) -> None:
         super().__init__(client)
 
         self.my_results = my_results
@@ -71,5 +69,5 @@ class FoundContacts(Object):
         return FoundContacts(
             my_results=types.List(my_results) or None,
             global_results=types.List(global_results) or None,
-            client=client
+            client=client,
         )

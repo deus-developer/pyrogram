@@ -17,10 +17,9 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Union, List, Optional
 
 import pyrogram
-from pyrogram import utils, raw, types
+from pyrogram import raw, types, utils
 
 
 class CreateInvoiceLink:
@@ -28,26 +27,26 @@ class CreateInvoiceLink:
         self: "pyrogram.Client",
         title: str,
         description: str,
-        payload: Union[str, bytes],
+        payload: str | bytes,
         currency: str,
-        prices: List["types.LabeledPrice"],
-        provider_token: Optional[str] = None,
-        subscription_period: datetime = None,
-        max_tip_amount: Optional[int] = None,
-        suggested_tip_amounts: Optional[List[int]] = None,
-        start_parameter: Optional[str] = None,
-        provider_data: Optional[str] = None,
-        photo_url: Optional[str] = None,
-        photo_size: Optional[int] = None,
-        photo_width: Optional[int] = None,
-        photo_height: Optional[int] = None,
-        need_name: Optional[bool] = None,
-        need_phone_number: Optional[bool] = None,
-        need_email: Optional[bool] = None,
-        need_shipping_address: Optional[bool] = None,
-        send_phone_number_to_provider: Optional[bool] = None,
-        send_email_to_provider: Optional[bool] = None,
-        is_flexible: Optional[bool] = None
+        prices: list["types.LabeledPrice"],
+        provider_token: str | None = None,
+        subscription_period: datetime | None = None,
+        max_tip_amount: int | None = None,
+        suggested_tip_amounts: list[int] | None = None,
+        start_parameter: str | None = None,
+        provider_data: str | None = None,
+        photo_url: str | None = None,
+        photo_size: int | None = None,
+        photo_width: int | None = None,
+        photo_height: int | None = None,
+        need_name: bool | None = None,
+        need_phone_number: bool | None = None,
+        need_email: bool | None = None,
+        need_shipping_address: bool | None = None,
+        send_phone_number_to_provider: bool | None = None,
+        send_email_to_provider: bool | None = None,
+        is_flexible: bool | None = None,
     ) -> str:
         """Create invoice link.
 
@@ -137,12 +136,11 @@ class CreateInvoiceLink:
                 mime_type="image/jpg",
                 size=photo_size,
                 attributes=[
-                    raw.types.DocumentAttributeImageSize(
-                        w=photo_width,
-                        h=photo_height
-                    )
-                ]
-            ) if photo_url else None,
+                    raw.types.DocumentAttributeImageSize(w=photo_width, h=photo_height),
+                ],
+            )
+            if photo_url
+            else None,
             invoice=raw.types.Invoice(
                 currency=currency,
                 prices=[i.write() for i in prices],
@@ -156,20 +154,16 @@ class CreateInvoiceLink:
                 email_to_provider=send_email_to_provider,
                 max_tip_amount=max_tip_amount,
                 suggested_tip_amounts=suggested_tip_amounts,
-                subscription_period=utils.datetime_to_timestamp(subscription_period)
+                subscription_period=utils.datetime_to_timestamp(subscription_period),
             ),
             payload=payload.encode() if isinstance(payload, str) else payload,
             provider=provider_token,
             provider_data=raw.types.DataJSON(
-                data=provider_data if provider_data else "{}"
+                data=provider_data if provider_data else "{}",
             ),
-            start_param=start_parameter
+            start_param=start_parameter,
         )
 
-        r = await self.invoke(
-            raw.functions.payments.ExportInvoice(
-                invoice_media=media
-            )
-        )
+        r = await self.invoke(raw.functions.payments.ExportInvoice(invoice_media=media))
 
         return r.url

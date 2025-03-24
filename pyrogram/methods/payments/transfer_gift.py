@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import errors, raw
@@ -26,7 +25,7 @@ class TransferGift:
     async def transfer_gift(
         self: "pyrogram.Client",
         message_id: int,
-        to_chat_id: Union[int, str],
+        to_chat_id: int | str,
     ) -> bool:
         """Transfer star gift to another user.
 
@@ -52,37 +51,31 @@ class TransferGift:
         """
         peer = await self.resolve_peer(to_chat_id)
 
-        if not isinstance(peer, (raw.types.InputPeerUser, raw.types.InputPeerSelf)):
+        if not isinstance(peer, raw.types.InputPeerUser | raw.types.InputPeerSelf):
             raise ValueError("chat_id must belong to a user.")
 
         try:
             await self.invoke(
                 raw.functions.payments.TransferStarGift(
-                    stargift=raw.types.InputSavedStarGiftUser(
-                        msg_id=message_id
-                    ),
-                    to_id=peer
-                )
+                    stargift=raw.types.InputSavedStarGiftUser(msg_id=message_id),
+                    to_id=peer,
+                ),
             )
         except errors.PaymentRequired:
             invoice = raw.types.InputInvoiceStarGiftTransfer(
-                stargift=raw.types.InputSavedStarGiftUser(
-                    msg_id=message_id
-                ),
-                to_id=peer
+                stargift=raw.types.InputSavedStarGiftUser(msg_id=message_id),
+                to_id=peer,
             )
 
             form = await self.invoke(
-                raw.functions.payments.GetPaymentForm(
-                    invoice=invoice
-                )
+                raw.functions.payments.GetPaymentForm(invoice=invoice),
             )
 
             await self.invoke(
                 raw.functions.payments.SendStarsForm(
                     form_id=form.form_id,
-                    invoice=invoice
-                )
+                    invoice=invoice,
+                ),
             )
 
         return True

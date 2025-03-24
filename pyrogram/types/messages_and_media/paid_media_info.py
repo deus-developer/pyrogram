@@ -16,11 +16,11 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import List, Union
+from typing import Union
 
 import pyrogram
 from pyrogram import raw, types
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class PaidMediaInfo(Object):
@@ -38,8 +38,8 @@ class PaidMediaInfo(Object):
         self,
         *,
         stars_amount: str,
-        media: List[Union["types.Photo", "types.Video", "types.PaidMediaPreview"]]
-    ):
+        media: list[Union["types.Photo", "types.Video", "types.PaidMediaPreview"]],
+    ) -> None:
         super().__init__()
 
         self.stars_amount = stars_amount
@@ -48,7 +48,7 @@ class PaidMediaInfo(Object):
     @staticmethod
     def _parse(
         client: "pyrogram.Client",
-        message_paid_media: "raw.types.MessageMediaPaidMedia"
+        message_paid_media: "raw.types.MessageMediaPaidMedia",
     ) -> "PaidMediaInfo":
         medias = []
 
@@ -56,8 +56,14 @@ class PaidMediaInfo(Object):
             if isinstance(extended_media, raw.types.MessageExtendedMediaPreview):
                 thumbnail = None
 
-                if isinstance(getattr(extended_media, "thumb", None), raw.types.PhotoStrippedSize):
-                    thumbnail = types.StrippedThumbnail._parse(client, extended_media.thumb)
+                if isinstance(
+                    getattr(extended_media, "thumb", None),
+                    raw.types.PhotoStrippedSize,
+                ):
+                    thumbnail = types.StrippedThumbnail._parse(
+                        client,
+                        extended_media.thumb,
+                    )
 
                 medias.append(
                     types.PaidMediaPreview(
@@ -65,29 +71,39 @@ class PaidMediaInfo(Object):
                         height=getattr(extended_media, "h", None),
                         duration=getattr(extended_media, "video_duration", None),
                         thumbnail=thumbnail,
-                    )
+                    ),
                 )
             elif isinstance(extended_media, raw.types.MessageExtendedMedia):
                 media = extended_media.media
 
                 if isinstance(media, raw.types.MessageMediaPhoto):
-                    medias.append(types.Photo._parse(client, media.photo, media.ttl_seconds))
+                    medias.append(
+                        types.Photo._parse(client, media.photo, media.ttl_seconds),
+                    )
                 elif isinstance(media, raw.types.MessageMediaDocument):
                     doc = media.document
 
                     attributes = {type(i): i for i in doc.attributes}
 
                     file_name = getattr(
-                        attributes.get(
-                            raw.types.DocumentAttributeFilename, None
-                        ), "file_name", None
+                        attributes.get(raw.types.DocumentAttributeFilename, None),
+                        "file_name",
+                        None,
                     )
 
                     video_attributes = attributes[raw.types.DocumentAttributeVideo]
 
-                    medias.append(types.Video._parse(client, doc, video_attributes, file_name, media.ttl_seconds))
+                    medias.append(
+                        types.Video._parse(
+                            client,
+                            doc,
+                            video_attributes,
+                            file_name,
+                            media.ttl_seconds,
+                        ),
+                    )
 
         return PaidMediaInfo(
             stars_amount=message_paid_media.stars_amount,
-            media=types.List(medias)
+            media=types.List(medias),
         )

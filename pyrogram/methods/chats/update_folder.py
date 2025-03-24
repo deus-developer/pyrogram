@@ -16,10 +16,10 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import List, Optional, Union
+from typing import Optional
 
 import pyrogram
-from pyrogram import raw, utils, types, enums
+from pyrogram import enums, raw, types, utils
 
 
 class UpdateFolder:
@@ -28,20 +28,20 @@ class UpdateFolder:
         folder_id: int,
         title: str,
         parse_mode: Optional["enums.ParseMode"] = None,
-        entities: List["types.MessageEntity"] = None,
-        included_chats: Union[Union[int, str], List[Union[int, str]]] = None,
-        excluded_chats: Union[Union[int, str], List[Union[int, str]]] = None,
-        pinned_chats: Union[Union[int, str], List[Union[int, str]]] = None,
-        contacts: bool = None,
-        non_contacts: bool = None,
-        groups: bool = None,
-        channels: bool = None,
-        bots: bool = None,
-        exclude_muted: bool = None,
-        exclude_read: bool = None,
-        exclude_archived: bool = None,
+        entities: list["types.MessageEntity"] | None = None,
+        included_chats: int | str | list[int | str] | None = None,
+        excluded_chats: int | str | list[int | str] | None = None,
+        pinned_chats: int | str | list[int | str] | None = None,
+        contacts: bool | None = None,
+        non_contacts: bool | None = None,
+        groups: bool | None = None,
+        channels: bool | None = None,
+        bots: bool | None = None,
+        exclude_muted: bool | None = None,
+        exclude_read: bool | None = None,
+        exclude_archived: bool | None = None,
         color: "enums.FolderColor" = None,
-        emoji: str = None
+        emoji: str | None = None,
     ) -> bool:
         """Create or update a user's folder.
 
@@ -124,10 +124,14 @@ class UpdateFolder:
         if not isinstance(pinned_chats, list):
             pinned_chats = [pinned_chats] if pinned_chats else []
 
-        title, title_entities = (await utils.parse_text_entities(self, title, parse_mode, entities)).values()
-        title_entities = title_entities or []  # For some reason, `title_entities` may be `None`
+        title, title_entities = (
+            await utils.parse_text_entities(self, title, parse_mode, entities)
+        ).values()
+        title_entities = (
+            title_entities or []
+        )  # For some reason, `title_entities` may be `None`
 
-        r = await self.invoke(
+        return await self.invoke(
             raw.functions.messages.UpdateDialogFilter(
                 id=folder_id,
                 filter=raw.types.DialogFilter(
@@ -137,16 +141,13 @@ class UpdateFolder:
                         entities=title_entities,
                     ),
                     pinned_peers=[
-                        await self.resolve_peer(user_id)
-                        for user_id in pinned_chats
+                        await self.resolve_peer(user_id) for user_id in pinned_chats
                     ],
                     include_peers=[
-                        await self.resolve_peer(user_id)
-                        for user_id in included_chats
+                        await self.resolve_peer(user_id) for user_id in included_chats
                     ],
                     exclude_peers=[
-                        await self.resolve_peer(user_id)
-                        for user_id in excluded_chats
+                        await self.resolve_peer(user_id) for user_id in excluded_chats
                     ],
                     contacts=contacts,
                     non_contacts=non_contacts,
@@ -157,9 +158,7 @@ class UpdateFolder:
                     exclude_read=exclude_read,
                     exclude_archived=exclude_archived,
                     emoticon=emoji,
-                    color=color.value if color else None
-                )
-            )
+                    color=color.value if color else None,
+                ),
+            ),
         )
-
-        return r

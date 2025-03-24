@@ -16,11 +16,10 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional
 
 import pyrogram
 from pyrogram import raw
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class Reaction(Object):
@@ -48,12 +47,12 @@ class Reaction(Object):
         self,
         *,
         client: "pyrogram.Client" = None,
-        emoji: Optional[str] = None,
-        custom_emoji_id: Optional[int] = None,
-        count: Optional[int] = None,
-        chosen_order: Optional[int] = None,
-        is_paid: Optional[bool] = None
-    ):
+        emoji: str | None = None,
+        custom_emoji_id: int | None = None,
+        count: int | None = None,
+        chosen_order: int | None = None,
+        is_paid: bool | None = None,
+    ) -> None:
         super().__init__(client)
 
         self.emoji = emoji
@@ -63,32 +62,21 @@ class Reaction(Object):
         self.is_paid = is_paid
 
     @staticmethod
-    def _parse(
-        client: "pyrogram.Client",
-        reaction: "raw.base.Reaction"
-    ) -> "Reaction":
+    def _parse(client: "pyrogram.Client", reaction: "raw.base.Reaction") -> "Reaction":
         if isinstance(reaction, raw.types.ReactionEmoji):
-            return Reaction(
-                client=client,
-                emoji=reaction.emoticon
-            )
+            return Reaction(client=client, emoji=reaction.emoticon)
 
         if isinstance(reaction, raw.types.ReactionCustomEmoji):
-            return Reaction(
-                client=client,
-                custom_emoji_id=reaction.document_id
-            )
+            return Reaction(client=client, custom_emoji_id=reaction.document_id)
 
         if isinstance(reaction, raw.types.ReactionPaid):
-            return Reaction(
-                client=client,
-                is_paid=True
-            )
+            return Reaction(client=client, is_paid=True)
+        return None
 
     @staticmethod
     def _parse_count(
         client: "pyrogram.Client",
-        reaction_count: "raw.base.ReactionCount"
+        reaction_count: "raw.base.ReactionCount",
     ) -> "Reaction":
         reaction = Reaction._parse(client, reaction_count.reaction)
         reaction.count = reaction_count.count

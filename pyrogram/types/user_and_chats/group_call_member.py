@@ -17,11 +17,10 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Dict
 
 import pyrogram
 from pyrogram import raw, types, utils
-from ..object import Object
+from pyrogram.types.object import Object
 
 
 class GroupCallMember(Object):
@@ -79,21 +78,21 @@ class GroupCallMember(Object):
         *,
         client: "pyrogram.Client" = None,
         chat: "types.Chat" = None,
-        date: datetime = None,
-        active_date: datetime = None,
-        volume: int = None,
-        can_self_unmute: bool = None,
-        is_muted: bool = None,
-        is_left: bool = None,
-        is_just_joined: bool = None,
-        is_muted_by_you: bool = None,
-        is_volume_by_admin: bool = None,
-        is_self: bool = None,
-        is_video_joined: bool = None,
-        is_hand_raised: bool = None,
-        is_video_enabled: bool = None,
-        is_screen_sharing_enabled: bool = None
-    ):
+        date: datetime | None = None,
+        active_date: datetime | None = None,
+        volume: int | None = None,
+        can_self_unmute: bool | None = None,
+        is_muted: bool | None = None,
+        is_left: bool | None = None,
+        is_just_joined: bool | None = None,
+        is_muted_by_you: bool | None = None,
+        is_volume_by_admin: bool | None = None,
+        is_self: bool | None = None,
+        is_video_joined: bool | None = None,
+        is_hand_raised: bool | None = None,
+        is_video_enabled: bool | None = None,
+        is_screen_sharing_enabled: bool | None = None,
+    ) -> None:
         super().__init__(client)
 
         self.chat = chat
@@ -116,8 +115,8 @@ class GroupCallMember(Object):
     def _parse(
         client: "pyrogram.Client",
         member: "raw.types.GroupCallParticipant",
-        users: Dict[int, "raw.base.User"],
-        chats: Dict[int, "raw.base.Chat"]
+        users: dict[int, "raw.base.User"],
+        chats: dict[int, "raw.base.Chat"],
     ) -> "GroupCallMember":
         peer = member.peer
         peer_id = utils.get_raw_peer_id(peer)
@@ -145,5 +144,5 @@ class GroupCallMember(Object):
             is_hand_raised=bool(getattr(member, "raise_hand_rating", None)),
             is_video_enabled=bool(getattr(member, "video", None)),
             is_screen_sharing_enabled=bool(getattr(member, "presentation", None)),
-            client=client
+            client=client,
         )

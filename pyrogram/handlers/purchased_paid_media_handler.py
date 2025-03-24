@@ -16,7 +16,13 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Callable
+from collections.abc import Awaitable, Callable
+from typing import (
+    Any,
+    ClassVar,
+)
+
+import pyrogram
 
 from .handler import Handler
 
@@ -41,9 +47,18 @@ class PurchasedPaidMediaHandler(Handler):
         client (:obj:`~pyrogram.Client`):
             The Client itself, useful when you want to call other API methods inside the handler.
 
-        update (:obj:`~pyrogram.types.PurchasedPaidMedia`):
+        purchased_paid_media (:obj:`~pyrogram.types.PurchasedPaidMedia`):
             Information about who bought paid media.
     """
 
-    def __init__(self, callback: Callable, filters=None):
+    event_type: ClassVar[str] = "purchased_paid_media"
+
+    def __init__(
+        self,
+        callback: Callable[
+            ["pyrogram.Client", "pyrogram.types.PurchasedPaidMedia"],
+            Awaitable[Any],
+        ],
+        filters: "pyrogram.filters.Filter | None" = None,
+    ) -> None:
         super().__init__(callback, filters)

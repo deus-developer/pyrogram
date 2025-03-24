@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional, Union
 
 import pyrogram
 from pyrogram import raw, types
@@ -25,15 +24,15 @@ from pyrogram import raw, types
 class GetChatGifts:
     async def get_chat_gifts(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        exclude_unsaved: Optional[bool] = None,
-        exclude_saved: Optional[bool] = None,
-        exclude_unlimited: Optional[bool] = None,
-        exclude_limited: Optional[bool] = None,
-        exclude_upgraded: Optional[bool] = None,
-        sort_by_value: Optional[bool] = None,
+        chat_id: int | str,
+        exclude_unsaved: bool | None = None,
+        exclude_saved: bool | None = None,
+        exclude_unlimited: bool | None = None,
+        exclude_limited: bool | None = None,
+        exclude_upgraded: bool | None = None,
+        sort_by_value: bool | None = None,
         limit: int = 0,
-        offset: str = ""
+        offset: str = "",
     ):
         """Get all gifts owned by specified chat.
 
@@ -95,9 +94,9 @@ class GetChatGifts:
                     exclude_unlimited=exclude_unlimited,
                     exclude_limited=exclude_limited,
                     exclude_unique=exclude_upgraded,
-                    sort_by_value=sort_by_value
+                    sort_by_value=sort_by_value,
                 ),
-                sleep_threshold=60
+                sleep_threshold=60,
             )
 
             users = {i.id: i for i in r.users}

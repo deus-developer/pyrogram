@@ -19,7 +19,6 @@
 import logging
 
 import pyrogram
-from pyrogram import raw
 
 log = logging.getLogger(__name__)
 
@@ -27,7 +26,7 @@ log = logging.getLogger(__name__)
 class Terminate:
     async def terminate(
         self: "pyrogram.Client",
-    ):
+    ) -> None:
         """Terminate the client by shutting down workers.
 
         This method does the opposite of :meth:`~pyrogram.Client.initialize`.
@@ -38,13 +37,6 @@ class Terminate:
         """
         if not self.is_initialized:
             raise ConnectionError("Client is already terminated")
-
-        if self.takeout_id:
-            await self.invoke(raw.functions.account.FinishTakeoutSession())
-            log.info("Takeout session %s finished", self.takeout_id)
-
-        await self.storage.save()
-        await self.dispatcher.stop()
 
         for media_session in self.media_sessions.values():
             await media_session.stop()
@@ -57,5 +49,6 @@ class Terminate:
             await self.updates_watchdog_task
 
         self.updates_watchdog_event.clear()
+        await self.storage.save()
 
         self.is_initialized = False

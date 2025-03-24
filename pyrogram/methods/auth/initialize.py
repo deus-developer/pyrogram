@@ -27,7 +27,7 @@ log = logging.getLogger(__name__)
 class Initialize:
     async def initialize(
         self: "pyrogram.Client",
-    ):
+    ) -> None:
         """Initialize the client by starting up workers.
 
         This method will start updates and download workers.
@@ -42,10 +42,6 @@ class Initialize:
 
         if self.is_initialized:
             raise ConnectionError("Client is already initialized")
-
-        self.load_plugins()
-
-        await self.dispatcher.start()
 
         self.updates_watchdog_task = asyncio.create_task(self.updates_watchdog())
 

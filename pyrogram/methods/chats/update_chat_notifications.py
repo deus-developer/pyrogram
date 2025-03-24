@@ -16,23 +16,21 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from datetime import datetime, timedelta
-from typing import Union
+from datetime import datetime
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import raw, types, utils
+
 
 class UpdateChatNotifications:
     async def update_chat_notifications(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        mute: bool = None,
-        mute_until: datetime = None,
-        stories_muted: bool = None,
-        stories_hide_sender: bool = None,
-        show_previews: bool = None
+        chat_id: int | str,
+        mute: bool | None = None,
+        mute_until: datetime | None = None,
+        stories_muted: bool | None = None,
+        stories_hide_sender: bool | None = None,
+        show_previews: bool | None = None,
     ) -> "types.Chat":
         """Update the notification settings for the selected chat
 
@@ -77,7 +75,7 @@ class UpdateChatNotifications:
         if not mute_until:
             mute_until = utils.max_datetime() if mute else utils.zero_datetime()
 
-        r = await self.invoke(
+        return await self.invoke(
             raw.functions.account.UpdateNotifySettings(
                 peer=raw.types.InputNotifyPeer(peer=await self.resolve_peer(chat_id)),
                 settings=raw.types.InputPeerNotifySettings(
@@ -86,8 +84,6 @@ class UpdateChatNotifications:
                     mute_until=utils.datetime_to_timestamp(mute_until),
                     stories_muted=stories_muted,
                     stories_hide_sender=stories_hide_sender,
-                )
-            )
+                ),
+            ),
         )
-
-        return r
