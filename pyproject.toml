@@ -1,0 +1,135 @@
+[build-system]
+requires = ["hatchling>=1.12.0", "setuptools>=42"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pyrogram"
+description = "Elegant, modern and asynchronous Telegram MTProto API framework in Python for users and bots"
+readme = "README.md"
+authors = [
+    { name = "Dan", email = "dan@pyrogram.org" },
+]
+
+keywords = [
+    "telegram",
+    "chat",
+    "messenger",
+    "mtproto",
+    "api",
+    "client",
+    "library",
+    "python",
+    "framework",
+]
+
+requires-python = ">=3.10"
+
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: Implementation",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Internet",
+    "Topic :: Communications",
+    "Topic :: Communications :: Chat",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+]
+
+dynamic = ["version"]
+
+dependencies = [
+    "tgcrypto==1.2.5",
+    "pysocks==1.7.1",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.15.0",
+    "ruff>=0.11.2",
+]
+
+[project.urls]
+Tracker = "https://github.com/deus-developer/pyrogram/issues"
+Community = "https://t.me/RuPyrogram"
+Source = "https://github.com/deus-developer/pyrogram"
+Documentation = "https://github.com/deus-developer/pyrogram"
+Homepage = "https://github.com/deus-developer/pyrogram"
+Download = "https://github.com/deus-developer/pyrogram/releases/latest"
+
+[tool.hatch.build.hooks.custom]
+path = "build_hooks.py"
+dependencies = [
+    "setuptools>=42",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["pyrogram"]
+
+[tool.hatch.version]
+path = "pyrogram/__init__.py"
+
+[tool.hatch.build]
+skip-excluded-dirs = true
+exclude = ["/compiler", "/tests", "/docs", "venv"]
+
+[tool.mypy]
+files = ["pyrogram"]
+strict = true
+python_version = "3.10"
+ignore_missing_imports = true
+install_types = true
+non_interactive = true
+
+# from https://blog.wolt.com/engineering/2021/09/30/professional-grade-mypy-configuration/
+disallow_untyped_defs = true
+no_implicit_optional = true
+check_untyped_defs = true
+warn_return_any = true
+show_error_codes = true
+warn_unused_ignores = true
+
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+disallow_any_unimported = false
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+include = [
+    "pyrogram/**/*.py",
+    "pyrogram/**/*.pyi",
+    "pyproject.toml",
+]
+exclude = [
+    "pyrogram/errors/exceptions",
+    "pyrogram/raw",
+]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "D",
+    "DTZ005",
+    "PLR2004",
+    "SLF001",
+]
+
+[tool.ruff.lint.isort]
+case-sensitive = true
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
