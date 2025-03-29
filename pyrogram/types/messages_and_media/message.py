@@ -729,6 +729,7 @@ class Message(Object, Update):
         if isinstance(message, raw.types.MessageEmpty):
             return Message(
                 id=message.id,
+                chat=types.Chat._parse(client, message, users, chats, is_chat=True),
                 empty=True,
                 business_connection_id=business_connection_id,
                 raw=message,
@@ -5187,7 +5188,7 @@ class Message(Object, Update):
                 button = keyboard[y][x]
             except IndexError as exc:
                 raise ValueError(
-                    f"The button at position ({x}, {y}) doesn't exist"
+                    f"The button at position ({x}, {y}) doesn't exist",
                 ) from exc
         elif isinstance(x, str) and y is None:
             label = x.encode("utf-16", "surrogatepass").decode("utf-16")

@@ -88,7 +88,7 @@ exclude = ["/compiler", "/tests", "/docs", "venv"]
 [tool.mypy]
 files = ["pyrogram"]
 strict = true
-python_version = "3.10"
+python_version = "3.12"
 ignore_missing_imports = true
 install_types = true
 non_interactive = true

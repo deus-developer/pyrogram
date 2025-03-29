@@ -12,7 +12,7 @@ from pyrogram.dispatcher.schemas import (
 UpdateParserT = Callable[
     [
         "pyrogram.Client",
-        "TelegramRawUpdate",
+        "TelegramRawUpdate[Any]",
     ],
     Awaitable[TelegramUpdate],
 ]
