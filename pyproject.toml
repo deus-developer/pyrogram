@@ -70,10 +70,7 @@ Homepage = "https://github.com/deus-developer/pyrogram"
 Download = "https://github.com/deus-developer/pyrogram/releases/latest"
 
 [tool.hatch.build.hooks.custom]
-path = "build_hooks.py"
-dependencies = [
-    "setuptools>=42",
-]
+path = "./build_hooks.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["pyrogram"]
@@ -83,7 +80,7 @@ path = "pyrogram/__init__.py"
 
 [tool.hatch.build]
 skip-excluded-dirs = true
-exclude = ["/compiler", "/tests", "/docs", "venv"]
+exclude = ["/compiler", "/tests", "/docs", ".venv", "venv"]
 
 [tool.mypy]
 files = ["pyrogram"]
