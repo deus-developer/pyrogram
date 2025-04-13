@@ -635,6 +635,7 @@ class Message(Object, Update):
         if isinstance(message, raw.types.MessageEmpty):
             return Message(
                 id=message.id,
+                chat=types.Chat._parse(client, message, users, chats, is_chat=True),
                 empty=True,
                 business_connection_id=business_connection_id,
                 raw=message,

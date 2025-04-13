@@ -390,12 +390,15 @@ class Chat(Object):
     @staticmethod
     def _parse(
         client,
-        message: Union[raw.types.Message, raw.types.MessageService],
+        message: Union[raw.types.Message, raw.types.MessageService, raw.types.MessageEmpty],
         users: dict,
         chats: dict,
         is_chat: bool
     ) -> "Chat":
-        from_id = utils.get_raw_peer_id(message.from_id)
+        from_id: int | None = None
+        if not isinstance(message, raw.types.MessageEmpty):
+            from_id = utils.get_raw_peer_id(message.from_id)
+
         peer_id = utils.get_raw_peer_id(message.peer_id)
         chat_id = (peer_id or from_id) if is_chat else (from_id or peer_id)
 

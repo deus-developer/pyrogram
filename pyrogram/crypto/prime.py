@@ -17,6 +17,7 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from random import randint
+from math import gcd
 
 CURRENT_DH_PRIME = int(
     "C71CAEB9C6B1C9048E6C522F70F13F73980D40238E3E21C14934D037563D930F"
@@ -29,18 +30,6 @@ CURRENT_DH_PRIME = int(
     "0D8115F635B105EE2E4E15D04B2454BF6F4FADF034B10403119CD8E3B92FCC5B",
     16
 )
-
-
-# Recursive variant
-# def gcd(cls, a: int, b: int) -> int:
-#     return cls.gcd(b, a % b) if b else a
-
-def gcd(a: int, b: int) -> int:
-    while b:
-        a, b = b, a % b
-
-    return a
-
 
 def decompose(pq: int) -> int:
     # https://comeoncodeon.wordpress.com/2010/09/18/pollard-rho-brent-integer-factorization/
