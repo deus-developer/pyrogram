@@ -1,2 +1,0 @@
-pysocks==1.7.1
-tgcrypto==1.2.5

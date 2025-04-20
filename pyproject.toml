@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "Pyrogram"
+version = "0.1.0"
+description = "Elegant, modern and asynchronous Telegram MTProto API framework in Python for users and bots"
+readme = "README.md"
+requires-python = ">=3.12"
+license = {text = "LGPLv3"}
+authors = [
+  {name = "Dan", email = "dan@pyrogram.org"}
+]
+dependencies = [
+  "pysocks==1.7.1",
+  "tgcrypto==1.2.5"
+]
+
+[project.urls]
+Homepage = "https://github.com/pyrogram/pyrogram"
+
+[tool.hatch.build.targets.wheel]
+packages = ["pyrogram"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
