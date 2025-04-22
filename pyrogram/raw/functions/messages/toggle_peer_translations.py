@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class TogglePeerTranslations(TLObject):  # type: ignore
+class TogglePeerTranslations(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,27 @@ class TogglePeerTranslations(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["peer", "disabled"]
+    __slots__: list[str] = ["disabled", "peer"]
 
-    ID = 0xe47cb579
+    ID = 0xE47CB579
     QUALNAME = "functions.messages.TogglePeerTranslations"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", disabled: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        disabled: bool | None = None,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.disabled = disabled  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "TogglePeerTranslations":
-        
         flags = Int.read(b)
-        
+
         disabled = True if flags & (1 << 0) else False
         peer = TLObject.read(b)
-        
+
         return TogglePeerTranslations(peer=peer, disabled=disabled)
 
     def write(self, *args) -> bytes:
@@ -74,7 +80,7 @@ class TogglePeerTranslations(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.disabled else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         return b.getvalue()

@@ -4,8 +4,10 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type LangPackString = Union["raw.types.LangPackString, raw.types.LangPackStringDeleted, raw.types.LangPackStringPluralized"]
+type LangPackString = (
+    raw.types.LangPackString
+    | raw.types.LangPackStringDeleted
+    | raw.types.LangPackStringPluralized
+)

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,9 +59,9 @@ class ExportedMessageLink(TLObject):  # type: ignore
             channels.ExportMessageLink
     """
 
-    __slots__: List[str] = ["link", "html"]
+    __slots__: list[str] = ["html", "link"]
 
-    ID = 0x5dab1af4
+    ID = 0x5DAB1AF4
     QUALNAME = "types.ExportedMessageLink"
 
     def __init__(self, *, link: str, html: str) -> None:
@@ -69,11 +71,11 @@ class ExportedMessageLink(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ExportedMessageLink":
         # No flags
-        
+
         link = String.read(b)
-        
+
         html = String.read(b)
-        
+
         return ExportedMessageLink(link=link, html=html)
 
     def write(self, *args) -> bytes:
@@ -81,9 +83,9 @@ class ExportedMessageLink(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.link))
-        
+
         b.write(String(self.html))
-        
+
         return b.getvalue()

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -72,12 +75,30 @@ class ChannelDifference(TLObject):  # type: ignore
             updates.GetChannelDifference
     """
 
-    __slots__: List[str] = ["pts", "new_messages", "other_updates", "chats", "users", "final", "timeout"]
+    __slots__: list[str] = [
+        "chats",
+        "final",
+        "new_messages",
+        "other_updates",
+        "pts",
+        "timeout",
+        "users",
+    ]
 
-    ID = 0x2064674e
+    ID = 0x2064674E
     QUALNAME = "types.updates.ChannelDifference"
 
-    def __init__(self, *, pts: int, new_messages: List["raw.base.Message"], other_updates: List["raw.base.Update"], chats: List["raw.base.Chat"], users: List["raw.base.User"], final: Optional[bool] = None, timeout: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        pts: int,
+        new_messages: list["raw.base.Message"],
+        other_updates: list["raw.base.Update"],
+        chats: list["raw.base.Chat"],
+        users: list["raw.base.User"],
+        final: bool | None = None,
+        timeout: int | None = None,
+    ) -> None:
         self.pts = pts  # int
         self.new_messages = new_messages  # Vector<Message>
         self.other_updates = other_updates  # Vector<Update>
@@ -88,22 +109,29 @@ class ChannelDifference(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChannelDifference":
-        
         flags = Int.read(b)
-        
+
         final = True if flags & (1 << 0) else False
         pts = Int.read(b)
-        
+
         timeout = Int.read(b) if flags & (1 << 1) else None
         new_messages = TLObject.read(b)
-        
+
         other_updates = TLObject.read(b)
-        
+
         chats = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
-        return ChannelDifference(pts=pts, new_messages=new_messages, other_updates=other_updates, chats=chats, users=users, final=final, timeout=timeout)
+
+        return ChannelDifference(
+            pts=pts,
+            new_messages=new_messages,
+            other_updates=other_updates,
+            chats=chats,
+            users=users,
+            final=final,
+            timeout=timeout,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -113,18 +141,18 @@ class ChannelDifference(TLObject):  # type: ignore
         flags |= (1 << 0) if self.final else 0
         flags |= (1 << 1) if self.timeout is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.pts))
-        
+
         if self.timeout is not None:
             b.write(Int(self.timeout))
-        
+
         b.write(Vector(self.new_messages))
-        
+
         b.write(Vector(self.other_updates))
-        
+
         b.write(Vector(self.chats))
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

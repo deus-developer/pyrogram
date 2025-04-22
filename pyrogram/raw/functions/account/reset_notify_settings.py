@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ResetNotifySettings(TLObject):  # type: ignore
+class ResetNotifySettings(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -44,9 +45,9 @@ class ResetNotifySettings(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
-    ID = 0xdb7e1747
+    ID = 0xDB7E1747
     QUALNAME = "functions.account.ResetNotifySettings"
 
     def __init__(self) -> None:
@@ -55,7 +56,7 @@ class ResetNotifySettings(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ResetNotifySettings":
         # No flags
-        
+
         return ResetNotifySettings()
 
     def write(self, *args) -> bytes:
@@ -63,5 +64,5 @@ class ResetNotifySettings(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         return b.getvalue()

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class LeaveChatlist(TLObject):  # type: ignore
+class LeaveChatlist(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +51,28 @@ class LeaveChatlist(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["chatlist", "peers"]
+    __slots__: list[str] = ["chatlist", "peers"]
 
-    ID = 0x74fae13a
+    ID = 0x74FAE13A
     QUALNAME = "functions.chatlists.LeaveChatlist"
 
-    def __init__(self, *, chatlist: "raw.base.InputChatlist", peers: List["raw.base.InputPeer"]) -> None:
+    def __init__(
+        self,
+        *,
+        chatlist: "raw.base.InputChatlist",
+        peers: list["raw.base.InputPeer"],
+    ) -> None:
         self.chatlist = chatlist  # InputChatlist
         self.peers = peers  # Vector<InputPeer>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "LeaveChatlist":
         # No flags
-        
+
         chatlist = TLObject.read(b)
-        
+
         peers = TLObject.read(b)
-        
+
         return LeaveChatlist(chatlist=chatlist, peers=peers)
 
     def write(self, *args) -> bytes:
@@ -72,9 +80,9 @@ class LeaveChatlist(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.chatlist.write())
-        
+
         b.write(Vector(self.peers))
-        
+
         return b.getvalue()

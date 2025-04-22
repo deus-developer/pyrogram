@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class LeaveChannel(TLObject):  # type: ignore
+class LeaveChannel(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class LeaveChannel(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["channel"]
+    __slots__: list[str] = ["channel"]
 
-    ID = 0xf836aa95
+    ID = 0xF836AA95
     QUALNAME = "functions.channels.LeaveChannel"
 
     def __init__(self, *, channel: "raw.base.InputChannel") -> None:
@@ -56,9 +58,9 @@ class LeaveChannel(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "LeaveChannel":
         # No flags
-        
+
         channel = TLObject.read(b)
-        
+
         return LeaveChannel(channel=channel)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class LeaveChannel(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.channel.write())
-        
+
         return b.getvalue()

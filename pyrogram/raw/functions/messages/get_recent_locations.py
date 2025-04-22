@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetRecentLocations(TLObject):  # type: ignore
+class GetRecentLocations(TLFunction["raw.base.messages.Messages"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,9 +54,9 @@ class GetRecentLocations(TLObject):  # type: ignore
         :obj:`messages.Messages <pyrogram.raw.base.messages.Messages>`
     """
 
-    __slots__: List[str] = ["peer", "limit", "hash"]
+    __slots__: list[str] = ["hash", "limit", "peer"]
 
-    ID = 0x702a40e0
+    ID = 0x702A40E0
     QUALNAME = "functions.messages.GetRecentLocations"
 
     def __init__(self, *, peer: "raw.base.InputPeer", limit: int, hash: int) -> None:
@@ -64,13 +67,13 @@ class GetRecentLocations(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetRecentLocations":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         limit = Int.read(b)
-        
+
         hash = Long.read(b)
-        
+
         return GetRecentLocations(peer=peer, limit=limit, hash=hash)
 
     def write(self, *args) -> bytes:
@@ -78,11 +81,11 @@ class GetRecentLocations(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.limit))
-        
+
         b.write(Long(self.hash))
-        
+
         return b.getvalue()

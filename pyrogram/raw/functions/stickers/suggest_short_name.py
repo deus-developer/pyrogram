@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SuggestShortName(TLObject):  # type: ignore
+class SuggestShortName(TLFunction["raw.base.stickers.SuggestedShortName"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class SuggestShortName(TLObject):  # type: ignore
         :obj:`stickers.SuggestedShortName <pyrogram.raw.base.stickers.SuggestedShortName>`
     """
 
-    __slots__: List[str] = ["title"]
+    __slots__: list[str] = ["title"]
 
-    ID = 0x4dafc503
+    ID = 0x4DAFC503
     QUALNAME = "functions.stickers.SuggestShortName"
 
     def __init__(self, *, title: str) -> None:
@@ -56,9 +58,9 @@ class SuggestShortName(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SuggestShortName":
         # No flags
-        
+
         title = String.read(b)
-        
+
         return SuggestShortName(title=title)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class SuggestShortName(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.title))
-        
+
         return b.getvalue()

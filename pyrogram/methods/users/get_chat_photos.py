@@ -16,16 +16,16 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, AsyncGenerator, Optional
+from collections.abc import AsyncGenerator
 
 import pyrogram
-from pyrogram import types, raw, utils
+from pyrogram import raw, types, utils
 
 
 class GetChatPhotos:
     async def get_chat_photos(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         limit: int = 0,
     ) -> AsyncGenerator["types.Photo", None]:
         """Get a chat or a user profile photos sequentially.
@@ -56,8 +56,8 @@ class GetChatPhotos:
         if isinstance(peer_id, raw.types.InputPeerChannel):
             r = await self.invoke(
                 raw.functions.channels.GetFullChannel(
-                    channel=peer_id
-                )
+                    channel=peer_id,
+                ),
             )
 
             current = types.Photo.from_raw_tl(self, r.full_chat.chat_photo) or []
@@ -76,23 +76,26 @@ class GetChatPhotos:
                         limit=limit,
                         max_id=0,
                         min_id=0,
-                        hash=0
-                    )
-                )
+                        hash=0,
+                    ),
+                ),
             )
 
             extra = [message.new_chat_photo for message in r]
 
             if extra:
                 if current:
-                    photos = ([current] + extra) if current.file_id != extra[0].file_id else extra
+                    photos = (
+                        ([current] + extra)
+                        if current.file_id != extra[0].file_id
+                        else extra
+                    )
                 else:
                     photos = extra
+            elif current:
+                photos = [current]
             else:
-                if current:
-                    photos = [current]
-                else:
-                    photos = []
+                photos = []
 
             current = 0
 
@@ -115,8 +118,8 @@ class GetChatPhotos:
                         user_id=peer_id,
                         offset=offset,
                         max_id=0,
-                        limit=limit
-                    )
+                        limit=limit,
+                    ),
                 )
 
                 photos = [types.Photo.from_raw_tl(self, photo) for photo in r.photos]

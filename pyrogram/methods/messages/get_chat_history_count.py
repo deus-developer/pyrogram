@@ -17,7 +17,6 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -28,7 +27,7 @@ log = logging.getLogger(__name__)
 class GetChatHistoryCount:
     async def get_chat_history_count(
         self: "pyrogram.Client",
-        chat_id: Union[int, str]
+        chat_id: int | str,
     ) -> int:
         """Get the total count of messages in a chat.
 
@@ -52,7 +51,6 @@ class GetChatHistoryCount:
 
                 await app.get_chat_history_count(chat_id)
         """
-
         r = await self.invoke(
             raw.functions.messages.GetHistory(
                 peer=await self.resolve_peer(chat_id),
@@ -62,11 +60,10 @@ class GetChatHistoryCount:
                 limit=1,
                 max_id=0,
                 min_id=0,
-                hash=0
-            )
+                hash=0,
+            ),
         )
 
         if isinstance(r, raw.types.messages.Messages):
             return len(r.messages)
-        else:
-            return r.count
+        return r.count

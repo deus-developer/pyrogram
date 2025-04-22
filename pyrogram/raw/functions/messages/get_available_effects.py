@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetAvailableEffects(TLObject):  # type: ignore
+class GetAvailableEffects(TLFunction["raw.base.messages.AvailableEffects"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +46,9 @@ class GetAvailableEffects(TLObject):  # type: ignore
         :obj:`messages.AvailableEffects <pyrogram.raw.base.messages.AvailableEffects>`
     """
 
-    __slots__: List[str] = ["hash"]
+    __slots__: list[str] = ["hash"]
 
-    ID = 0xdea20a39
+    ID = 0xDEA20A39
     QUALNAME = "functions.messages.GetAvailableEffects"
 
     def __init__(self, *, hash: int) -> None:
@@ -56,9 +57,9 @@ class GetAvailableEffects(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetAvailableEffects":
         # No flags
-        
+
         hash = Int.read(b)
-        
+
         return GetAvailableEffects(hash=hash)
 
     def write(self, *args) -> bytes:
@@ -66,7 +67,7 @@ class GetAvailableEffects(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.hash))
-        
+
         return b.getvalue()

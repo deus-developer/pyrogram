@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,23 +51,22 @@ class KeyboardButtonRequestPoll(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["text", "quiz"]
+    __slots__: list[str] = ["quiz", "text"]
 
-    ID = 0xbbc7515d
+    ID = 0xBBC7515D
     QUALNAME = "types.KeyboardButtonRequestPoll"
 
-    def __init__(self, *, text: str, quiz: Optional[bool] = None) -> None:
+    def __init__(self, *, text: str, quiz: bool | None = None) -> None:
         self.text = text  # string
         self.quiz = quiz  # flags.0?Bool
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "KeyboardButtonRequestPoll":
-        
         flags = Int.read(b)
-        
+
         quiz = Bool.read(b) if flags & (1 << 0) else None
         text = String.read(b)
-        
+
         return KeyboardButtonRequestPoll(text=text, quiz=quiz)
 
     def write(self, *args) -> bytes:
@@ -74,10 +76,10 @@ class KeyboardButtonRequestPoll(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.quiz is not None else 0
         b.write(Int(flags))
-        
+
         if self.quiz is not None:
             b.write(Bool(self.quiz))
-        
+
         b.write(String(self.text))
-        
+
         return b.getvalue()

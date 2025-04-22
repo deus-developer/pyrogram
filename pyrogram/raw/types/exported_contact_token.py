@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,9 +59,9 @@ class ExportedContactToken(TLObject):  # type: ignore
             contacts.ExportContactToken
     """
 
-    __slots__: List[str] = ["url", "expires"]
+    __slots__: list[str] = ["expires", "url"]
 
-    ID = 0x41bf109b
+    ID = 0x41BF109B
     QUALNAME = "types.ExportedContactToken"
 
     def __init__(self, *, url: str, expires: int) -> None:
@@ -69,11 +71,11 @@ class ExportedContactToken(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ExportedContactToken":
         # No flags
-        
+
         url = String.read(b)
-        
+
         expires = Int.read(b)
-        
+
         return ExportedContactToken(url=url, expires=expires)
 
     def write(self, *args) -> bytes:
@@ -81,9 +83,9 @@ class ExportedContactToken(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.url))
-        
+
         b.write(Int(self.expires))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class UpdateBusinessIntro(TLObject):  # type: ignore
+class UpdateBusinessIntro(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class UpdateBusinessIntro(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["intro"]
+    __slots__: list[str] = ["intro"]
 
-    ID = 0xa614d034
+    ID = 0xA614D034
     QUALNAME = "functions.account.UpdateBusinessIntro"
 
     def __init__(self, *, intro: "raw.base.InputBusinessIntro" = None) -> None:
@@ -55,11 +57,10 @@ class UpdateBusinessIntro(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateBusinessIntro":
-        
         flags = Int.read(b)
-        
+
         intro = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         return UpdateBusinessIntro(intro=intro)
 
     def write(self, *args) -> bytes:
@@ -69,8 +70,8 @@ class UpdateBusinessIntro(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.intro is not None else 0
         b.write(Int(flags))
-        
+
         if self.intro is not None:
             b.write(self.intro.write())
-        
+
         return b.getvalue()

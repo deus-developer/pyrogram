@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -80,12 +84,34 @@ class SecureValue(TLObject):  # type: ignore
             account.SaveSecureValue
     """
 
-    __slots__: List[str] = ["type", "hash", "data", "front_side", "reverse_side", "selfie", "translation", "files", "plain_data"]
+    __slots__: list[str] = [
+        "data",
+        "files",
+        "front_side",
+        "hash",
+        "plain_data",
+        "reverse_side",
+        "selfie",
+        "translation",
+        "type",
+    ]
 
-    ID = 0x187fa0ca
+    ID = 0x187FA0CA
     QUALNAME = "types.SecureValue"
 
-    def __init__(self, *, type: "raw.base.SecureValueType", hash: bytes, data: "raw.base.SecureData" = None, front_side: "raw.base.SecureFile" = None, reverse_side: "raw.base.SecureFile" = None, selfie: "raw.base.SecureFile" = None, translation: Optional[List["raw.base.SecureFile"]] = None, files: Optional[List["raw.base.SecureFile"]] = None, plain_data: "raw.base.SecurePlainData" = None) -> None:
+    def __init__(
+        self,
+        *,
+        type: "raw.base.SecureValueType",
+        hash: bytes,
+        data: "raw.base.SecureData" = None,
+        front_side: "raw.base.SecureFile" = None,
+        reverse_side: "raw.base.SecureFile" = None,
+        selfie: "raw.base.SecureFile" = None,
+        translation: list["raw.base.SecureFile"] | None = None,
+        files: list["raw.base.SecureFile"] | None = None,
+        plain_data: "raw.base.SecurePlainData" = None,
+    ) -> None:
         self.type = type  # SecureValueType
         self.hash = hash  # bytes
         self.data = data  # flags.0?SecureData
@@ -98,28 +124,37 @@ class SecureValue(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SecureValue":
-        
         flags = Int.read(b)
-        
+
         type = TLObject.read(b)
-        
+
         data = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         front_side = TLObject.read(b) if flags & (1 << 1) else None
-        
+
         reverse_side = TLObject.read(b) if flags & (1 << 2) else None
-        
+
         selfie = TLObject.read(b) if flags & (1 << 3) else None
-        
+
         translation = TLObject.read(b) if flags & (1 << 6) else []
-        
+
         files = TLObject.read(b) if flags & (1 << 4) else []
-        
+
         plain_data = TLObject.read(b) if flags & (1 << 5) else None
-        
+
         hash = Bytes.read(b)
-        
-        return SecureValue(type=type, hash=hash, data=data, front_side=front_side, reverse_side=reverse_side, selfie=selfie, translation=translation, files=files, plain_data=plain_data)
+
+        return SecureValue(
+            type=type,
+            hash=hash,
+            data=data,
+            front_side=front_side,
+            reverse_side=reverse_side,
+            selfie=selfie,
+            translation=translation,
+            files=files,
+            plain_data=plain_data,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -134,30 +169,30 @@ class SecureValue(TLObject):  # type: ignore
         flags |= (1 << 4) if self.files else 0
         flags |= (1 << 5) if self.plain_data is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.type.write())
-        
+
         if self.data is not None:
             b.write(self.data.write())
-        
+
         if self.front_side is not None:
             b.write(self.front_side.write())
-        
+
         if self.reverse_side is not None:
             b.write(self.reverse_side.write())
-        
+
         if self.selfie is not None:
             b.write(self.selfie.write())
-        
+
         if self.translation is not None:
             b.write(Vector(self.translation))
-        
+
         if self.files is not None:
             b.write(Vector(self.files))
-        
+
         if self.plain_data is not None:
             b.write(self.plain_data.write())
-        
+
         b.write(Bytes(self.hash))
-        
+
         return b.getvalue()

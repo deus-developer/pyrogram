@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class DeactivateAllUsernames(TLObject):  # type: ignore
+class DeactivateAllUsernames(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class DeactivateAllUsernames(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["channel"]
+    __slots__: list[str] = ["channel"]
 
-    ID = 0xa245dd3
+    ID = 0xA245DD3
     QUALNAME = "functions.channels.DeactivateAllUsernames"
 
     def __init__(self, *, channel: "raw.base.InputChannel") -> None:
@@ -56,9 +58,9 @@ class DeactivateAllUsernames(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DeactivateAllUsernames":
         # No flags
-        
+
         channel = TLObject.read(b)
-        
+
         return DeactivateAllUsernames(channel=channel)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class DeactivateAllUsernames(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.channel.write())
-        
+
         return b.getvalue()

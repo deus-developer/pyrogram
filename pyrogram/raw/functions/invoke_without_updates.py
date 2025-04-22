@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class InvokeWithoutUpdates(TLObject):  # type: ignore
+class InvokeWithoutUpdates(TLFunction["raw.base.X"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +46,9 @@ class InvokeWithoutUpdates(TLObject):  # type: ignore
         Any object from :obj:`~pyrogram.raw.types`
     """
 
-    __slots__: List[str] = ["query"]
+    __slots__: list[str] = ["query"]
 
-    ID = 0xbf9459b7
+    ID = 0xBF9459B7
     QUALNAME = "functions.InvokeWithoutUpdates"
 
     def __init__(self, *, query: TLObject) -> None:
@@ -56,9 +57,9 @@ class InvokeWithoutUpdates(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InvokeWithoutUpdates":
         # No flags
-        
+
         query = TLObject.read(b)
-        
+
         return InvokeWithoutUpdates(query=query)
 
     def write(self, *args) -> bytes:
@@ -66,7 +67,7 @@ class InvokeWithoutUpdates(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.query.write())
-        
+
         return b.getvalue()

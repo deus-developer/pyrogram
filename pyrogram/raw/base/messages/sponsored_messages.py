@@ -4,8 +4,8 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type SponsoredMessages = Union["raw.types.messages.SponsoredMessages, raw.types.messages.SponsoredMessagesEmpty"]
+type SponsoredMessages = (
+    raw.types.messages.SponsoredMessages | raw.types.messages.SponsoredMessagesEmpty
+)

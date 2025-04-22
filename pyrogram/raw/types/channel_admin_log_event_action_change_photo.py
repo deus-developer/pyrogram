@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,33 +50,41 @@ class ChannelAdminLogEventActionChangePhoto(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["prev_photo", "new_photo"]
+    __slots__: list[str] = ["new_photo", "prev_photo"]
 
-    ID = 0x434bd2af
+    ID = 0x434BD2AF
     QUALNAME = "types.ChannelAdminLogEventActionChangePhoto"
 
-    def __init__(self, *, prev_photo: "raw.base.Photo", new_photo: "raw.base.Photo") -> None:
+    def __init__(
+        self,
+        *,
+        prev_photo: "raw.base.Photo",
+        new_photo: "raw.base.Photo",
+    ) -> None:
         self.prev_photo = prev_photo  # Photo
         self.new_photo = new_photo  # Photo
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChannelAdminLogEventActionChangePhoto":
         # No flags
-        
+
         prev_photo = TLObject.read(b)
-        
+
         new_photo = TLObject.read(b)
-        
-        return ChannelAdminLogEventActionChangePhoto(prev_photo=prev_photo, new_photo=new_photo)
+
+        return ChannelAdminLogEventActionChangePhoto(
+            prev_photo=prev_photo,
+            new_photo=new_photo,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.prev_photo.write())
-        
+
         b.write(self.new_photo.write())
-        
+
         return b.getvalue()

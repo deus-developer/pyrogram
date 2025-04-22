@@ -17,11 +17,10 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import List
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
+from pyrogram import raw, types, utils
+
 from ..object import Object
 
 
@@ -61,14 +60,14 @@ class Giveaway(Object):
         self,
         *,
         client: "pyrogram.Client" = None,
-        chats: List["types.Chat"] = None,
+        chats: list["types.Chat"] = None,
         quantity: int = None,
         months: int = None,
         until_date: datetime = None,
         description: str = None,
         only_new_subscribers: bool = None,
-        only_for_countries: List[str] = None,
-        winners_are_visible: bool = None
+        only_for_countries: list[str] = None,
+        winners_are_visible: bool = None,
     ):
         super().__init__(client)
 
@@ -87,13 +86,20 @@ class Giveaway(Object):
         giveaway: "raw.types.MessageMediaGiveaway",
     ) -> "Giveaway":
         return Giveaway(
-            chats=types.List(types.Chat.from_raw_tl_channel_chat(client, client.entity_cache.get_channel(channel_id=i)) for i in giveaway.channels),
+            chats=types.List(
+                types.Chat.from_raw_tl_channel_chat(
+                    client,
+                    client.entity_cache.get_channel(channel_id=i),
+                )
+                for i in giveaway.channels
+            ),
             quantity=giveaway.quantity,
             months=giveaway.months,
             until_date=utils.timestamp_to_datetime(giveaway.until_date),
             description=getattr(giveaway, "prize_description", None) or None,
             only_new_subscribers=getattr(giveaway, "only_new_subscribers", None),
-            only_for_countries=types.List(getattr(giveaway, "countries_iso2", [])) or None,
+            only_for_countries=types.List(getattr(giveaway, "countries_iso2", []))
+            or None,
             winners_are_visible=getattr(giveaway, "winners_are_visible", None),
-            client=client
+            client=client,
         )

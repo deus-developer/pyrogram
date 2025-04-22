@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetMessages(TLObject):  # type: ignore
+class GetMessages(TLFunction["raw.base.messages.Messages"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,20 +48,20 @@ class GetMessages(TLObject):  # type: ignore
         :obj:`messages.Messages <pyrogram.raw.base.messages.Messages>`
     """
 
-    __slots__: List[str] = ["id"]
+    __slots__: list[str] = ["id"]
 
-    ID = 0x63c66506
+    ID = 0x63C66506
     QUALNAME = "functions.messages.GetMessages"
 
-    def __init__(self, *, id: List["raw.base.InputMessage"]) -> None:
+    def __init__(self, *, id: list["raw.base.InputMessage"]) -> None:
         self.id = id  # Vector<InputMessage>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetMessages":
         # No flags
-        
+
         id = TLObject.read(b)
-        
+
         return GetMessages(id=id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class GetMessages(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.id))
-        
+
         return b.getvalue()

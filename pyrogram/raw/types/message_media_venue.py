@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -71,12 +74,28 @@ class MessageMediaVenue(TLObject):  # type: ignore
             messages.UploadImportedMedia
     """
 
-    __slots__: List[str] = ["geo", "title", "address", "provider", "venue_id", "venue_type"]
+    __slots__: list[str] = [
+        "address",
+        "geo",
+        "provider",
+        "title",
+        "venue_id",
+        "venue_type",
+    ]
 
-    ID = 0x2ec0533f
+    ID = 0x2EC0533F
     QUALNAME = "types.MessageMediaVenue"
 
-    def __init__(self, *, geo: "raw.base.GeoPoint", title: str, address: str, provider: str, venue_id: str, venue_type: str) -> None:
+    def __init__(
+        self,
+        *,
+        geo: "raw.base.GeoPoint",
+        title: str,
+        address: str,
+        provider: str,
+        venue_id: str,
+        venue_type: str,
+    ) -> None:
         self.geo = geo  # GeoPoint
         self.title = title  # string
         self.address = address  # string
@@ -87,37 +106,44 @@ class MessageMediaVenue(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageMediaVenue":
         # No flags
-        
+
         geo = TLObject.read(b)
-        
+
         title = String.read(b)
-        
+
         address = String.read(b)
-        
+
         provider = String.read(b)
-        
+
         venue_id = String.read(b)
-        
+
         venue_type = String.read(b)
-        
-        return MessageMediaVenue(geo=geo, title=title, address=address, provider=provider, venue_id=venue_id, venue_type=venue_type)
+
+        return MessageMediaVenue(
+            geo=geo,
+            title=title,
+            address=address,
+            provider=provider,
+            venue_id=venue_id,
+            venue_type=venue_type,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.geo.write())
-        
+
         b.write(String(self.title))
-        
+
         b.write(String(self.address))
-        
+
         b.write(String(self.provider))
-        
+
         b.write(String(self.venue_id))
-        
+
         b.write(String(self.venue_type))
-        
+
         return b.getvalue()

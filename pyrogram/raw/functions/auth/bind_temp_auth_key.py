@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class BindTempAuthKey(TLObject):  # type: ignore
+class BindTempAuthKey(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +57,24 @@ class BindTempAuthKey(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["perm_auth_key_id", "nonce", "expires_at", "encrypted_message"]
+    __slots__: list[str] = [
+        "encrypted_message",
+        "expires_at",
+        "nonce",
+        "perm_auth_key_id",
+    ]
 
-    ID = 0xcdd42a05
+    ID = 0xCDD42A05
     QUALNAME = "functions.auth.BindTempAuthKey"
 
-    def __init__(self, *, perm_auth_key_id: int, nonce: int, expires_at: int, encrypted_message: bytes) -> None:
+    def __init__(
+        self,
+        *,
+        perm_auth_key_id: int,
+        nonce: int,
+        expires_at: int,
+        encrypted_message: bytes,
+    ) -> None:
         self.perm_auth_key_id = perm_auth_key_id  # long
         self.nonce = nonce  # long
         self.expires_at = expires_at  # int
@@ -68,29 +83,34 @@ class BindTempAuthKey(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "BindTempAuthKey":
         # No flags
-        
+
         perm_auth_key_id = Long.read(b)
-        
+
         nonce = Long.read(b)
-        
+
         expires_at = Int.read(b)
-        
+
         encrypted_message = Bytes.read(b)
-        
-        return BindTempAuthKey(perm_auth_key_id=perm_auth_key_id, nonce=nonce, expires_at=expires_at, encrypted_message=encrypted_message)
+
+        return BindTempAuthKey(
+            perm_auth_key_id=perm_auth_key_id,
+            nonce=nonce,
+            expires_at=expires_at,
+            encrypted_message=encrypted_message,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.perm_auth_key_id))
-        
+
         b.write(Long(self.nonce))
-        
+
         b.write(Int(self.expires_at))
-        
+
         b.write(Bytes(self.encrypted_message))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,12 +59,20 @@ class MyBoost(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["slot", "date", "expires", "peer", "cooldown_until_date"]
+    __slots__: list[str] = ["cooldown_until_date", "date", "expires", "peer", "slot"]
 
-    ID = 0xc448415c
+    ID = 0xC448415C
     QUALNAME = "types.MyBoost"
 
-    def __init__(self, *, slot: int, date: int, expires: int, peer: "raw.base.Peer" = None, cooldown_until_date: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        slot: int,
+        date: int,
+        expires: int,
+        peer: "raw.base.Peer" = None,
+        cooldown_until_date: int | None = None,
+    ) -> None:
         self.slot = slot  # int
         self.date = date  # int
         self.expires = expires  # int
@@ -71,19 +81,24 @@ class MyBoost(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MyBoost":
-        
         flags = Int.read(b)
-        
+
         slot = Int.read(b)
-        
+
         peer = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         date = Int.read(b)
-        
+
         expires = Int.read(b)
-        
+
         cooldown_until_date = Int.read(b) if flags & (1 << 1) else None
-        return MyBoost(slot=slot, date=date, expires=expires, peer=peer, cooldown_until_date=cooldown_until_date)
+        return MyBoost(
+            slot=slot,
+            date=date,
+            expires=expires,
+            peer=peer,
+            cooldown_until_date=cooldown_until_date,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -93,17 +108,17 @@ class MyBoost(TLObject):  # type: ignore
         flags |= (1 << 0) if self.peer is not None else 0
         flags |= (1 << 1) if self.cooldown_until_date is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.slot))
-        
+
         if self.peer is not None:
             b.write(self.peer.write())
-        
+
         b.write(Int(self.date))
-        
+
         b.write(Int(self.expires))
-        
+
         if self.cooldown_until_date is not None:
             b.write(Int(self.cooldown_until_date))
-        
+
         return b.getvalue()

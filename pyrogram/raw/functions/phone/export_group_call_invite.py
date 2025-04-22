@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ExportGroupCallInvite(TLObject):  # type: ignore
+class ExportGroupCallInvite(TLFunction["raw.base.phone.ExportedGroupCallInvite"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,27 @@ class ExportGroupCallInvite(TLObject):  # type: ignore
         :obj:`phone.ExportedGroupCallInvite <pyrogram.raw.base.phone.ExportedGroupCallInvite>`
     """
 
-    __slots__: List[str] = ["call", "can_self_unmute"]
+    __slots__: list[str] = ["call", "can_self_unmute"]
 
-    ID = 0xe6aa647f
+    ID = 0xE6AA647F
     QUALNAME = "functions.phone.ExportGroupCallInvite"
 
-    def __init__(self, *, call: "raw.base.InputGroupCall", can_self_unmute: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        call: "raw.base.InputGroupCall",
+        can_self_unmute: bool | None = None,
+    ) -> None:
         self.call = call  # InputGroupCall
         self.can_self_unmute = can_self_unmute  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ExportGroupCallInvite":
-        
         flags = Int.read(b)
-        
+
         can_self_unmute = True if flags & (1 << 0) else False
         call = TLObject.read(b)
-        
+
         return ExportGroupCallInvite(call=call, can_self_unmute=can_self_unmute)
 
     def write(self, *args) -> bytes:
@@ -74,7 +80,7 @@ class ExportGroupCallInvite(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.can_self_unmute else 0
         b.write(Int(flags))
-        
+
         b.write(self.call.write())
-        
+
         return b.getvalue()

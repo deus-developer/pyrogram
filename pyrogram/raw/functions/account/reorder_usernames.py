@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ReorderUsernames(TLObject):  # type: ignore
+class ReorderUsernames(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,20 +48,20 @@ class ReorderUsernames(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["order"]
+    __slots__: list[str] = ["order"]
 
-    ID = 0xef500eab
+    ID = 0xEF500EAB
     QUALNAME = "functions.account.ReorderUsernames"
 
-    def __init__(self, *, order: List[str]) -> None:
+    def __init__(self, *, order: list[str]) -> None:
         self.order = order  # Vector<string>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ReorderUsernames":
         # No flags
-        
+
         order = TLObject.read(b, String)
-        
+
         return ReorderUsernames(order=order)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class ReorderUsernames(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.order, String))
-        
+
         return b.getvalue()

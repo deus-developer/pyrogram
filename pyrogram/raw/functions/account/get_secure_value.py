@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetSecureValue(TLObject):  # type: ignore
+class GetSecureValue(TLFunction[list["raw.base.SecureValue"]]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,20 +48,20 @@ class GetSecureValue(TLObject):  # type: ignore
         List of :obj:`SecureValue <pyrogram.raw.base.SecureValue>`
     """
 
-    __slots__: List[str] = ["types"]
+    __slots__: list[str] = ["types"]
 
-    ID = 0x73665bc2
+    ID = 0x73665BC2
     QUALNAME = "functions.account.GetSecureValue"
 
-    def __init__(self, *, types: List["raw.base.SecureValueType"]) -> None:
+    def __init__(self, *, types: list["raw.base.SecureValueType"]) -> None:
         self.types = types  # Vector<SecureValueType>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetSecureValue":
         # No flags
-        
+
         types = TLObject.read(b)
-        
+
         return GetSecureValue(types=types)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class GetSecureValue(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.types))
-        
+
         return b.getvalue()

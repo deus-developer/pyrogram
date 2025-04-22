@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,12 +61,20 @@ class Country(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["iso2", "default_name", "country_codes", "hidden", "name"]
+    __slots__: list[str] = ["country_codes", "default_name", "hidden", "iso2", "name"]
 
-    ID = 0xc3878e23
+    ID = 0xC3878E23
     QUALNAME = "types.help.Country"
 
-    def __init__(self, *, iso2: str, default_name: str, country_codes: List["raw.base.help.CountryCode"], hidden: Optional[bool] = None, name: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        iso2: str,
+        default_name: str,
+        country_codes: list["raw.base.help.CountryCode"],
+        hidden: bool | None = None,
+        name: str | None = None,
+    ) -> None:
         self.iso2 = iso2  # string
         self.default_name = default_name  # string
         self.country_codes = country_codes  # Vector<help.CountryCode>
@@ -71,18 +83,23 @@ class Country(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "Country":
-        
         flags = Int.read(b)
-        
+
         hidden = True if flags & (1 << 0) else False
         iso2 = String.read(b)
-        
+
         default_name = String.read(b)
-        
+
         name = String.read(b) if flags & (1 << 1) else None
         country_codes = TLObject.read(b)
-        
-        return Country(iso2=iso2, default_name=default_name, country_codes=country_codes, hidden=hidden, name=name)
+
+        return Country(
+            iso2=iso2,
+            default_name=default_name,
+            country_codes=country_codes,
+            hidden=hidden,
+            name=name,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -92,14 +109,14 @@ class Country(TLObject):  # type: ignore
         flags |= (1 << 0) if self.hidden else 0
         flags |= (1 << 1) if self.name is not None else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.iso2))
-        
+
         b.write(String(self.default_name))
-        
+
         if self.name is not None:
             b.write(String(self.name))
-        
+
         b.write(Vector(self.country_codes))
-        
+
         return b.getvalue()

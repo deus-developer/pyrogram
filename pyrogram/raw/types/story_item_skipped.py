@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +55,19 @@ class StoryItemSkipped(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "date", "expire_date", "close_friends"]
+    __slots__: list[str] = ["close_friends", "date", "expire_date", "id"]
 
-    ID = 0xffadc913
+    ID = 0xFFADC913
     QUALNAME = "types.StoryItemSkipped"
 
-    def __init__(self, *, id: int, date: int, expire_date: int, close_friends: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: int,
+        date: int,
+        expire_date: int,
+        close_friends: bool | None = None,
+    ) -> None:
         self.id = id  # int
         self.date = date  # int
         self.expire_date = expire_date  # int
@@ -67,17 +75,21 @@ class StoryItemSkipped(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "StoryItemSkipped":
-        
         flags = Int.read(b)
-        
+
         close_friends = True if flags & (1 << 8) else False
         id = Int.read(b)
-        
+
         date = Int.read(b)
-        
+
         expire_date = Int.read(b)
-        
-        return StoryItemSkipped(id=id, date=date, expire_date=expire_date, close_friends=close_friends)
+
+        return StoryItemSkipped(
+            id=id,
+            date=date,
+            expire_date=expire_date,
+            close_friends=close_friends,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -86,11 +98,11 @@ class StoryItemSkipped(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 8) if self.close_friends else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.id))
-        
+
         b.write(Int(self.date))
-        
+
         b.write(Int(self.expire_date))
-        
+
         return b.getvalue()

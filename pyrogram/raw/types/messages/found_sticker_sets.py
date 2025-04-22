@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -58,23 +62,23 @@ class FoundStickerSets(TLObject):  # type: ignore
             messages.SearchEmojiStickerSets
     """
 
-    __slots__: List[str] = ["hash", "sets"]
+    __slots__: list[str] = ["hash", "sets"]
 
-    ID = 0x8af09dd2
+    ID = 0x8AF09DD2
     QUALNAME = "types.messages.FoundStickerSets"
 
-    def __init__(self, *, hash: int, sets: List["raw.base.StickerSetCovered"]) -> None:
+    def __init__(self, *, hash: int, sets: list["raw.base.StickerSetCovered"]) -> None:
         self.hash = hash  # long
         self.sets = sets  # Vector<StickerSetCovered>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "FoundStickerSets":
         # No flags
-        
+
         hash = Long.read(b)
-        
+
         sets = TLObject.read(b)
-        
+
         return FoundStickerSets(hash=hash, sets=sets)
 
     def write(self, *args) -> bytes:
@@ -82,9 +86,9 @@ class FoundStickerSets(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.hash))
-        
+
         b.write(Vector(self.sets))
-        
+
         return b.getvalue()

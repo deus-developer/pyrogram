@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +47,9 @@ class ReactionCustomEmoji(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["document_id"]
+    __slots__: list[str] = ["document_id"]
 
-    ID = 0x8935fc73
+    ID = 0x8935FC73
     QUALNAME = "types.ReactionCustomEmoji"
 
     def __init__(self, *, document_id: int) -> None:
@@ -56,9 +58,9 @@ class ReactionCustomEmoji(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ReactionCustomEmoji":
         # No flags
-        
+
         document_id = Long.read(b)
-        
+
         return ReactionCustomEmoji(document_id=document_id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class ReactionCustomEmoji(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.document_id))
-        
+
         return b.getvalue()

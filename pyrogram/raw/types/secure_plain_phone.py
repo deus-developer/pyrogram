@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +47,9 @@ class SecurePlainPhone(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["phone"]
+    __slots__: list[str] = ["phone"]
 
-    ID = 0x7d6099dd
+    ID = 0x7D6099DD
     QUALNAME = "types.SecurePlainPhone"
 
     def __init__(self, *, phone: str) -> None:
@@ -56,9 +58,9 @@ class SecurePlainPhone(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SecurePlainPhone":
         # No flags
-        
+
         phone = String.read(b)
-        
+
         return SecurePlainPhone(phone=phone)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class SecurePlainPhone(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.phone))
-        
+
         return b.getvalue()

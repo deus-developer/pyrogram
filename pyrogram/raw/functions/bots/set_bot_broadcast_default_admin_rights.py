@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetBotBroadcastDefaultAdminRights(TLObject):  # type: ignore
+class SetBotBroadcastDefaultAdminRights(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class SetBotBroadcastDefaultAdminRights(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["admin_rights"]
+    __slots__: list[str] = ["admin_rights"]
 
-    ID = 0x788464e1
+    ID = 0x788464E1
     QUALNAME = "functions.bots.SetBotBroadcastDefaultAdminRights"
 
     def __init__(self, *, admin_rights: "raw.base.ChatAdminRights") -> None:
@@ -56,9 +58,9 @@ class SetBotBroadcastDefaultAdminRights(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetBotBroadcastDefaultAdminRights":
         # No flags
-        
+
         admin_rights = TLObject.read(b)
-        
+
         return SetBotBroadcastDefaultAdminRights(admin_rights=admin_rights)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class SetBotBroadcastDefaultAdminRights(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.admin_rights.write())
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetQuickReplies(TLObject):  # type: ignore
+class GetQuickReplies(TLFunction["raw.base.messages.QuickReplies"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetQuickReplies(TLObject):  # type: ignore
         :obj:`messages.QuickReplies <pyrogram.raw.base.messages.QuickReplies>`
     """
 
-    __slots__: List[str] = ["hash"]
+    __slots__: list[str] = ["hash"]
 
-    ID = 0xd483f2a8
+    ID = 0xD483F2A8
     QUALNAME = "functions.messages.GetQuickReplies"
 
     def __init__(self, *, hash: int) -> None:
@@ -56,9 +58,9 @@ class GetQuickReplies(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetQuickReplies":
         # No flags
-        
+
         hash = Long.read(b)
-        
+
         return GetQuickReplies(hash=hash)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class GetQuickReplies(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.hash))
-        
+
         return b.getvalue()

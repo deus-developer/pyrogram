@@ -17,8 +17,8 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
+
 from ..object import Object
 
 
@@ -125,7 +125,7 @@ class WebPage(Object):
         manual: bool = None,
         safe: bool = None,
         duration: int = None,
-        author: str = None
+        author: str = None,
     ):
         super().__init__(client)
 
@@ -160,7 +160,7 @@ class WebPage(Object):
         prefer_large_media: bool = None,
         prefer_small_media: bool = None,
         manual: bool = None,
-        safe: bool = None
+        safe: bool = None,
     ) -> "WebPage":
         audio = None
         document = None
@@ -178,21 +178,42 @@ class WebPage(Object):
 
             file_name = getattr(
                 attributes.get(
-                    raw.types.DocumentAttributeFilename, None
-                ), "file_name", None
+                    raw.types.DocumentAttributeFilename,
+                    None,
+                ),
+                "file_name",
+                None,
             )
 
             if raw.types.DocumentAttributeAudio in attributes:
                 audio_attributes = attributes[raw.types.DocumentAttributeAudio]
-                audio = types.Audio.from_raw_tl(client, doc, audio_attributes, file_name)
+                audio = types.Audio.from_raw_tl(
+                    client,
+                    doc,
+                    audio_attributes,
+                    file_name,
+                )
 
             elif raw.types.DocumentAttributeAnimated in attributes:
-                video_attributes = attributes.get(raw.types.DocumentAttributeVideo, None)
-                animation = types.Animation.from_raw_tl(client, doc, video_attributes, file_name)
+                video_attributes = attributes.get(
+                    raw.types.DocumentAttributeVideo,
+                    None,
+                )
+                animation = types.Animation.from_raw_tl(
+                    client,
+                    doc,
+                    video_attributes,
+                    file_name,
+                )
 
             elif raw.types.DocumentAttributeVideo in attributes:
                 video_attributes = attributes[raw.types.DocumentAttributeVideo]
-                video = types.Video.from_raw_tl(client, doc, video_attributes, file_name)
+                video = types.Video.from_raw_tl(
+                    client,
+                    doc,
+                    video_attributes,
+                    file_name,
+                )
 
             else:
                 document = types.Document.from_raw_tl(client, doc, file_name)
@@ -220,5 +241,5 @@ class WebPage(Object):
             manual=manual,
             safe=safe,
             duration=webpage.duration,
-            author=webpage.author
+            author=webpage.author,
         )

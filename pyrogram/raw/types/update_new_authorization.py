@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,12 +60,20 @@ class UpdateNewAuthorization(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["hash", "unconfirmed", "date", "device", "location"]
+    __slots__: list[str] = ["date", "device", "hash", "location", "unconfirmed"]
 
-    ID = 0x8951abef
+    ID = 0x8951ABEF
     QUALNAME = "types.UpdateNewAuthorization"
 
-    def __init__(self, *, hash: int, unconfirmed: Optional[bool] = None, date: Optional[int] = None, device: Optional[str] = None, location: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        hash: int,
+        unconfirmed: bool | None = None,
+        date: int | None = None,
+        device: str | None = None,
+        location: str | None = None,
+    ) -> None:
         self.hash = hash  # long
         self.unconfirmed = unconfirmed  # flags.0?true
         self.date = date  # flags.0?int
@@ -71,16 +82,21 @@ class UpdateNewAuthorization(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateNewAuthorization":
-        
         flags = Int.read(b)
-        
+
         unconfirmed = True if flags & (1 << 0) else False
         hash = Long.read(b)
-        
+
         date = Int.read(b) if flags & (1 << 0) else None
         device = String.read(b) if flags & (1 << 0) else None
         location = String.read(b) if flags & (1 << 0) else None
-        return UpdateNewAuthorization(hash=hash, unconfirmed=unconfirmed, date=date, device=device, location=location)
+        return UpdateNewAuthorization(
+            hash=hash,
+            unconfirmed=unconfirmed,
+            date=date,
+            device=device,
+            location=location,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -92,16 +108,16 @@ class UpdateNewAuthorization(TLObject):  # type: ignore
         flags |= (1 << 0) if self.device is not None else 0
         flags |= (1 << 0) if self.location is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.hash))
-        
+
         if self.date is not None:
             b.write(Int(self.date))
-        
+
         if self.device is not None:
             b.write(String(self.device))
-        
+
         if self.location is not None:
             b.write(String(self.location))
-        
+
         return b.getvalue()

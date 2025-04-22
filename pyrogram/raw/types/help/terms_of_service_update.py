@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,23 +59,28 @@ class TermsOfServiceUpdate(TLObject):  # type: ignore
             help.GetTermsOfServiceUpdate
     """
 
-    __slots__: List[str] = ["expires", "terms_of_service"]
+    __slots__: list[str] = ["expires", "terms_of_service"]
 
-    ID = 0x28ecf961
+    ID = 0x28ECF961
     QUALNAME = "types.help.TermsOfServiceUpdate"
 
-    def __init__(self, *, expires: int, terms_of_service: "raw.base.help.TermsOfService") -> None:
+    def __init__(
+        self,
+        *,
+        expires: int,
+        terms_of_service: "raw.base.help.TermsOfService",
+    ) -> None:
         self.expires = expires  # int
         self.terms_of_service = terms_of_service  # help.TermsOfService
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "TermsOfServiceUpdate":
         # No flags
-        
+
         expires = Int.read(b)
-        
+
         terms_of_service = TLObject.read(b)
-        
+
         return TermsOfServiceUpdate(expires=expires, terms_of_service=terms_of_service)
 
     def write(self, *args) -> bytes:
@@ -81,9 +88,9 @@ class TermsOfServiceUpdate(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.expires))
-        
+
         b.write(self.terms_of_service.write())
-        
+
         return b.getvalue()

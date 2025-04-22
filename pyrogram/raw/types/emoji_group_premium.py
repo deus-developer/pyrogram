@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +51,9 @@ class EmojiGroupPremium(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["title", "icon_emoji_id"]
+    __slots__: list[str] = ["icon_emoji_id", "title"]
 
-    ID = 0x93bcf34
+    ID = 0x93BCF34
     QUALNAME = "types.EmojiGroupPremium"
 
     def __init__(self, *, title: str, icon_emoji_id: int) -> None:
@@ -60,11 +63,11 @@ class EmojiGroupPremium(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EmojiGroupPremium":
         # No flags
-        
+
         title = String.read(b)
-        
+
         icon_emoji_id = Long.read(b)
-        
+
         return EmojiGroupPremium(title=title, icon_emoji_id=icon_emoji_id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class EmojiGroupPremium(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.title))
-        
+
         b.write(Long(self.icon_emoji_id))
-        
+
         return b.getvalue()

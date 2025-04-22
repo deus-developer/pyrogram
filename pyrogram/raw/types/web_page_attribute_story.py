@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,27 +53,32 @@ class WebPageAttributeStory(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "id", "story"]
+    __slots__: list[str] = ["id", "peer", "story"]
 
-    ID = 0x2e94c3e7
+    ID = 0x2E94C3E7
     QUALNAME = "types.WebPageAttributeStory"
 
-    def __init__(self, *, peer: "raw.base.Peer", id: int, story: "raw.base.StoryItem" = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.Peer",
+        id: int,
+        story: "raw.base.StoryItem" = None,
+    ) -> None:
         self.peer = peer  # Peer
         self.id = id  # int
         self.story = story  # flags.0?StoryItem
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "WebPageAttributeStory":
-        
         flags = Int.read(b)
-        
+
         peer = TLObject.read(b)
-        
+
         id = Int.read(b)
-        
+
         story = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         return WebPageAttributeStory(peer=peer, id=id, story=story)
 
     def write(self, *args) -> bytes:
@@ -81,12 +88,12 @@ class WebPageAttributeStory(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.story is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.id))
-        
+
         if self.story is not None:
             b.write(self.story.write())
-        
+
         return b.getvalue()

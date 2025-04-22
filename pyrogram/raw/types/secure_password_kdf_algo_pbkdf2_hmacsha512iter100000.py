@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,20 +47,23 @@ class SecurePasswordKdfAlgoPBKDF2HMACSHA512iter100000(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["salt"]
+    __slots__: list[str] = ["salt"]
 
-    ID = 0xbbf2dda0
+    ID = 0xBBF2DDA0
     QUALNAME = "types.SecurePasswordKdfAlgoPBKDF2HMACSHA512iter100000"
 
     def __init__(self, *, salt: bytes) -> None:
         self.salt = salt  # bytes
 
     @staticmethod
-    def read(b: BytesIO, *args: Any) -> "SecurePasswordKdfAlgoPBKDF2HMACSHA512iter100000":
+    def read(
+        b: BytesIO,
+        *args: Any,
+    ) -> "SecurePasswordKdfAlgoPBKDF2HMACSHA512iter100000":
         # No flags
-        
+
         salt = Bytes.read(b)
-        
+
         return SecurePasswordKdfAlgoPBKDF2HMACSHA512iter100000(salt=salt)
 
     def write(self, *args) -> bytes:
@@ -66,7 +71,7 @@ class SecurePasswordKdfAlgoPBKDF2HMACSHA512iter100000(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Bytes(self.salt))
-        
+
         return b.getvalue()

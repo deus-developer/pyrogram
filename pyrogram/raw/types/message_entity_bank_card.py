@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +49,9 @@ class MessageEntityBankCard(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["offset", "length"]
+    __slots__: list[str] = ["length", "offset"]
 
-    ID = 0x761e6af4
+    ID = 0x761E6AF4
     QUALNAME = "types.MessageEntityBankCard"
 
     def __init__(self, *, offset: int, length: int) -> None:
@@ -60,11 +61,11 @@ class MessageEntityBankCard(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageEntityBankCard":
         # No flags
-        
+
         offset = Int.read(b)
-        
+
         length = Int.read(b)
-        
+
         return MessageEntityBankCard(offset=offset, length=length)
 
     def write(self, *args) -> bytes:
@@ -72,9 +73,9 @@ class MessageEntityBankCard(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.offset))
-        
+
         b.write(Int(self.length))
-        
+
         return b.getvalue()

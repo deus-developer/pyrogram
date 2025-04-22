@@ -4,8 +4,9 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type PasswordKdfAlgo = Union["raw.types.PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow, raw.types.PasswordKdfAlgoUnknown"]
+type PasswordKdfAlgo = (
+    raw.types.PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow
+    | raw.types.PasswordKdfAlgoUnknown
+)

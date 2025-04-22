@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class UpdateBirthday(TLObject):  # type: ignore
+class UpdateBirthday(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class UpdateBirthday(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["birthday"]
+    __slots__: list[str] = ["birthday"]
 
-    ID = 0xcc6e0c11
+    ID = 0xCC6E0C11
     QUALNAME = "functions.account.UpdateBirthday"
 
     def __init__(self, *, birthday: "raw.base.Birthday" = None) -> None:
@@ -55,11 +57,10 @@ class UpdateBirthday(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateBirthday":
-        
         flags = Int.read(b)
-        
+
         birthday = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         return UpdateBirthday(birthday=birthday)
 
     def write(self, *args) -> bytes:
@@ -69,8 +70,8 @@ class UpdateBirthday(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.birthday is not None else 0
         b.write(Int(flags))
-        
+
         if self.birthday is not None:
             b.write(self.birthday.write())
-        
+
         return b.getvalue()

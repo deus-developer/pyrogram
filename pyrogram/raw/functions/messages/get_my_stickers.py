@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetMyStickers(TLObject):  # type: ignore
+class GetMyStickers(TLFunction["raw.base.messages.MyStickers"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class GetMyStickers(TLObject):  # type: ignore
         :obj:`messages.MyStickers <pyrogram.raw.base.messages.MyStickers>`
     """
 
-    __slots__: List[str] = ["offset_id", "limit"]
+    __slots__: list[str] = ["limit", "offset_id"]
 
-    ID = 0xd0b5e1fc
+    ID = 0xD0B5E1FC
     QUALNAME = "functions.messages.GetMyStickers"
 
     def __init__(self, *, offset_id: int, limit: int) -> None:
@@ -60,11 +62,11 @@ class GetMyStickers(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetMyStickers":
         # No flags
-        
+
         offset_id = Long.read(b)
-        
+
         limit = Int.read(b)
-        
+
         return GetMyStickers(offset_id=offset_id, limit=limit)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class GetMyStickers(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.offset_id))
-        
+
         b.write(Int(self.limit))
-        
+
         return b.getvalue()

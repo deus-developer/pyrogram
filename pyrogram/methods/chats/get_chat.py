@@ -19,16 +19,14 @@
 from typing import Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import raw, types, utils
 
 
 class GetChat:
     async def get_chat(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        force_full: bool = True
+        chat_id: int | str,
+        force_full: bool = True,
     ) -> Union["types.Chat", "types.ChatPreview"]:
         """Get up to date information about a chat.
 
@@ -65,8 +63,8 @@ class GetChat:
         if match:
             r = await self.invoke(
                 raw.functions.messages.CheckChatInvite(
-                    hash=match.group(1)
-                )
+                    hash=match.group(1),
+                ),
             )
 
             if isinstance(r, raw.types.ChatInvite):
@@ -84,22 +82,25 @@ class GetChat:
 
         if force_full:
             if isinstance(peer, raw.types.InputPeerChannel):
-                r = await self.invoke(raw.functions.channels.GetFullChannel(channel=peer))
+                r = await self.invoke(
+                    raw.functions.channels.GetFullChannel(channel=peer),
+                )
             elif isinstance(peer, (raw.types.InputPeerUser, raw.types.InputPeerSelf)):
                 r = await self.invoke(raw.functions.users.GetFullUser(id=peer))
             else:
-                r = await self.invoke(raw.functions.messages.GetFullChat(chat_id=peer.chat_id))
+                r = await self.invoke(
+                    raw.functions.messages.GetFullChat(chat_id=peer.chat_id),
+                )
 
             return await types.Chat.from_raw_tl_full(self, r)
+        if isinstance(peer, raw.types.InputPeerChannel):
+            r = await self.invoke(raw.functions.channels.GetChannels(id=[peer]))
+        elif isinstance(peer, (raw.types.InputPeerUser, raw.types.InputPeerSelf)):
+            r = await self.invoke(raw.functions.users.GetUsers(id=[peer]))
         else:
-            if isinstance(peer, raw.types.InputPeerChannel):
-                r = await self.invoke(raw.functions.channels.GetChannels(id=[peer]))
-            elif isinstance(peer, (raw.types.InputPeerUser, raw.types.InputPeerSelf)):
-                r = await self.invoke(raw.functions.users.GetUsers(id=[peer]))
-            else:
-                r = await self.invoke(raw.functions.messages.GetChats(id=[peer.chat_id]))
+            r = await self.invoke(raw.functions.messages.GetChats(id=[peer.chat_id]))
 
-            return types.Chat.from_raw_tl_chat(
-                self,
-                r.chats[0] if isinstance(r, raw.types.messages.Chats) else r[0]
-            )
+        return types.Chat.from_raw_tl_chat(
+            self,
+            r.chats[0] if isinstance(r, raw.types.messages.Chats) else r[0],
+        )

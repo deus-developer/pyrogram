@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +47,9 @@ class PageBlockAnchor(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["name"]
+    __slots__: list[str] = ["name"]
 
-    ID = 0xce0d37b0
+    ID = 0xCE0D37B0
     QUALNAME = "types.PageBlockAnchor"
 
     def __init__(self, *, name: str) -> None:
@@ -56,9 +58,9 @@ class PageBlockAnchor(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PageBlockAnchor":
         # No flags
-        
+
         name = String.read(b)
-        
+
         return PageBlockAnchor(name=name)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class PageBlockAnchor(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.name))
-        
+
         return b.getvalue()

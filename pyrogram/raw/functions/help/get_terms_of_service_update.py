@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetTermsOfServiceUpdate(TLObject):  # type: ignore
+class GetTermsOfServiceUpdate(TLFunction["raw.base.help.TermsOfServiceUpdate"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -44,9 +45,9 @@ class GetTermsOfServiceUpdate(TLObject):  # type: ignore
         :obj:`help.TermsOfServiceUpdate <pyrogram.raw.base.help.TermsOfServiceUpdate>`
     """
 
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
-    ID = 0x2ca51fd1
+    ID = 0x2CA51FD1
     QUALNAME = "functions.help.GetTermsOfServiceUpdate"
 
     def __init__(self) -> None:
@@ -55,7 +56,7 @@ class GetTermsOfServiceUpdate(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetTermsOfServiceUpdate":
         # No flags
-        
+
         return GetTermsOfServiceUpdate()
 
     def write(self, *args) -> bytes:
@@ -63,5 +64,5 @@ class GetTermsOfServiceUpdate(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         return b.getvalue()

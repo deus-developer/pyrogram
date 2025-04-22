@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,7 +50,7 @@ class KeyboardButtonWebView(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["text", "url"]
+    __slots__: list[str] = ["text", "url"]
 
     ID = 0x13767230
     QUALNAME = "types.KeyboardButtonWebView"
@@ -60,11 +62,11 @@ class KeyboardButtonWebView(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "KeyboardButtonWebView":
         # No flags
-        
+
         text = String.read(b)
-        
+
         url = String.read(b)
-        
+
         return KeyboardButtonWebView(text=text, url=url)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class KeyboardButtonWebView(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.text))
-        
+
         b.write(String(self.url))
-        
+
         return b.getvalue()

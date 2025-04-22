@@ -17,26 +17,24 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Union, List, Optional
+from typing import Optional
 
 import pyrogram
-from pyrogram import raw, enums
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import enums, raw, types, utils
 
 
 class EditMessageText:
     async def edit_message_text(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         message_id: int,
         text: str,
         parse_mode: Optional["enums.ParseMode"] = None,
-        entities: List["types.MessageEntity"] = None,
+        entities: list["types.MessageEntity"] = None,
         disable_web_page_preview: bool = None,
         show_above_text: bool = None,
         schedule_date: datetime = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None
+        reply_markup: "types.InlineKeyboardMarkup" = None,
     ) -> "types.Message":
         """Edit the text of messages.
 
@@ -85,10 +83,9 @@ class EditMessageText:
 
                 # Take the same text message, remove the web page preview only
                 await app.edit_message_text(
-                    chat_id, message_id, message.text,
-                    disable_web_page_preview=True)
+                    chat_id, message_id, message.text, disable_web_page_preview=True
+                )
         """
-
         r = await self.invoke(
             raw.functions.messages.EditMessage(
                 peer=await self.resolve_peer(chat_id),
@@ -97,12 +94,16 @@ class EditMessageText:
                 invert_media=show_above_text or None,
                 schedule_date=utils.datetime_to_timestamp(schedule_date),
                 reply_markup=await reply_markup.write(self) if reply_markup else None,
-                **await utils.parse_text_entities(self, text, parse_mode, entities)
-            )
+                **await utils.parse_text_entities(self, text, parse_mode, entities),
+            ),
         )
 
         for i in r.updates:
-            if isinstance(i, (raw.types.UpdateEditMessage, raw.types.UpdateEditChannelMessage)):
+            if isinstance(
+                i,
+                (raw.types.UpdateEditMessage, raw.types.UpdateEditChannelMessage),
+            ):
                 return await types.Message.from_raw_tl(
-                    self, i.message,
+                    self,
+                    i.message,
                 )

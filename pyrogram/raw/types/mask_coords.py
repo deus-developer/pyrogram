@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Double,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +56,9 @@ class MaskCoords(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["n", "x", "y", "zoom"]
+    __slots__: list[str] = ["n", "x", "y", "zoom"]
 
-    ID = 0xaed6dbb2
+    ID = 0xAED6DBB2
     QUALNAME = "types.MaskCoords"
 
     def __init__(self, *, n: int, x: float, y: float, zoom: float) -> None:
@@ -68,15 +70,15 @@ class MaskCoords(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MaskCoords":
         # No flags
-        
+
         n = Int.read(b)
-        
+
         x = Double.read(b)
-        
+
         y = Double.read(b)
-        
+
         zoom = Double.read(b)
-        
+
         return MaskCoords(n=n, x=x, y=y, zoom=zoom)
 
     def write(self, *args) -> bytes:
@@ -84,13 +86,13 @@ class MaskCoords(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.n))
-        
+
         b.write(Double(self.x))
-        
+
         b.write(Double(self.y))
-        
+
         b.write(Double(self.zoom))
-        
+
         return b.getvalue()

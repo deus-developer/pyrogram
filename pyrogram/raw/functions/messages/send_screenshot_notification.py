@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SendScreenshotNotification(TLObject):  # type: ignore
+class SendScreenshotNotification(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +54,18 @@ class SendScreenshotNotification(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["peer", "reply_to", "random_id"]
+    __slots__: list[str] = ["peer", "random_id", "reply_to"]
 
-    ID = 0xa1405817
+    ID = 0xA1405817
     QUALNAME = "functions.messages.SendScreenshotNotification"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", reply_to: "raw.base.InputReplyTo", random_id: int) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        reply_to: "raw.base.InputReplyTo",
+        random_id: int,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.reply_to = reply_to  # InputReplyTo
         self.random_id = random_id  # long
@@ -64,25 +73,29 @@ class SendScreenshotNotification(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SendScreenshotNotification":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         reply_to = TLObject.read(b)
-        
+
         random_id = Long.read(b)
-        
-        return SendScreenshotNotification(peer=peer, reply_to=reply_to, random_id=random_id)
+
+        return SendScreenshotNotification(
+            peer=peer,
+            reply_to=reply_to,
+            random_id=random_id,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(self.reply_to.write())
-        
+
         b.write(Long(self.random_id))
-        
+
         return b.getvalue()

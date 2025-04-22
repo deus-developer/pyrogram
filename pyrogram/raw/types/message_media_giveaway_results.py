@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -86,12 +90,38 @@ class MessageMediaGiveawayResults(TLObject):  # type: ignore
             messages.UploadImportedMedia
     """
 
-    __slots__: List[str] = ["channel_id", "launch_msg_id", "winners_count", "unclaimed_count", "winners", "months", "until_date", "only_new_subscribers", "refunded", "additional_peers_count", "prize_description"]
+    __slots__: list[str] = [
+        "additional_peers_count",
+        "channel_id",
+        "launch_msg_id",
+        "months",
+        "only_new_subscribers",
+        "prize_description",
+        "refunded",
+        "unclaimed_count",
+        "until_date",
+        "winners",
+        "winners_count",
+    ]
 
-    ID = 0xc6991068
+    ID = 0xC6991068
     QUALNAME = "types.MessageMediaGiveawayResults"
 
-    def __init__(self, *, channel_id: int, launch_msg_id: int, winners_count: int, unclaimed_count: int, winners: List[int], months: int, until_date: int, only_new_subscribers: Optional[bool] = None, refunded: Optional[bool] = None, additional_peers_count: Optional[int] = None, prize_description: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        channel_id: int,
+        launch_msg_id: int,
+        winners_count: int,
+        unclaimed_count: int,
+        winners: list[int],
+        months: int,
+        until_date: int,
+        only_new_subscribers: bool | None = None,
+        refunded: bool | None = None,
+        additional_peers_count: int | None = None,
+        prize_description: str | None = None,
+    ) -> None:
         self.channel_id = channel_id  # long
         self.launch_msg_id = launch_msg_id  # int
         self.winners_count = winners_count  # int
@@ -106,28 +136,39 @@ class MessageMediaGiveawayResults(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageMediaGiveawayResults":
-        
         flags = Int.read(b)
-        
+
         only_new_subscribers = True if flags & (1 << 0) else False
         refunded = True if flags & (1 << 2) else False
         channel_id = Long.read(b)
-        
+
         additional_peers_count = Int.read(b) if flags & (1 << 3) else None
         launch_msg_id = Int.read(b)
-        
+
         winners_count = Int.read(b)
-        
+
         unclaimed_count = Int.read(b)
-        
+
         winners = TLObject.read(b, Long)
-        
+
         months = Int.read(b)
-        
+
         prize_description = String.read(b) if flags & (1 << 1) else None
         until_date = Int.read(b)
-        
-        return MessageMediaGiveawayResults(channel_id=channel_id, launch_msg_id=launch_msg_id, winners_count=winners_count, unclaimed_count=unclaimed_count, winners=winners, months=months, until_date=until_date, only_new_subscribers=only_new_subscribers, refunded=refunded, additional_peers_count=additional_peers_count, prize_description=prize_description)
+
+        return MessageMediaGiveawayResults(
+            channel_id=channel_id,
+            launch_msg_id=launch_msg_id,
+            winners_count=winners_count,
+            unclaimed_count=unclaimed_count,
+            winners=winners,
+            months=months,
+            until_date=until_date,
+            only_new_subscribers=only_new_subscribers,
+            refunded=refunded,
+            additional_peers_count=additional_peers_count,
+            prize_description=prize_description,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -139,25 +180,25 @@ class MessageMediaGiveawayResults(TLObject):  # type: ignore
         flags |= (1 << 3) if self.additional_peers_count is not None else 0
         flags |= (1 << 1) if self.prize_description is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.channel_id))
-        
+
         if self.additional_peers_count is not None:
             b.write(Int(self.additional_peers_count))
-        
+
         b.write(Int(self.launch_msg_id))
-        
+
         b.write(Int(self.winners_count))
-        
+
         b.write(Int(self.unclaimed_count))
-        
+
         b.write(Vector(self.winners, Long))
-        
+
         b.write(Int(self.months))
-        
+
         if self.prize_description is not None:
             b.write(String(self.prize_description))
-        
+
         b.write(Int(self.until_date))
-        
+
         return b.getvalue()

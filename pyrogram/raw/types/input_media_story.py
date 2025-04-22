@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class InputMediaStory(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "id"]
+    __slots__: list[str] = ["id", "peer"]
 
-    ID = 0x89fdd778
+    ID = 0x89FDD778
     QUALNAME = "types.InputMediaStory"
 
     def __init__(self, *, peer: "raw.base.InputPeer", id: int) -> None:
@@ -60,11 +62,11 @@ class InputMediaStory(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputMediaStory":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         id = Int.read(b)
-        
+
         return InputMediaStory(peer=peer, id=id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class InputMediaStory(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.id))
-        
+
         return b.getvalue()

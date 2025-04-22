@@ -23,7 +23,7 @@ from pyrogram import raw
 class AcceptTermsOfService:
     async def accept_terms_of_service(
         self: "pyrogram.Client",
-        terms_of_service_id: str
+        terms_of_service_id: str,
     ) -> bool:
         """Accept the given terms of service.
 
@@ -36,9 +36,9 @@ class AcceptTermsOfService:
         r = await self.invoke(
             raw.functions.help.AcceptTermsOfService(
                 id=raw.types.DataJSON(
-                    data=terms_of_service_id
-                )
-            )
+                    data=terms_of_service_id,
+                ),
+            ),
         )
 
         return bool(r)

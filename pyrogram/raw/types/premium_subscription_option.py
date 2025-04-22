@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -66,12 +69,32 @@ class PremiumSubscriptionOption(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["months", "currency", "amount", "bot_url", "current", "can_purchase_upgrade", "transaction", "store_product"]
+    __slots__: list[str] = [
+        "amount",
+        "bot_url",
+        "can_purchase_upgrade",
+        "currency",
+        "current",
+        "months",
+        "store_product",
+        "transaction",
+    ]
 
-    ID = 0x5f2d1df2
+    ID = 0x5F2D1DF2
     QUALNAME = "types.PremiumSubscriptionOption"
 
-    def __init__(self, *, months: int, currency: str, amount: int, bot_url: str, current: Optional[bool] = None, can_purchase_upgrade: Optional[bool] = None, transaction: Optional[str] = None, store_product: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        months: int,
+        currency: str,
+        amount: int,
+        bot_url: str,
+        current: bool | None = None,
+        can_purchase_upgrade: bool | None = None,
+        transaction: str | None = None,
+        store_product: str | None = None,
+    ) -> None:
         self.months = months  # int
         self.currency = currency  # string
         self.amount = amount  # long
@@ -83,22 +106,30 @@ class PremiumSubscriptionOption(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PremiumSubscriptionOption":
-        
         flags = Int.read(b)
-        
+
         current = True if flags & (1 << 1) else False
         can_purchase_upgrade = True if flags & (1 << 2) else False
         transaction = String.read(b) if flags & (1 << 3) else None
         months = Int.read(b)
-        
+
         currency = String.read(b)
-        
+
         amount = Long.read(b)
-        
+
         bot_url = String.read(b)
-        
+
         store_product = String.read(b) if flags & (1 << 0) else None
-        return PremiumSubscriptionOption(months=months, currency=currency, amount=amount, bot_url=bot_url, current=current, can_purchase_upgrade=can_purchase_upgrade, transaction=transaction, store_product=store_product)
+        return PremiumSubscriptionOption(
+            months=months,
+            currency=currency,
+            amount=amount,
+            bot_url=bot_url,
+            current=current,
+            can_purchase_upgrade=can_purchase_upgrade,
+            transaction=transaction,
+            store_product=store_product,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -110,19 +141,19 @@ class PremiumSubscriptionOption(TLObject):  # type: ignore
         flags |= (1 << 3) if self.transaction is not None else 0
         flags |= (1 << 0) if self.store_product is not None else 0
         b.write(Int(flags))
-        
+
         if self.transaction is not None:
             b.write(String(self.transaction))
-        
+
         b.write(Int(self.months))
-        
+
         b.write(String(self.currency))
-        
+
         b.write(Long(self.amount))
-        
+
         b.write(String(self.bot_url))
-        
+
         if self.store_product is not None:
             b.write(String(self.store_product))
-        
+
         return b.getvalue()

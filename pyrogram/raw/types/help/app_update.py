@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -75,12 +79,32 @@ class AppUpdate(TLObject):  # type: ignore
             help.GetAppUpdate
     """
 
-    __slots__: List[str] = ["id", "version", "text", "entities", "can_not_skip", "document", "url", "sticker"]
+    __slots__: list[str] = [
+        "can_not_skip",
+        "document",
+        "entities",
+        "id",
+        "sticker",
+        "text",
+        "url",
+        "version",
+    ]
 
-    ID = 0xccbbce30
+    ID = 0xCCBBCE30
     QUALNAME = "types.help.AppUpdate"
 
-    def __init__(self, *, id: int, version: str, text: str, entities: List["raw.base.MessageEntity"], can_not_skip: Optional[bool] = None, document: "raw.base.Document" = None, url: Optional[str] = None, sticker: "raw.base.Document" = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: int,
+        version: str,
+        text: str,
+        entities: list["raw.base.MessageEntity"],
+        can_not_skip: bool | None = None,
+        document: "raw.base.Document" = None,
+        url: str | None = None,
+        sticker: "raw.base.Document" = None,
+    ) -> None:
         self.id = id  # int
         self.version = version  # string
         self.text = text  # string
@@ -92,24 +116,32 @@ class AppUpdate(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "AppUpdate":
-        
         flags = Int.read(b)
-        
+
         can_not_skip = True if flags & (1 << 0) else False
         id = Int.read(b)
-        
+
         version = String.read(b)
-        
+
         text = String.read(b)
-        
+
         entities = TLObject.read(b)
-        
+
         document = TLObject.read(b) if flags & (1 << 1) else None
-        
+
         url = String.read(b) if flags & (1 << 2) else None
         sticker = TLObject.read(b) if flags & (1 << 3) else None
-        
-        return AppUpdate(id=id, version=version, text=text, entities=entities, can_not_skip=can_not_skip, document=document, url=url, sticker=sticker)
+
+        return AppUpdate(
+            id=id,
+            version=version,
+            text=text,
+            entities=entities,
+            can_not_skip=can_not_skip,
+            document=document,
+            url=url,
+            sticker=sticker,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -121,22 +153,22 @@ class AppUpdate(TLObject):  # type: ignore
         flags |= (1 << 2) if self.url is not None else 0
         flags |= (1 << 3) if self.sticker is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.id))
-        
+
         b.write(String(self.version))
-        
+
         b.write(String(self.text))
-        
+
         b.write(Vector(self.entities))
-        
+
         if self.document is not None:
             b.write(self.document.write())
-        
+
         if self.url is not None:
             b.write(String(self.url))
-        
+
         if self.sticker is not None:
             b.write(self.sticker.write())
-        
+
         return b.getvalue()

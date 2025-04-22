@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +47,9 @@ class InputBotInlineMessageGame(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["reply_markup"]
+    __slots__: list[str] = ["reply_markup"]
 
-    ID = 0x4b425864
+    ID = 0x4B425864
     QUALNAME = "types.InputBotInlineMessageGame"
 
     def __init__(self, *, reply_markup: "raw.base.ReplyMarkup" = None) -> None:
@@ -55,11 +57,10 @@ class InputBotInlineMessageGame(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputBotInlineMessageGame":
-        
         flags = Int.read(b)
-        
+
         reply_markup = TLObject.read(b) if flags & (1 << 2) else None
-        
+
         return InputBotInlineMessageGame(reply_markup=reply_markup)
 
     def write(self, *args) -> bytes:
@@ -69,8 +70,8 @@ class InputBotInlineMessageGame(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 2) if self.reply_markup is not None else 0
         b.write(Int(flags))
-        
+
         if self.reply_markup is not None:
             b.write(self.reply_markup.write())
-        
+
         return b.getvalue()

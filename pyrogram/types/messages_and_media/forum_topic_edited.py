@@ -17,12 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrogram import raw
+
 from ..object import Object
 
 
 class ForumTopicEdited(Object):
     """A service message about a forum topic renamed in the chat.
-
 
     Parameters:
         title (``String``):
@@ -36,10 +36,11 @@ class ForumTopicEdited(Object):
     """
 
     def __init__(
-        self, *,
+        self,
+        *,
         title: str = None,
         icon_color: int = None,
-        icon_emoji_id: str = None
+        icon_emoji_id: str = None,
     ):
         super().__init__()
 
@@ -52,5 +53,5 @@ class ForumTopicEdited(Object):
         return ForumTopicEdited(
             title=getattr(action, "title", None),
             icon_color=getattr(action, "icon_color", None),
-            icon_emoji_id=getattr(action, "icon_emoji_id", None)
+            icon_emoji_id=getattr(action, "icon_emoji_id", None),
         )

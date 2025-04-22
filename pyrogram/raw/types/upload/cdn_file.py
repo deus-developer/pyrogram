@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +56,9 @@ class CdnFile(TLObject):  # type: ignore
             upload.GetCdnFile
     """
 
-    __slots__: List[str] = ["bytes"]
+    __slots__: list[str] = ["bytes"]
 
-    ID = 0xa99fca4f
+    ID = 0xA99FCA4F
     QUALNAME = "types.upload.CdnFile"
 
     def __init__(self, *, bytes: bytes) -> None:
@@ -65,9 +67,9 @@ class CdnFile(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "CdnFile":
         # No flags
-        
+
         bytes = Bytes.read(b)
-        
+
         return CdnFile(bytes=bytes)
 
     def write(self, *args) -> bytes:
@@ -75,7 +77,7 @@ class CdnFile(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Bytes(self.bytes))
-        
+
         return b.getvalue()

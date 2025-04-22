@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -64,12 +68,19 @@ class UserInfo(TLObject):  # type: ignore
             help.EditUserInfo
     """
 
-    __slots__: List[str] = ["message", "entities", "author", "date"]
+    __slots__: list[str] = ["author", "date", "entities", "message"]
 
-    ID = 0x1eb3758
+    ID = 0x1EB3758
     QUALNAME = "types.help.UserInfo"
 
-    def __init__(self, *, message: str, entities: List["raw.base.MessageEntity"], author: str, date: int) -> None:
+    def __init__(
+        self,
+        *,
+        message: str,
+        entities: list["raw.base.MessageEntity"],
+        author: str,
+        date: int,
+    ) -> None:
         self.message = message  # string
         self.entities = entities  # Vector<MessageEntity>
         self.author = author  # string
@@ -78,15 +89,15 @@ class UserInfo(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UserInfo":
         # No flags
-        
+
         message = String.read(b)
-        
+
         entities = TLObject.read(b)
-        
+
         author = String.read(b)
-        
+
         date = Int.read(b)
-        
+
         return UserInfo(message=message, entities=entities, author=author, date=date)
 
     def write(self, *args) -> bytes:
@@ -94,13 +105,13 @@ class UserInfo(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.message))
-        
+
         b.write(Vector(self.entities))
-        
+
         b.write(String(self.author))
-        
+
         b.write(Int(self.date))
-        
+
         return b.getvalue()

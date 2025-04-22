@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +47,9 @@ class MessageActionChatEditTitle(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["title"]
+    __slots__: list[str] = ["title"]
 
-    ID = 0xb5a1ce5a
+    ID = 0xB5A1CE5A
     QUALNAME = "types.MessageActionChatEditTitle"
 
     def __init__(self, *, title: str) -> None:
@@ -56,9 +58,9 @@ class MessageActionChatEditTitle(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageActionChatEditTitle":
         # No flags
-        
+
         title = String.read(b)
-        
+
         return MessageActionChatEditTitle(title=title)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class MessageActionChatEditTitle(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.title))
-        
+
         return b.getvalue()

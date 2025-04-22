@@ -4,8 +4,6 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type Boost = Union["raw.types.Boost"]
+type Boost = raw.types.Boost

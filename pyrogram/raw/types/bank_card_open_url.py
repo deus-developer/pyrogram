@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class BankCardOpenUrl(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["url", "name"]
+    __slots__: list[str] = ["name", "url"]
 
-    ID = 0xf568028a
+    ID = 0xF568028A
     QUALNAME = "types.BankCardOpenUrl"
 
     def __init__(self, *, url: str, name: str) -> None:
@@ -60,11 +62,11 @@ class BankCardOpenUrl(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "BankCardOpenUrl":
         # No flags
-        
+
         url = String.read(b)
-        
+
         name = String.read(b)
-        
+
         return BankCardOpenUrl(url=url, name=name)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class BankCardOpenUrl(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.url))
-        
+
         b.write(String(self.name))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +56,19 @@ class UpdateReadMessagesContents(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["messages", "pts", "pts_count", "date"]
+    __slots__: list[str] = ["date", "messages", "pts", "pts_count"]
 
-    ID = 0xf8227181
+    ID = 0xF8227181
     QUALNAME = "types.UpdateReadMessagesContents"
 
-    def __init__(self, *, messages: List[int], pts: int, pts_count: int, date: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        messages: list[int],
+        pts: int,
+        pts_count: int,
+        date: int | None = None,
+    ) -> None:
         self.messages = messages  # Vector<int>
         self.pts = pts  # int
         self.pts_count = pts_count  # int
@@ -67,17 +76,21 @@ class UpdateReadMessagesContents(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateReadMessagesContents":
-        
         flags = Int.read(b)
-        
+
         messages = TLObject.read(b, Int)
-        
+
         pts = Int.read(b)
-        
+
         pts_count = Int.read(b)
-        
+
         date = Int.read(b) if flags & (1 << 0) else None
-        return UpdateReadMessagesContents(messages=messages, pts=pts, pts_count=pts_count, date=date)
+        return UpdateReadMessagesContents(
+            messages=messages,
+            pts=pts,
+            pts_count=pts_count,
+            date=date,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -86,14 +99,14 @@ class UpdateReadMessagesContents(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.date is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Vector(self.messages, Int))
-        
+
         b.write(Int(self.pts))
-        
+
         b.write(Int(self.pts_count))
-        
+
         if self.date is not None:
             b.write(Int(self.date))
-        
+
         return b.getvalue()

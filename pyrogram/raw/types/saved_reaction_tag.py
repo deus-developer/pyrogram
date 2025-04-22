@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,26 +54,31 @@ class SavedReactionTag(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["reaction", "count", "title"]
+    __slots__: list[str] = ["count", "reaction", "title"]
 
-    ID = 0xcb6ff828
+    ID = 0xCB6FF828
     QUALNAME = "types.SavedReactionTag"
 
-    def __init__(self, *, reaction: "raw.base.Reaction", count: int, title: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        reaction: "raw.base.Reaction",
+        count: int,
+        title: str | None = None,
+    ) -> None:
         self.reaction = reaction  # Reaction
         self.count = count  # int
         self.title = title  # flags.0?string
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SavedReactionTag":
-        
         flags = Int.read(b)
-        
+
         reaction = TLObject.read(b)
-        
+
         title = String.read(b) if flags & (1 << 0) else None
         count = Int.read(b)
-        
+
         return SavedReactionTag(reaction=reaction, count=count, title=title)
 
     def write(self, *args) -> bytes:
@@ -80,12 +88,12 @@ class SavedReactionTag(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.title is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.reaction.write())
-        
+
         if self.title is not None:
             b.write(String(self.title))
-        
+
         b.write(Int(self.count))
-        
+
         return b.getvalue()

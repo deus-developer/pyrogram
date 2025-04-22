@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class DeleteContacts(TLObject):  # type: ignore
+class DeleteContacts(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,20 +48,20 @@ class DeleteContacts(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["id"]
+    __slots__: list[str] = ["id"]
 
-    ID = 0x96a0e00
+    ID = 0x96A0E00
     QUALNAME = "functions.contacts.DeleteContacts"
 
-    def __init__(self, *, id: List["raw.base.InputUser"]) -> None:
+    def __init__(self, *, id: list["raw.base.InputUser"]) -> None:
         self.id = id  # Vector<InputUser>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DeleteContacts":
         # No flags
-        
+
         id = TLObject.read(b)
-        
+
         return DeleteContacts(id=id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class DeleteContacts(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.id))
-        
+
         return b.getvalue()

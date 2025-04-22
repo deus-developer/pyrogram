@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class LaunchPrepaidGiveaway(TLObject):  # type: ignore
+class LaunchPrepaidGiveaway(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +54,18 @@ class LaunchPrepaidGiveaway(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["peer", "giveaway_id", "purpose"]
+    __slots__: list[str] = ["giveaway_id", "peer", "purpose"]
 
-    ID = 0x5ff58f20
+    ID = 0x5FF58F20
     QUALNAME = "functions.payments.LaunchPrepaidGiveaway"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", giveaway_id: int, purpose: "raw.base.InputStorePaymentPurpose") -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        giveaway_id: int,
+        purpose: "raw.base.InputStorePaymentPurpose",
+    ) -> None:
         self.peer = peer  # InputPeer
         self.giveaway_id = giveaway_id  # long
         self.purpose = purpose  # InputStorePaymentPurpose
@@ -64,25 +73,29 @@ class LaunchPrepaidGiveaway(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "LaunchPrepaidGiveaway":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         giveaway_id = Long.read(b)
-        
+
         purpose = TLObject.read(b)
-        
-        return LaunchPrepaidGiveaway(peer=peer, giveaway_id=giveaway_id, purpose=purpose)
+
+        return LaunchPrepaidGiveaway(
+            peer=peer,
+            giveaway_id=giveaway_id,
+            purpose=purpose,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Long(self.giveaway_id))
-        
+
         b.write(self.purpose.write())
-        
+
         return b.getvalue()

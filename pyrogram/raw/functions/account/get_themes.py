@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetThemes(TLObject):  # type: ignore
+class GetThemes(TLFunction["raw.base.account.Themes"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class GetThemes(TLObject):  # type: ignore
         :obj:`account.Themes <pyrogram.raw.base.account.Themes>`
     """
 
-    __slots__: List[str] = ["format", "hash"]
+    __slots__: list[str] = ["format", "hash"]
 
-    ID = 0x7206e458
+    ID = 0x7206E458
     QUALNAME = "functions.account.GetThemes"
 
     def __init__(self, *, format: str, hash: int) -> None:
@@ -60,11 +63,11 @@ class GetThemes(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetThemes":
         # No flags
-        
+
         format = String.read(b)
-        
+
         hash = Long.read(b)
-        
+
         return GetThemes(format=format, hash=hash)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class GetThemes(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.format))
-        
+
         b.write(Long(self.hash))
-        
+
         return b.getvalue()

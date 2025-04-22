@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetMessageStats(TLObject):  # type: ignore
+class GetMessageStats(TLFunction["raw.base.stats.MessageStats"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,26 +53,31 @@ class GetMessageStats(TLObject):  # type: ignore
         :obj:`stats.MessageStats <pyrogram.raw.base.stats.MessageStats>`
     """
 
-    __slots__: List[str] = ["channel", "msg_id", "dark"]
+    __slots__: list[str] = ["channel", "dark", "msg_id"]
 
-    ID = 0xb6e0a3f5
+    ID = 0xB6E0A3F5
     QUALNAME = "functions.stats.GetMessageStats"
 
-    def __init__(self, *, channel: "raw.base.InputChannel", msg_id: int, dark: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        channel: "raw.base.InputChannel",
+        msg_id: int,
+        dark: bool | None = None,
+    ) -> None:
         self.channel = channel  # InputChannel
         self.msg_id = msg_id  # int
         self.dark = dark  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetMessageStats":
-        
         flags = Int.read(b)
-        
+
         dark = True if flags & (1 << 0) else False
         channel = TLObject.read(b)
-        
+
         msg_id = Int.read(b)
-        
+
         return GetMessageStats(channel=channel, msg_id=msg_id, dark=dark)
 
     def write(self, *args) -> bytes:
@@ -80,9 +87,9 @@ class GetMessageStats(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.dark else 0
         b.write(Int(flags))
-        
+
         b.write(self.channel.write())
-        
+
         b.write(Int(self.msg_id))
-        
+
         return b.getvalue()

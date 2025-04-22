@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -155,9 +156,9 @@ class UpdatesTooLong(TLObject):  # type: ignore
             stories.GetAllReadPeerStories
     """
 
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
-    ID = 0xe317af7e
+    ID = 0xE317AF7E
     QUALNAME = "types.UpdatesTooLong"
 
     def __init__(self) -> None:
@@ -166,7 +167,7 @@ class UpdatesTooLong(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdatesTooLong":
         # No flags
-        
+
         return UpdatesTooLong()
 
     def write(self, *args) -> bytes:
@@ -174,5 +175,5 @@ class UpdatesTooLong(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +56,9 @@ class DestroySessionNone(TLObject):  # type: ignore
             DestroySession
     """
 
-    __slots__: List[str] = ["session_id"]
+    __slots__: list[str] = ["session_id"]
 
-    ID = 0x62d350c9
+    ID = 0x62D350C9
     QUALNAME = "types.DestroySessionNone"
 
     def __init__(self, *, session_id: int) -> None:
@@ -65,9 +67,9 @@ class DestroySessionNone(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DestroySessionNone":
         # No flags
-        
+
         session_id = Long.read(b)
-        
+
         return DestroySessionNone(session_id=session_id)
 
     def write(self, *args) -> bytes:
@@ -75,7 +77,7 @@ class DestroySessionNone(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.session_id))
-        
+
         return b.getvalue()

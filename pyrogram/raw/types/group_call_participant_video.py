@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,29 +58,42 @@ class GroupCallParticipantVideo(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["endpoint", "source_groups", "paused", "audio_source"]
+    __slots__: list[str] = ["audio_source", "endpoint", "paused", "source_groups"]
 
-    ID = 0x67753ac8
+    ID = 0x67753AC8
     QUALNAME = "types.GroupCallParticipantVideo"
 
-    def __init__(self, *, endpoint: str, source_groups: List["raw.base.GroupCallParticipantVideoSourceGroup"], paused: Optional[bool] = None, audio_source: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        endpoint: str,
+        source_groups: list["raw.base.GroupCallParticipantVideoSourceGroup"],
+        paused: bool | None = None,
+        audio_source: int | None = None,
+    ) -> None:
         self.endpoint = endpoint  # string
-        self.source_groups = source_groups  # Vector<GroupCallParticipantVideoSourceGroup>
+        self.source_groups = (
+            source_groups  # Vector<GroupCallParticipantVideoSourceGroup>
+        )
         self.paused = paused  # flags.0?true
         self.audio_source = audio_source  # flags.1?int
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GroupCallParticipantVideo":
-        
         flags = Int.read(b)
-        
+
         paused = True if flags & (1 << 0) else False
         endpoint = String.read(b)
-        
+
         source_groups = TLObject.read(b)
-        
+
         audio_source = Int.read(b) if flags & (1 << 1) else None
-        return GroupCallParticipantVideo(endpoint=endpoint, source_groups=source_groups, paused=paused, audio_source=audio_source)
+        return GroupCallParticipantVideo(
+            endpoint=endpoint,
+            source_groups=source_groups,
+            paused=paused,
+            audio_source=audio_source,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -86,12 +103,12 @@ class GroupCallParticipantVideo(TLObject):  # type: ignore
         flags |= (1 << 0) if self.paused else 0
         flags |= (1 << 1) if self.audio_source is not None else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.endpoint))
-        
+
         b.write(Vector(self.source_groups))
-        
+
         if self.audio_source is not None:
             b.write(Int(self.audio_source))
-        
+
         return b.getvalue()

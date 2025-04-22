@@ -17,18 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import raw, types, utils
 
 
 class EditMessageReplyMarkup:
     async def edit_message_reply_markup(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         message_id: int,
         schedule_date: datetime = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
@@ -62,9 +59,12 @@ class EditMessageReplyMarkup:
 
                 # Bots only
                 await app.edit_message_reply_markup(
-                    chat_id, message_id,
-                    InlineKeyboardMarkup([[
-                        InlineKeyboardButton("New button", callback_data="new_data")]]))
+                    chat_id,
+                    message_id,
+                    InlineKeyboardMarkup(
+                        [[InlineKeyboardButton("New button", callback_data="new_data")]]
+                    ),
+                )
         """
         r = await self.invoke(
             raw.functions.messages.EditMessage(
@@ -72,11 +72,15 @@ class EditMessageReplyMarkup:
                 id=message_id,
                 schedule_date=utils.datetime_to_timestamp(schedule_date),
                 reply_markup=await reply_markup.write(self) if reply_markup else None,
-            )
+            ),
         )
 
         for i in r.updates:
-            if isinstance(i, (raw.types.UpdateEditMessage, raw.types.UpdateEditChannelMessage)):
+            if isinstance(
+                i,
+                (raw.types.UpdateEditMessage, raw.types.UpdateEditChannelMessage),
+            ):
                 return await types.Message.from_raw_tl(
-                    self, i.message,
+                    self,
+                    i.message,
                 )

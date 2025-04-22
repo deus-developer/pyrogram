@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class MessageReplyStoryHeader(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "story_id"]
+    __slots__: list[str] = ["peer", "story_id"]
 
-    ID = 0xe5af939
+    ID = 0xE5AF939
     QUALNAME = "types.MessageReplyStoryHeader"
 
     def __init__(self, *, peer: "raw.base.Peer", story_id: int) -> None:
@@ -60,11 +62,11 @@ class MessageReplyStoryHeader(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageReplyStoryHeader":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         story_id = Int.read(b)
-        
+
         return MessageReplyStoryHeader(peer=peer, story_id=story_id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class MessageReplyStoryHeader(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.story_id))
-        
+
         return b.getvalue()

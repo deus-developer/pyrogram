@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +58,19 @@ class UpdateBotDeleteBusinessMessage(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["connection_id", "peer", "messages", "qts"]
+    __slots__: list[str] = ["connection_id", "messages", "peer", "qts"]
 
-    ID = 0xa02a982e
+    ID = 0xA02A982E
     QUALNAME = "types.UpdateBotDeleteBusinessMessage"
 
-    def __init__(self, *, connection_id: str, peer: "raw.base.Peer", messages: List[int], qts: int) -> None:
+    def __init__(
+        self,
+        *,
+        connection_id: str,
+        peer: "raw.base.Peer",
+        messages: list[int],
+        qts: int,
+    ) -> None:
         self.connection_id = connection_id  # string
         self.peer = peer  # Peer
         self.messages = messages  # Vector<int>
@@ -68,29 +79,34 @@ class UpdateBotDeleteBusinessMessage(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateBotDeleteBusinessMessage":
         # No flags
-        
+
         connection_id = String.read(b)
-        
+
         peer = TLObject.read(b)
-        
+
         messages = TLObject.read(b, Int)
-        
+
         qts = Int.read(b)
-        
-        return UpdateBotDeleteBusinessMessage(connection_id=connection_id, peer=peer, messages=messages, qts=qts)
+
+        return UpdateBotDeleteBusinessMessage(
+            connection_id=connection_id,
+            peer=peer,
+            messages=messages,
+            qts=qts,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.connection_id))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Vector(self.messages, Int))
-        
+
         b.write(Int(self.qts))
-        
+
         return b.getvalue()

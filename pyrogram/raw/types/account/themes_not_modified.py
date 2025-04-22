@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +55,9 @@ class ThemesNotModified(TLObject):  # type: ignore
             account.GetChatThemes
     """
 
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
-    ID = 0xf41eb622
+    ID = 0xF41EB622
     QUALNAME = "types.account.ThemesNotModified"
 
     def __init__(self) -> None:
@@ -65,7 +66,7 @@ class ThemesNotModified(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ThemesNotModified":
         # No flags
-        
+
         return ThemesNotModified()
 
     def write(self, *args) -> bytes:
@@ -73,5 +74,5 @@ class ThemesNotModified(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         return b.getvalue()

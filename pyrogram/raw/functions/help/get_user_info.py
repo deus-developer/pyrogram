@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetUserInfo(TLObject):  # type: ignore
+class GetUserInfo(TLFunction["raw.base.help.UserInfo"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetUserInfo(TLObject):  # type: ignore
         :obj:`help.UserInfo <pyrogram.raw.base.help.UserInfo>`
     """
 
-    __slots__: List[str] = ["user_id"]
+    __slots__: list[str] = ["user_id"]
 
-    ID = 0x38a08d3
+    ID = 0x38A08D3
     QUALNAME = "functions.help.GetUserInfo"
 
     def __init__(self, *, user_id: "raw.base.InputUser") -> None:
@@ -56,9 +58,9 @@ class GetUserInfo(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetUserInfo":
         # No flags
-        
+
         user_id = TLObject.read(b)
-        
+
         return GetUserInfo(user_id=user_id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class GetUserInfo(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.user_id.write())
-        
+
         return b.getvalue()

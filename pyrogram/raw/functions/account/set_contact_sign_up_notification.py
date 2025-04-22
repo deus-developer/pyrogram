@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetContactSignUpNotification(TLObject):  # type: ignore
+class SetContactSignUpNotification(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class SetContactSignUpNotification(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["silent"]
+    __slots__: list[str] = ["silent"]
 
-    ID = 0xcff43f61
+    ID = 0xCFF43F61
     QUALNAME = "functions.account.SetContactSignUpNotification"
 
     def __init__(self, *, silent: bool) -> None:
@@ -56,9 +58,9 @@ class SetContactSignUpNotification(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetContactSignUpNotification":
         # No flags
-        
+
         silent = Bool.read(b)
-        
+
         return SetContactSignUpNotification(silent=silent)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class SetContactSignUpNotification(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Bool(self.silent))
-        
+
         return b.getvalue()

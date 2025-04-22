@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ToggleForum(TLObject):  # type: ignore
+class ToggleForum(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class ToggleForum(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["channel", "enabled"]
+    __slots__: list[str] = ["channel", "enabled"]
 
-    ID = 0xa4298b29
+    ID = 0xA4298B29
     QUALNAME = "functions.channels.ToggleForum"
 
     def __init__(self, *, channel: "raw.base.InputChannel", enabled: bool) -> None:
@@ -60,11 +63,11 @@ class ToggleForum(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ToggleForum":
         # No flags
-        
+
         channel = TLObject.read(b)
-        
+
         enabled = Bool.read(b)
-        
+
         return ToggleForum(channel=channel, enabled=enabled)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class ToggleForum(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.channel.write())
-        
+
         b.write(Bool(self.enabled))
-        
+
         return b.getvalue()

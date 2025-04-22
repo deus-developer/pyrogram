@@ -49,5 +49,5 @@ class BotCommand(Object):
     def read(c: "raw.types.BotCommand") -> "BotCommand":
         return BotCommand(
             command=c.command,
-            description=c.description
+            description=c.description,
         )

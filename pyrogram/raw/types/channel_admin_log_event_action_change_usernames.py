@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,33 +51,36 @@ class ChannelAdminLogEventActionChangeUsernames(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["prev_value", "new_value"]
+    __slots__: list[str] = ["new_value", "prev_value"]
 
-    ID = 0xf04fb3a9
+    ID = 0xF04FB3A9
     QUALNAME = "types.ChannelAdminLogEventActionChangeUsernames"
 
-    def __init__(self, *, prev_value: List[str], new_value: List[str]) -> None:
+    def __init__(self, *, prev_value: list[str], new_value: list[str]) -> None:
         self.prev_value = prev_value  # Vector<string>
         self.new_value = new_value  # Vector<string>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChannelAdminLogEventActionChangeUsernames":
         # No flags
-        
+
         prev_value = TLObject.read(b, String)
-        
+
         new_value = TLObject.read(b, String)
-        
-        return ChannelAdminLogEventActionChangeUsernames(prev_value=prev_value, new_value=new_value)
+
+        return ChannelAdminLogEventActionChangeUsernames(
+            prev_value=prev_value,
+            new_value=new_value,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.prev_value, String))
-        
+
         b.write(Vector(self.new_value, String))
-        
+
         return b.getvalue()

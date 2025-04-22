@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetBoostsToUnblockRestrictions(TLObject):  # type: ignore
+class SetBoostsToUnblockRestrictions(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class SetBoostsToUnblockRestrictions(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["channel", "boosts"]
+    __slots__: list[str] = ["boosts", "channel"]
 
-    ID = 0xad399cee
+    ID = 0xAD399CEE
     QUALNAME = "functions.channels.SetBoostsToUnblockRestrictions"
 
     def __init__(self, *, channel: "raw.base.InputChannel", boosts: int) -> None:
@@ -60,11 +62,11 @@ class SetBoostsToUnblockRestrictions(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetBoostsToUnblockRestrictions":
         # No flags
-        
+
         channel = TLObject.read(b)
-        
+
         boosts = Int.read(b)
-        
+
         return SetBoostsToUnblockRestrictions(channel=channel, boosts=boosts)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class SetBoostsToUnblockRestrictions(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.channel.write())
-        
+
         b.write(Int(self.boosts))
-        
+
         return b.getvalue()

@@ -17,11 +17,11 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Dict, Union
+from typing import Union
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
+from pyrogram import raw, types, utils
+
 from ..object import Object
 from ..update import Update
 
@@ -62,7 +62,7 @@ class ChatMemberUpdated(Object, Update):
         old_chat_member: "types.ChatMember",
         new_chat_member: "types.ChatMember",
         invite_link: "types.ChatInviteLink" = None,
-        via_join_request: bool = None
+        via_join_request: bool = None,
     ):
         super().__init__(client)
 
@@ -77,7 +77,10 @@ class ChatMemberUpdated(Object, Update):
     @staticmethod
     def from_raw_tl(
         client: "pyrogram.Client",
-        update: Union["raw.types.UpdateChatParticipant", "raw.types.UpdateChannelParticipant"],
+        update: Union[
+            "raw.types.UpdateChatParticipant",
+            "raw.types.UpdateChannelParticipant",
+        ],
     ) -> "ChatMemberUpdated":
         old_chat_member = None
         new_chat_member = None
@@ -85,10 +88,16 @@ class ChatMemberUpdated(Object, Update):
         via_join_request = None
 
         if update.prev_participant:
-            old_chat_member = types.ChatMember.from_raw_tl(client, update.prev_participant)
+            old_chat_member = types.ChatMember.from_raw_tl(
+                client,
+                update.prev_participant,
+            )
 
         if update.new_participant:
-            new_chat_member = types.ChatMember.from_raw_tl(client, update.new_participant)
+            new_chat_member = types.ChatMember.from_raw_tl(
+                client,
+                update.new_participant,
+            )
 
         if update.invite:
             invite_link = types.ChatInviteLink.from_raw_tl(client, update.invite)
@@ -97,15 +106,21 @@ class ChatMemberUpdated(Object, Update):
                 via_join_request = True
 
         return ChatMemberUpdated(
-            chat=types.Chat.from_raw_tl_chat(client, client.entity_cache.get(
-                chat_id=getattr(update, "chat_id", None),
-                channel_id=getattr(update, "channel_id", None)
-            )),
-            from_user=types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=update.actor_id)),
+            chat=types.Chat.from_raw_tl_chat(
+                client,
+                client.entity_cache.get(
+                    chat_id=getattr(update, "chat_id", None),
+                    channel_id=getattr(update, "channel_id", None),
+                ),
+            ),
+            from_user=types.User.from_raw_tl(
+                client,
+                client.entity_cache.get_user(user_id=update.actor_id),
+            ),
             date=utils.timestamp_to_datetime(update.date),
             old_chat_member=old_chat_member,
             new_chat_member=new_chat_member,
             invite_link=invite_link,
             via_join_request=via_join_request,
-            client=client
+            client=client,
         )

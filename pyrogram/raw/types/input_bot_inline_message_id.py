@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,9 +53,9 @@ class InputBotInlineMessageID(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["dc_id", "id", "access_hash"]
+    __slots__: list[str] = ["access_hash", "dc_id", "id"]
 
-    ID = 0x890c3d89
+    ID = 0x890C3D89
     QUALNAME = "types.InputBotInlineMessageID"
 
     def __init__(self, *, dc_id: int, id: int, access_hash: int) -> None:
@@ -64,13 +66,13 @@ class InputBotInlineMessageID(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputBotInlineMessageID":
         # No flags
-        
+
         dc_id = Int.read(b)
-        
+
         id = Long.read(b)
-        
+
         access_hash = Long.read(b)
-        
+
         return InputBotInlineMessageID(dc_id=dc_id, id=id, access_hash=access_hash)
 
     def write(self, *args) -> bytes:
@@ -78,11 +80,11 @@ class InputBotInlineMessageID(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.dc_id))
-        
+
         b.write(Long(self.id))
-        
+
         b.write(Long(self.access_hash))
-        
+
         return b.getvalue()

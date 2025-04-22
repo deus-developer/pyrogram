@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,22 +50,26 @@ class UpdatePeerHistoryTTL(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "ttl_period"]
+    __slots__: list[str] = ["peer", "ttl_period"]
 
-    ID = 0xbb9bb9a5
+    ID = 0xBB9BB9A5
     QUALNAME = "types.UpdatePeerHistoryTTL"
 
-    def __init__(self, *, peer: "raw.base.Peer", ttl_period: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.Peer",
+        ttl_period: int | None = None,
+    ) -> None:
         self.peer = peer  # Peer
         self.ttl_period = ttl_period  # flags.0?int
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdatePeerHistoryTTL":
-        
         flags = Int.read(b)
-        
+
         peer = TLObject.read(b)
-        
+
         ttl_period = Int.read(b) if flags & (1 << 0) else None
         return UpdatePeerHistoryTTL(peer=peer, ttl_period=ttl_period)
 
@@ -74,10 +80,10 @@ class UpdatePeerHistoryTTL(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.ttl_period is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         if self.ttl_period is not None:
             b.write(Int(self.ttl_period))
-        
+
         return b.getvalue()

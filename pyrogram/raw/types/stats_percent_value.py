@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Double,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class StatsPercentValue(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["part", "total"]
+    __slots__: list[str] = ["part", "total"]
 
-    ID = 0xcbce2fe0
+    ID = 0xCBCE2FE0
     QUALNAME = "types.StatsPercentValue"
 
     def __init__(self, *, part: float, total: float) -> None:
@@ -60,11 +62,11 @@ class StatsPercentValue(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "StatsPercentValue":
         # No flags
-        
+
         part = Double.read(b)
-        
+
         total = Double.read(b)
-        
+
         return StatsPercentValue(part=part, total=total)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class StatsPercentValue(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Double(self.part))
-        
+
         b.write(Double(self.total))
-        
+
         return b.getvalue()

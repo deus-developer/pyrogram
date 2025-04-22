@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SendEncrypted(TLObject):  # type: ignore
+class SendEncrypted(TLFunction["raw.base.messages.SentEncryptedMessage"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +58,19 @@ class SendEncrypted(TLObject):  # type: ignore
         :obj:`messages.SentEncryptedMessage <pyrogram.raw.base.messages.SentEncryptedMessage>`
     """
 
-    __slots__: List[str] = ["peer", "random_id", "data", "silent"]
+    __slots__: list[str] = ["data", "peer", "random_id", "silent"]
 
-    ID = 0x44fa7a15
+    ID = 0x44FA7A15
     QUALNAME = "functions.messages.SendEncrypted"
 
-    def __init__(self, *, peer: "raw.base.InputEncryptedChat", random_id: int, data: bytes, silent: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputEncryptedChat",
+        random_id: int,
+        data: bytes,
+        silent: bool | None = None,
+    ) -> None:
         self.peer = peer  # InputEncryptedChat
         self.random_id = random_id  # long
         self.data = data  # bytes
@@ -67,16 +78,15 @@ class SendEncrypted(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SendEncrypted":
-        
         flags = Int.read(b)
-        
+
         silent = True if flags & (1 << 0) else False
         peer = TLObject.read(b)
-        
+
         random_id = Long.read(b)
-        
+
         data = Bytes.read(b)
-        
+
         return SendEncrypted(peer=peer, random_id=random_id, data=data, silent=silent)
 
     def write(self, *args) -> bytes:
@@ -86,11 +96,11 @@ class SendEncrypted(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.silent else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Long(self.random_id))
-        
+
         b.write(Bytes(self.data))
-        
+
         return b.getvalue()

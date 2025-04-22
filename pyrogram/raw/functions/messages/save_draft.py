@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SaveDraft(TLObject):  # type: ignore
+class SaveDraft(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -63,12 +67,30 @@ class SaveDraft(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["peer", "message", "no_webpage", "invert_media", "reply_to", "entities", "media"]
+    __slots__: list[str] = [
+        "entities",
+        "invert_media",
+        "media",
+        "message",
+        "no_webpage",
+        "peer",
+        "reply_to",
+    ]
 
-    ID = 0x7ff3b806
+    ID = 0x7FF3B806
     QUALNAME = "functions.messages.SaveDraft"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", message: str, no_webpage: Optional[bool] = None, invert_media: Optional[bool] = None, reply_to: "raw.base.InputReplyTo" = None, entities: Optional[List["raw.base.MessageEntity"]] = None, media: "raw.base.InputMedia" = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        message: str,
+        no_webpage: bool | None = None,
+        invert_media: bool | None = None,
+        reply_to: "raw.base.InputReplyTo" = None,
+        entities: list["raw.base.MessageEntity"] | None = None,
+        media: "raw.base.InputMedia" = None,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.message = message  # string
         self.no_webpage = no_webpage  # flags.1?true
@@ -79,22 +101,29 @@ class SaveDraft(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SaveDraft":
-        
         flags = Int.read(b)
-        
+
         no_webpage = True if flags & (1 << 1) else False
         invert_media = True if flags & (1 << 6) else False
         reply_to = TLObject.read(b) if flags & (1 << 4) else None
-        
+
         peer = TLObject.read(b)
-        
+
         message = String.read(b)
-        
+
         entities = TLObject.read(b) if flags & (1 << 3) else []
-        
+
         media = TLObject.read(b) if flags & (1 << 5) else None
-        
-        return SaveDraft(peer=peer, message=message, no_webpage=no_webpage, invert_media=invert_media, reply_to=reply_to, entities=entities, media=media)
+
+        return SaveDraft(
+            peer=peer,
+            message=message,
+            no_webpage=no_webpage,
+            invert_media=invert_media,
+            reply_to=reply_to,
+            entities=entities,
+            media=media,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -107,18 +136,18 @@ class SaveDraft(TLObject):  # type: ignore
         flags |= (1 << 3) if self.entities else 0
         flags |= (1 << 5) if self.media is not None else 0
         b.write(Int(flags))
-        
+
         if self.reply_to is not None:
             b.write(self.reply_to.write())
-        
+
         b.write(self.peer.write())
-        
+
         b.write(String(self.message))
-        
+
         if self.entities is not None:
             b.write(Vector(self.entities))
-        
+
         if self.media is not None:
             b.write(self.media.write())
-        
+
         return b.getvalue()

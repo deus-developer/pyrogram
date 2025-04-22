@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ChangeStickerPosition(TLObject):  # type: ignore
+class ChangeStickerPosition(TLFunction["raw.base.messages.StickerSet"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class ChangeStickerPosition(TLObject):  # type: ignore
         :obj:`messages.StickerSet <pyrogram.raw.base.messages.StickerSet>`
     """
 
-    __slots__: List[str] = ["sticker", "position"]
+    __slots__: list[str] = ["position", "sticker"]
 
-    ID = 0xffb6d4ca
+    ID = 0xFFB6D4CA
     QUALNAME = "functions.stickers.ChangeStickerPosition"
 
     def __init__(self, *, sticker: "raw.base.InputDocument", position: int) -> None:
@@ -60,11 +62,11 @@ class ChangeStickerPosition(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChangeStickerPosition":
         # No flags
-        
+
         sticker = TLObject.read(b)
-        
+
         position = Int.read(b)
-        
+
         return ChangeStickerPosition(sticker=sticker, position=position)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class ChangeStickerPosition(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.sticker.write())
-        
+
         b.write(Int(self.position))
-        
+
         return b.getvalue()

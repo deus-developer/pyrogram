@@ -4,8 +4,8 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type FeaturedStickers = Union["raw.types.messages.FeaturedStickers, raw.types.messages.FeaturedStickersNotModified"]
+type FeaturedStickers = (
+    raw.types.messages.FeaturedStickers | raw.types.messages.FeaturedStickersNotModified
+)

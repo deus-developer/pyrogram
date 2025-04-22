@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ToggleGroupCallStartSubscription(TLObject):  # type: ignore
+class ToggleGroupCallStartSubscription(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class ToggleGroupCallStartSubscription(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["call", "subscribed"]
+    __slots__: list[str] = ["call", "subscribed"]
 
-    ID = 0x219c34e6
+    ID = 0x219C34E6
     QUALNAME = "functions.phone.ToggleGroupCallStartSubscription"
 
     def __init__(self, *, call: "raw.base.InputGroupCall", subscribed: bool) -> None:
@@ -60,11 +63,11 @@ class ToggleGroupCallStartSubscription(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ToggleGroupCallStartSubscription":
         # No flags
-        
+
         call = TLObject.read(b)
-        
+
         subscribed = Bool.read(b)
-        
+
         return ToggleGroupCallStartSubscription(call=call, subscribed=subscribed)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class ToggleGroupCallStartSubscription(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.call.write())
-        
+
         b.write(Bool(self.subscribed))
-        
+
         return b.getvalue()

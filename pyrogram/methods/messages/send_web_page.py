@@ -17,32 +17,31 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Union, List, Optional
+from typing import Optional, Union
 
 import pyrogram
-from pyrogram import raw, utils, enums
-from pyrogram import types
+from pyrogram import enums, raw, types, utils
 
 
 class SendWebPage:
     async def send_web_page(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         text: str = None,
         url: str = None,
         prefer_large_media: bool = None,
         prefer_small_media: bool = None,
         parse_mode: Optional["enums.ParseMode"] = None,
-        entities: List["types.MessageEntity"] = None,
+        entities: list["types.MessageEntity"] = None,
         disable_notification: bool = None,
         message_thread_id: int = None,
         effect_id: int = None,
         show_above_text: bool = None,
         reply_to_message_id: int = None,
-        reply_to_chat_id: Union[int, str] = None,
+        reply_to_chat_id: int | str = None,
         reply_to_story_id: int = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         quote_offset: int = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
@@ -51,8 +50,8 @@ class SendWebPage:
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply"
-        ] = None
+            "types.ForceReply",
+        ] = None,
     ) -> "types.Message":
         """Send Web Page Preview.
 
@@ -143,13 +142,23 @@ class SendWebPage:
                 await app.send_web_page("me", "https://docs.pyrogram.org")
 
                 # Make web preview image larger
-                await app.send_web_page("me", "https://docs.pyrogram.org", prefer_large_media=True)
+                await app.send_web_page(
+                    "me", "https://docs.pyrogram.org", prefer_large_media=True
+                )
 
         """
+        message, entities = (
+            await utils.parse_text_entities(self, text, parse_mode, entities)
+        ).values()
 
-        message, entities = (await utils.parse_text_entities(self, text, parse_mode, entities)).values()
-
-        quote_text, quote_entities = (await utils.parse_text_entities(self, quote_text, parse_mode, quote_entities)).values()
+        quote_text, quote_entities = (
+            await utils.parse_text_entities(
+                self,
+                quote_text,
+                parse_mode,
+                quote_entities,
+            )
+        ).values()
 
         if not url:
             if entities:
@@ -171,7 +180,9 @@ class SendWebPage:
                 reply_to=utils.get_reply_to(
                     reply_to_message_id=reply_to_message_id,
                     message_thread_id=message_thread_id,
-                    reply_to_peer=await self.resolve_peer(reply_to_chat_id) if reply_to_chat_id else None,
+                    reply_to_peer=await self.resolve_peer(reply_to_chat_id)
+                    if reply_to_chat_id
+                    else None,
                     reply_to_story_id=reply_to_story_id,
                     quote_text=quote_text,
                     quote_entities=quote_entities,
@@ -184,14 +195,14 @@ class SendWebPage:
                 media=raw.types.InputMediaWebPage(
                     url=url,
                     force_large_media=prefer_large_media,
-                    force_small_media=prefer_small_media
+                    force_small_media=prefer_small_media,
                 ),
                 invert_media=show_above_text,
                 entities=entities,
                 noforwards=protect_content,
-                effect=effect_id
+                effect=effect_id,
             ),
-            business_connection_id=business_connection_id
+            business_connection_id=business_connection_id,
         )
 
         if isinstance(r, raw.types.UpdateShortSentMessage):
@@ -208,7 +219,7 @@ class SendWebPage:
                 chat=types.Chat(
                     id=peer_id,
                     type=enums.ChatType.PRIVATE,
-                    client=self
+                    client=self,
                 ),
                 text=message,
                 date=utils.timestamp_to_datetime(r.date),
@@ -217,17 +228,25 @@ class SendWebPage:
                 entities=[
                     types.MessageEntity.from_raw_tl(None, entity, {})
                     for entity in entities
-                ] if entities else None,
-                client=self
+                ]
+                if entities
+                else None,
+                client=self,
             )
 
         for i in r.updates:
-            if isinstance(i, (raw.types.UpdateNewMessage,
-                              raw.types.UpdateNewChannelMessage,
-                              raw.types.UpdateNewScheduledMessage,
-                              raw.types.UpdateBotNewBusinessMessage)):
+            if isinstance(
+                i,
+                (
+                    raw.types.UpdateNewMessage,
+                    raw.types.UpdateNewChannelMessage,
+                    raw.types.UpdateNewScheduledMessage,
+                    raw.types.UpdateBotNewBusinessMessage,
+                ),
+            ):
                 return await types.Message.from_raw_tl(
-                    self, i.message,
+                    self,
+                    i.message,
                     is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
-                    business_connection_id=getattr(i, "connection_id", None)
+                    business_connection_id=getattr(i, "connection_id", None),
                 )

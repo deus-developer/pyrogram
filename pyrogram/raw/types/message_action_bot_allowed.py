@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +57,19 @@ class MessageActionBotAllowed(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["attach_menu", "from_request", "domain", "app"]
+    __slots__: list[str] = ["app", "attach_menu", "domain", "from_request"]
 
-    ID = 0xc516d679
+    ID = 0xC516D679
     QUALNAME = "types.MessageActionBotAllowed"
 
-    def __init__(self, *, attach_menu: Optional[bool] = None, from_request: Optional[bool] = None, domain: Optional[str] = None, app: "raw.base.BotApp" = None) -> None:
+    def __init__(
+        self,
+        *,
+        attach_menu: bool | None = None,
+        from_request: bool | None = None,
+        domain: str | None = None,
+        app: "raw.base.BotApp" = None,
+    ) -> None:
         self.attach_menu = attach_menu  # flags.1?true
         self.from_request = from_request  # flags.3?true
         self.domain = domain  # flags.0?string
@@ -67,15 +77,19 @@ class MessageActionBotAllowed(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageActionBotAllowed":
-        
         flags = Int.read(b)
-        
+
         attach_menu = True if flags & (1 << 1) else False
         from_request = True if flags & (1 << 3) else False
         domain = String.read(b) if flags & (1 << 0) else None
         app = TLObject.read(b) if flags & (1 << 2) else None
-        
-        return MessageActionBotAllowed(attach_menu=attach_menu, from_request=from_request, domain=domain, app=app)
+
+        return MessageActionBotAllowed(
+            attach_menu=attach_menu,
+            from_request=from_request,
+            domain=domain,
+            app=app,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -87,11 +101,11 @@ class MessageActionBotAllowed(TLObject):  # type: ignore
         flags |= (1 << 0) if self.domain is not None else 0
         flags |= (1 << 2) if self.app is not None else 0
         b.write(Int(flags))
-        
+
         if self.domain is not None:
             b.write(String(self.domain))
-        
+
         if self.app is not None:
             b.write(self.app.write())
-        
+
         return b.getvalue()

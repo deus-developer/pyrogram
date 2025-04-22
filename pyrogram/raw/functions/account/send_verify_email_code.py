@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SendVerifyEmailCode(TLObject):  # type: ignore
+class SendVerifyEmailCode(TLFunction["raw.base.account.SentEmailCode"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class SendVerifyEmailCode(TLObject):  # type: ignore
         :obj:`account.SentEmailCode <pyrogram.raw.base.account.SentEmailCode>`
     """
 
-    __slots__: List[str] = ["purpose", "email"]
+    __slots__: list[str] = ["email", "purpose"]
 
-    ID = 0x98e037bb
+    ID = 0x98E037BB
     QUALNAME = "functions.account.SendVerifyEmailCode"
 
     def __init__(self, *, purpose: "raw.base.EmailVerifyPurpose", email: str) -> None:
@@ -60,11 +63,11 @@ class SendVerifyEmailCode(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SendVerifyEmailCode":
         # No flags
-        
+
         purpose = TLObject.read(b)
-        
+
         email = String.read(b)
-        
+
         return SendVerifyEmailCode(purpose=purpose, email=email)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class SendVerifyEmailCode(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.purpose.write())
-        
+
         b.write(String(self.email))
-        
+
         return b.getvalue()

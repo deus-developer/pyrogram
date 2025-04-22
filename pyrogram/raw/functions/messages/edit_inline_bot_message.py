@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class EditInlineBotMessage(TLObject):  # type: ignore
+class EditInlineBotMessage(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -63,12 +67,30 @@ class EditInlineBotMessage(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["id", "no_webpage", "invert_media", "message", "media", "reply_markup", "entities"]
+    __slots__: list[str] = [
+        "entities",
+        "id",
+        "invert_media",
+        "media",
+        "message",
+        "no_webpage",
+        "reply_markup",
+    ]
 
-    ID = 0x83557dba
+    ID = 0x83557DBA
     QUALNAME = "functions.messages.EditInlineBotMessage"
 
-    def __init__(self, *, id: "raw.base.InputBotInlineMessageID", no_webpage: Optional[bool] = None, invert_media: Optional[bool] = None, message: Optional[str] = None, media: "raw.base.InputMedia" = None, reply_markup: "raw.base.ReplyMarkup" = None, entities: Optional[List["raw.base.MessageEntity"]] = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: "raw.base.InputBotInlineMessageID",
+        no_webpage: bool | None = None,
+        invert_media: bool | None = None,
+        message: str | None = None,
+        media: "raw.base.InputMedia" = None,
+        reply_markup: "raw.base.ReplyMarkup" = None,
+        entities: list["raw.base.MessageEntity"] | None = None,
+    ) -> None:
         self.id = id  # InputBotInlineMessageID
         self.no_webpage = no_webpage  # flags.1?true
         self.invert_media = invert_media  # flags.16?true
@@ -79,21 +101,28 @@ class EditInlineBotMessage(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EditInlineBotMessage":
-        
         flags = Int.read(b)
-        
+
         no_webpage = True if flags & (1 << 1) else False
         invert_media = True if flags & (1 << 16) else False
         id = TLObject.read(b)
-        
+
         message = String.read(b) if flags & (1 << 11) else None
         media = TLObject.read(b) if flags & (1 << 14) else None
-        
+
         reply_markup = TLObject.read(b) if flags & (1 << 2) else None
-        
+
         entities = TLObject.read(b) if flags & (1 << 3) else []
-        
-        return EditInlineBotMessage(id=id, no_webpage=no_webpage, invert_media=invert_media, message=message, media=media, reply_markup=reply_markup, entities=entities)
+
+        return EditInlineBotMessage(
+            id=id,
+            no_webpage=no_webpage,
+            invert_media=invert_media,
+            message=message,
+            media=media,
+            reply_markup=reply_markup,
+            entities=entities,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -107,19 +136,19 @@ class EditInlineBotMessage(TLObject):  # type: ignore
         flags |= (1 << 2) if self.reply_markup is not None else 0
         flags |= (1 << 3) if self.entities else 0
         b.write(Int(flags))
-        
+
         b.write(self.id.write())
-        
+
         if self.message is not None:
             b.write(String(self.message))
-        
+
         if self.media is not None:
             b.write(self.media.write())
-        
+
         if self.reply_markup is not None:
             b.write(self.reply_markup.write())
-        
+
         if self.entities is not None:
             b.write(Vector(self.entities))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetLocated(TLObject):  # type: ignore
+class GetLocated(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,26 +53,35 @@ class GetLocated(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["geo_point", "background", "self_expires"]
+    __slots__: list[str] = ["background", "geo_point", "self_expires"]
 
-    ID = 0xd348bc44
+    ID = 0xD348BC44
     QUALNAME = "functions.contacts.GetLocated"
 
-    def __init__(self, *, geo_point: "raw.base.InputGeoPoint", background: Optional[bool] = None, self_expires: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        geo_point: "raw.base.InputGeoPoint",
+        background: bool | None = None,
+        self_expires: int | None = None,
+    ) -> None:
         self.geo_point = geo_point  # InputGeoPoint
         self.background = background  # flags.1?true
         self.self_expires = self_expires  # flags.0?int
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetLocated":
-        
         flags = Int.read(b)
-        
+
         background = True if flags & (1 << 1) else False
         geo_point = TLObject.read(b)
-        
+
         self_expires = Int.read(b) if flags & (1 << 0) else None
-        return GetLocated(geo_point=geo_point, background=background, self_expires=self_expires)
+        return GetLocated(
+            geo_point=geo_point,
+            background=background,
+            self_expires=self_expires,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -80,10 +91,10 @@ class GetLocated(TLObject):  # type: ignore
         flags |= (1 << 1) if self.background else 0
         flags |= (1 << 0) if self.self_expires is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.geo_point.write())
-        
+
         if self.self_expires is not None:
             b.write(Int(self.self_expires))
-        
+
         return b.getvalue()

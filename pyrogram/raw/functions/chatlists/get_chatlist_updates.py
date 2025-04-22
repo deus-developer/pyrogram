@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetChatlistUpdates(TLObject):  # type: ignore
+class GetChatlistUpdates(TLFunction["raw.base.chatlists.ChatlistUpdates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,7 +47,7 @@ class GetChatlistUpdates(TLObject):  # type: ignore
         :obj:`chatlists.ChatlistUpdates <pyrogram.raw.base.chatlists.ChatlistUpdates>`
     """
 
-    __slots__: List[str] = ["chatlist"]
+    __slots__: list[str] = ["chatlist"]
 
     ID = 0x89419521
     QUALNAME = "functions.chatlists.GetChatlistUpdates"
@@ -56,9 +58,9 @@ class GetChatlistUpdates(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetChatlistUpdates":
         # No flags
-        
+
         chatlist = TLObject.read(b)
-        
+
         return GetChatlistUpdates(chatlist=chatlist)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class GetChatlistUpdates(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.chatlist.write())
-        
+
         return b.getvalue()

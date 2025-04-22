@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -81,12 +85,36 @@ class BoostsStatus(TLObject):  # type: ignore
             premium.GetBoostsStatus
     """
 
-    __slots__: List[str] = ["level", "current_level_boosts", "boosts", "boost_url", "my_boost", "gift_boosts", "next_level_boosts", "premium_audience", "prepaid_giveaways", "my_boost_slots"]
+    __slots__: list[str] = [
+        "boost_url",
+        "boosts",
+        "current_level_boosts",
+        "gift_boosts",
+        "level",
+        "my_boost",
+        "my_boost_slots",
+        "next_level_boosts",
+        "premium_audience",
+        "prepaid_giveaways",
+    ]
 
-    ID = 0x4959427a
+    ID = 0x4959427A
     QUALNAME = "types.premium.BoostsStatus"
 
-    def __init__(self, *, level: int, current_level_boosts: int, boosts: int, boost_url: str, my_boost: Optional[bool] = None, gift_boosts: Optional[int] = None, next_level_boosts: Optional[int] = None, premium_audience: "raw.base.StatsPercentValue" = None, prepaid_giveaways: Optional[List["raw.base.PrepaidGiveaway"]] = None, my_boost_slots: Optional[List[int]] = None) -> None:
+    def __init__(
+        self,
+        *,
+        level: int,
+        current_level_boosts: int,
+        boosts: int,
+        boost_url: str,
+        my_boost: bool | None = None,
+        gift_boosts: int | None = None,
+        next_level_boosts: int | None = None,
+        premium_audience: "raw.base.StatsPercentValue" = None,
+        prepaid_giveaways: list["raw.base.PrepaidGiveaway"] | None = None,
+        my_boost_slots: list[int] | None = None,
+    ) -> None:
         self.level = level  # int
         self.current_level_boosts = current_level_boosts  # int
         self.boosts = boosts  # int
@@ -100,27 +128,37 @@ class BoostsStatus(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "BoostsStatus":
-        
         flags = Int.read(b)
-        
+
         my_boost = True if flags & (1 << 2) else False
         level = Int.read(b)
-        
+
         current_level_boosts = Int.read(b)
-        
+
         boosts = Int.read(b)
-        
+
         gift_boosts = Int.read(b) if flags & (1 << 4) else None
         next_level_boosts = Int.read(b) if flags & (1 << 0) else None
         premium_audience = TLObject.read(b) if flags & (1 << 1) else None
-        
+
         boost_url = String.read(b)
-        
+
         prepaid_giveaways = TLObject.read(b) if flags & (1 << 3) else []
-        
+
         my_boost_slots = TLObject.read(b, Int) if flags & (1 << 2) else []
-        
-        return BoostsStatus(level=level, current_level_boosts=current_level_boosts, boosts=boosts, boost_url=boost_url, my_boost=my_boost, gift_boosts=gift_boosts, next_level_boosts=next_level_boosts, premium_audience=premium_audience, prepaid_giveaways=prepaid_giveaways, my_boost_slots=my_boost_slots)
+
+        return BoostsStatus(
+            level=level,
+            current_level_boosts=current_level_boosts,
+            boosts=boosts,
+            boost_url=boost_url,
+            my_boost=my_boost,
+            gift_boosts=gift_boosts,
+            next_level_boosts=next_level_boosts,
+            premium_audience=premium_audience,
+            prepaid_giveaways=prepaid_giveaways,
+            my_boost_slots=my_boost_slots,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -134,28 +172,28 @@ class BoostsStatus(TLObject):  # type: ignore
         flags |= (1 << 3) if self.prepaid_giveaways else 0
         flags |= (1 << 2) if self.my_boost_slots else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.level))
-        
+
         b.write(Int(self.current_level_boosts))
-        
+
         b.write(Int(self.boosts))
-        
+
         if self.gift_boosts is not None:
             b.write(Int(self.gift_boosts))
-        
+
         if self.next_level_boosts is not None:
             b.write(Int(self.next_level_boosts))
-        
+
         if self.premium_audience is not None:
             b.write(self.premium_audience.write())
-        
+
         b.write(String(self.boost_url))
-        
+
         if self.prepaid_giveaways is not None:
             b.write(Vector(self.prepaid_giveaways))
-        
+
         if self.my_boost_slots is not None:
             b.write(Vector(self.my_boost_slots, Int))
-        
+
         return b.getvalue()

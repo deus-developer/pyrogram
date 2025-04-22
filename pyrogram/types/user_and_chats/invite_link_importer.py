@@ -18,8 +18,8 @@
 
 from datetime import datetime
 
-from pyrogram import raw, utils
-from pyrogram import types
+from pyrogram import raw, types, utils
+
 from ..object import Object
 
 
@@ -35,9 +35,10 @@ class InviteLinkImporter(Object):
     """
 
     def __init__(
-        self, *,
+        self,
+        *,
         date: datetime,
-        user: "types.User"
+        user: "types.User",
     ):
         super().__init__(None)
 
@@ -48,14 +49,15 @@ class InviteLinkImporter(Object):
     def from_raw_tl(client, invite_importers: "raw.types.messages.ChatInviteImporters"):
         importers = types.List()
 
-        d = {i.id: i for i in invite_importers.users}
-
         for j in invite_importers.importers:
             importers.append(
                 InviteLinkImporter(
                     date=utils.timestamp_to_datetime(j.date),
-                    user=types.User.from_raw_tl(client=None, user=d[j.user_id])
-                )
+                    user=types.User.from_raw_tl(
+                        client=None,
+                        user=client.entity_cache.get_user(user_id=j.user_id),
+                    ),
+                ),
             )
 
         return importers

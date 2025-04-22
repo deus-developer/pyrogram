@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class UpdateProfile(TLObject):  # type: ignore
+class UpdateProfile(TLFunction["raw.base.User"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,21 +53,26 @@ class UpdateProfile(TLObject):  # type: ignore
         :obj:`User <pyrogram.raw.base.User>`
     """
 
-    __slots__: List[str] = ["first_name", "last_name", "about"]
+    __slots__: list[str] = ["about", "first_name", "last_name"]
 
     ID = 0x78515775
     QUALNAME = "functions.account.UpdateProfile"
 
-    def __init__(self, *, first_name: Optional[str] = None, last_name: Optional[str] = None, about: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        first_name: str | None = None,
+        last_name: str | None = None,
+        about: str | None = None,
+    ) -> None:
         self.first_name = first_name  # flags.0?string
         self.last_name = last_name  # flags.1?string
         self.about = about  # flags.2?string
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateProfile":
-        
         flags = Int.read(b)
-        
+
         first_name = String.read(b) if flags & (1 << 0) else None
         last_name = String.read(b) if flags & (1 << 1) else None
         about = String.read(b) if flags & (1 << 2) else None
@@ -80,14 +87,14 @@ class UpdateProfile(TLObject):  # type: ignore
         flags |= (1 << 1) if self.last_name is not None else 0
         flags |= (1 << 2) if self.about is not None else 0
         b.write(Int(flags))
-        
+
         if self.first_name is not None:
             b.write(String(self.first_name))
-        
+
         if self.last_name is not None:
             b.write(String(self.last_name))
-        
+
         if self.about is not None:
             b.write(String(self.about))
-        
+
         return b.getvalue()

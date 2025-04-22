@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -99,12 +103,54 @@ class GroupCallParticipant(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "date", "source", "muted", "left", "can_self_unmute", "just_joined", "versioned", "min", "muted_by_you", "volume_by_admin", "is_self", "video_joined", "active_date", "volume", "about", "raise_hand_rating", "video", "presentation"]
+    __slots__: list[str] = [
+        "about",
+        "active_date",
+        "can_self_unmute",
+        "date",
+        "is_self",
+        "just_joined",
+        "left",
+        "min",
+        "muted",
+        "muted_by_you",
+        "peer",
+        "presentation",
+        "raise_hand_rating",
+        "source",
+        "versioned",
+        "video",
+        "video_joined",
+        "volume",
+        "volume_by_admin",
+    ]
 
-    ID = 0xeba636fe
+    ID = 0xEBA636FE
     QUALNAME = "types.GroupCallParticipant"
 
-    def __init__(self, *, peer: "raw.base.Peer", date: int, source: int, muted: Optional[bool] = None, left: Optional[bool] = None, can_self_unmute: Optional[bool] = None, just_joined: Optional[bool] = None, versioned: Optional[bool] = None, min: Optional[bool] = None, muted_by_you: Optional[bool] = None, volume_by_admin: Optional[bool] = None, is_self: Optional[bool] = None, video_joined: Optional[bool] = None, active_date: Optional[int] = None, volume: Optional[int] = None, about: Optional[str] = None, raise_hand_rating: Optional[int] = None, video: "raw.base.GroupCallParticipantVideo" = None, presentation: "raw.base.GroupCallParticipantVideo" = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.Peer",
+        date: int,
+        source: int,
+        muted: bool | None = None,
+        left: bool | None = None,
+        can_self_unmute: bool | None = None,
+        just_joined: bool | None = None,
+        versioned: bool | None = None,
+        min: bool | None = None,
+        muted_by_you: bool | None = None,
+        volume_by_admin: bool | None = None,
+        is_self: bool | None = None,
+        video_joined: bool | None = None,
+        active_date: int | None = None,
+        volume: int | None = None,
+        about: str | None = None,
+        raise_hand_rating: int | None = None,
+        video: "raw.base.GroupCallParticipantVideo" = None,
+        presentation: "raw.base.GroupCallParticipantVideo" = None,
+    ) -> None:
         self.peer = peer  # Peer
         self.date = date  # int
         self.source = source  # int
@@ -127,9 +173,8 @@ class GroupCallParticipant(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GroupCallParticipant":
-        
         flags = Int.read(b)
-        
+
         muted = True if flags & (1 << 0) else False
         left = True if flags & (1 << 1) else False
         can_self_unmute = True if flags & (1 << 2) else False
@@ -141,20 +186,40 @@ class GroupCallParticipant(TLObject):  # type: ignore
         is_self = True if flags & (1 << 12) else False
         video_joined = True if flags & (1 << 15) else False
         peer = TLObject.read(b)
-        
+
         date = Int.read(b)
-        
+
         active_date = Int.read(b) if flags & (1 << 3) else None
         source = Int.read(b)
-        
+
         volume = Int.read(b) if flags & (1 << 7) else None
         about = String.read(b) if flags & (1 << 11) else None
         raise_hand_rating = Long.read(b) if flags & (1 << 13) else None
         video = TLObject.read(b) if flags & (1 << 6) else None
-        
+
         presentation = TLObject.read(b) if flags & (1 << 14) else None
-        
-        return GroupCallParticipant(peer=peer, date=date, source=source, muted=muted, left=left, can_self_unmute=can_self_unmute, just_joined=just_joined, versioned=versioned, min=min, muted_by_you=muted_by_you, volume_by_admin=volume_by_admin, is_self=is_self, video_joined=video_joined, active_date=active_date, volume=volume, about=about, raise_hand_rating=raise_hand_rating, video=video, presentation=presentation)
+
+        return GroupCallParticipant(
+            peer=peer,
+            date=date,
+            source=source,
+            muted=muted,
+            left=left,
+            can_self_unmute=can_self_unmute,
+            just_joined=just_joined,
+            versioned=versioned,
+            min=min,
+            muted_by_you=muted_by_you,
+            volume_by_admin=volume_by_admin,
+            is_self=is_self,
+            video_joined=video_joined,
+            active_date=active_date,
+            volume=volume,
+            about=about,
+            raise_hand_rating=raise_hand_rating,
+            video=video,
+            presentation=presentation,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -178,29 +243,29 @@ class GroupCallParticipant(TLObject):  # type: ignore
         flags |= (1 << 6) if self.video is not None else 0
         flags |= (1 << 14) if self.presentation is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.date))
-        
+
         if self.active_date is not None:
             b.write(Int(self.active_date))
-        
+
         b.write(Int(self.source))
-        
+
         if self.volume is not None:
             b.write(Int(self.volume))
-        
+
         if self.about is not None:
             b.write(String(self.about))
-        
+
         if self.raise_hand_rating is not None:
             b.write(Long(self.raise_hand_rating))
-        
+
         if self.video is not None:
             b.write(self.video.write())
-        
+
         if self.presentation is not None:
             b.write(self.presentation.write())
-        
+
         return b.getvalue()

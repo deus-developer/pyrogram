@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +56,9 @@ class StatsGraphError(TLObject):  # type: ignore
             stats.LoadAsyncGraph
     """
 
-    __slots__: List[str] = ["error"]
+    __slots__: list[str] = ["error"]
 
-    ID = 0xbedc9822
+    ID = 0xBEDC9822
     QUALNAME = "types.StatsGraphError"
 
     def __init__(self, *, error: str) -> None:
@@ -65,9 +67,9 @@ class StatsGraphError(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "StatsGraphError":
         # No flags
-        
+
         error = String.read(b)
-        
+
         return StatsGraphError(error=error)
 
     def write(self, *args) -> bytes:
@@ -75,7 +77,7 @@ class StatsGraphError(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.error))
-        
+
         return b.getvalue()

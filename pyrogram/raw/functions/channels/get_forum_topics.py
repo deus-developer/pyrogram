@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetForumTopics(TLObject):  # type: ignore
+class GetForumTopics(TLFunction["raw.base.messages.ForumTopics"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -60,12 +63,28 @@ class GetForumTopics(TLObject):  # type: ignore
         :obj:`messages.ForumTopics <pyrogram.raw.base.messages.ForumTopics>`
     """
 
-    __slots__: List[str] = ["channel", "offset_date", "offset_id", "offset_topic", "limit", "q"]
+    __slots__: list[str] = [
+        "channel",
+        "limit",
+        "offset_date",
+        "offset_id",
+        "offset_topic",
+        "q",
+    ]
 
-    ID = 0xde560d1
+    ID = 0xDE560D1
     QUALNAME = "functions.channels.GetForumTopics"
 
-    def __init__(self, *, channel: "raw.base.InputChannel", offset_date: int, offset_id: int, offset_topic: int, limit: int, q: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        channel: "raw.base.InputChannel",
+        offset_date: int,
+        offset_id: int,
+        offset_topic: int,
+        limit: int,
+        q: str | None = None,
+    ) -> None:
         self.channel = channel  # InputChannel
         self.offset_date = offset_date  # int
         self.offset_id = offset_id  # int
@@ -75,21 +94,27 @@ class GetForumTopics(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetForumTopics":
-        
         flags = Int.read(b)
-        
+
         channel = TLObject.read(b)
-        
+
         q = String.read(b) if flags & (1 << 0) else None
         offset_date = Int.read(b)
-        
+
         offset_id = Int.read(b)
-        
+
         offset_topic = Int.read(b)
-        
+
         limit = Int.read(b)
-        
-        return GetForumTopics(channel=channel, offset_date=offset_date, offset_id=offset_id, offset_topic=offset_topic, limit=limit, q=q)
+
+        return GetForumTopics(
+            channel=channel,
+            offset_date=offset_date,
+            offset_id=offset_id,
+            offset_topic=offset_topic,
+            limit=limit,
+            q=q,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -98,18 +123,18 @@ class GetForumTopics(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.q is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.channel.write())
-        
+
         if self.q is not None:
             b.write(String(self.q))
-        
+
         b.write(Int(self.offset_date))
-        
+
         b.write(Int(self.offset_id))
-        
+
         b.write(Int(self.offset_topic))
-        
+
         b.write(Int(self.limit))
-        
+
         return b.getvalue()

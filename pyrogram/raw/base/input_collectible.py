@@ -4,8 +4,8 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type InputCollectible = Union["raw.types.InputCollectiblePhone, raw.types.InputCollectibleUsername"]
+type InputCollectible = (
+    raw.types.InputCollectiblePhone | raw.types.InputCollectibleUsername
+)

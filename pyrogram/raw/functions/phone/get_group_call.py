@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetGroupCall(TLObject):  # type: ignore
+class GetGroupCall(TLFunction["raw.base.phone.GroupCall"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class GetGroupCall(TLObject):  # type: ignore
         :obj:`phone.GroupCall <pyrogram.raw.base.phone.GroupCall>`
     """
 
-    __slots__: List[str] = ["call", "limit"]
+    __slots__: list[str] = ["call", "limit"]
 
-    ID = 0x41845db
+    ID = 0x41845DB
     QUALNAME = "functions.phone.GetGroupCall"
 
     def __init__(self, *, call: "raw.base.InputGroupCall", limit: int) -> None:
@@ -60,11 +62,11 @@ class GetGroupCall(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetGroupCall":
         # No flags
-        
+
         call = TLObject.read(b)
-        
+
         limit = Int.read(b)
-        
+
         return GetGroupCall(call=call, limit=limit)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class GetGroupCall(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.call.write())
-        
+
         b.write(Int(self.limit))
-        
+
         return b.getvalue()

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +51,9 @@ class MsgsStateInfo(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["req_msg_id", "info"]
+    __slots__: list[str] = ["info", "req_msg_id"]
 
-    ID = 0x04deb57d
+    ID = 0x04DEB57D
     QUALNAME = "types.MsgsStateInfo"
 
     def __init__(self, *, req_msg_id: int, info: str) -> None:
@@ -60,11 +63,11 @@ class MsgsStateInfo(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MsgsStateInfo":
         # No flags
-        
+
         req_msg_id = Long.read(b)
-        
+
         info = String.read(b)
-        
+
         return MsgsStateInfo(req_msg_id=req_msg_id, info=info)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class MsgsStateInfo(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.req_msg_id))
-        
+
         b.write(String(self.info))
-        
+
         return b.getvalue()

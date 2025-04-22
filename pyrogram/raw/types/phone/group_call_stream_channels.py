@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,20 +57,20 @@ class GroupCallStreamChannels(TLObject):  # type: ignore
             phone.GetGroupCallStreamChannels
     """
 
-    __slots__: List[str] = ["channels"]
+    __slots__: list[str] = ["channels"]
 
-    ID = 0xd0e482b2
+    ID = 0xD0E482B2
     QUALNAME = "types.phone.GroupCallStreamChannels"
 
-    def __init__(self, *, channels: List["raw.base.GroupCallStreamChannel"]) -> None:
+    def __init__(self, *, channels: list["raw.base.GroupCallStreamChannel"]) -> None:
         self.channels = channels  # Vector<GroupCallStreamChannel>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GroupCallStreamChannels":
         # No flags
-        
+
         channels = TLObject.read(b)
-        
+
         return GroupCallStreamChannels(channels=channels)
 
     def write(self, *args) -> bytes:
@@ -75,7 +78,7 @@ class GroupCallStreamChannels(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.channels))
-        
+
         return b.getvalue()

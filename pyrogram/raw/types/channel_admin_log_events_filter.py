@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -96,12 +97,52 @@ class ChannelAdminLogEventsFilter(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["join", "leave", "invite", "ban", "unban", "kick", "unkick", "promote", "demote", "info", "settings", "pinned", "edit", "delete", "group_call", "invites", "send", "forums"]
+    __slots__: list[str] = [
+        "ban",
+        "delete",
+        "demote",
+        "edit",
+        "forums",
+        "group_call",
+        "info",
+        "invite",
+        "invites",
+        "join",
+        "kick",
+        "leave",
+        "pinned",
+        "promote",
+        "send",
+        "settings",
+        "unban",
+        "unkick",
+    ]
 
-    ID = 0xea107ae4
+    ID = 0xEA107AE4
     QUALNAME = "types.ChannelAdminLogEventsFilter"
 
-    def __init__(self, *, join: Optional[bool] = None, leave: Optional[bool] = None, invite: Optional[bool] = None, ban: Optional[bool] = None, unban: Optional[bool] = None, kick: Optional[bool] = None, unkick: Optional[bool] = None, promote: Optional[bool] = None, demote: Optional[bool] = None, info: Optional[bool] = None, settings: Optional[bool] = None, pinned: Optional[bool] = None, edit: Optional[bool] = None, delete: Optional[bool] = None, group_call: Optional[bool] = None, invites: Optional[bool] = None, send: Optional[bool] = None, forums: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        join: bool | None = None,
+        leave: bool | None = None,
+        invite: bool | None = None,
+        ban: bool | None = None,
+        unban: bool | None = None,
+        kick: bool | None = None,
+        unkick: bool | None = None,
+        promote: bool | None = None,
+        demote: bool | None = None,
+        info: bool | None = None,
+        settings: bool | None = None,
+        pinned: bool | None = None,
+        edit: bool | None = None,
+        delete: bool | None = None,
+        group_call: bool | None = None,
+        invites: bool | None = None,
+        send: bool | None = None,
+        forums: bool | None = None,
+    ) -> None:
         self.join = join  # flags.0?true
         self.leave = leave  # flags.1?true
         self.invite = invite  # flags.2?true
@@ -123,9 +164,8 @@ class ChannelAdminLogEventsFilter(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChannelAdminLogEventsFilter":
-        
         flags = Int.read(b)
-        
+
         join = True if flags & (1 << 0) else False
         leave = True if flags & (1 << 1) else False
         invite = True if flags & (1 << 2) else False
@@ -144,7 +184,26 @@ class ChannelAdminLogEventsFilter(TLObject):  # type: ignore
         invites = True if flags & (1 << 15) else False
         send = True if flags & (1 << 16) else False
         forums = True if flags & (1 << 17) else False
-        return ChannelAdminLogEventsFilter(join=join, leave=leave, invite=invite, ban=ban, unban=unban, kick=kick, unkick=unkick, promote=promote, demote=demote, info=info, settings=settings, pinned=pinned, edit=edit, delete=delete, group_call=group_call, invites=invites, send=send, forums=forums)
+        return ChannelAdminLogEventsFilter(
+            join=join,
+            leave=leave,
+            invite=invite,
+            ban=ban,
+            unban=unban,
+            kick=kick,
+            unkick=unkick,
+            promote=promote,
+            demote=demote,
+            info=info,
+            settings=settings,
+            pinned=pinned,
+            edit=edit,
+            delete=delete,
+            group_call=group_call,
+            invites=invites,
+            send=send,
+            forums=forums,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -170,5 +229,5 @@ class ChannelAdminLogEventsFilter(TLObject):  # type: ignore
         flags |= (1 << 16) if self.send else 0
         flags |= (1 << 17) if self.forums else 0
         b.write(Int(flags))
-        
+
         return b.getvalue()

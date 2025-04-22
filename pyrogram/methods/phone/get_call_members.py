@@ -16,17 +16,17 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, AsyncGenerator
+from collections.abc import AsyncGenerator
 
 import pyrogram
-from pyrogram import types, raw
+from pyrogram import raw, types
 
 
 class GetCallMembers:
     async def get_call_members(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        limit: int = 0
+        chat_id: int | str,
+        limit: int = 0,
     ) -> AsyncGenerator["types.GroupCallMember", None]:
         """Get the members list of a chat call.
 
@@ -56,7 +56,9 @@ class GetCallMembers:
         if isinstance(peer, raw.types.InputPeerChannel):
             r = await self.invoke(raw.functions.channels.GetFullChannel(channel=peer))
         elif isinstance(peer, raw.types.InputPeerChat):
-            r = await self.invoke(raw.functions.messages.GetFullChat(chat_id=peer.chat_id))
+            r = await self.invoke(
+                raw.functions.messages.GetFullChat(chat_id=peer.chat_id),
+            )
         else:
             raise ValueError("Target chat should be group, supergroup or channel.")
 
@@ -77,9 +79,9 @@ class GetCallMembers:
                     ids=[],
                     sources=[],
                     offset=offset,
-                    limit=limit
+                    limit=limit,
                 ),
-                sleep_threshold=60
+                sleep_threshold=60,
             )
 
             members = [

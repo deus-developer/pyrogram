@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -59,23 +63,23 @@ class EmojiStatuses(TLObject):  # type: ignore
             account.GetChannelDefaultEmojiStatuses
     """
 
-    __slots__: List[str] = ["hash", "statuses"]
+    __slots__: list[str] = ["hash", "statuses"]
 
-    ID = 0x90c467d1
+    ID = 0x90C467D1
     QUALNAME = "types.account.EmojiStatuses"
 
-    def __init__(self, *, hash: int, statuses: List["raw.base.EmojiStatus"]) -> None:
+    def __init__(self, *, hash: int, statuses: list["raw.base.EmojiStatus"]) -> None:
         self.hash = hash  # long
         self.statuses = statuses  # Vector<EmojiStatus>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EmojiStatuses":
         # No flags
-        
+
         hash = Long.read(b)
-        
+
         statuses = TLObject.read(b)
-        
+
         return EmojiStatuses(hash=hash, statuses=statuses)
 
     def write(self, *args) -> bytes:
@@ -83,9 +87,9 @@ class EmojiStatuses(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.hash))
-        
+
         b.write(Vector(self.statuses))
-        
+
         return b.getvalue()

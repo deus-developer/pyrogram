@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetNotifySettings(TLObject):  # type: ignore
+class GetNotifySettings(TLFunction["raw.base.PeerNotifySettings"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetNotifySettings(TLObject):  # type: ignore
         :obj:`PeerNotifySettings <pyrogram.raw.base.PeerNotifySettings>`
     """
 
-    __slots__: List[str] = ["peer"]
+    __slots__: list[str] = ["peer"]
 
-    ID = 0x12b3ad31
+    ID = 0x12B3AD31
     QUALNAME = "functions.account.GetNotifySettings"
 
     def __init__(self, *, peer: "raw.base.InputNotifyPeer") -> None:
@@ -56,9 +58,9 @@ class GetNotifySettings(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetNotifySettings":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         return GetNotifySettings(peer=peer)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class GetNotifySettings(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         return b.getvalue()

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,27 +54,36 @@ class KeyboardButtonCallback(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["text", "data", "requires_password"]
+    __slots__: list[str] = ["data", "requires_password", "text"]
 
-    ID = 0x35bbdb6b
+    ID = 0x35BBDB6B
     QUALNAME = "types.KeyboardButtonCallback"
 
-    def __init__(self, *, text: str, data: bytes, requires_password: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        text: str,
+        data: bytes,
+        requires_password: bool | None = None,
+    ) -> None:
         self.text = text  # string
         self.data = data  # bytes
         self.requires_password = requires_password  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "KeyboardButtonCallback":
-        
         flags = Int.read(b)
-        
+
         requires_password = True if flags & (1 << 0) else False
         text = String.read(b)
-        
+
         data = Bytes.read(b)
-        
-        return KeyboardButtonCallback(text=text, data=data, requires_password=requires_password)
+
+        return KeyboardButtonCallback(
+            text=text,
+            data=data,
+            requires_password=requires_password,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -80,9 +92,9 @@ class KeyboardButtonCallback(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.requires_password else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.text))
-        
+
         b.write(Bytes(self.data))
-        
+
         return b.getvalue()

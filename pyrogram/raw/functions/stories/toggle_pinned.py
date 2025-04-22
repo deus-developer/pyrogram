@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class TogglePinned(TLObject):  # type: ignore
+class TogglePinned(TLFunction[list[int]]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +55,18 @@ class TogglePinned(TLObject):  # type: ignore
         List of ``int`` ``32-bit``
     """
 
-    __slots__: List[str] = ["peer", "id", "pinned"]
+    __slots__: list[str] = ["id", "peer", "pinned"]
 
-    ID = 0x9a75a1ef
+    ID = 0x9A75A1EF
     QUALNAME = "functions.stories.TogglePinned"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", id: List[int], pinned: bool) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        id: list[int],
+        pinned: bool,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.id = id  # Vector<int>
         self.pinned = pinned  # Bool
@@ -64,13 +74,13 @@ class TogglePinned(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "TogglePinned":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         id = TLObject.read(b, Int)
-        
+
         pinned = Bool.read(b)
-        
+
         return TogglePinned(peer=peer, id=id, pinned=pinned)
 
     def write(self, *args) -> bytes:
@@ -78,11 +88,11 @@ class TogglePinned(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Vector(self.id, Int))
-        
+
         b.write(Bool(self.pinned))
-        
+
         return b.getvalue()

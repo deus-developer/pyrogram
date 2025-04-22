@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class InvokeWithBusinessConnection(TLObject):  # type: ignore
+class InvokeWithBusinessConnection(TLFunction["raw.base.X"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class InvokeWithBusinessConnection(TLObject):  # type: ignore
         Any object from :obj:`~pyrogram.raw.types`
     """
 
-    __slots__: List[str] = ["connection_id", "query"]
+    __slots__: list[str] = ["connection_id", "query"]
 
-    ID = 0xdd289f8e
+    ID = 0xDD289F8E
     QUALNAME = "functions.InvokeWithBusinessConnection"
 
     def __init__(self, *, connection_id: str, query: TLObject) -> None:
@@ -60,11 +62,11 @@ class InvokeWithBusinessConnection(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InvokeWithBusinessConnection":
         # No flags
-        
+
         connection_id = String.read(b)
-        
+
         query = TLObject.read(b)
-        
+
         return InvokeWithBusinessConnection(connection_id=connection_id, query=query)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class InvokeWithBusinessConnection(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.connection_id))
-        
+
         b.write(self.query.write())
-        
+
         return b.getvalue()

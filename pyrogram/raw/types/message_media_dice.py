@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -59,9 +61,9 @@ class MessageMediaDice(TLObject):  # type: ignore
             messages.UploadImportedMedia
     """
 
-    __slots__: List[str] = ["value", "emoticon"]
+    __slots__: list[str] = ["emoticon", "value"]
 
-    ID = 0x3f7ee58b
+    ID = 0x3F7EE58B
     QUALNAME = "types.MessageMediaDice"
 
     def __init__(self, *, value: int, emoticon: str) -> None:
@@ -71,11 +73,11 @@ class MessageMediaDice(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageMediaDice":
         # No flags
-        
+
         value = Int.read(b)
-        
+
         emoticon = String.read(b)
-        
+
         return MessageMediaDice(value=value, emoticon=emoticon)
 
     def write(self, *args) -> bytes:
@@ -83,9 +85,9 @@ class MessageMediaDice(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.value))
-        
+
         b.write(String(self.emoticon))
-        
+
         return b.getvalue()

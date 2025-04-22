@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,12 +61,20 @@ class TermsOfService(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "text", "entities", "popup", "min_age_confirm"]
+    __slots__: list[str] = ["entities", "id", "min_age_confirm", "popup", "text"]
 
-    ID = 0x780a0310
+    ID = 0x780A0310
     QUALNAME = "types.help.TermsOfService"
 
-    def __init__(self, *, id: "raw.base.DataJSON", text: str, entities: List["raw.base.MessageEntity"], popup: Optional[bool] = None, min_age_confirm: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: "raw.base.DataJSON",
+        text: str,
+        entities: list["raw.base.MessageEntity"],
+        popup: bool | None = None,
+        min_age_confirm: int | None = None,
+    ) -> None:
         self.id = id  # DataJSON
         self.text = text  # string
         self.entities = entities  # Vector<MessageEntity>
@@ -71,18 +83,23 @@ class TermsOfService(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "TermsOfService":
-        
         flags = Int.read(b)
-        
+
         popup = True if flags & (1 << 0) else False
         id = TLObject.read(b)
-        
+
         text = String.read(b)
-        
+
         entities = TLObject.read(b)
-        
+
         min_age_confirm = Int.read(b) if flags & (1 << 1) else None
-        return TermsOfService(id=id, text=text, entities=entities, popup=popup, min_age_confirm=min_age_confirm)
+        return TermsOfService(
+            id=id,
+            text=text,
+            entities=entities,
+            popup=popup,
+            min_age_confirm=min_age_confirm,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -92,14 +109,14 @@ class TermsOfService(TLObject):  # type: ignore
         flags |= (1 << 0) if self.popup else 0
         flags |= (1 << 1) if self.min_age_confirm is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.id.write())
-        
+
         b.write(String(self.text))
-        
+
         b.write(Vector(self.entities))
-        
+
         if self.min_age_confirm is not None:
             b.write(Int(self.min_age_confirm))
-        
+
         return b.getvalue()

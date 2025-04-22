@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetWebPage(TLObject):  # type: ignore
+class GetWebPage(TLFunction["raw.base.messages.WebPage"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class GetWebPage(TLObject):  # type: ignore
         :obj:`messages.WebPage <pyrogram.raw.base.messages.WebPage>`
     """
 
-    __slots__: List[str] = ["url", "hash"]
+    __slots__: list[str] = ["hash", "url"]
 
-    ID = 0x8d9692a3
+    ID = 0x8D9692A3
     QUALNAME = "functions.messages.GetWebPage"
 
     def __init__(self, *, url: str, hash: int) -> None:
@@ -60,11 +62,11 @@ class GetWebPage(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetWebPage":
         # No flags
-        
+
         url = String.read(b)
-        
+
         hash = Int.read(b)
-        
+
         return GetWebPage(url=url, hash=hash)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class GetWebPage(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.url))
-        
+
         b.write(Int(self.hash))
-        
+
         return b.getvalue()

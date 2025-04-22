@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,12 +62,18 @@ class AutoDownloadSettings(TLObject):  # type: ignore
             account.GetAutoDownloadSettings
     """
 
-    __slots__: List[str] = ["low", "medium", "high"]
+    __slots__: list[str] = ["high", "low", "medium"]
 
-    ID = 0x63cacf26
+    ID = 0x63CACF26
     QUALNAME = "types.account.AutoDownloadSettings"
 
-    def __init__(self, *, low: "raw.base.AutoDownloadSettings", medium: "raw.base.AutoDownloadSettings", high: "raw.base.AutoDownloadSettings") -> None:
+    def __init__(
+        self,
+        *,
+        low: "raw.base.AutoDownloadSettings",
+        medium: "raw.base.AutoDownloadSettings",
+        high: "raw.base.AutoDownloadSettings",
+    ) -> None:
         self.low = low  # AutoDownloadSettings
         self.medium = medium  # AutoDownloadSettings
         self.high = high  # AutoDownloadSettings
@@ -73,13 +81,13 @@ class AutoDownloadSettings(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "AutoDownloadSettings":
         # No flags
-        
+
         low = TLObject.read(b)
-        
+
         medium = TLObject.read(b)
-        
+
         high = TLObject.read(b)
-        
+
         return AutoDownloadSettings(low=low, medium=medium, high=high)
 
     def write(self, *args) -> bytes:
@@ -87,11 +95,11 @@ class AutoDownloadSettings(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.low.write())
-        
+
         b.write(self.medium.write())
-        
+
         b.write(self.high.write())
-        
+
         return b.getvalue()

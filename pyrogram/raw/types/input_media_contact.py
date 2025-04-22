@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +56,19 @@ class InputMediaContact(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["phone_number", "first_name", "last_name", "vcard"]
+    __slots__: list[str] = ["first_name", "last_name", "phone_number", "vcard"]
 
-    ID = 0xf8ab7dfb
+    ID = 0xF8AB7DFB
     QUALNAME = "types.InputMediaContact"
 
-    def __init__(self, *, phone_number: str, first_name: str, last_name: str, vcard: str) -> None:
+    def __init__(
+        self,
+        *,
+        phone_number: str,
+        first_name: str,
+        last_name: str,
+        vcard: str,
+    ) -> None:
         self.phone_number = phone_number  # string
         self.first_name = first_name  # string
         self.last_name = last_name  # string
@@ -68,29 +77,34 @@ class InputMediaContact(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputMediaContact":
         # No flags
-        
+
         phone_number = String.read(b)
-        
+
         first_name = String.read(b)
-        
+
         last_name = String.read(b)
-        
+
         vcard = String.read(b)
-        
-        return InputMediaContact(phone_number=phone_number, first_name=first_name, last_name=last_name, vcard=vcard)
+
+        return InputMediaContact(
+            phone_number=phone_number,
+            first_name=first_name,
+            last_name=last_name,
+            vcard=vcard,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.phone_number))
-        
+
         b.write(String(self.first_name))
-        
+
         b.write(String(self.last_name))
-        
+
         b.write(String(self.vcard))
-        
+
         return b.getvalue()

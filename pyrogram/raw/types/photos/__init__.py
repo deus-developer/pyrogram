@@ -22,6 +22,6 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
+from .photo import Photo
 from .photos import Photos
 from .photos_slice import PhotosSlice
-from .photo import Photo

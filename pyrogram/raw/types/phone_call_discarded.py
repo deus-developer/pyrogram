@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,12 +63,28 @@ class PhoneCallDiscarded(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "need_rating", "need_debug", "video", "reason", "duration"]
+    __slots__: list[str] = [
+        "duration",
+        "id",
+        "need_debug",
+        "need_rating",
+        "reason",
+        "video",
+    ]
 
-    ID = 0x50ca4de1
+    ID = 0x50CA4DE1
     QUALNAME = "types.PhoneCallDiscarded"
 
-    def __init__(self, *, id: int, need_rating: Optional[bool] = None, need_debug: Optional[bool] = None, video: Optional[bool] = None, reason: "raw.base.PhoneCallDiscardReason" = None, duration: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: int,
+        need_rating: bool | None = None,
+        need_debug: bool | None = None,
+        video: bool | None = None,
+        reason: "raw.base.PhoneCallDiscardReason" = None,
+        duration: int | None = None,
+    ) -> None:
         self.id = id  # long
         self.need_rating = need_rating  # flags.2?true
         self.need_debug = need_debug  # flags.3?true
@@ -75,18 +94,24 @@ class PhoneCallDiscarded(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PhoneCallDiscarded":
-        
         flags = Int.read(b)
-        
+
         need_rating = True if flags & (1 << 2) else False
         need_debug = True if flags & (1 << 3) else False
         video = True if flags & (1 << 6) else False
         id = Long.read(b)
-        
+
         reason = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         duration = Int.read(b) if flags & (1 << 1) else None
-        return PhoneCallDiscarded(id=id, need_rating=need_rating, need_debug=need_debug, video=video, reason=reason, duration=duration)
+        return PhoneCallDiscarded(
+            id=id,
+            need_rating=need_rating,
+            need_debug=need_debug,
+            video=video,
+            reason=reason,
+            duration=duration,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -99,13 +124,13 @@ class PhoneCallDiscarded(TLObject):  # type: ignore
         flags |= (1 << 0) if self.reason is not None else 0
         flags |= (1 << 1) if self.duration is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.id))
-        
+
         if self.reason is not None:
             b.write(self.reason.write())
-        
+
         if self.duration is not None:
             b.write(Int(self.duration))
-        
+
         return b.getvalue()

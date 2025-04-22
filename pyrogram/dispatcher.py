@@ -17,38 +17,71 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import asyncio
-import inspect
 import logging
 from collections import OrderedDict
 
 import pyrogram
-from pyrogram import errors
 from pyrogram import utils
-from pyrogram import raw
 from pyrogram.handlers import (
-    CallbackQueryHandler, MessageHandler, EditedMessageHandler, DeletedMessagesHandler,
-    UserStatusHandler, RawUpdateHandler, InlineQueryHandler, PollHandler, PreCheckoutQueryHandler,
-    ChosenInlineResultHandler, ChatMemberUpdatedHandler, ChatJoinRequestHandler, StoryHandler
+    CallbackQueryHandler,
+    ChatJoinRequestHandler,
+    ChatMemberUpdatedHandler,
+    ChosenInlineResultHandler,
+    DeletedMessagesHandler,
+    EditedMessageHandler,
+    InlineQueryHandler,
+    MessageHandler,
+    PollHandler,
+    PreCheckoutQueryHandler,
+    RawUpdateHandler,
+    StoryHandler,
+    UserStatusHandler,
 )
 from pyrogram.raw.core import TLObject
 from pyrogram.raw.types import (
-    UpdateNewMessage, UpdateNewChannelMessage, UpdateNewScheduledMessage,
-    UpdateBotNewBusinessMessage, UpdateBotEditBusinessMessage, UpdateBotDeleteBusinessMessage,
-    UpdateEditMessage, UpdateEditChannelMessage,
-    UpdateDeleteMessages, UpdateDeleteChannelMessages,
-    UpdateBotCallbackQuery, UpdateInlineBotCallbackQuery, UpdateBotPrecheckoutQuery,
-    UpdateUserStatus, UpdateBotInlineQuery, UpdateMessagePoll,
-    UpdateBotInlineSend, UpdateChatParticipant, UpdateChannelParticipant,
-    UpdateBotChatInviteRequester, UpdateStory
+    UpdateBotCallbackQuery,
+    UpdateBotChatInviteRequester,
+    UpdateBotDeleteBusinessMessage,
+    UpdateBotEditBusinessMessage,
+    UpdateBotInlineQuery,
+    UpdateBotInlineSend,
+    UpdateBotNewBusinessMessage,
+    UpdateBotPrecheckoutQuery,
+    UpdateChannelParticipant,
+    UpdateChatParticipant,
+    UpdateDeleteChannelMessages,
+    UpdateDeleteMessages,
+    UpdateEditChannelMessage,
+    UpdateEditMessage,
+    UpdateInlineBotCallbackQuery,
+    UpdateMessagePoll,
+    UpdateNewChannelMessage,
+    UpdateNewMessage,
+    UpdateNewScheduledMessage,
+    UpdateStory,
+    UpdateUserStatus,
 )
 
 log = logging.getLogger(__name__)
 
 
 class Dispatcher:
-    NEW_MESSAGE_UPDATES = (UpdateNewMessage, UpdateNewChannelMessage, UpdateNewScheduledMessage, UpdateBotNewBusinessMessage)
-    EDIT_MESSAGE_UPDATES = (UpdateEditMessage, UpdateEditChannelMessage, UpdateBotEditBusinessMessage)
-    DELETE_MESSAGES_UPDATES = (UpdateDeleteMessages, UpdateDeleteChannelMessages, UpdateBotDeleteBusinessMessage)
+    NEW_MESSAGE_UPDATES = (
+        UpdateNewMessage,
+        UpdateNewChannelMessage,
+        UpdateNewScheduledMessage,
+        UpdateBotNewBusinessMessage,
+    )
+    EDIT_MESSAGE_UPDATES = (
+        UpdateEditMessage,
+        UpdateEditChannelMessage,
+        UpdateBotEditBusinessMessage,
+    )
+    DELETE_MESSAGES_UPDATES = (
+        UpdateDeleteMessages,
+        UpdateDeleteChannelMessages,
+        UpdateBotDeleteBusinessMessage,
+    )
     CALLBACK_QUERY_UPDATES = (UpdateBotCallbackQuery, UpdateInlineBotCallbackQuery)
     CHAT_MEMBER_UPDATES = (UpdateChatParticipant, UpdateChannelParticipant)
     USER_STATUS_UPDATES = (UpdateUserStatus,)
@@ -75,9 +108,9 @@ class Dispatcher:
                     update.message,
                     is_scheduled=isinstance(update, UpdateNewScheduledMessage),
                     business_connection_id=getattr(update, "connection_id", None),
-                    reply_to_message=getattr(update, "reply_to_message", None)
+                    reply_to_message=getattr(update, "reply_to_message", None),
                 ),
-                MessageHandler
+                MessageHandler,
             )
 
         async def edited_messagefrom_raw_tlr(update):
@@ -86,7 +119,7 @@ class Dispatcher:
 
             return (
                 parsed,
-                EditedMessageHandler
+                EditedMessageHandler,
             )
 
         async def deleted_messagesfrom_raw_tlr(update):
@@ -98,55 +131,59 @@ class Dispatcher:
         async def callback_queryfrom_raw_tlr(update):
             return (
                 await pyrogram.types.CallbackQuery.from_raw_tl(self.client, update),
-                CallbackQueryHandler
+                CallbackQueryHandler,
             )
 
         async def user_statusfrom_raw_tlr(update):
             return (
                 pyrogram.types.User.from_raw_tl_user_status(self.client, update),
-                UserStatusHandler
+                UserStatusHandler,
             )
 
         async def inline_queryfrom_raw_tlr(update):
             return (
                 pyrogram.types.InlineQuery.from_raw_tl(self.client, update),
-                InlineQueryHandler
+                InlineQueryHandler,
             )
 
         async def pollfrom_raw_tlr(update):
             return (
                 pyrogram.types.Poll.from_raw_tl_update(self.client, update),
-                PollHandler
+                PollHandler,
             )
 
         async def chosen_inline_resultfrom_raw_tlr(update):
             return (
                 pyrogram.types.ChosenInlineResult.from_raw_tl(self.client, update),
-                ChosenInlineResultHandler
+                ChosenInlineResultHandler,
             )
 
         async def chat_member_updatedfrom_raw_tlr(update):
             return (
                 pyrogram.types.ChatMemberUpdated.from_raw_tl(self.client, update),
-                ChatMemberUpdatedHandler
+                ChatMemberUpdatedHandler,
             )
 
         async def chat_join_requestfrom_raw_tlr(update):
             return (
                 pyrogram.types.ChatJoinRequest.from_raw_tl(self.client, update),
-                ChatJoinRequestHandler
+                ChatJoinRequestHandler,
             )
 
         async def storyfrom_raw_tlr(update):
             return (
-                await pyrogram.types.Story.from_raw_tl(self.client, update.story, update.peer),
-                StoryHandler
+                await pyrogram.types.Story.from_raw_tl(
+                    self.client,
+                    update.story,
+                    update.peer,
+                ),
+                StoryHandler,
             )
 
         async def pre_checkout_queryfrom_raw_tlr(update):
             return (
                 await pyrogram.types.PreCheckoutQuery.from_raw_tl(self.client, update),
-                PreCheckoutQueryHandler
+                PreCheckoutQueryHandler,
             )
 
         self.updatefrom_raw_tlrs = {
@@ -161,10 +198,14 @@ class Dispatcher:
             Dispatcher.CHAT_MEMBER_UPDATES: chat_member_updatedfrom_raw_tlr,
             Dispatcher.CHAT_JOIN_REQUEST_UPDATES: chat_join_requestfrom_raw_tlr,
             Dispatcher.NEW_STORY_UPDATES: storyfrom_raw_tlr,
-            Dispatcher.PRE_CHECKOUT_QUERY_UPDATES: pre_checkout_queryfrom_raw_tlr
+            Dispatcher.PRE_CHECKOUT_QUERY_UPDATES: pre_checkout_queryfrom_raw_tlr,
         }
 
-        self.updatefrom_raw_tlrs = {key: value for key_tuple, value in self.updatefrom_raw_tlrs.items() for key in key_tuple}
+        self.updatefrom_raw_tlrs = {
+            key: value
+            for key_tuple, value in self.updatefrom_raw_tlrs.items()
+            for key in key_tuple
+        }
 
     async def start(self):
         if self.client.no_updates:
@@ -174,7 +215,7 @@ class Dispatcher:
             self.locks_list.append(asyncio.Lock())
 
             self.handler_worker_tasks.append(
-                asyncio.create_task(self.handler_worker(self.locks_list[-1]))
+                asyncio.create_task(self.handler_worker(self.locks_list[-1])),
             )
 
         log.info("Started %s HandlerTasks", self.client.workers)
@@ -218,7 +259,9 @@ class Dispatcher:
 
             try:
                 if group not in self.groups:
-                    raise ValueError(f"Group {group} does not exist. Handler was not removed.")
+                    raise ValueError(
+                        f"Group {group} does not exist. Handler was not removed.",
+                    )
 
                 self.groups[group].remove(handler)
             finally:
@@ -238,9 +281,7 @@ class Dispatcher:
                 parser = self.updatefrom_raw_tlrs.get(type(update), None)
 
                 parsed_update, handler_type = (
-                    await parser(update)
-                    if parser is not None
-                    else (None, type(None))
+                    await parser(update) if parser is not None else (None, type(None))
                 )
 
                 async with lock:

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ImportContacts(TLObject):  # type: ignore
+class ImportContacts(TLFunction["raw.base.contacts.ImportedContacts"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,20 +48,20 @@ class ImportContacts(TLObject):  # type: ignore
         :obj:`contacts.ImportedContacts <pyrogram.raw.base.contacts.ImportedContacts>`
     """
 
-    __slots__: List[str] = ["contacts"]
+    __slots__: list[str] = ["contacts"]
 
-    ID = 0x2c800be5
+    ID = 0x2C800BE5
     QUALNAME = "functions.contacts.ImportContacts"
 
-    def __init__(self, *, contacts: List["raw.base.InputContact"]) -> None:
+    def __init__(self, *, contacts: list["raw.base.InputContact"]) -> None:
         self.contacts = contacts  # Vector<InputContact>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ImportContacts":
         # No flags
-        
+
         contacts = TLObject.read(b)
-        
+
         return ImportContacts(contacts=contacts)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class ImportContacts(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.contacts))
-        
+
         return b.getvalue()

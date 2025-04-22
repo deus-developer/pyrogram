@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,23 +51,28 @@ class UpdatePrivacy(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["key", "rules"]
+    __slots__: list[str] = ["key", "rules"]
 
-    ID = 0xee3b272a
+    ID = 0xEE3B272A
     QUALNAME = "types.UpdatePrivacy"
 
-    def __init__(self, *, key: "raw.base.PrivacyKey", rules: List["raw.base.PrivacyRule"]) -> None:
+    def __init__(
+        self,
+        *,
+        key: "raw.base.PrivacyKey",
+        rules: list["raw.base.PrivacyRule"],
+    ) -> None:
         self.key = key  # PrivacyKey
         self.rules = rules  # Vector<PrivacyRule>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdatePrivacy":
         # No flags
-        
+
         key = TLObject.read(b)
-        
+
         rules = TLObject.read(b)
-        
+
         return UpdatePrivacy(key=key, rules=rules)
 
     def write(self, *args) -> bytes:
@@ -72,9 +80,9 @@ class UpdatePrivacy(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.key.write())
-        
+
         b.write(Vector(self.rules))
-        
+
         return b.getvalue()

@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,9 +58,9 @@ class DifferenceEmpty(TLObject):  # type: ignore
             updates.GetDifference
     """
 
-    __slots__: List[str] = ["date", "seq"]
+    __slots__: list[str] = ["date", "seq"]
 
-    ID = 0x5d75a138
+    ID = 0x5D75A138
     QUALNAME = "types.updates.DifferenceEmpty"
 
     def __init__(self, *, date: int, seq: int) -> None:
@@ -69,11 +70,11 @@ class DifferenceEmpty(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DifferenceEmpty":
         # No flags
-        
+
         date = Int.read(b)
-        
+
         seq = Int.read(b)
-        
+
         return DifferenceEmpty(date=date, seq=seq)
 
     def write(self, *args) -> bytes:
@@ -81,9 +82,9 @@ class DifferenceEmpty(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.date))
-        
+
         b.write(Int(self.seq))
-        
+
         return b.getvalue()

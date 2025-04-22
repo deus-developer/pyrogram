@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +51,9 @@ class LabeledPrice(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["label", "amount"]
+    __slots__: list[str] = ["amount", "label"]
 
-    ID = 0xcb296bf8
+    ID = 0xCB296BF8
     QUALNAME = "types.LabeledPrice"
 
     def __init__(self, *, label: str, amount: int) -> None:
@@ -60,11 +63,11 @@ class LabeledPrice(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "LabeledPrice":
         # No flags
-        
+
         label = String.read(b)
-        
+
         amount = Long.read(b)
-        
+
         return LabeledPrice(label=label, amount=amount)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class LabeledPrice(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.label))
-        
+
         b.write(Long(self.amount))
-        
+
         return b.getvalue()

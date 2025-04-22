@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Int128,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,12 +63,18 @@ class ServerDHParamsOk(TLObject):  # type: ignore
             ReqDHParams
     """
 
-    __slots__: List[str] = ["nonce", "server_nonce", "encrypted_answer"]
+    __slots__: list[str] = ["encrypted_answer", "nonce", "server_nonce"]
 
-    ID = 0xd0e8075c
+    ID = 0xD0E8075C
     QUALNAME = "types.ServerDHParamsOk"
 
-    def __init__(self, *, nonce: int, server_nonce: int, encrypted_answer: bytes) -> None:
+    def __init__(
+        self,
+        *,
+        nonce: int,
+        server_nonce: int,
+        encrypted_answer: bytes,
+    ) -> None:
         self.nonce = nonce  # int128
         self.server_nonce = server_nonce  # int128
         self.encrypted_answer = encrypted_answer  # bytes
@@ -73,25 +82,29 @@ class ServerDHParamsOk(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ServerDHParamsOk":
         # No flags
-        
+
         nonce = Int128.read(b)
-        
+
         server_nonce = Int128.read(b)
-        
+
         encrypted_answer = Bytes.read(b)
-        
-        return ServerDHParamsOk(nonce=nonce, server_nonce=server_nonce, encrypted_answer=encrypted_answer)
+
+        return ServerDHParamsOk(
+            nonce=nonce,
+            server_nonce=server_nonce,
+            encrypted_answer=encrypted_answer,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int128(self.nonce))
-        
+
         b.write(Int128(self.server_nonce))
-        
+
         b.write(Bytes(self.encrypted_answer))
-        
+
         return b.getvalue()

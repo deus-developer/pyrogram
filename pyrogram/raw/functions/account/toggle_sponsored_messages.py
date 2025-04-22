@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ToggleSponsoredMessages(TLObject):  # type: ignore
+class ToggleSponsoredMessages(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class ToggleSponsoredMessages(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["enabled"]
+    __slots__: list[str] = ["enabled"]
 
-    ID = 0xb9d9a38d
+    ID = 0xB9D9A38D
     QUALNAME = "functions.account.ToggleSponsoredMessages"
 
     def __init__(self, *, enabled: bool) -> None:
@@ -56,9 +58,9 @@ class ToggleSponsoredMessages(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ToggleSponsoredMessages":
         # No flags
-        
+
         enabled = Bool.read(b)
-        
+
         return ToggleSponsoredMessages(enabled=enabled)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class ToggleSponsoredMessages(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Bool(self.enabled))
-        
+
         return b.getvalue()

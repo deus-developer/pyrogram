@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,33 +50,41 @@ class ChannelAdminLogEventActionEditTopic(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["prev_topic", "new_topic"]
+    __slots__: list[str] = ["new_topic", "prev_topic"]
 
-    ID = 0xf06fe208
+    ID = 0xF06FE208
     QUALNAME = "types.ChannelAdminLogEventActionEditTopic"
 
-    def __init__(self, *, prev_topic: "raw.base.ForumTopic", new_topic: "raw.base.ForumTopic") -> None:
+    def __init__(
+        self,
+        *,
+        prev_topic: "raw.base.ForumTopic",
+        new_topic: "raw.base.ForumTopic",
+    ) -> None:
         self.prev_topic = prev_topic  # ForumTopic
         self.new_topic = new_topic  # ForumTopic
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChannelAdminLogEventActionEditTopic":
         # No flags
-        
+
         prev_topic = TLObject.read(b)
-        
+
         new_topic = TLObject.read(b)
-        
-        return ChannelAdminLogEventActionEditTopic(prev_topic=prev_topic, new_topic=new_topic)
+
+        return ChannelAdminLogEventActionEditTopic(
+            prev_topic=prev_topic,
+            new_topic=new_topic,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.prev_topic.write())
-        
+
         b.write(self.new_topic.write())
-        
+
         return b.getvalue()

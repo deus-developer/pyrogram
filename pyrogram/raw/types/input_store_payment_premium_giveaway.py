@@ -17,11 +17,16 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -72,12 +77,36 @@ class InputStorePaymentPremiumGiveaway(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["boost_peer", "random_id", "until_date", "currency", "amount", "only_new_subscribers", "winners_are_visible", "additional_peers", "countries_iso2", "prize_description"]
+    __slots__: list[str] = [
+        "additional_peers",
+        "amount",
+        "boost_peer",
+        "countries_iso2",
+        "currency",
+        "only_new_subscribers",
+        "prize_description",
+        "random_id",
+        "until_date",
+        "winners_are_visible",
+    ]
 
-    ID = 0x160544ca
+    ID = 0x160544CA
     QUALNAME = "types.InputStorePaymentPremiumGiveaway"
 
-    def __init__(self, *, boost_peer: "raw.base.InputPeer", random_id: int, until_date: int, currency: str, amount: int, only_new_subscribers: Optional[bool] = None, winners_are_visible: Optional[bool] = None, additional_peers: Optional[List["raw.base.InputPeer"]] = None, countries_iso2: Optional[List[str]] = None, prize_description: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        boost_peer: "raw.base.InputPeer",
+        random_id: int,
+        until_date: int,
+        currency: str,
+        amount: int,
+        only_new_subscribers: bool | None = None,
+        winners_are_visible: bool | None = None,
+        additional_peers: list["raw.base.InputPeer"] | None = None,
+        countries_iso2: list[str] | None = None,
+        prize_description: str | None = None,
+    ) -> None:
         self.boost_peer = boost_peer  # InputPeer
         self.random_id = random_id  # long
         self.until_date = until_date  # int
@@ -91,27 +120,37 @@ class InputStorePaymentPremiumGiveaway(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputStorePaymentPremiumGiveaway":
-        
         flags = Int.read(b)
-        
+
         only_new_subscribers = True if flags & (1 << 0) else False
         winners_are_visible = True if flags & (1 << 3) else False
         boost_peer = TLObject.read(b)
-        
+
         additional_peers = TLObject.read(b) if flags & (1 << 1) else []
-        
+
         countries_iso2 = TLObject.read(b, String) if flags & (1 << 2) else []
-        
+
         prize_description = String.read(b) if flags & (1 << 4) else None
         random_id = Long.read(b)
-        
+
         until_date = Int.read(b)
-        
+
         currency = String.read(b)
-        
+
         amount = Long.read(b)
-        
-        return InputStorePaymentPremiumGiveaway(boost_peer=boost_peer, random_id=random_id, until_date=until_date, currency=currency, amount=amount, only_new_subscribers=only_new_subscribers, winners_are_visible=winners_are_visible, additional_peers=additional_peers, countries_iso2=countries_iso2, prize_description=prize_description)
+
+        return InputStorePaymentPremiumGiveaway(
+            boost_peer=boost_peer,
+            random_id=random_id,
+            until_date=until_date,
+            currency=currency,
+            amount=amount,
+            only_new_subscribers=only_new_subscribers,
+            winners_are_visible=winners_are_visible,
+            additional_peers=additional_peers,
+            countries_iso2=countries_iso2,
+            prize_description=prize_description,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -124,24 +163,24 @@ class InputStorePaymentPremiumGiveaway(TLObject):  # type: ignore
         flags |= (1 << 2) if self.countries_iso2 else 0
         flags |= (1 << 4) if self.prize_description is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.boost_peer.write())
-        
+
         if self.additional_peers is not None:
             b.write(Vector(self.additional_peers))
-        
+
         if self.countries_iso2 is not None:
             b.write(Vector(self.countries_iso2, String))
-        
+
         if self.prize_description is not None:
             b.write(String(self.prize_description))
-        
+
         b.write(Long(self.random_id))
-        
+
         b.write(Int(self.until_date))
-        
+
         b.write(String(self.currency))
-        
+
         b.write(Long(self.amount))
-        
+
         return b.getvalue()

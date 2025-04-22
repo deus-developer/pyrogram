@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class DiscardGroupCall(TLObject):  # type: ignore
+class DiscardGroupCall(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class DiscardGroupCall(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["call"]
+    __slots__: list[str] = ["call"]
 
-    ID = 0x7a777135
+    ID = 0x7A777135
     QUALNAME = "functions.phone.DiscardGroupCall"
 
     def __init__(self, *, call: "raw.base.InputGroupCall") -> None:
@@ -56,9 +58,9 @@ class DiscardGroupCall(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DiscardGroupCall":
         # No flags
-        
+
         call = TLObject.read(b)
-        
+
         return DiscardGroupCall(call=call)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class DiscardGroupCall(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.call.write())
-        
+
         return b.getvalue()

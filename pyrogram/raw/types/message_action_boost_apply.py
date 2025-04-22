@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +46,9 @@ class MessageActionBoostApply(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["boosts"]
+    __slots__: list[str] = ["boosts"]
 
-    ID = 0xcc02aa6d
+    ID = 0xCC02AA6D
     QUALNAME = "types.MessageActionBoostApply"
 
     def __init__(self, *, boosts: int) -> None:
@@ -56,9 +57,9 @@ class MessageActionBoostApply(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageActionBoostApply":
         # No flags
-        
+
         boosts = Int.read(b)
-        
+
         return MessageActionBoostApply(boosts=boosts)
 
     def write(self, *args) -> bytes:
@@ -66,7 +67,7 @@ class MessageActionBoostApply(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.boosts))
-        
+
         return b.getvalue()

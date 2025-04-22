@@ -4,8 +4,8 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type InputBotInlineMessageID = Union["raw.types.InputBotInlineMessageID, raw.types.InputBotInlineMessageID64"]
+type InputBotInlineMessageID = (
+    raw.types.InputBotInlineMessageID | raw.types.InputBotInlineMessageID64
+)

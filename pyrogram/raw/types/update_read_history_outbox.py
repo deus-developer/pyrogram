@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +56,19 @@ class UpdateReadHistoryOutbox(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "max_id", "pts", "pts_count"]
+    __slots__: list[str] = ["max_id", "peer", "pts", "pts_count"]
 
-    ID = 0x2f2f21bf
+    ID = 0x2F2F21BF
     QUALNAME = "types.UpdateReadHistoryOutbox"
 
-    def __init__(self, *, peer: "raw.base.Peer", max_id: int, pts: int, pts_count: int) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.Peer",
+        max_id: int,
+        pts: int,
+        pts_count: int,
+    ) -> None:
         self.peer = peer  # Peer
         self.max_id = max_id  # int
         self.pts = pts  # int
@@ -68,29 +77,34 @@ class UpdateReadHistoryOutbox(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateReadHistoryOutbox":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         max_id = Int.read(b)
-        
+
         pts = Int.read(b)
-        
+
         pts_count = Int.read(b)
-        
-        return UpdateReadHistoryOutbox(peer=peer, max_id=max_id, pts=pts, pts_count=pts_count)
+
+        return UpdateReadHistoryOutbox(
+            peer=peer,
+            max_id=max_id,
+            pts=pts,
+            pts_count=pts_count,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.max_id))
-        
+
         b.write(Int(self.pts))
-        
+
         b.write(Int(self.pts_count))
-        
+
         return b.getvalue()

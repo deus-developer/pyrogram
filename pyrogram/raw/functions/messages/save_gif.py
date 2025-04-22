@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SaveGif(TLObject):  # type: ignore
+class SaveGif(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class SaveGif(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["id", "unsave"]
+    __slots__: list[str] = ["id", "unsave"]
 
-    ID = 0x327a30cb
+    ID = 0x327A30CB
     QUALNAME = "functions.messages.SaveGif"
 
     def __init__(self, *, id: "raw.base.InputDocument", unsave: bool) -> None:
@@ -60,11 +63,11 @@ class SaveGif(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SaveGif":
         # No flags
-        
+
         id = TLObject.read(b)
-        
+
         unsave = Bool.read(b)
-        
+
         return SaveGif(id=id, unsave=unsave)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class SaveGif(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.id.write())
-        
+
         b.write(Bool(self.unsave))
-        
+
         return b.getvalue()

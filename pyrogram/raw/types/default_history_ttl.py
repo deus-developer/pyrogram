@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +55,9 @@ class DefaultHistoryTTL(TLObject):  # type: ignore
             messages.GetDefaultHistoryTTL
     """
 
-    __slots__: List[str] = ["period"]
+    __slots__: list[str] = ["period"]
 
-    ID = 0x43b46b20
+    ID = 0x43B46B20
     QUALNAME = "types.DefaultHistoryTTL"
 
     def __init__(self, *, period: int) -> None:
@@ -65,9 +66,9 @@ class DefaultHistoryTTL(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DefaultHistoryTTL":
         # No flags
-        
+
         period = Int.read(b)
-        
+
         return DefaultHistoryTTL(period=period)
 
     def write(self, *args) -> bytes:
@@ -75,7 +76,7 @@ class DefaultHistoryTTL(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.period))
-        
+
         return b.getvalue()

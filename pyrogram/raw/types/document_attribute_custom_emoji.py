@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +57,19 @@ class DocumentAttributeCustomEmoji(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["alt", "stickerset", "free", "text_color"]
+    __slots__: list[str] = ["alt", "free", "stickerset", "text_color"]
 
-    ID = 0xfd149899
+    ID = 0xFD149899
     QUALNAME = "types.DocumentAttributeCustomEmoji"
 
-    def __init__(self, *, alt: str, stickerset: "raw.base.InputStickerSet", free: Optional[bool] = None, text_color: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        alt: str,
+        stickerset: "raw.base.InputStickerSet",
+        free: bool | None = None,
+        text_color: bool | None = None,
+    ) -> None:
         self.alt = alt  # string
         self.stickerset = stickerset  # InputStickerSet
         self.free = free  # flags.0?true
@@ -67,16 +77,20 @@ class DocumentAttributeCustomEmoji(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DocumentAttributeCustomEmoji":
-        
         flags = Int.read(b)
-        
+
         free = True if flags & (1 << 0) else False
         text_color = True if flags & (1 << 1) else False
         alt = String.read(b)
-        
+
         stickerset = TLObject.read(b)
-        
-        return DocumentAttributeCustomEmoji(alt=alt, stickerset=stickerset, free=free, text_color=text_color)
+
+        return DocumentAttributeCustomEmoji(
+            alt=alt,
+            stickerset=stickerset,
+            free=free,
+            text_color=text_color,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -86,9 +100,9 @@ class DocumentAttributeCustomEmoji(TLObject):  # type: ignore
         flags |= (1 << 0) if self.free else 0
         flags |= (1 << 1) if self.text_color else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.alt))
-        
+
         b.write(self.stickerset.write())
-        
+
         return b.getvalue()

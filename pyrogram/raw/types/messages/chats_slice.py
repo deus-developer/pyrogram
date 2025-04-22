@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -64,23 +67,23 @@ class ChatsSlice(TLObject):  # type: ignore
             stories.GetChatsToSend
     """
 
-    __slots__: List[str] = ["count", "chats"]
+    __slots__: list[str] = ["chats", "count"]
 
-    ID = 0x9cd81144
+    ID = 0x9CD81144
     QUALNAME = "types.messages.ChatsSlice"
 
-    def __init__(self, *, count: int, chats: List["raw.base.Chat"]) -> None:
+    def __init__(self, *, count: int, chats: list["raw.base.Chat"]) -> None:
         self.count = count  # int
         self.chats = chats  # Vector<Chat>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChatsSlice":
         # No flags
-        
+
         count = Int.read(b)
-        
+
         chats = TLObject.read(b)
-        
+
         return ChatsSlice(count=count, chats=chats)
 
     def write(self, *args) -> bytes:
@@ -88,9 +91,9 @@ class ChatsSlice(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.count))
-        
+
         b.write(Vector(self.chats))
-        
+
         return b.getvalue()

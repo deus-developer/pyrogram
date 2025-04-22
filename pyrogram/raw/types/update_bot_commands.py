@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,12 +55,18 @@ class UpdateBotCommands(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "bot_id", "commands"]
+    __slots__: list[str] = ["bot_id", "commands", "peer"]
 
-    ID = 0x4d712f2e
+    ID = 0x4D712F2E
     QUALNAME = "types.UpdateBotCommands"
 
-    def __init__(self, *, peer: "raw.base.Peer", bot_id: int, commands: List["raw.base.BotCommand"]) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.Peer",
+        bot_id: int,
+        commands: list["raw.base.BotCommand"],
+    ) -> None:
         self.peer = peer  # Peer
         self.bot_id = bot_id  # long
         self.commands = commands  # Vector<BotCommand>
@@ -64,13 +74,13 @@ class UpdateBotCommands(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateBotCommands":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         bot_id = Long.read(b)
-        
+
         commands = TLObject.read(b)
-        
+
         return UpdateBotCommands(peer=peer, bot_id=bot_id, commands=commands)
 
     def write(self, *args) -> bytes:
@@ -78,11 +88,11 @@ class UpdateBotCommands(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Long(self.bot_id))
-        
+
         b.write(Vector(self.commands))
-        
+
         return b.getvalue()

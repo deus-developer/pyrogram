@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetChatTheme(TLObject):  # type: ignore
+class SetChatTheme(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class SetChatTheme(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["peer", "emoticon"]
+    __slots__: list[str] = ["emoticon", "peer"]
 
-    ID = 0xe63be13f
+    ID = 0xE63BE13F
     QUALNAME = "functions.messages.SetChatTheme"
 
     def __init__(self, *, peer: "raw.base.InputPeer", emoticon: str) -> None:
@@ -60,11 +63,11 @@ class SetChatTheme(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetChatTheme":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         emoticon = String.read(b)
-        
+
         return SetChatTheme(peer=peer, emoticon=emoticon)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class SetChatTheme(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(String(self.emoticon))
-        
+
         return b.getvalue()

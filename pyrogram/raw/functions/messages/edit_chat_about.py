@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class EditChatAbout(TLObject):  # type: ignore
+class EditChatAbout(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class EditChatAbout(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["peer", "about"]
+    __slots__: list[str] = ["about", "peer"]
 
-    ID = 0xdef60797
+    ID = 0xDEF60797
     QUALNAME = "functions.messages.EditChatAbout"
 
     def __init__(self, *, peer: "raw.base.InputPeer", about: str) -> None:
@@ -60,11 +63,11 @@ class EditChatAbout(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EditChatAbout":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         about = String.read(b)
-        
+
         return EditChatAbout(peer=peer, about=about)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class EditChatAbout(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(String(self.about))
-        
+
         return b.getvalue()

@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +49,9 @@ class IpPort(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["ipv4", "port"]
+    __slots__: list[str] = ["ipv4", "port"]
 
-    ID = 0xd433ad73
+    ID = 0xD433AD73
     QUALNAME = "types.IpPort"
 
     def __init__(self, *, ipv4: int, port: int) -> None:
@@ -60,11 +61,11 @@ class IpPort(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "IpPort":
         # No flags
-        
+
         ipv4 = Int.read(b)
-        
+
         port = Int.read(b)
-        
+
         return IpPort(ipv4=ipv4, port=port)
 
     def write(self, *args) -> bytes:
@@ -72,9 +73,9 @@ class IpPort(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.ipv4))
-        
+
         b.write(Int(self.port))
-        
+
         return b.getvalue()

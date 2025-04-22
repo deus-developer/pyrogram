@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class AttachMenuBotIconColor(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["name", "color"]
+    __slots__: list[str] = ["color", "name"]
 
-    ID = 0x4576f3f0
+    ID = 0x4576F3F0
     QUALNAME = "types.AttachMenuBotIconColor"
 
     def __init__(self, *, name: str, color: int) -> None:
@@ -60,11 +62,11 @@ class AttachMenuBotIconColor(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "AttachMenuBotIconColor":
         # No flags
-        
+
         name = String.read(b)
-        
+
         color = Int.read(b)
-        
+
         return AttachMenuBotIconColor(name=name, color=color)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class AttachMenuBotIconColor(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.name))
-        
+
         b.write(Int(self.color))
-        
+
         return b.getvalue()

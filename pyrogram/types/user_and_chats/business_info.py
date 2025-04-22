@@ -18,7 +18,8 @@
 
 from typing import Optional
 
-from pyrogram import types, raw
+from pyrogram import raw, types
+
 from ..object import Object
 
 
@@ -50,7 +51,6 @@ class BusinessInfo(Object):
         greeting_message: "types.BusinessMessage" = None,
         away_message: "types.BusinessMessage" = None,
         working_hours: "types.BusinessWorkingHours" = None,
-
     ):
         self.address = address
         self.location = location
@@ -73,8 +73,14 @@ class BusinessInfo(Object):
 
         return BusinessInfo(
             address=getattr(location, "address", None),
-            location=types.Location.from_raw_tl(client, getattr(location, "geo_point", None)),
-            greeting_message=types.BusinessMessage.from_raw_tl(client, greeting_message),
+            location=types.Location.from_raw_tl(
+                client,
+                getattr(location, "geo_point", None),
+            ),
+            greeting_message=types.BusinessMessage.from_raw_tl(
+                client,
+                greeting_message,
+            ),
             away_message=types.BusinessMessage.from_raw_tl(client, away_message),
             working_hours=types.BusinessWorkingHours.from_raw_tl(working_hours),
         )

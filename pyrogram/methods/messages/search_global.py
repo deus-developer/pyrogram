@@ -16,12 +16,10 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import AsyncGenerator, Optional
+from collections.abc import AsyncGenerator
 
 import pyrogram
-from pyrogram import raw, enums
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import enums, raw, types, utils
 
 
 class SearchGlobal:
@@ -68,7 +66,9 @@ class SearchGlobal:
                     print(message.text)
 
                 # Search for recent photos from Global. Get the first 20 results
-                async for message in app.search_global(filter=enums.MessagesFilter.PHOTO, limit=20):
+                async for message in app.search_global(
+                    filter=enums.MessagesFilter.PHOTO, limit=20
+                ):
                     print(message.photo)
         """
         current = 0
@@ -92,11 +92,11 @@ class SearchGlobal:
                         offset_rate=offset_date,
                         offset_peer=offset_peer,
                         offset_id=offset_id,
-                        limit=limit
+                        limit=limit,
                     ),
-                    sleep_threshold=60
+                    sleep_threshold=60,
                 ),
-                replies=0
+                replies=0,
             )
 
             if not messages:

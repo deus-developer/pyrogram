@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +56,9 @@ class CheckedHistoryImportPeer(TLObject):  # type: ignore
             messages.CheckHistoryImportPeer
     """
 
-    __slots__: List[str] = ["confirm_text"]
+    __slots__: list[str] = ["confirm_text"]
 
-    ID = 0xa24de717
+    ID = 0xA24DE717
     QUALNAME = "types.messages.CheckedHistoryImportPeer"
 
     def __init__(self, *, confirm_text: str) -> None:
@@ -65,9 +67,9 @@ class CheckedHistoryImportPeer(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "CheckedHistoryImportPeer":
         # No flags
-        
+
         confirm_text = String.read(b)
-        
+
         return CheckedHistoryImportPeer(confirm_text=confirm_text)
 
     def write(self, *args) -> bytes:
@@ -75,7 +77,7 @@ class CheckedHistoryImportPeer(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.confirm_text))
-        
+
         return b.getvalue()

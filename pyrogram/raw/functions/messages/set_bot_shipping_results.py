@@ -17,11 +17,16 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +35,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetBotShippingResults(TLObject):  # type: ignore
+class SetBotShippingResults(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,27 +56,36 @@ class SetBotShippingResults(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["query_id", "error", "shipping_options"]
+    __slots__: list[str] = ["error", "query_id", "shipping_options"]
 
-    ID = 0xe5f672fa
+    ID = 0xE5F672FA
     QUALNAME = "functions.messages.SetBotShippingResults"
 
-    def __init__(self, *, query_id: int, error: Optional[str] = None, shipping_options: Optional[List["raw.base.ShippingOption"]] = None) -> None:
+    def __init__(
+        self,
+        *,
+        query_id: int,
+        error: str | None = None,
+        shipping_options: list["raw.base.ShippingOption"] | None = None,
+    ) -> None:
         self.query_id = query_id  # long
         self.error = error  # flags.0?string
         self.shipping_options = shipping_options  # flags.1?Vector<ShippingOption>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetBotShippingResults":
-        
         flags = Int.read(b)
-        
+
         query_id = Long.read(b)
-        
+
         error = String.read(b) if flags & (1 << 0) else None
         shipping_options = TLObject.read(b) if flags & (1 << 1) else []
-        
-        return SetBotShippingResults(query_id=query_id, error=error, shipping_options=shipping_options)
+
+        return SetBotShippingResults(
+            query_id=query_id,
+            error=error,
+            shipping_options=shipping_options,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -81,13 +95,13 @@ class SetBotShippingResults(TLObject):  # type: ignore
         flags |= (1 << 0) if self.error is not None else 0
         flags |= (1 << 1) if self.shipping_options else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.query_id))
-        
+
         if self.error is not None:
             b.write(String(self.error))
-        
+
         if self.shipping_options is not None:
             b.write(Vector(self.shipping_options))
-        
+
         return b.getvalue()

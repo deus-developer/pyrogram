@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,24 +61,29 @@ class ChannelDifferenceEmpty(TLObject):  # type: ignore
             updates.GetChannelDifference
     """
 
-    __slots__: List[str] = ["pts", "final", "timeout"]
+    __slots__: list[str] = ["final", "pts", "timeout"]
 
-    ID = 0x3e11affb
+    ID = 0x3E11AFFB
     QUALNAME = "types.updates.ChannelDifferenceEmpty"
 
-    def __init__(self, *, pts: int, final: Optional[bool] = None, timeout: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        pts: int,
+        final: bool | None = None,
+        timeout: int | None = None,
+    ) -> None:
         self.pts = pts  # int
         self.final = final  # flags.0?true
         self.timeout = timeout  # flags.1?int
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChannelDifferenceEmpty":
-        
         flags = Int.read(b)
-        
+
         final = True if flags & (1 << 0) else False
         pts = Int.read(b)
-        
+
         timeout = Int.read(b) if flags & (1 << 1) else None
         return ChannelDifferenceEmpty(pts=pts, final=final, timeout=timeout)
 
@@ -89,10 +95,10 @@ class ChannelDifferenceEmpty(TLObject):  # type: ignore
         flags |= (1 << 0) if self.final else 0
         flags |= (1 << 1) if self.timeout is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.pts))
-        
+
         if self.timeout is not None:
             b.write(Int(self.timeout))
-        
+
         return b.getvalue()

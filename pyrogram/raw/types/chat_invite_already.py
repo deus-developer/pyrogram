@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +56,9 @@ class ChatInviteAlready(TLObject):  # type: ignore
             messages.CheckChatInvite
     """
 
-    __slots__: List[str] = ["chat"]
+    __slots__: list[str] = ["chat"]
 
-    ID = 0x5a686d7c
+    ID = 0x5A686D7C
     QUALNAME = "types.ChatInviteAlready"
 
     def __init__(self, *, chat: "raw.base.Chat") -> None:
@@ -65,9 +67,9 @@ class ChatInviteAlready(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChatInviteAlready":
         # No flags
-        
+
         chat = TLObject.read(b)
-        
+
         return ChatInviteAlready(chat=chat)
 
     def write(self, *args) -> bytes:
@@ -75,7 +77,7 @@ class ChatInviteAlready(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.chat.write())
-        
+
         return b.getvalue()

@@ -16,11 +16,10 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import List
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
+
 from ..object import Object
 
 
@@ -32,7 +31,7 @@ class InlineKeyboardMarkup(Object):
             List of button rows, each represented by a List of InlineKeyboardButton objects.
     """
 
-    def __init__(self, inline_keyboard: List[List["types.InlineKeyboardButton"]]):
+    def __init__(self, inline_keyboard: list[list["types.InlineKeyboardButton"]]):
         super().__init__()
 
         self.inline_keyboard = inline_keyboard
@@ -50,7 +49,7 @@ class InlineKeyboardMarkup(Object):
             inline_keyboard.append(row)
 
         return InlineKeyboardMarkup(
-            inline_keyboard=inline_keyboard
+            inline_keyboard=inline_keyboard,
         )
 
     async def write(self, client: "pyrogram.Client"):

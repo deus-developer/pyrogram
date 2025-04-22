@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, List
 
 import pyrogram
 from pyrogram import raw
@@ -25,7 +24,7 @@ from pyrogram import raw
 class ArchiveChats:
     async def archive_chats(
         self: "pyrogram.Client",
-        chat_ids: Union[int, str, List[Union[int, str]]],
+        chat_ids: int | str | list[int | str],
     ) -> bool:
         """Archive one or more chats.
 
@@ -48,7 +47,6 @@ class ArchiveChats:
                 # Archive multiple chats at once
                 await app.archive_chats([chat_id1, chat_id2, chat_id3])
         """
-
         if not isinstance(chat_ids, list):
             chat_ids = [chat_ids]
 
@@ -58,14 +56,14 @@ class ArchiveChats:
             folder_peers.append(
                 raw.types.InputFolderPeer(
                     peer=await self.resolve_peer(chat),
-                    folder_id=1
-                )
+                    folder_id=1,
+                ),
             )
 
         await self.invoke(
             raw.functions.folders.EditPeerFolders(
-                folder_peers=folder_peers
-            )
+                folder_peers=folder_peers,
+            ),
         )
 
         return True

@@ -16,18 +16,17 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, Iterable
+from collections.abc import Iterable
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class GetStories:
     async def get_stories(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        story_ids: Union[int, Iterable[int]],
+        chat_id: int | str,
+        story_ids: int | Iterable[int],
     ) -> "types.Stories":
         """Get one or more stories from a chat by using stories identifiers.
 
@@ -63,8 +62,8 @@ class GetStories:
         r = await self.invoke(
             raw.functions.stories.GetStoriesByID(
                 peer=peer,
-                id=ids
-            )
+                id=ids,
+            ),
         )
 
         stories = []
@@ -74,8 +73,8 @@ class GetStories:
                 await types.Story.from_raw_tl(
                     self,
                     story,
-                    peer
-                )
+                    peer,
+                ),
             )
 
         return types.List(stories) if is_iterable else stories[0] if stories else None

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class UpdatePinnedMessage(TLObject):  # type: ignore
+class UpdatePinnedMessage(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -57,12 +59,20 @@ class UpdatePinnedMessage(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["peer", "id", "silent", "unpin", "pm_oneside"]
+    __slots__: list[str] = ["id", "peer", "pm_oneside", "silent", "unpin"]
 
-    ID = 0xd2aaf7ec
+    ID = 0xD2AAF7EC
     QUALNAME = "functions.messages.UpdatePinnedMessage"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", id: int, silent: Optional[bool] = None, unpin: Optional[bool] = None, pm_oneside: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        id: int,
+        silent: bool | None = None,
+        unpin: bool | None = None,
+        pm_oneside: bool | None = None,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.id = id  # int
         self.silent = silent  # flags.0?true
@@ -71,17 +81,22 @@ class UpdatePinnedMessage(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdatePinnedMessage":
-        
         flags = Int.read(b)
-        
+
         silent = True if flags & (1 << 0) else False
         unpin = True if flags & (1 << 1) else False
         pm_oneside = True if flags & (1 << 2) else False
         peer = TLObject.read(b)
-        
+
         id = Int.read(b)
-        
-        return UpdatePinnedMessage(peer=peer, id=id, silent=silent, unpin=unpin, pm_oneside=pm_oneside)
+
+        return UpdatePinnedMessage(
+            peer=peer,
+            id=id,
+            silent=silent,
+            unpin=unpin,
+            pm_oneside=pm_oneside,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -92,9 +107,9 @@ class UpdatePinnedMessage(TLObject):  # type: ignore
         flags |= (1 << 1) if self.unpin else 0
         flags |= (1 << 2) if self.pm_oneside else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.id))
-        
+
         return b.getvalue()

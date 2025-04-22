@@ -4,8 +4,13 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type UserStatus = Union["raw.types.UserStatusEmpty, raw.types.UserStatusLastMonth, raw.types.UserStatusLastWeek, raw.types.UserStatusOffline, raw.types.UserStatusOnline, raw.types.UserStatusRecently"]
+type UserStatus = (
+    raw.types.UserStatusEmpty
+    | raw.types.UserStatusLastMonth
+    | raw.types.UserStatusLastWeek
+    | raw.types.UserStatusOffline
+    | raw.types.UserStatusOnline
+    | raw.types.UserStatusRecently
+)

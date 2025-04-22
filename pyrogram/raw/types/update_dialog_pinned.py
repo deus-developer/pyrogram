@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,25 +53,30 @@ class UpdateDialogPinned(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "pinned", "folder_id"]
+    __slots__: list[str] = ["folder_id", "peer", "pinned"]
 
-    ID = 0x6e6fe51c
+    ID = 0x6E6FE51C
     QUALNAME = "types.UpdateDialogPinned"
 
-    def __init__(self, *, peer: "raw.base.DialogPeer", pinned: Optional[bool] = None, folder_id: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.DialogPeer",
+        pinned: bool | None = None,
+        folder_id: int | None = None,
+    ) -> None:
         self.peer = peer  # DialogPeer
         self.pinned = pinned  # flags.0?true
         self.folder_id = folder_id  # flags.1?int
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateDialogPinned":
-        
         flags = Int.read(b)
-        
+
         pinned = True if flags & (1 << 0) else False
         folder_id = Int.read(b) if flags & (1 << 1) else None
         peer = TLObject.read(b)
-        
+
         return UpdateDialogPinned(peer=peer, pinned=pinned, folder_id=folder_id)
 
     def write(self, *args) -> bytes:
@@ -80,10 +87,10 @@ class UpdateDialogPinned(TLObject):  # type: ignore
         flags |= (1 << 0) if self.pinned else 0
         flags |= (1 << 1) if self.folder_id is not None else 0
         b.write(Int(flags))
-        
+
         if self.folder_id is not None:
             b.write(Int(self.folder_id))
-        
+
         b.write(self.peer.write())
-        
+
         return b.getvalue()

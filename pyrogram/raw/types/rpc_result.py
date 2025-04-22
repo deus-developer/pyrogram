@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class RpcResult(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["req_msg_id", "result"]
+    __slots__: list[str] = ["req_msg_id", "result"]
 
-    ID = 0xf35c6d01
+    ID = 0xF35C6D01
     QUALNAME = "types.RpcResult"
 
     def __init__(self, *, req_msg_id: int, result: TLObject) -> None:
@@ -60,11 +62,11 @@ class RpcResult(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "RpcResult":
         # No flags
-        
+
         req_msg_id = Long.read(b)
-        
+
         result = TLObject.read(b)
-        
+
         return RpcResult(req_msg_id=req_msg_id, result=result)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class RpcResult(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.req_msg_id))
-        
+
         b.write(self.result.write())
-        
+
         return b.getvalue()

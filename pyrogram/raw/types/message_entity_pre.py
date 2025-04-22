@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,9 +53,9 @@ class MessageEntityPre(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["offset", "length", "language"]
+    __slots__: list[str] = ["language", "length", "offset"]
 
-    ID = 0x73924be0
+    ID = 0x73924BE0
     QUALNAME = "types.MessageEntityPre"
 
     def __init__(self, *, offset: int, length: int, language: str) -> None:
@@ -64,13 +66,13 @@ class MessageEntityPre(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageEntityPre":
         # No flags
-        
+
         offset = Int.read(b)
-        
+
         length = Int.read(b)
-        
+
         language = String.read(b)
-        
+
         return MessageEntityPre(offset=offset, length=length, language=language)
 
     def write(self, *args) -> bytes:
@@ -78,11 +80,11 @@ class MessageEntityPre(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.offset))
-        
+
         b.write(Int(self.length))
-        
+
         b.write(String(self.language))
-        
+
         return b.getvalue()

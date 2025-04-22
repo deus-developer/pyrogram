@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetFactCheck(TLObject):  # type: ignore
+class GetFactCheck(TLFunction[list["raw.base.FactCheck"]]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +51,23 @@ class GetFactCheck(TLObject):  # type: ignore
         List of :obj:`FactCheck <pyrogram.raw.base.FactCheck>`
     """
 
-    __slots__: List[str] = ["peer", "msg_id"]
+    __slots__: list[str] = ["msg_id", "peer"]
 
-    ID = 0xb9cdc5ee
+    ID = 0xB9CDC5EE
     QUALNAME = "functions.messages.GetFactCheck"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", msg_id: List[int]) -> None:
+    def __init__(self, *, peer: "raw.base.InputPeer", msg_id: list[int]) -> None:
         self.peer = peer  # InputPeer
         self.msg_id = msg_id  # Vector<int>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetFactCheck":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         msg_id = TLObject.read(b, Int)
-        
+
         return GetFactCheck(peer=peer, msg_id=msg_id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class GetFactCheck(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Vector(self.msg_id, Int))
-        
+
         return b.getvalue()

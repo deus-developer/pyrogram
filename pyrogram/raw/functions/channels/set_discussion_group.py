@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetDiscussionGroup(TLObject):  # type: ignore
+class SetDiscussionGroup(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,28 @@ class SetDiscussionGroup(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["broadcast", "group"]
+    __slots__: list[str] = ["broadcast", "group"]
 
-    ID = 0x40582bb2
+    ID = 0x40582BB2
     QUALNAME = "functions.channels.SetDiscussionGroup"
 
-    def __init__(self, *, broadcast: "raw.base.InputChannel", group: "raw.base.InputChannel") -> None:
+    def __init__(
+        self,
+        *,
+        broadcast: "raw.base.InputChannel",
+        group: "raw.base.InputChannel",
+    ) -> None:
         self.broadcast = broadcast  # InputChannel
         self.group = group  # InputChannel
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetDiscussionGroup":
         # No flags
-        
+
         broadcast = TLObject.read(b)
-        
+
         group = TLObject.read(b)
-        
+
         return SetDiscussionGroup(broadcast=broadcast, group=group)
 
     def write(self, *args) -> bytes:
@@ -72,9 +79,9 @@ class SetDiscussionGroup(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.broadcast.write())
-        
+
         b.write(self.group.write())
-        
+
         return b.getvalue()

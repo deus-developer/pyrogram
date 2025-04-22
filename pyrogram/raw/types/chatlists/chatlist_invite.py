@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -66,12 +70,20 @@ class ChatlistInvite(TLObject):  # type: ignore
             chatlists.CheckChatlistInvite
     """
 
-    __slots__: List[str] = ["title", "peers", "chats", "users", "emoticon"]
+    __slots__: list[str] = ["chats", "emoticon", "peers", "title", "users"]
 
-    ID = 0x1dcd839d
+    ID = 0x1DCD839D
     QUALNAME = "types.chatlists.ChatlistInvite"
 
-    def __init__(self, *, title: str, peers: List["raw.base.Peer"], chats: List["raw.base.Chat"], users: List["raw.base.User"], emoticon: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        title: str,
+        peers: list["raw.base.Peer"],
+        chats: list["raw.base.Chat"],
+        users: list["raw.base.User"],
+        emoticon: str | None = None,
+    ) -> None:
         self.title = title  # string
         self.peers = peers  # Vector<Peer>
         self.chats = chats  # Vector<Chat>
@@ -80,19 +92,24 @@ class ChatlistInvite(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChatlistInvite":
-        
         flags = Int.read(b)
-        
+
         title = String.read(b)
-        
+
         emoticon = String.read(b) if flags & (1 << 0) else None
         peers = TLObject.read(b)
-        
+
         chats = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
-        return ChatlistInvite(title=title, peers=peers, chats=chats, users=users, emoticon=emoticon)
+
+        return ChatlistInvite(
+            title=title,
+            peers=peers,
+            chats=chats,
+            users=users,
+            emoticon=emoticon,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -101,16 +118,16 @@ class ChatlistInvite(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.emoticon is not None else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.title))
-        
+
         if self.emoticon is not None:
             b.write(String(self.emoticon))
-        
+
         b.write(Vector(self.peers))
-        
+
         b.write(Vector(self.chats))
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

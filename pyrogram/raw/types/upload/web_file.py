@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -66,12 +70,20 @@ class WebFile(TLObject):  # type: ignore
             upload.GetWebFile
     """
 
-    __slots__: List[str] = ["size", "mime_type", "file_type", "mtime", "bytes"]
+    __slots__: list[str] = ["bytes", "file_type", "mime_type", "mtime", "size"]
 
-    ID = 0x21e753bc
+    ID = 0x21E753BC
     QUALNAME = "types.upload.WebFile"
 
-    def __init__(self, *, size: int, mime_type: str, file_type: "raw.base.storage.FileType", mtime: int, bytes: bytes) -> None:
+    def __init__(
+        self,
+        *,
+        size: int,
+        mime_type: str,
+        file_type: "raw.base.storage.FileType",
+        mtime: int,
+        bytes: bytes,
+    ) -> None:
         self.size = size  # int
         self.mime_type = mime_type  # string
         self.file_type = file_type  # storage.FileType
@@ -81,33 +93,39 @@ class WebFile(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "WebFile":
         # No flags
-        
+
         size = Int.read(b)
-        
+
         mime_type = String.read(b)
-        
+
         file_type = TLObject.read(b)
-        
+
         mtime = Int.read(b)
-        
+
         bytes = Bytes.read(b)
-        
-        return WebFile(size=size, mime_type=mime_type, file_type=file_type, mtime=mtime, bytes=bytes)
+
+        return WebFile(
+            size=size,
+            mime_type=mime_type,
+            file_type=file_type,
+            mtime=mtime,
+            bytes=bytes,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.size))
-        
+
         b.write(String(self.mime_type))
-        
+
         b.write(self.file_type.write())
-        
+
         b.write(Int(self.mtime))
-        
+
         b.write(Bytes(self.bytes))
-        
+
         return b.getvalue()

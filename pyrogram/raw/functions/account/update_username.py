@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class UpdateUsername(TLObject):  # type: ignore
+class UpdateUsername(TLFunction["raw.base.User"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class UpdateUsername(TLObject):  # type: ignore
         :obj:`User <pyrogram.raw.base.User>`
     """
 
-    __slots__: List[str] = ["username"]
+    __slots__: list[str] = ["username"]
 
-    ID = 0x3e0bdd7c
+    ID = 0x3E0BDD7C
     QUALNAME = "functions.account.UpdateUsername"
 
     def __init__(self, *, username: str) -> None:
@@ -56,9 +58,9 @@ class UpdateUsername(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateUsername":
         # No flags
-        
+
         username = String.read(b)
-        
+
         return UpdateUsername(username=username)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class UpdateUsername(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.username))
-        
+
         return b.getvalue()

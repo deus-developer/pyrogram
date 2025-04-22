@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,12 +59,26 @@ class UpdateReadChannelInbox(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["channel_id", "max_id", "still_unread_count", "pts", "folder_id"]
+    __slots__: list[str] = [
+        "channel_id",
+        "folder_id",
+        "max_id",
+        "pts",
+        "still_unread_count",
+    ]
 
-    ID = 0x922e6e10
+    ID = 0x922E6E10
     QUALNAME = "types.UpdateReadChannelInbox"
 
-    def __init__(self, *, channel_id: int, max_id: int, still_unread_count: int, pts: int, folder_id: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        channel_id: int,
+        max_id: int,
+        still_unread_count: int,
+        pts: int,
+        folder_id: int | None = None,
+    ) -> None:
         self.channel_id = channel_id  # long
         self.max_id = max_id  # int
         self.still_unread_count = still_unread_count  # int
@@ -71,19 +87,24 @@ class UpdateReadChannelInbox(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateReadChannelInbox":
-        
         flags = Int.read(b)
-        
+
         folder_id = Int.read(b) if flags & (1 << 0) else None
         channel_id = Long.read(b)
-        
+
         max_id = Int.read(b)
-        
+
         still_unread_count = Int.read(b)
-        
+
         pts = Int.read(b)
-        
-        return UpdateReadChannelInbox(channel_id=channel_id, max_id=max_id, still_unread_count=still_unread_count, pts=pts, folder_id=folder_id)
+
+        return UpdateReadChannelInbox(
+            channel_id=channel_id,
+            max_id=max_id,
+            still_unread_count=still_unread_count,
+            pts=pts,
+            folder_id=folder_id,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -92,16 +113,16 @@ class UpdateReadChannelInbox(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.folder_id is not None else 0
         b.write(Int(flags))
-        
+
         if self.folder_id is not None:
             b.write(Int(self.folder_id))
-        
+
         b.write(Long(self.channel_id))
-        
+
         b.write(Int(self.max_id))
-        
+
         b.write(Int(self.still_unread_count))
-        
+
         b.write(Int(self.pts))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetWebFile(TLObject):  # type: ignore
+class GetWebFile(TLFunction["raw.base.upload.WebFile"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +53,18 @@ class GetWebFile(TLObject):  # type: ignore
         :obj:`upload.WebFile <pyrogram.raw.base.upload.WebFile>`
     """
 
-    __slots__: List[str] = ["location", "offset", "limit"]
+    __slots__: list[str] = ["limit", "location", "offset"]
 
-    ID = 0x24e6818d
+    ID = 0x24E6818D
     QUALNAME = "functions.upload.GetWebFile"
 
-    def __init__(self, *, location: "raw.base.InputWebFileLocation", offset: int, limit: int) -> None:
+    def __init__(
+        self,
+        *,
+        location: "raw.base.InputWebFileLocation",
+        offset: int,
+        limit: int,
+    ) -> None:
         self.location = location  # InputWebFileLocation
         self.offset = offset  # int
         self.limit = limit  # int
@@ -64,13 +72,13 @@ class GetWebFile(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetWebFile":
         # No flags
-        
+
         location = TLObject.read(b)
-        
+
         offset = Int.read(b)
-        
+
         limit = Int.read(b)
-        
+
         return GetWebFile(location=location, offset=offset, limit=limit)
 
     def write(self, *args) -> bytes:
@@ -78,11 +86,11 @@ class GetWebFile(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.location.write())
-        
+
         b.write(Int(self.offset))
-        
+
         b.write(Int(self.limit))
-        
+
         return b.getvalue()

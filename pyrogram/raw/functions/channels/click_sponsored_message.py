@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ClickSponsoredMessage(TLObject):  # type: ignore
+class ClickSponsoredMessage(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class ClickSponsoredMessage(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["channel", "random_id"]
+    __slots__: list[str] = ["channel", "random_id"]
 
-    ID = 0x18afbc93
+    ID = 0x18AFBC93
     QUALNAME = "functions.channels.ClickSponsoredMessage"
 
     def __init__(self, *, channel: "raw.base.InputChannel", random_id: bytes) -> None:
@@ -60,11 +63,11 @@ class ClickSponsoredMessage(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ClickSponsoredMessage":
         # No flags
-        
+
         channel = TLObject.read(b)
-        
+
         random_id = Bytes.read(b)
-        
+
         return ClickSponsoredMessage(channel=channel, random_id=random_id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class ClickSponsoredMessage(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.channel.write())
-        
+
         b.write(Bytes(self.random_id))
-        
+
         return b.getvalue()

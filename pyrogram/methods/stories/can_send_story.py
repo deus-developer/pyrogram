@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -25,7 +24,7 @@ from pyrogram import raw
 class CanSendStory:
     async def can_send_story(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
     ) -> bool:
         """Can send story
 
@@ -47,7 +46,7 @@ class CanSendStory:
         r = await self.invoke(
             raw.functions.stories.CanSendStory(
                 peer=await self.resolve_peer(chat_id),
-            )
+            ),
         )
 
         return r

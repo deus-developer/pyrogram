@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class AcceptUrlAuth(TLObject):  # type: ignore
+class AcceptUrlAuth(TLFunction["raw.base.UrlAuthResult"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -57,12 +60,20 @@ class AcceptUrlAuth(TLObject):  # type: ignore
         :obj:`UrlAuthResult <pyrogram.raw.base.UrlAuthResult>`
     """
 
-    __slots__: List[str] = ["write_allowed", "peer", "msg_id", "button_id", "url"]
+    __slots__: list[str] = ["button_id", "msg_id", "peer", "url", "write_allowed"]
 
-    ID = 0xb12c7125
+    ID = 0xB12C7125
     QUALNAME = "functions.messages.AcceptUrlAuth"
 
-    def __init__(self, *, write_allowed: Optional[bool] = None, peer: "raw.base.InputPeer" = None, msg_id: Optional[int] = None, button_id: Optional[int] = None, url: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        write_allowed: bool | None = None,
+        peer: "raw.base.InputPeer" = None,
+        msg_id: int | None = None,
+        button_id: int | None = None,
+        url: str | None = None,
+    ) -> None:
         self.write_allowed = write_allowed  # flags.0?true
         self.peer = peer  # flags.1?InputPeer
         self.msg_id = msg_id  # flags.1?int
@@ -71,16 +82,21 @@ class AcceptUrlAuth(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "AcceptUrlAuth":
-        
         flags = Int.read(b)
-        
+
         write_allowed = True if flags & (1 << 0) else False
         peer = TLObject.read(b) if flags & (1 << 1) else None
-        
+
         msg_id = Int.read(b) if flags & (1 << 1) else None
         button_id = Int.read(b) if flags & (1 << 1) else None
         url = String.read(b) if flags & (1 << 2) else None
-        return AcceptUrlAuth(write_allowed=write_allowed, peer=peer, msg_id=msg_id, button_id=button_id, url=url)
+        return AcceptUrlAuth(
+            write_allowed=write_allowed,
+            peer=peer,
+            msg_id=msg_id,
+            button_id=button_id,
+            url=url,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -93,17 +109,17 @@ class AcceptUrlAuth(TLObject):  # type: ignore
         flags |= (1 << 1) if self.button_id is not None else 0
         flags |= (1 << 2) if self.url is not None else 0
         b.write(Int(flags))
-        
+
         if self.peer is not None:
             b.write(self.peer.write())
-        
+
         if self.msg_id is not None:
             b.write(Int(self.msg_id))
-        
+
         if self.button_id is not None:
             b.write(Int(self.button_id))
-        
+
         if self.url is not None:
             b.write(String(self.url))
-        
+
         return b.getvalue()

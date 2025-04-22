@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetDifference(TLObject):  # type: ignore
+class GetDifference(TLFunction["raw.base.updates.Difference"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -60,12 +61,28 @@ class GetDifference(TLObject):  # type: ignore
         :obj:`updates.Difference <pyrogram.raw.base.updates.Difference>`
     """
 
-    __slots__: List[str] = ["pts", "date", "qts", "pts_limit", "pts_total_limit", "qts_limit"]
+    __slots__: list[str] = [
+        "date",
+        "pts",
+        "pts_limit",
+        "pts_total_limit",
+        "qts",
+        "qts_limit",
+    ]
 
-    ID = 0x19c2f763
+    ID = 0x19C2F763
     QUALNAME = "functions.updates.GetDifference"
 
-    def __init__(self, *, pts: int, date: int, qts: int, pts_limit: Optional[int] = None, pts_total_limit: Optional[int] = None, qts_limit: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        pts: int,
+        date: int,
+        qts: int,
+        pts_limit: int | None = None,
+        pts_total_limit: int | None = None,
+        qts_limit: int | None = None,
+    ) -> None:
         self.pts = pts  # int
         self.date = date  # int
         self.qts = qts  # int
@@ -75,19 +92,25 @@ class GetDifference(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetDifference":
-        
         flags = Int.read(b)
-        
+
         pts = Int.read(b)
-        
+
         pts_limit = Int.read(b) if flags & (1 << 1) else None
         pts_total_limit = Int.read(b) if flags & (1 << 0) else None
         date = Int.read(b)
-        
+
         qts = Int.read(b)
-        
+
         qts_limit = Int.read(b) if flags & (1 << 2) else None
-        return GetDifference(pts=pts, date=date, qts=qts, pts_limit=pts_limit, pts_total_limit=pts_total_limit, qts_limit=qts_limit)
+        return GetDifference(
+            pts=pts,
+            date=date,
+            qts=qts,
+            pts_limit=pts_limit,
+            pts_total_limit=pts_total_limit,
+            qts_limit=qts_limit,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -98,20 +121,20 @@ class GetDifference(TLObject):  # type: ignore
         flags |= (1 << 0) if self.pts_total_limit is not None else 0
         flags |= (1 << 2) if self.qts_limit is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.pts))
-        
+
         if self.pts_limit is not None:
             b.write(Int(self.pts_limit))
-        
+
         if self.pts_total_limit is not None:
             b.write(Int(self.pts_total_limit))
-        
+
         b.write(Int(self.date))
-        
+
         b.write(Int(self.qts))
-        
+
         if self.qts_limit is not None:
             b.write(Int(self.qts_limit))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class DeleteSavedHistory(TLObject):  # type: ignore
+class DeleteSavedHistory(TLFunction["raw.base.messages.AffectedHistory"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +56,19 @@ class DeleteSavedHistory(TLObject):  # type: ignore
         :obj:`messages.AffectedHistory <pyrogram.raw.base.messages.AffectedHistory>`
     """
 
-    __slots__: List[str] = ["peer", "max_id", "min_date", "max_date"]
+    __slots__: list[str] = ["max_date", "max_id", "min_date", "peer"]
 
-    ID = 0x6e98102b
+    ID = 0x6E98102B
     QUALNAME = "functions.messages.DeleteSavedHistory"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", max_id: int, min_date: Optional[int] = None, max_date: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        max_id: int,
+        min_date: int | None = None,
+        max_date: int | None = None,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.max_id = max_id  # int
         self.min_date = min_date  # flags.2?int
@@ -67,16 +76,20 @@ class DeleteSavedHistory(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DeleteSavedHistory":
-        
         flags = Int.read(b)
-        
+
         peer = TLObject.read(b)
-        
+
         max_id = Int.read(b)
-        
+
         min_date = Int.read(b) if flags & (1 << 2) else None
         max_date = Int.read(b) if flags & (1 << 3) else None
-        return DeleteSavedHistory(peer=peer, max_id=max_id, min_date=min_date, max_date=max_date)
+        return DeleteSavedHistory(
+            peer=peer,
+            max_id=max_id,
+            min_date=min_date,
+            max_date=max_date,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -86,15 +99,15 @@ class DeleteSavedHistory(TLObject):  # type: ignore
         flags |= (1 << 2) if self.min_date is not None else 0
         flags |= (1 << 3) if self.max_date is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.max_id))
-        
+
         if self.min_date is not None:
             b.write(Int(self.min_date))
-        
+
         if self.max_date is not None:
             b.write(Int(self.max_date))
-        
+
         return b.getvalue()

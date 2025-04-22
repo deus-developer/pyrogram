@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetBotBusinessConnection(TLObject):  # type: ignore
+class GetBotBusinessConnection(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetBotBusinessConnection(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["connection_id"]
+    __slots__: list[str] = ["connection_id"]
 
-    ID = 0x76a86270
+    ID = 0x76A86270
     QUALNAME = "functions.account.GetBotBusinessConnection"
 
     def __init__(self, *, connection_id: str) -> None:
@@ -56,9 +58,9 @@ class GetBotBusinessConnection(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetBotBusinessConnection":
         # No flags
-        
+
         connection_id = String.read(b)
-        
+
         return GetBotBusinessConnection(connection_id=connection_id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class GetBotBusinessConnection(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.connection_id))
-        
+
         return b.getvalue()

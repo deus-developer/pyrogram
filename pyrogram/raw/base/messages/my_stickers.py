@@ -4,8 +4,6 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type MyStickers = Union["raw.types.messages.MyStickers"]
+type MyStickers = raw.types.messages.MyStickers

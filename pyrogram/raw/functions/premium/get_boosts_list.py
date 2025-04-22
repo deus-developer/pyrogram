@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetBoostsList(TLObject):  # type: ignore
+class GetBoostsList(TLFunction["raw.base.premium.BoostsList"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +57,19 @@ class GetBoostsList(TLObject):  # type: ignore
         :obj:`premium.BoostsList <pyrogram.raw.base.premium.BoostsList>`
     """
 
-    __slots__: List[str] = ["peer", "offset", "limit", "gifts"]
+    __slots__: list[str] = ["gifts", "limit", "offset", "peer"]
 
-    ID = 0x60f67660
+    ID = 0x60F67660
     QUALNAME = "functions.premium.GetBoostsList"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", offset: str, limit: int, gifts: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        offset: str,
+        limit: int,
+        gifts: bool | None = None,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.offset = offset  # string
         self.limit = limit  # int
@@ -67,16 +77,15 @@ class GetBoostsList(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetBoostsList":
-        
         flags = Int.read(b)
-        
+
         gifts = True if flags & (1 << 0) else False
         peer = TLObject.read(b)
-        
+
         offset = String.read(b)
-        
+
         limit = Int.read(b)
-        
+
         return GetBoostsList(peer=peer, offset=offset, limit=limit, gifts=gifts)
 
     def write(self, *args) -> bytes:
@@ -86,11 +95,11 @@ class GetBoostsList(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.gifts else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(String(self.offset))
-        
+
         b.write(Int(self.limit))
-        
+
         return b.getvalue()

@@ -22,7 +22,7 @@ import pyrogram
 class Restart:
     async def restart(
         self: "pyrogram.Client",
-        block: bool = True
+        block: bool = True,
     ):
         """Restart the Client.
 
@@ -59,7 +59,6 @@ class Restart:
 
                 app.run(main())
         """
-
         if not block:
             raise RuntimeError("Not supported with block=False.")
 

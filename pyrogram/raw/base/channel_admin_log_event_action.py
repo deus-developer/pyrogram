@@ -4,8 +4,55 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type ChannelAdminLogEventAction = Union["raw.types.ChannelAdminLogEventActionChangeAbout, raw.types.ChannelAdminLogEventActionChangeAvailableReactions, raw.types.ChannelAdminLogEventActionChangeEmojiStatus, raw.types.ChannelAdminLogEventActionChangeEmojiStickerSet, raw.types.ChannelAdminLogEventActionChangeHistoryTTL, raw.types.ChannelAdminLogEventActionChangeLinkedChat, raw.types.ChannelAdminLogEventActionChangeLocation, raw.types.ChannelAdminLogEventActionChangePeerColor, raw.types.ChannelAdminLogEventActionChangePhoto, raw.types.ChannelAdminLogEventActionChangeProfilePeerColor, raw.types.ChannelAdminLogEventActionChangeStickerSet, raw.types.ChannelAdminLogEventActionChangeTitle, raw.types.ChannelAdminLogEventActionChangeUsername, raw.types.ChannelAdminLogEventActionChangeUsernames, raw.types.ChannelAdminLogEventActionChangeWallpaper, raw.types.ChannelAdminLogEventActionCreateTopic, raw.types.ChannelAdminLogEventActionDefaultBannedRights, raw.types.ChannelAdminLogEventActionDeleteMessage, raw.types.ChannelAdminLogEventActionDeleteTopic, raw.types.ChannelAdminLogEventActionDiscardGroupCall, raw.types.ChannelAdminLogEventActionEditMessage, raw.types.ChannelAdminLogEventActionEditTopic, raw.types.ChannelAdminLogEventActionExportedInviteDelete, raw.types.ChannelAdminLogEventActionExportedInviteEdit, raw.types.ChannelAdminLogEventActionExportedInviteRevoke, raw.types.ChannelAdminLogEventActionParticipantInvite, raw.types.ChannelAdminLogEventActionParticipantJoin, raw.types.ChannelAdminLogEventActionParticipantJoinByInvite, raw.types.ChannelAdminLogEventActionParticipantJoinByRequest, raw.types.ChannelAdminLogEventActionParticipantLeave, raw.types.ChannelAdminLogEventActionParticipantMute, raw.types.ChannelAdminLogEventActionParticipantToggleAdmin, raw.types.ChannelAdminLogEventActionParticipantToggleBan, raw.types.ChannelAdminLogEventActionParticipantUnmute, raw.types.ChannelAdminLogEventActionParticipantVolume, raw.types.ChannelAdminLogEventActionPinTopic, raw.types.ChannelAdminLogEventActionSendMessage, raw.types.ChannelAdminLogEventActionStartGroupCall, raw.types.ChannelAdminLogEventActionStopPoll, raw.types.ChannelAdminLogEventActionToggleAntiSpam, raw.types.ChannelAdminLogEventActionToggleForum, raw.types.ChannelAdminLogEventActionToggleGroupCallSetting, raw.types.ChannelAdminLogEventActionToggleInvites, raw.types.ChannelAdminLogEventActionToggleNoForwards, raw.types.ChannelAdminLogEventActionTogglePreHistoryHidden, raw.types.ChannelAdminLogEventActionToggleSignatures, raw.types.ChannelAdminLogEventActionToggleSlowMode, raw.types.ChannelAdminLogEventActionUpdatePinned"]
+type ChannelAdminLogEventAction = (
+    raw.types.ChannelAdminLogEventActionChangeAbout
+    | raw.types.ChannelAdminLogEventActionChangeAvailableReactions
+    | raw.types.ChannelAdminLogEventActionChangeEmojiStatus
+    | raw.types.ChannelAdminLogEventActionChangeEmojiStickerSet
+    | raw.types.ChannelAdminLogEventActionChangeHistoryTTL
+    | raw.types.ChannelAdminLogEventActionChangeLinkedChat
+    | raw.types.ChannelAdminLogEventActionChangeLocation
+    | raw.types.ChannelAdminLogEventActionChangePeerColor
+    | raw.types.ChannelAdminLogEventActionChangePhoto
+    | raw.types.ChannelAdminLogEventActionChangeProfilePeerColor
+    | raw.types.ChannelAdminLogEventActionChangeStickerSet
+    | raw.types.ChannelAdminLogEventActionChangeTitle
+    | raw.types.ChannelAdminLogEventActionChangeUsername
+    | raw.types.ChannelAdminLogEventActionChangeUsernames
+    | raw.types.ChannelAdminLogEventActionChangeWallpaper
+    | raw.types.ChannelAdminLogEventActionCreateTopic
+    | raw.types.ChannelAdminLogEventActionDefaultBannedRights
+    | raw.types.ChannelAdminLogEventActionDeleteMessage
+    | raw.types.ChannelAdminLogEventActionDeleteTopic
+    | raw.types.ChannelAdminLogEventActionDiscardGroupCall
+    | raw.types.ChannelAdminLogEventActionEditMessage
+    | raw.types.ChannelAdminLogEventActionEditTopic
+    | raw.types.ChannelAdminLogEventActionExportedInviteDelete
+    | raw.types.ChannelAdminLogEventActionExportedInviteEdit
+    | raw.types.ChannelAdminLogEventActionExportedInviteRevoke
+    | raw.types.ChannelAdminLogEventActionParticipantInvite
+    | raw.types.ChannelAdminLogEventActionParticipantJoin
+    | raw.types.ChannelAdminLogEventActionParticipantJoinByInvite
+    | raw.types.ChannelAdminLogEventActionParticipantJoinByRequest
+    | raw.types.ChannelAdminLogEventActionParticipantLeave
+    | raw.types.ChannelAdminLogEventActionParticipantMute
+    | raw.types.ChannelAdminLogEventActionParticipantToggleAdmin
+    | raw.types.ChannelAdminLogEventActionParticipantToggleBan
+    | raw.types.ChannelAdminLogEventActionParticipantUnmute
+    | raw.types.ChannelAdminLogEventActionParticipantVolume
+    | raw.types.ChannelAdminLogEventActionPinTopic
+    | raw.types.ChannelAdminLogEventActionSendMessage
+    | raw.types.ChannelAdminLogEventActionStartGroupCall
+    | raw.types.ChannelAdminLogEventActionStopPoll
+    | raw.types.ChannelAdminLogEventActionToggleAntiSpam
+    | raw.types.ChannelAdminLogEventActionToggleForum
+    | raw.types.ChannelAdminLogEventActionToggleGroupCallSetting
+    | raw.types.ChannelAdminLogEventActionToggleInvites
+    | raw.types.ChannelAdminLogEventActionToggleNoForwards
+    | raw.types.ChannelAdminLogEventActionTogglePreHistoryHidden
+    | raw.types.ChannelAdminLogEventActionToggleSignatures
+    | raw.types.ChannelAdminLogEventActionToggleSlowMode
+    | raw.types.ChannelAdminLogEventActionUpdatePinned
+)

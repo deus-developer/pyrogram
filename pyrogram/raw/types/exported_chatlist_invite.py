@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,27 +64,26 @@ class ExportedChatlistInvite(TLObject):  # type: ignore
             chatlists.EditExportedInvite
     """
 
-    __slots__: List[str] = ["title", "url", "peers"]
+    __slots__: list[str] = ["peers", "title", "url"]
 
-    ID = 0xc5181ac
+    ID = 0xC5181AC
     QUALNAME = "types.ExportedChatlistInvite"
 
-    def __init__(self, *, title: str, url: str, peers: List["raw.base.Peer"]) -> None:
+    def __init__(self, *, title: str, url: str, peers: list["raw.base.Peer"]) -> None:
         self.title = title  # string
         self.url = url  # string
         self.peers = peers  # Vector<Peer>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ExportedChatlistInvite":
-        
         flags = Int.read(b)
-        
+
         title = String.read(b)
-        
+
         url = String.read(b)
-        
+
         peers = TLObject.read(b)
-        
+
         return ExportedChatlistInvite(title=title, url=url, peers=peers)
 
     def write(self, *args) -> bytes:
@@ -88,13 +91,13 @@ class ExportedChatlistInvite(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         flags = 0
-        
+
         b.write(Int(flags))
-        
+
         b.write(String(self.title))
-        
+
         b.write(String(self.url))
-        
+
         b.write(Vector(self.peers))
-        
+
         return b.getvalue()

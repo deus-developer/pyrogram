@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Double,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class StatsAbsValueAndPrev(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["current", "previous"]
+    __slots__: list[str] = ["current", "previous"]
 
-    ID = 0xcb43acde
+    ID = 0xCB43ACDE
     QUALNAME = "types.StatsAbsValueAndPrev"
 
     def __init__(self, *, current: float, previous: float) -> None:
@@ -60,11 +62,11 @@ class StatsAbsValueAndPrev(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "StatsAbsValueAndPrev":
         # No flags
-        
+
         current = Double.read(b)
-        
+
         previous = Double.read(b)
-        
+
         return StatsAbsValueAndPrev(current=current, previous=previous)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class StatsAbsValueAndPrev(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Double(self.current))
-        
+
         b.write(Double(self.previous))
-        
+
         return b.getvalue()

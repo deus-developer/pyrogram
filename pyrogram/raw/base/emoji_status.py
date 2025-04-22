@@ -4,8 +4,8 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type EmojiStatus = Union["raw.types.EmojiStatus, raw.types.EmojiStatusEmpty, raw.types.EmojiStatusUntil"]
+type EmojiStatus = (
+    raw.types.EmojiStatus | raw.types.EmojiStatusEmpty | raw.types.EmojiStatusUntil
+)

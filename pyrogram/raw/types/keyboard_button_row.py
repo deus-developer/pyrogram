@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,20 +48,20 @@ class KeyboardButtonRow(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["buttons"]
+    __slots__: list[str] = ["buttons"]
 
-    ID = 0x77608b83
+    ID = 0x77608B83
     QUALNAME = "types.KeyboardButtonRow"
 
-    def __init__(self, *, buttons: List["raw.base.KeyboardButton"]) -> None:
+    def __init__(self, *, buttons: list["raw.base.KeyboardButton"]) -> None:
         self.buttons = buttons  # Vector<KeyboardButton>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "KeyboardButtonRow":
         # No flags
-        
+
         buttons = TLObject.read(b)
-        
+
         return KeyboardButtonRow(buttons=buttons)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class KeyboardButtonRow(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.buttons))
-        
+
         return b.getvalue()

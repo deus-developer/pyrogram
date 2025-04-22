@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +49,9 @@ class MessageEntityCode(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["offset", "length"]
+    __slots__: list[str] = ["length", "offset"]
 
-    ID = 0x28a20571
+    ID = 0x28A20571
     QUALNAME = "types.MessageEntityCode"
 
     def __init__(self, *, offset: int, length: int) -> None:
@@ -60,11 +61,11 @@ class MessageEntityCode(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageEntityCode":
         # No flags
-        
+
         offset = Int.read(b)
-        
+
         length = Int.read(b)
-        
+
         return MessageEntityCode(offset=offset, length=length)
 
     def write(self, *args) -> bytes:
@@ -72,9 +73,9 @@ class MessageEntityCode(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.offset))
-        
+
         b.write(Int(self.length))
-        
+
         return b.getvalue()

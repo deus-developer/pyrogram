@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class RateTranscribedAudio(TLObject):  # type: ignore
+class RateTranscribedAudio(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +58,19 @@ class RateTranscribedAudio(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["peer", "msg_id", "transcription_id", "good"]
+    __slots__: list[str] = ["good", "msg_id", "peer", "transcription_id"]
 
-    ID = 0x7f1d072f
+    ID = 0x7F1D072F
     QUALNAME = "functions.messages.RateTranscribedAudio"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", msg_id: int, transcription_id: int, good: bool) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        msg_id: int,
+        transcription_id: int,
+        good: bool,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.msg_id = msg_id  # int
         self.transcription_id = transcription_id  # long
@@ -68,29 +79,34 @@ class RateTranscribedAudio(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "RateTranscribedAudio":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         msg_id = Int.read(b)
-        
+
         transcription_id = Long.read(b)
-        
+
         good = Bool.read(b)
-        
-        return RateTranscribedAudio(peer=peer, msg_id=msg_id, transcription_id=transcription_id, good=good)
+
+        return RateTranscribedAudio(
+            peer=peer,
+            msg_id=msg_id,
+            transcription_id=transcription_id,
+            good=good,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.msg_id))
-        
+
         b.write(Long(self.transcription_id))
-        
+
         b.write(Bool(self.good))
-        
+
         return b.getvalue()

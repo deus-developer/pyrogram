@@ -20,6 +20,7 @@ from datetime import datetime
 
 import pyrogram
 from pyrogram import raw, types, utils
+
 from ..object import Object
 
 
@@ -51,7 +52,7 @@ class MyBoost(Object):
         chat: "types.Chat",
         date: datetime,
         expire_date: datetime,
-        cooldown_until_date: datetime
+        cooldown_until_date: datetime,
     ):
         super().__init__()
 
@@ -62,16 +63,27 @@ class MyBoost(Object):
         self.cooldown_until_date = cooldown_until_date
 
     @staticmethod
-    def from_raw_tl(client: "pyrogram.Client", my_boost: "raw.types.MyBoost") -> "MyBoost":
+    def from_raw_tl(
+        client: "pyrogram.Client",
+        my_boost: "raw.types.MyBoost",
+    ) -> "MyBoost":
         if isinstance(my_boost.peer, raw.types.PeerChannel):
-            chat = types.Chat.from_raw_tl_channel_chat(client, client.entity_cache.get_peer(peer=my_boost.peer))
+            chat = types.Chat.from_raw_tl_channel_chat(
+                client,
+                client.entity_cache.get_peer(peer=my_boost.peer),
+            )
         else:
-            chat = types.Chat.from_raw_tl_user_chat(client, client.entity_cache.get_peer(peer=my_boost.peer))
+            chat = types.Chat.from_raw_tl_user_chat(
+                client,
+                client.entity_cache.get_peer(peer=my_boost.peer),
+            )
 
         return MyBoost(
             slot=my_boost.slot,
             chat=chat,
             date=utils.timestamp_to_datetime(my_boost.date),
             expire_date=utils.timestamp_to_datetime(my_boost.expires),
-            cooldown_until_date=utils.timestamp_to_datetime(my_boost.cooldown_until_date),
+            cooldown_until_date=utils.timestamp_to_datetime(
+                my_boost.cooldown_until_date,
+            ),
         )

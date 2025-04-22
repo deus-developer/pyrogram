@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class DeletePhotos(TLObject):  # type: ignore
+class DeletePhotos(TLFunction[list[int]]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,20 +48,20 @@ class DeletePhotos(TLObject):  # type: ignore
         List of ``int`` ``64-bit``
     """
 
-    __slots__: List[str] = ["id"]
+    __slots__: list[str] = ["id"]
 
-    ID = 0x87cf7f2f
+    ID = 0x87CF7F2F
     QUALNAME = "functions.photos.DeletePhotos"
 
-    def __init__(self, *, id: List["raw.base.InputPhoto"]) -> None:
+    def __init__(self, *, id: list["raw.base.InputPhoto"]) -> None:
         self.id = id  # Vector<InputPhoto>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DeletePhotos":
         # No flags
-        
+
         id = TLObject.read(b)
-        
+
         return DeletePhotos(id=id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class DeletePhotos(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.id))
-        
+
         return b.getvalue()

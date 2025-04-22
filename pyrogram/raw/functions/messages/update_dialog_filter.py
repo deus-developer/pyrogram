@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class UpdateDialogFilter(TLObject):  # type: ignore
+class UpdateDialogFilter(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class UpdateDialogFilter(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["id", "filter"]
+    __slots__: list[str] = ["filter", "id"]
 
-    ID = 0x1ad4a04a
+    ID = 0x1AD4A04A
     QUALNAME = "functions.messages.UpdateDialogFilter"
 
     def __init__(self, *, id: int, filter: "raw.base.DialogFilter" = None) -> None:
@@ -59,13 +61,12 @@ class UpdateDialogFilter(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateDialogFilter":
-        
         flags = Int.read(b)
-        
+
         id = Int.read(b)
-        
+
         filter = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         return UpdateDialogFilter(id=id, filter=filter)
 
     def write(self, *args) -> bytes:
@@ -75,10 +76,10 @@ class UpdateDialogFilter(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.filter is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.id))
-        
+
         if self.filter is not None:
             b.write(self.filter.write())
-        
+
         return b.getvalue()

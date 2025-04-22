@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,9 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetBroadcastRevenueWithdrawalUrl(TLObject):  # type: ignore
+class GetBroadcastRevenueWithdrawalUrl(
+    TLFunction["raw.base.stats.BroadcastRevenueWithdrawalUrl"],
+):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +52,28 @@ class GetBroadcastRevenueWithdrawalUrl(TLObject):  # type: ignore
         :obj:`stats.BroadcastRevenueWithdrawalUrl <pyrogram.raw.base.stats.BroadcastRevenueWithdrawalUrl>`
     """
 
-    __slots__: List[str] = ["channel", "password"]
+    __slots__: list[str] = ["channel", "password"]
 
-    ID = 0x2a65ef73
+    ID = 0x2A65EF73
     QUALNAME = "functions.stats.GetBroadcastRevenueWithdrawalUrl"
 
-    def __init__(self, *, channel: "raw.base.InputChannel", password: "raw.base.InputCheckPasswordSRP") -> None:
+    def __init__(
+        self,
+        *,
+        channel: "raw.base.InputChannel",
+        password: "raw.base.InputCheckPasswordSRP",
+    ) -> None:
         self.channel = channel  # InputChannel
         self.password = password  # InputCheckPasswordSRP
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetBroadcastRevenueWithdrawalUrl":
         # No flags
-        
+
         channel = TLObject.read(b)
-        
+
         password = TLObject.read(b)
-        
+
         return GetBroadcastRevenueWithdrawalUrl(channel=channel, password=password)
 
     def write(self, *args) -> bytes:
@@ -72,9 +81,9 @@ class GetBroadcastRevenueWithdrawalUrl(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.channel.write())
-        
+
         b.write(self.password.write())
-        
+
         return b.getvalue()

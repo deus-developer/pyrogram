@@ -17,11 +17,16 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +35,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetAdminLog(TLObject):  # type: ignore
+class GetAdminLog(TLFunction["raw.base.channels.AdminLogResults"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -63,12 +68,30 @@ class GetAdminLog(TLObject):  # type: ignore
         :obj:`channels.AdminLogResults <pyrogram.raw.base.channels.AdminLogResults>`
     """
 
-    __slots__: List[str] = ["channel", "q", "max_id", "min_id", "limit", "events_filter", "admins"]
+    __slots__: list[str] = [
+        "admins",
+        "channel",
+        "events_filter",
+        "limit",
+        "max_id",
+        "min_id",
+        "q",
+    ]
 
-    ID = 0x33ddf480
+    ID = 0x33DDF480
     QUALNAME = "functions.channels.GetAdminLog"
 
-    def __init__(self, *, channel: "raw.base.InputChannel", q: str, max_id: int, min_id: int, limit: int, events_filter: "raw.base.ChannelAdminLogEventsFilter" = None, admins: Optional[List["raw.base.InputUser"]] = None) -> None:
+    def __init__(
+        self,
+        *,
+        channel: "raw.base.InputChannel",
+        q: str,
+        max_id: int,
+        min_id: int,
+        limit: int,
+        events_filter: "raw.base.ChannelAdminLogEventsFilter" = None,
+        admins: list["raw.base.InputUser"] | None = None,
+    ) -> None:
         self.channel = channel  # InputChannel
         self.q = q  # string
         self.max_id = max_id  # long
@@ -79,24 +102,31 @@ class GetAdminLog(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetAdminLog":
-        
         flags = Int.read(b)
-        
+
         channel = TLObject.read(b)
-        
+
         q = String.read(b)
-        
+
         events_filter = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         admins = TLObject.read(b) if flags & (1 << 1) else []
-        
+
         max_id = Long.read(b)
-        
+
         min_id = Long.read(b)
-        
+
         limit = Int.read(b)
-        
-        return GetAdminLog(channel=channel, q=q, max_id=max_id, min_id=min_id, limit=limit, events_filter=events_filter, admins=admins)
+
+        return GetAdminLog(
+            channel=channel,
+            q=q,
+            max_id=max_id,
+            min_id=min_id,
+            limit=limit,
+            events_filter=events_filter,
+            admins=admins,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -106,21 +136,21 @@ class GetAdminLog(TLObject):  # type: ignore
         flags |= (1 << 0) if self.events_filter is not None else 0
         flags |= (1 << 1) if self.admins else 0
         b.write(Int(flags))
-        
+
         b.write(self.channel.write())
-        
+
         b.write(String(self.q))
-        
+
         if self.events_filter is not None:
             b.write(self.events_filter.write())
-        
+
         if self.admins is not None:
             b.write(Vector(self.admins))
-        
+
         b.write(Long(self.max_id))
-        
+
         b.write(Long(self.min_id))
-        
+
         b.write(Int(self.limit))
-        
+
         return b.getvalue()

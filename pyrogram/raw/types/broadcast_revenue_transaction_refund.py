@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,9 +54,9 @@ class BroadcastRevenueTransactionRefund(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["amount", "date", "provider"]
+    __slots__: list[str] = ["amount", "date", "provider"]
 
-    ID = 0x42d30d2e
+    ID = 0x42D30D2E
     QUALNAME = "types.BroadcastRevenueTransactionRefund"
 
     def __init__(self, *, amount: int, date: int, provider: str) -> None:
@@ -64,25 +67,29 @@ class BroadcastRevenueTransactionRefund(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "BroadcastRevenueTransactionRefund":
         # No flags
-        
+
         amount = Long.read(b)
-        
+
         date = Int.read(b)
-        
+
         provider = String.read(b)
-        
-        return BroadcastRevenueTransactionRefund(amount=amount, date=date, provider=provider)
+
+        return BroadcastRevenueTransactionRefund(
+            amount=amount,
+            date=date,
+            provider=provider,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.amount))
-        
+
         b.write(Int(self.date))
-        
+
         b.write(String(self.provider))
-        
+
         return b.getvalue()

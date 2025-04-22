@@ -25,7 +25,7 @@ class RemoveHandler:
     def remove_handler(
         self: "pyrogram.Client",
         handler: "Handler",
-        group: int = 0
+        group: int = 0,
     ):
         """Remove a previously-registered update handler.
 
@@ -45,8 +45,10 @@ class RemoveHandler:
                 from pyrogram import Client
                 from pyrogram.handlers import MessageHandler
 
+
                 async def hello(client, message):
                     print(message)
+
 
                 app = Client("my_account")
 

@@ -20,7 +20,7 @@ import os
 
 import pyrogram
 from pyrogram import raw
-from pyrogram.utils import compute_password_hash, btoi, itob
+from pyrogram.utils import btoi, compute_password_hash, itob
 
 
 class EnableCloudPassword:
@@ -28,7 +28,7 @@ class EnableCloudPassword:
         self: "pyrogram.Client",
         password: str,
         hint: str = "",
-        email: str = None
+        email: str = None,
     ) -> bool:
         """Enable the Two-Step Verification security feature (Cloud Password) on your account.
 
@@ -62,7 +62,9 @@ class EnableCloudPassword:
                 await app.enable_cloud_password("password", hint="hint")
 
                 # Enable password with hint and email
-                await app.enable_cloud_password("password", hint="hint", email="user@email.com")
+                await app.enable_cloud_password(
+                    "password", hint="hint", email="user@email.com"
+                )
         """
         r = await self.invoke(raw.functions.account.GetPassword())
 
@@ -80,9 +82,9 @@ class EnableCloudPassword:
                     new_algo=r.new_algo,
                     new_password_hash=new_hash,
                     hint=hint,
-                    email=email
-                )
-            )
+                    email=email,
+                ),
+            ),
         )
 
         return True

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -66,12 +69,26 @@ class ChatlistInviteAlready(TLObject):  # type: ignore
             chatlists.CheckChatlistInvite
     """
 
-    __slots__: List[str] = ["filter_id", "missing_peers", "already_peers", "chats", "users"]
+    __slots__: list[str] = [
+        "already_peers",
+        "chats",
+        "filter_id",
+        "missing_peers",
+        "users",
+    ]
 
-    ID = 0xfa87f659
+    ID = 0xFA87F659
     QUALNAME = "types.chatlists.ChatlistInviteAlready"
 
-    def __init__(self, *, filter_id: int, missing_peers: List["raw.base.Peer"], already_peers: List["raw.base.Peer"], chats: List["raw.base.Chat"], users: List["raw.base.User"]) -> None:
+    def __init__(
+        self,
+        *,
+        filter_id: int,
+        missing_peers: list["raw.base.Peer"],
+        already_peers: list["raw.base.Peer"],
+        chats: list["raw.base.Chat"],
+        users: list["raw.base.User"],
+    ) -> None:
         self.filter_id = filter_id  # int
         self.missing_peers = missing_peers  # Vector<Peer>
         self.already_peers = already_peers  # Vector<Peer>
@@ -81,33 +98,39 @@ class ChatlistInviteAlready(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChatlistInviteAlready":
         # No flags
-        
+
         filter_id = Int.read(b)
-        
+
         missing_peers = TLObject.read(b)
-        
+
         already_peers = TLObject.read(b)
-        
+
         chats = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
-        return ChatlistInviteAlready(filter_id=filter_id, missing_peers=missing_peers, already_peers=already_peers, chats=chats, users=users)
+
+        return ChatlistInviteAlready(
+            filter_id=filter_id,
+            missing_peers=missing_peers,
+            already_peers=already_peers,
+            chats=chats,
+            users=users,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.filter_id))
-        
+
         b.write(Vector(self.missing_peers))
-        
+
         b.write(Vector(self.already_peers))
-        
+
         b.write(Vector(self.chats))
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

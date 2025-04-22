@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -69,12 +72,28 @@ class GiveawayInfo(TLObject):  # type: ignore
             payments.GetGiveawayInfo
     """
 
-    __slots__: List[str] = ["start_date", "participating", "preparing_results", "joined_too_early_date", "admin_disallowed_chat_id", "disallowed_country"]
+    __slots__: list[str] = [
+        "admin_disallowed_chat_id",
+        "disallowed_country",
+        "joined_too_early_date",
+        "participating",
+        "preparing_results",
+        "start_date",
+    ]
 
-    ID = 0x4367daa0
+    ID = 0x4367DAA0
     QUALNAME = "types.payments.GiveawayInfo"
 
-    def __init__(self, *, start_date: int, participating: Optional[bool] = None, preparing_results: Optional[bool] = None, joined_too_early_date: Optional[int] = None, admin_disallowed_chat_id: Optional[int] = None, disallowed_country: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        start_date: int,
+        participating: bool | None = None,
+        preparing_results: bool | None = None,
+        joined_too_early_date: int | None = None,
+        admin_disallowed_chat_id: int | None = None,
+        disallowed_country: str | None = None,
+    ) -> None:
         self.start_date = start_date  # int
         self.participating = participating  # flags.0?true
         self.preparing_results = preparing_results  # flags.3?true
@@ -84,17 +103,23 @@ class GiveawayInfo(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GiveawayInfo":
-        
         flags = Int.read(b)
-        
+
         participating = True if flags & (1 << 0) else False
         preparing_results = True if flags & (1 << 3) else False
         start_date = Int.read(b)
-        
+
         joined_too_early_date = Int.read(b) if flags & (1 << 1) else None
         admin_disallowed_chat_id = Long.read(b) if flags & (1 << 2) else None
         disallowed_country = String.read(b) if flags & (1 << 4) else None
-        return GiveawayInfo(start_date=start_date, participating=participating, preparing_results=preparing_results, joined_too_early_date=joined_too_early_date, admin_disallowed_chat_id=admin_disallowed_chat_id, disallowed_country=disallowed_country)
+        return GiveawayInfo(
+            start_date=start_date,
+            participating=participating,
+            preparing_results=preparing_results,
+            joined_too_early_date=joined_too_early_date,
+            admin_disallowed_chat_id=admin_disallowed_chat_id,
+            disallowed_country=disallowed_country,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -107,16 +132,16 @@ class GiveawayInfo(TLObject):  # type: ignore
         flags |= (1 << 2) if self.admin_disallowed_chat_id is not None else 0
         flags |= (1 << 4) if self.disallowed_country is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.start_date))
-        
+
         if self.joined_too_early_date is not None:
             b.write(Int(self.joined_too_early_date))
-        
+
         if self.admin_disallowed_chat_id is not None:
             b.write(Long(self.admin_disallowed_chat_id))
-        
+
         if self.disallowed_country is not None:
             b.write(String(self.disallowed_country))
-        
+
         return b.getvalue()

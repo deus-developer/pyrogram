@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,23 +50,28 @@ class UpdatePeerSettings(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "settings"]
+    __slots__: list[str] = ["peer", "settings"]
 
-    ID = 0x6a7e7366
+    ID = 0x6A7E7366
     QUALNAME = "types.UpdatePeerSettings"
 
-    def __init__(self, *, peer: "raw.base.Peer", settings: "raw.base.PeerSettings") -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.Peer",
+        settings: "raw.base.PeerSettings",
+    ) -> None:
         self.peer = peer  # Peer
         self.settings = settings  # PeerSettings
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdatePeerSettings":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         settings = TLObject.read(b)
-        
+
         return UpdatePeerSettings(peer=peer, settings=settings)
 
     def write(self, *args) -> bytes:
@@ -72,9 +79,9 @@ class UpdatePeerSettings(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(self.settings.write())
-        
+
         return b.getvalue()

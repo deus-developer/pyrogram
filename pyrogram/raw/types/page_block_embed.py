@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -66,12 +70,32 @@ class PageBlockEmbed(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["caption", "full_width", "allow_scrolling", "url", "html", "poster_photo_id", "w", "h"]
+    __slots__: list[str] = [
+        "allow_scrolling",
+        "caption",
+        "full_width",
+        "h",
+        "html",
+        "poster_photo_id",
+        "url",
+        "w",
+    ]
 
-    ID = 0xa8718dc5
+    ID = 0xA8718DC5
     QUALNAME = "types.PageBlockEmbed"
 
-    def __init__(self, *, caption: "raw.base.PageCaption", full_width: Optional[bool] = None, allow_scrolling: Optional[bool] = None, url: Optional[str] = None, html: Optional[str] = None, poster_photo_id: Optional[int] = None, w: Optional[int] = None, h: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        caption: "raw.base.PageCaption",
+        full_width: bool | None = None,
+        allow_scrolling: bool | None = None,
+        url: str | None = None,
+        html: str | None = None,
+        poster_photo_id: int | None = None,
+        w: int | None = None,
+        h: int | None = None,
+    ) -> None:
         self.caption = caption  # PageCaption
         self.full_width = full_width  # flags.0?true
         self.allow_scrolling = allow_scrolling  # flags.3?true
@@ -83,9 +107,8 @@ class PageBlockEmbed(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PageBlockEmbed":
-        
         flags = Int.read(b)
-        
+
         full_width = True if flags & (1 << 0) else False
         allow_scrolling = True if flags & (1 << 3) else False
         url = String.read(b) if flags & (1 << 1) else None
@@ -94,8 +117,17 @@ class PageBlockEmbed(TLObject):  # type: ignore
         w = Int.read(b) if flags & (1 << 5) else None
         h = Int.read(b) if flags & (1 << 5) else None
         caption = TLObject.read(b)
-        
-        return PageBlockEmbed(caption=caption, full_width=full_width, allow_scrolling=allow_scrolling, url=url, html=html, poster_photo_id=poster_photo_id, w=w, h=h)
+
+        return PageBlockEmbed(
+            caption=caption,
+            full_width=full_width,
+            allow_scrolling=allow_scrolling,
+            url=url,
+            html=html,
+            poster_photo_id=poster_photo_id,
+            w=w,
+            h=h,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -110,22 +142,22 @@ class PageBlockEmbed(TLObject):  # type: ignore
         flags |= (1 << 5) if self.w is not None else 0
         flags |= (1 << 5) if self.h is not None else 0
         b.write(Int(flags))
-        
+
         if self.url is not None:
             b.write(String(self.url))
-        
+
         if self.html is not None:
             b.write(String(self.html))
-        
+
         if self.poster_photo_id is not None:
             b.write(Long(self.poster_photo_id))
-        
+
         if self.w is not None:
             b.write(Int(self.w))
-        
+
         if self.h is not None:
             b.write(Int(self.h))
-        
+
         b.write(self.caption.write())
-        
+
         return b.getvalue()

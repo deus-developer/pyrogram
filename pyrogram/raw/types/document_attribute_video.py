@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Double,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -63,12 +65,30 @@ class DocumentAttributeVideo(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["duration", "w", "h", "round_message", "supports_streaming", "nosound", "preload_prefix_size"]
+    __slots__: list[str] = [
+        "duration",
+        "h",
+        "nosound",
+        "preload_prefix_size",
+        "round_message",
+        "supports_streaming",
+        "w",
+    ]
 
-    ID = 0xd38ff1c2
+    ID = 0xD38FF1C2
     QUALNAME = "types.DocumentAttributeVideo"
 
-    def __init__(self, *, duration: float, w: int, h: int, round_message: Optional[bool] = None, supports_streaming: Optional[bool] = None, nosound: Optional[bool] = None, preload_prefix_size: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        duration: float,
+        w: int,
+        h: int,
+        round_message: bool | None = None,
+        supports_streaming: bool | None = None,
+        nosound: bool | None = None,
+        preload_prefix_size: int | None = None,
+    ) -> None:
         self.duration = duration  # double
         self.w = w  # int
         self.h = h  # int
@@ -79,20 +99,27 @@ class DocumentAttributeVideo(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DocumentAttributeVideo":
-        
         flags = Int.read(b)
-        
+
         round_message = True if flags & (1 << 0) else False
         supports_streaming = True if flags & (1 << 1) else False
         nosound = True if flags & (1 << 3) else False
         duration = Double.read(b)
-        
+
         w = Int.read(b)
-        
+
         h = Int.read(b)
-        
+
         preload_prefix_size = Int.read(b) if flags & (1 << 2) else None
-        return DocumentAttributeVideo(duration=duration, w=w, h=h, round_message=round_message, supports_streaming=supports_streaming, nosound=nosound, preload_prefix_size=preload_prefix_size)
+        return DocumentAttributeVideo(
+            duration=duration,
+            w=w,
+            h=h,
+            round_message=round_message,
+            supports_streaming=supports_streaming,
+            nosound=nosound,
+            preload_prefix_size=preload_prefix_size,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -104,14 +131,14 @@ class DocumentAttributeVideo(TLObject):  # type: ignore
         flags |= (1 << 3) if self.nosound else 0
         flags |= (1 << 2) if self.preload_prefix_size is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Double(self.duration))
-        
+
         b.write(Int(self.w))
-        
+
         b.write(Int(self.h))
-        
+
         if self.preload_prefix_size is not None:
             b.write(Int(self.preload_prefix_size))
-        
+
         return b.getvalue()

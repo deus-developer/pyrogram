@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SearchEmojiStickerSets(TLObject):  # type: ignore
+class SearchEmojiStickerSets(TLFunction["raw.base.messages.FoundStickerSets"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,26 +54,31 @@ class SearchEmojiStickerSets(TLObject):  # type: ignore
         :obj:`messages.FoundStickerSets <pyrogram.raw.base.messages.FoundStickerSets>`
     """
 
-    __slots__: List[str] = ["q", "hash", "exclude_featured"]
+    __slots__: list[str] = ["exclude_featured", "hash", "q"]
 
-    ID = 0x92b4494c
+    ID = 0x92B4494C
     QUALNAME = "functions.messages.SearchEmojiStickerSets"
 
-    def __init__(self, *, q: str, hash: int, exclude_featured: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        q: str,
+        hash: int,
+        exclude_featured: bool | None = None,
+    ) -> None:
         self.q = q  # string
         self.hash = hash  # long
         self.exclude_featured = exclude_featured  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SearchEmojiStickerSets":
-        
         flags = Int.read(b)
-        
+
         exclude_featured = True if flags & (1 << 0) else False
         q = String.read(b)
-        
+
         hash = Long.read(b)
-        
+
         return SearchEmojiStickerSets(q=q, hash=hash, exclude_featured=exclude_featured)
 
     def write(self, *args) -> bytes:
@@ -80,9 +88,9 @@ class SearchEmojiStickerSets(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.exclude_featured else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.q))
-        
+
         b.write(Long(self.hash))
-        
+
         return b.getvalue()

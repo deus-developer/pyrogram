@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,27 +55,36 @@ class ChannelParticipantCreator(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["user_id", "admin_rights", "rank"]
+    __slots__: list[str] = ["admin_rights", "rank", "user_id"]
 
-    ID = 0x2fe601d3
+    ID = 0x2FE601D3
     QUALNAME = "types.ChannelParticipantCreator"
 
-    def __init__(self, *, user_id: int, admin_rights: "raw.base.ChatAdminRights", rank: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        user_id: int,
+        admin_rights: "raw.base.ChatAdminRights",
+        rank: str | None = None,
+    ) -> None:
         self.user_id = user_id  # long
         self.admin_rights = admin_rights  # ChatAdminRights
         self.rank = rank  # flags.0?string
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChannelParticipantCreator":
-        
         flags = Int.read(b)
-        
+
         user_id = Long.read(b)
-        
+
         admin_rights = TLObject.read(b)
-        
+
         rank = String.read(b) if flags & (1 << 0) else None
-        return ChannelParticipantCreator(user_id=user_id, admin_rights=admin_rights, rank=rank)
+        return ChannelParticipantCreator(
+            user_id=user_id,
+            admin_rights=admin_rights,
+            rank=rank,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -80,12 +93,12 @@ class ChannelParticipantCreator(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.rank is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.user_id))
-        
+
         b.write(self.admin_rights.write())
-        
+
         if self.rank is not None:
             b.write(String(self.rank))
-        
+
         return b.getvalue()

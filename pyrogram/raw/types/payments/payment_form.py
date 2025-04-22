@@ -17,11 +17,16 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -99,12 +104,48 @@ class PaymentForm(TLObject):  # type: ignore
             payments.GetPaymentForm
     """
 
-    __slots__: List[str] = ["form_id", "bot_id", "title", "description", "invoice", "provider_id", "url", "users", "can_save_credentials", "password_missing", "photo", "native_provider", "native_params", "additional_methods", "saved_info", "saved_credentials"]
+    __slots__: list[str] = [
+        "additional_methods",
+        "bot_id",
+        "can_save_credentials",
+        "description",
+        "form_id",
+        "invoice",
+        "native_params",
+        "native_provider",
+        "password_missing",
+        "photo",
+        "provider_id",
+        "saved_credentials",
+        "saved_info",
+        "title",
+        "url",
+        "users",
+    ]
 
-    ID = 0xa0058751
+    ID = 0xA0058751
     QUALNAME = "types.payments.PaymentForm"
 
-    def __init__(self, *, form_id: int, bot_id: int, title: str, description: str, invoice: "raw.base.Invoice", provider_id: int, url: str, users: List["raw.base.User"], can_save_credentials: Optional[bool] = None, password_missing: Optional[bool] = None, photo: "raw.base.WebDocument" = None, native_provider: Optional[str] = None, native_params: "raw.base.DataJSON" = None, additional_methods: Optional[List["raw.base.PaymentFormMethod"]] = None, saved_info: "raw.base.PaymentRequestedInfo" = None, saved_credentials: Optional[List["raw.base.PaymentSavedCredentials"]] = None) -> None:
+    def __init__(
+        self,
+        *,
+        form_id: int,
+        bot_id: int,
+        title: str,
+        description: str,
+        invoice: "raw.base.Invoice",
+        provider_id: int,
+        url: str,
+        users: list["raw.base.User"],
+        can_save_credentials: bool | None = None,
+        password_missing: bool | None = None,
+        photo: "raw.base.WebDocument" = None,
+        native_provider: str | None = None,
+        native_params: "raw.base.DataJSON" = None,
+        additional_methods: list["raw.base.PaymentFormMethod"] | None = None,
+        saved_info: "raw.base.PaymentRequestedInfo" = None,
+        saved_credentials: list["raw.base.PaymentSavedCredentials"] | None = None,
+    ) -> None:
         self.form_id = form_id  # long
         self.bot_id = bot_id  # long
         self.title = title  # string
@@ -118,45 +159,65 @@ class PaymentForm(TLObject):  # type: ignore
         self.photo = photo  # flags.5?WebDocument
         self.native_provider = native_provider  # flags.4?string
         self.native_params = native_params  # flags.4?DataJSON
-        self.additional_methods = additional_methods  # flags.6?Vector<PaymentFormMethod>
+        self.additional_methods = (
+            additional_methods  # flags.6?Vector<PaymentFormMethod>
+        )
         self.saved_info = saved_info  # flags.0?PaymentRequestedInfo
-        self.saved_credentials = saved_credentials  # flags.1?Vector<PaymentSavedCredentials>
+        self.saved_credentials = (
+            saved_credentials  # flags.1?Vector<PaymentSavedCredentials>
+        )
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PaymentForm":
-        
         flags = Int.read(b)
-        
+
         can_save_credentials = True if flags & (1 << 2) else False
         password_missing = True if flags & (1 << 3) else False
         form_id = Long.read(b)
-        
+
         bot_id = Long.read(b)
-        
+
         title = String.read(b)
-        
+
         description = String.read(b)
-        
+
         photo = TLObject.read(b) if flags & (1 << 5) else None
-        
+
         invoice = TLObject.read(b)
-        
+
         provider_id = Long.read(b)
-        
+
         url = String.read(b)
-        
+
         native_provider = String.read(b) if flags & (1 << 4) else None
         native_params = TLObject.read(b) if flags & (1 << 4) else None
-        
+
         additional_methods = TLObject.read(b) if flags & (1 << 6) else []
-        
+
         saved_info = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         saved_credentials = TLObject.read(b) if flags & (1 << 1) else []
-        
+
         users = TLObject.read(b)
-        
-        return PaymentForm(form_id=form_id, bot_id=bot_id, title=title, description=description, invoice=invoice, provider_id=provider_id, url=url, users=users, can_save_credentials=can_save_credentials, password_missing=password_missing, photo=photo, native_provider=native_provider, native_params=native_params, additional_methods=additional_methods, saved_info=saved_info, saved_credentials=saved_credentials)
+
+        return PaymentForm(
+            form_id=form_id,
+            bot_id=bot_id,
+            title=title,
+            description=description,
+            invoice=invoice,
+            provider_id=provider_id,
+            url=url,
+            users=users,
+            can_save_credentials=can_save_credentials,
+            password_missing=password_missing,
+            photo=photo,
+            native_provider=native_provider,
+            native_params=native_params,
+            additional_methods=additional_methods,
+            saved_info=saved_info,
+            saved_credentials=saved_credentials,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -172,39 +233,39 @@ class PaymentForm(TLObject):  # type: ignore
         flags |= (1 << 0) if self.saved_info is not None else 0
         flags |= (1 << 1) if self.saved_credentials else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.form_id))
-        
+
         b.write(Long(self.bot_id))
-        
+
         b.write(String(self.title))
-        
+
         b.write(String(self.description))
-        
+
         if self.photo is not None:
             b.write(self.photo.write())
-        
+
         b.write(self.invoice.write())
-        
+
         b.write(Long(self.provider_id))
-        
+
         b.write(String(self.url))
-        
+
         if self.native_provider is not None:
             b.write(String(self.native_provider))
-        
+
         if self.native_params is not None:
             b.write(self.native_params.write())
-        
+
         if self.additional_methods is not None:
             b.write(Vector(self.additional_methods))
-        
+
         if self.saved_info is not None:
             b.write(self.saved_info.write())
-        
+
         if self.saved_credentials is not None:
             b.write(Vector(self.saved_credentials))
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

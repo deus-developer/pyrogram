@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,26 +53,35 @@ class MessageActionSetChatWallPaper(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["wallpaper", "same", "for_both"]
+    __slots__: list[str] = ["for_both", "same", "wallpaper"]
 
-    ID = 0x5060a3f4
+    ID = 0x5060A3F4
     QUALNAME = "types.MessageActionSetChatWallPaper"
 
-    def __init__(self, *, wallpaper: "raw.base.WallPaper", same: Optional[bool] = None, for_both: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        wallpaper: "raw.base.WallPaper",
+        same: bool | None = None,
+        for_both: bool | None = None,
+    ) -> None:
         self.wallpaper = wallpaper  # WallPaper
         self.same = same  # flags.0?true
         self.for_both = for_both  # flags.1?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageActionSetChatWallPaper":
-        
         flags = Int.read(b)
-        
+
         same = True if flags & (1 << 0) else False
         for_both = True if flags & (1 << 1) else False
         wallpaper = TLObject.read(b)
-        
-        return MessageActionSetChatWallPaper(wallpaper=wallpaper, same=same, for_both=for_both)
+
+        return MessageActionSetChatWallPaper(
+            wallpaper=wallpaper,
+            same=same,
+            for_both=for_both,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -80,7 +91,7 @@ class MessageActionSetChatWallPaper(TLObject):  # type: ignore
         flags |= (1 << 0) if self.same else 0
         flags |= (1 << 1) if self.for_both else 0
         b.write(Int(flags))
-        
+
         b.write(self.wallpaper.write())
-        
+
         return b.getvalue()

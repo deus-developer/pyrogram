@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class DeleteExportedChatInvite(TLObject):  # type: ignore
+class DeleteExportedChatInvite(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class DeleteExportedChatInvite(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["peer", "link"]
+    __slots__: list[str] = ["link", "peer"]
 
-    ID = 0xd464a42b
+    ID = 0xD464A42B
     QUALNAME = "functions.messages.DeleteExportedChatInvite"
 
     def __init__(self, *, peer: "raw.base.InputPeer", link: str) -> None:
@@ -60,11 +63,11 @@ class DeleteExportedChatInvite(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DeleteExportedChatInvite":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         link = String.read(b)
-        
+
         return DeleteExportedChatInvite(peer=peer, link=link)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class DeleteExportedChatInvite(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(String(self.link))
-        
+
         return b.getvalue()

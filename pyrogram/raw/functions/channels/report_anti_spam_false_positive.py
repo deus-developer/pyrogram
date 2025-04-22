@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ReportAntiSpamFalsePositive(TLObject):  # type: ignore
+class ReportAntiSpamFalsePositive(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class ReportAntiSpamFalsePositive(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["channel", "msg_id"]
+    __slots__: list[str] = ["channel", "msg_id"]
 
-    ID = 0xa850a693
+    ID = 0xA850A693
     QUALNAME = "functions.channels.ReportAntiSpamFalsePositive"
 
     def __init__(self, *, channel: "raw.base.InputChannel", msg_id: int) -> None:
@@ -60,11 +62,11 @@ class ReportAntiSpamFalsePositive(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ReportAntiSpamFalsePositive":
         # No flags
-        
+
         channel = TLObject.read(b)
-        
+
         msg_id = Int.read(b)
-        
+
         return ReportAntiSpamFalsePositive(channel=channel, msg_id=msg_id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class ReportAntiSpamFalsePositive(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.channel.write())
-        
+
         b.write(Int(self.msg_id))
-        
+
         return b.getvalue()

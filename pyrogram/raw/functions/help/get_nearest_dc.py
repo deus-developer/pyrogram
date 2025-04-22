@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetNearestDc(TLObject):  # type: ignore
+class GetNearestDc(TLFunction["raw.base.NearestDc"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -44,9 +45,9 @@ class GetNearestDc(TLObject):  # type: ignore
         :obj:`NearestDc <pyrogram.raw.base.NearestDc>`
     """
 
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
-    ID = 0x1fb33026
+    ID = 0x1FB33026
     QUALNAME = "functions.help.GetNearestDc"
 
     def __init__(self) -> None:
@@ -55,7 +56,7 @@ class GetNearestDc(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetNearestDc":
         # No flags
-        
+
         return GetNearestDc()
 
     def write(self, *args) -> bytes:
@@ -63,5 +64,5 @@ class GetNearestDc(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         return b.getvalue()

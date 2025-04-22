@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class AddContact(TLObject):  # type: ignore
+class AddContact(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -57,12 +60,26 @@ class AddContact(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["id", "first_name", "last_name", "phone", "add_phone_privacy_exception"]
+    __slots__: list[str] = [
+        "add_phone_privacy_exception",
+        "first_name",
+        "id",
+        "last_name",
+        "phone",
+    ]
 
-    ID = 0xe8f463d0
+    ID = 0xE8F463D0
     QUALNAME = "functions.contacts.AddContact"
 
-    def __init__(self, *, id: "raw.base.InputUser", first_name: str, last_name: str, phone: str, add_phone_privacy_exception: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: "raw.base.InputUser",
+        first_name: str,
+        last_name: str,
+        phone: str,
+        add_phone_privacy_exception: bool | None = None,
+    ) -> None:
         self.id = id  # InputUser
         self.first_name = first_name  # string
         self.last_name = last_name  # string
@@ -71,19 +88,24 @@ class AddContact(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "AddContact":
-        
         flags = Int.read(b)
-        
+
         add_phone_privacy_exception = True if flags & (1 << 0) else False
         id = TLObject.read(b)
-        
+
         first_name = String.read(b)
-        
+
         last_name = String.read(b)
-        
+
         phone = String.read(b)
-        
-        return AddContact(id=id, first_name=first_name, last_name=last_name, phone=phone, add_phone_privacy_exception=add_phone_privacy_exception)
+
+        return AddContact(
+            id=id,
+            first_name=first_name,
+            last_name=last_name,
+            phone=phone,
+            add_phone_privacy_exception=add_phone_privacy_exception,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -92,13 +114,13 @@ class AddContact(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.add_phone_privacy_exception else 0
         b.write(Int(flags))
-        
+
         b.write(self.id.write())
-        
+
         b.write(String(self.first_name))
-        
+
         b.write(String(self.last_name))
-        
+
         b.write(String(self.phone))
-        
+
         return b.getvalue()

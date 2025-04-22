@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,22 +60,26 @@ class StatsGraph(TLObject):  # type: ignore
             stats.LoadAsyncGraph
     """
 
-    __slots__: List[str] = ["json", "zoom_token"]
+    __slots__: list[str] = ["json", "zoom_token"]
 
-    ID = 0x8ea464b6
+    ID = 0x8EA464B6
     QUALNAME = "types.StatsGraph"
 
-    def __init__(self, *, json: "raw.base.DataJSON", zoom_token: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        json: "raw.base.DataJSON",
+        zoom_token: str | None = None,
+    ) -> None:
         self.json = json  # DataJSON
         self.zoom_token = zoom_token  # flags.0?string
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "StatsGraph":
-        
         flags = Int.read(b)
-        
+
         json = TLObject.read(b)
-        
+
         zoom_token = String.read(b) if flags & (1 << 0) else None
         return StatsGraph(json=json, zoom_token=zoom_token)
 
@@ -83,10 +90,10 @@ class StatsGraph(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.zoom_token is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.json.write())
-        
+
         if self.zoom_token is not None:
             b.write(String(self.zoom_token))
-        
+
         return b.getvalue()

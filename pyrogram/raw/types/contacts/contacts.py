@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,12 +63,18 @@ class Contacts(TLObject):  # type: ignore
             contacts.GetContacts
     """
 
-    __slots__: List[str] = ["contacts", "saved_count", "users"]
+    __slots__: list[str] = ["contacts", "saved_count", "users"]
 
-    ID = 0xeae87e42
+    ID = 0xEAE87E42
     QUALNAME = "types.contacts.Contacts"
 
-    def __init__(self, *, contacts: List["raw.base.Contact"], saved_count: int, users: List["raw.base.User"]) -> None:
+    def __init__(
+        self,
+        *,
+        contacts: list["raw.base.Contact"],
+        saved_count: int,
+        users: list["raw.base.User"],
+    ) -> None:
         self.contacts = contacts  # Vector<Contact>
         self.saved_count = saved_count  # int
         self.users = users  # Vector<User>
@@ -73,13 +82,13 @@ class Contacts(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "Contacts":
         # No flags
-        
+
         contacts = TLObject.read(b)
-        
+
         saved_count = Int.read(b)
-        
+
         users = TLObject.read(b)
-        
+
         return Contacts(contacts=contacts, saved_count=saved_count, users=users)
 
     def write(self, *args) -> bytes:
@@ -87,11 +96,11 @@ class Contacts(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.contacts))
-        
+
         b.write(Int(self.saved_count))
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

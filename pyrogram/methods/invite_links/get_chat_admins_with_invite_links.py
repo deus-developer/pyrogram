@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw, types
@@ -25,7 +24,7 @@ from pyrogram import raw, types
 class GetChatAdminsWithInviteLinks:
     async def get_chat_admins_with_invite_links(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
     ):
         """Get the list of the administrators that have exported invite links in a chat.
 
@@ -44,8 +43,8 @@ class GetChatAdminsWithInviteLinks:
         """
         r = await self.invoke(
             raw.functions.messages.GetAdminsWithInvites(
-                peer=await self.resolve_peer(chat_id)
-            )
+                peer=await self.resolve_peer(chat_id),
+            ),
         )
 
         return types.List(

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,23 +60,28 @@ class SearchResultsPositions(TLObject):  # type: ignore
             messages.GetSearchResultsPositions
     """
 
-    __slots__: List[str] = ["count", "positions"]
+    __slots__: list[str] = ["count", "positions"]
 
-    ID = 0x53b22baf
+    ID = 0x53B22BAF
     QUALNAME = "types.messages.SearchResultsPositions"
 
-    def __init__(self, *, count: int, positions: List["raw.base.SearchResultsPosition"]) -> None:
+    def __init__(
+        self,
+        *,
+        count: int,
+        positions: list["raw.base.SearchResultsPosition"],
+    ) -> None:
         self.count = count  # int
         self.positions = positions  # Vector<SearchResultsPosition>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SearchResultsPositions":
         # No flags
-        
+
         count = Int.read(b)
-        
+
         positions = TLObject.read(b)
-        
+
         return SearchResultsPositions(count=count, positions=positions)
 
     def write(self, *args) -> bytes:
@@ -81,9 +89,9 @@ class SearchResultsPositions(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.count))
-        
+
         b.write(Vector(self.positions))
-        
+
         return b.getvalue()

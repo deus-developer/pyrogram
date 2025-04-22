@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,20 +48,20 @@ class PageBlockList(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["items"]
+    __slots__: list[str] = ["items"]
 
-    ID = 0xe4e88011
+    ID = 0xE4E88011
     QUALNAME = "types.PageBlockList"
 
-    def __init__(self, *, items: List["raw.base.PageListItem"]) -> None:
+    def __init__(self, *, items: list["raw.base.PageListItem"]) -> None:
         self.items = items  # Vector<PageListItem>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PageBlockList":
         # No flags
-        
+
         items = TLObject.read(b)
-        
+
         return PageBlockList(items=items)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class PageBlockList(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.items))
-        
+
         return b.getvalue()

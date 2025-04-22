@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +56,9 @@ class ExportedGroupCallInvite(TLObject):  # type: ignore
             phone.ExportGroupCallInvite
     """
 
-    __slots__: List[str] = ["link"]
+    __slots__: list[str] = ["link"]
 
-    ID = 0x204bd158
+    ID = 0x204BD158
     QUALNAME = "types.phone.ExportedGroupCallInvite"
 
     def __init__(self, *, link: str) -> None:
@@ -65,9 +67,9 @@ class ExportedGroupCallInvite(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ExportedGroupCallInvite":
         # No flags
-        
+
         link = String.read(b)
-        
+
         return ExportedGroupCallInvite(link=link)
 
     def write(self, *args) -> bytes:
@@ -75,7 +77,7 @@ class ExportedGroupCallInvite(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.link))
-        
+
         return b.getvalue()

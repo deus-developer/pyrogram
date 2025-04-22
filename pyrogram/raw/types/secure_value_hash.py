@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +51,9 @@ class SecureValueHash(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["type", "hash"]
+    __slots__: list[str] = ["hash", "type"]
 
-    ID = 0xed1ecdb0
+    ID = 0xED1ECDB0
     QUALNAME = "types.SecureValueHash"
 
     def __init__(self, *, type: "raw.base.SecureValueType", hash: bytes) -> None:
@@ -60,11 +63,11 @@ class SecureValueHash(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SecureValueHash":
         # No flags
-        
+
         type = TLObject.read(b)
-        
+
         hash = Bytes.read(b)
-        
+
         return SecureValueHash(type=type, hash=hash)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class SecureValueHash(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.type.write())
-        
+
         b.write(Bytes(self.hash))
-        
+
         return b.getvalue()

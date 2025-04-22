@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetDialogs(TLObject):  # type: ignore
+class GetDialogs(TLFunction["raw.base.messages.Dialogs"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -63,12 +66,30 @@ class GetDialogs(TLObject):  # type: ignore
         :obj:`messages.Dialogs <pyrogram.raw.base.messages.Dialogs>`
     """
 
-    __slots__: List[str] = ["offset_date", "offset_id", "offset_peer", "limit", "hash", "exclude_pinned", "folder_id"]
+    __slots__: list[str] = [
+        "exclude_pinned",
+        "folder_id",
+        "hash",
+        "limit",
+        "offset_date",
+        "offset_id",
+        "offset_peer",
+    ]
 
-    ID = 0xa0f4cb4f
+    ID = 0xA0F4CB4F
     QUALNAME = "functions.messages.GetDialogs"
 
-    def __init__(self, *, offset_date: int, offset_id: int, offset_peer: "raw.base.InputPeer", limit: int, hash: int, exclude_pinned: Optional[bool] = None, folder_id: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        offset_date: int,
+        offset_id: int,
+        offset_peer: "raw.base.InputPeer",
+        limit: int,
+        hash: int,
+        exclude_pinned: bool | None = None,
+        folder_id: int | None = None,
+    ) -> None:
         self.offset_date = offset_date  # int
         self.offset_id = offset_id  # int
         self.offset_peer = offset_peer  # InputPeer
@@ -79,22 +100,29 @@ class GetDialogs(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetDialogs":
-        
         flags = Int.read(b)
-        
+
         exclude_pinned = True if flags & (1 << 0) else False
         folder_id = Int.read(b) if flags & (1 << 1) else None
         offset_date = Int.read(b)
-        
+
         offset_id = Int.read(b)
-        
+
         offset_peer = TLObject.read(b)
-        
+
         limit = Int.read(b)
-        
+
         hash = Long.read(b)
-        
-        return GetDialogs(offset_date=offset_date, offset_id=offset_id, offset_peer=offset_peer, limit=limit, hash=hash, exclude_pinned=exclude_pinned, folder_id=folder_id)
+
+        return GetDialogs(
+            offset_date=offset_date,
+            offset_id=offset_id,
+            offset_peer=offset_peer,
+            limit=limit,
+            hash=hash,
+            exclude_pinned=exclude_pinned,
+            folder_id=folder_id,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -104,18 +132,18 @@ class GetDialogs(TLObject):  # type: ignore
         flags |= (1 << 0) if self.exclude_pinned else 0
         flags |= (1 << 1) if self.folder_id is not None else 0
         b.write(Int(flags))
-        
+
         if self.folder_id is not None:
             b.write(Int(self.folder_id))
-        
+
         b.write(Int(self.offset_date))
-        
+
         b.write(Int(self.offset_id))
-        
+
         b.write(self.offset_peer.write())
-        
+
         b.write(Int(self.limit))
-        
+
         b.write(Long(self.hash))
-        
+
         return b.getvalue()

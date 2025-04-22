@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,23 +60,23 @@ class CountriesList(TLObject):  # type: ignore
             help.GetCountriesList
     """
 
-    __slots__: List[str] = ["countries", "hash"]
+    __slots__: list[str] = ["countries", "hash"]
 
-    ID = 0x87d0759e
+    ID = 0x87D0759E
     QUALNAME = "types.help.CountriesList"
 
-    def __init__(self, *, countries: List["raw.base.help.Country"], hash: int) -> None:
+    def __init__(self, *, countries: list["raw.base.help.Country"], hash: int) -> None:
         self.countries = countries  # Vector<help.Country>
         self.hash = hash  # int
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "CountriesList":
         # No flags
-        
+
         countries = TLObject.read(b)
-        
+
         hash = Int.read(b)
-        
+
         return CountriesList(countries=countries, hash=hash)
 
     def write(self, *args) -> bytes:
@@ -81,9 +84,9 @@ class CountriesList(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.countries))
-        
+
         b.write(Int(self.hash))
-        
+
         return b.getvalue()

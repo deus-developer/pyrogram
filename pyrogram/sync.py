@@ -16,17 +16,11 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-import asyncio
-import functools
-import inspect
-import threading
 
-from pyrogram import types
-from pyrogram.methods import Methods
-from pyrogram.methods.utilities import idle as idle_module, compose as compose_module
-
+from pyrogram.methods.utilities import compose as compose_module
+from pyrogram.methods.utilities import idle as idle_module
 
 # Special case for idle and compose, because they are not inside Methods
-idle = getattr(idle_module, "idle")
+idle = idle_module.idle
 
-compose = getattr(compose_module, "compose")
+compose = compose_module.compose

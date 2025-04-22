@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ToggleUsername(TLObject):  # type: ignore
+class ToggleUsername(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +55,18 @@ class ToggleUsername(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["bot", "username", "active"]
+    __slots__: list[str] = ["active", "bot", "username"]
 
-    ID = 0x53ca973
+    ID = 0x53CA973
     QUALNAME = "functions.bots.ToggleUsername"
 
-    def __init__(self, *, bot: "raw.base.InputUser", username: str, active: bool) -> None:
+    def __init__(
+        self,
+        *,
+        bot: "raw.base.InputUser",
+        username: str,
+        active: bool,
+    ) -> None:
         self.bot = bot  # InputUser
         self.username = username  # string
         self.active = active  # Bool
@@ -64,13 +74,13 @@ class ToggleUsername(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ToggleUsername":
         # No flags
-        
+
         bot = TLObject.read(b)
-        
+
         username = String.read(b)
-        
+
         active = Bool.read(b)
-        
+
         return ToggleUsername(bot=bot, username=username, active=active)
 
     def write(self, *args) -> bytes:
@@ -78,11 +88,11 @@ class ToggleUsername(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.bot.write())
-        
+
         b.write(String(self.username))
-        
+
         b.write(Bool(self.active))
-        
+
         return b.getvalue()

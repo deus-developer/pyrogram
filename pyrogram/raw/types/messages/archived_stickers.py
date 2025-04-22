@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,23 +60,23 @@ class ArchivedStickers(TLObject):  # type: ignore
             messages.GetArchivedStickers
     """
 
-    __slots__: List[str] = ["count", "sets"]
+    __slots__: list[str] = ["count", "sets"]
 
-    ID = 0x4fcba9c8
+    ID = 0x4FCBA9C8
     QUALNAME = "types.messages.ArchivedStickers"
 
-    def __init__(self, *, count: int, sets: List["raw.base.StickerSetCovered"]) -> None:
+    def __init__(self, *, count: int, sets: list["raw.base.StickerSetCovered"]) -> None:
         self.count = count  # int
         self.sets = sets  # Vector<StickerSetCovered>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ArchivedStickers":
         # No flags
-        
+
         count = Int.read(b)
-        
+
         sets = TLObject.read(b)
-        
+
         return ArchivedStickers(count=count, sets=sets)
 
     def write(self, *args) -> bytes:
@@ -81,9 +84,9 @@ class ArchivedStickers(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.count))
-        
+
         b.write(Vector(self.sets))
-        
+
         return b.getvalue()

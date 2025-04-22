@@ -18,6 +18,7 @@
 
 import pyrogram
 from pyrogram import raw, types
+
 from .menu_button import MenuButton
 
 
@@ -37,7 +38,7 @@ class MenuButtonWebApp(MenuButton):
     def __init__(
         self,
         text: str,
-        web_app: "types.WebAppInfo"
+        web_app: "types.WebAppInfo",
     ):
         super().__init__("web_app")
 
@@ -47,5 +48,5 @@ class MenuButtonWebApp(MenuButton):
     async def write(self, client: "pyrogram.Client") -> "raw.types.BotMenuButton":
         return raw.types.BotMenuButton(
             text=self.text,
-            url=self.web_app.url
+            url=self.web_app.url,
         )

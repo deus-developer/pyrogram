@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,24 +50,34 @@ class ChannelAdminLogEventActionParticipantJoinByInvite(TLObject):  # type: igno
 
     """
 
-    __slots__: List[str] = ["invite", "via_chatlist"]
+    __slots__: list[str] = ["invite", "via_chatlist"]
 
-    ID = 0xfe9fc158
+    ID = 0xFE9FC158
     QUALNAME = "types.ChannelAdminLogEventActionParticipantJoinByInvite"
 
-    def __init__(self, *, invite: "raw.base.ExportedChatInvite", via_chatlist: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        invite: "raw.base.ExportedChatInvite",
+        via_chatlist: bool | None = None,
+    ) -> None:
         self.invite = invite  # ExportedChatInvite
         self.via_chatlist = via_chatlist  # flags.0?true
 
     @staticmethod
-    def read(b: BytesIO, *args: Any) -> "ChannelAdminLogEventActionParticipantJoinByInvite":
-        
+    def read(
+        b: BytesIO,
+        *args: Any,
+    ) -> "ChannelAdminLogEventActionParticipantJoinByInvite":
         flags = Int.read(b)
-        
+
         via_chatlist = True if flags & (1 << 0) else False
         invite = TLObject.read(b)
-        
-        return ChannelAdminLogEventActionParticipantJoinByInvite(invite=invite, via_chatlist=via_chatlist)
+
+        return ChannelAdminLogEventActionParticipantJoinByInvite(
+            invite=invite,
+            via_chatlist=via_chatlist,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -74,7 +86,7 @@ class ChannelAdminLogEventActionParticipantJoinByInvite(TLObject):  # type: igno
         flags = 0
         flags |= (1 << 0) if self.via_chatlist else 0
         b.write(Int(flags))
-        
+
         b.write(self.invite.write())
-        
+
         return b.getvalue()

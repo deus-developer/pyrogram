@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,19 +46,18 @@ class ReplyKeyboardHide(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["selective"]
+    __slots__: list[str] = ["selective"]
 
-    ID = 0xa03e5b85
+    ID = 0xA03E5B85
     QUALNAME = "types.ReplyKeyboardHide"
 
-    def __init__(self, *, selective: Optional[bool] = None) -> None:
+    def __init__(self, *, selective: bool | None = None) -> None:
         self.selective = selective  # flags.2?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ReplyKeyboardHide":
-        
         flags = Int.read(b)
-        
+
         selective = True if flags & (1 << 2) else False
         return ReplyKeyboardHide(selective=selective)
 
@@ -68,5 +68,5 @@ class ReplyKeyboardHide(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 2) if self.selective else 0
         b.write(Int(flags))
-        
+
         return b.getvalue()

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SaveAppLog(TLObject):  # type: ignore
+class SaveAppLog(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,20 +48,20 @@ class SaveAppLog(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["events"]
+    __slots__: list[str] = ["events"]
 
-    ID = 0x6f02f748
+    ID = 0x6F02F748
     QUALNAME = "functions.help.SaveAppLog"
 
-    def __init__(self, *, events: List["raw.base.InputAppEvent"]) -> None:
+    def __init__(self, *, events: list["raw.base.InputAppEvent"]) -> None:
         self.events = events  # Vector<InputAppEvent>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SaveAppLog":
         # No flags
-        
+
         events = TLObject.read(b)
-        
+
         return SaveAppLog(events=events)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class SaveAppLog(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.events))
-        
+
         return b.getvalue()

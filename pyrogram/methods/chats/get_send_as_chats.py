@@ -16,18 +16,16 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import List, Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class GetSendAsChats:
     async def get_send_as_chats(
         self: "pyrogram.Client",
-        chat_id: Union[int, str]
-    ) -> List["types.Chat"]:
+        chat_id: int | str,
+    ) -> list["types.Chat"]:
         """Get the list of "send_as" chats available.
 
         .. include:: /_includes/usable-by/users.rst
@@ -47,16 +45,26 @@ class GetSendAsChats:
         """
         r = await self.invoke(
             raw.functions.channels.GetSendAs(
-                peer=await self.resolve_peer(chat_id)
-            )
+                peer=await self.resolve_peer(chat_id),
+            ),
         )
 
         send_as_chats = types.List()
 
         for p in r.peers:
             if isinstance(p.peer, raw.types.PeerUser):
-                send_as_chats.append(types.Chat.from_raw_tl_chat(self, self.entity_cache.get_user(user_id=p.peer.user_id)))
+                send_as_chats.append(
+                    types.Chat.from_raw_tl_chat(
+                        self,
+                        self.entity_cache.get_user(user_id=p.peer.user_id),
+                    ),
+                )
             else:
-                send_as_chats.append(types.Chat.from_raw_tl_chat(self, self.entity_cache.get_channel(channel_id=p.peer.channel_id)))
+                send_as_chats.append(
+                    types.Chat.from_raw_tl_chat(
+                        self,
+                        self.entity_cache.get_channel(channel_id=p.peer.channel_id),
+                    ),
+                )
 
         return send_as_chats

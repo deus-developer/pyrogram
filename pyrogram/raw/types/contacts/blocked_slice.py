@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -63,12 +66,19 @@ class BlockedSlice(TLObject):  # type: ignore
             contacts.GetBlocked
     """
 
-    __slots__: List[str] = ["count", "blocked", "chats", "users"]
+    __slots__: list[str] = ["blocked", "chats", "count", "users"]
 
-    ID = 0xe1664194
+    ID = 0xE1664194
     QUALNAME = "types.contacts.BlockedSlice"
 
-    def __init__(self, *, count: int, blocked: List["raw.base.PeerBlocked"], chats: List["raw.base.Chat"], users: List["raw.base.User"]) -> None:
+    def __init__(
+        self,
+        *,
+        count: int,
+        blocked: list["raw.base.PeerBlocked"],
+        chats: list["raw.base.Chat"],
+        users: list["raw.base.User"],
+    ) -> None:
         self.count = count  # int
         self.blocked = blocked  # Vector<PeerBlocked>
         self.chats = chats  # Vector<Chat>
@@ -77,15 +87,15 @@ class BlockedSlice(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "BlockedSlice":
         # No flags
-        
+
         count = Int.read(b)
-        
+
         blocked = TLObject.read(b)
-        
+
         chats = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
+
         return BlockedSlice(count=count, blocked=blocked, chats=chats, users=users)
 
     def write(self, *args) -> bytes:
@@ -93,13 +103,13 @@ class BlockedSlice(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.count))
-        
+
         b.write(Vector(self.blocked))
-        
+
         b.write(Vector(self.chats))
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

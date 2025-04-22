@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,9 +59,9 @@ class GroupCallStreamRtmpUrl(TLObject):  # type: ignore
             phone.GetGroupCallStreamRtmpUrl
     """
 
-    __slots__: List[str] = ["url", "key"]
+    __slots__: list[str] = ["key", "url"]
 
-    ID = 0x2dbf3432
+    ID = 0x2DBF3432
     QUALNAME = "types.phone.GroupCallStreamRtmpUrl"
 
     def __init__(self, *, url: str, key: str) -> None:
@@ -69,11 +71,11 @@ class GroupCallStreamRtmpUrl(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GroupCallStreamRtmpUrl":
         # No flags
-        
+
         url = String.read(b)
-        
+
         key = String.read(b)
-        
+
         return GroupCallStreamRtmpUrl(url=url, key=key)
 
     def write(self, *args) -> bytes:
@@ -81,9 +83,9 @@ class GroupCallStreamRtmpUrl(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.url))
-        
+
         b.write(String(self.key))
-        
+
         return b.getvalue()

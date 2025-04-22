@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -93,12 +97,44 @@ class ChatInvite(TLObject):  # type: ignore
             messages.CheckChatInvite
     """
 
-    __slots__: List[str] = ["title", "photo", "participants_count", "color", "channel", "broadcast", "public", "megagroup", "request_needed", "verified", "scam", "fake", "about", "participants"]
+    __slots__: list[str] = [
+        "about",
+        "broadcast",
+        "channel",
+        "color",
+        "fake",
+        "megagroup",
+        "participants",
+        "participants_count",
+        "photo",
+        "public",
+        "request_needed",
+        "scam",
+        "title",
+        "verified",
+    ]
 
-    ID = 0xcde0ec40
+    ID = 0xCDE0EC40
     QUALNAME = "types.ChatInvite"
 
-    def __init__(self, *, title: str, photo: "raw.base.Photo", participants_count: int, color: int, channel: Optional[bool] = None, broadcast: Optional[bool] = None, public: Optional[bool] = None, megagroup: Optional[bool] = None, request_needed: Optional[bool] = None, verified: Optional[bool] = None, scam: Optional[bool] = None, fake: Optional[bool] = None, about: Optional[str] = None, participants: Optional[List["raw.base.User"]] = None) -> None:
+    def __init__(
+        self,
+        *,
+        title: str,
+        photo: "raw.base.Photo",
+        participants_count: int,
+        color: int,
+        channel: bool | None = None,
+        broadcast: bool | None = None,
+        public: bool | None = None,
+        megagroup: bool | None = None,
+        request_needed: bool | None = None,
+        verified: bool | None = None,
+        scam: bool | None = None,
+        fake: bool | None = None,
+        about: str | None = None,
+        participants: list["raw.base.User"] | None = None,
+    ) -> None:
         self.title = title  # string
         self.photo = photo  # Photo
         self.participants_count = participants_count  # int
@@ -116,9 +152,8 @@ class ChatInvite(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChatInvite":
-        
         flags = Int.read(b)
-        
+
         channel = True if flags & (1 << 0) else False
         broadcast = True if flags & (1 << 1) else False
         public = True if flags & (1 << 2) else False
@@ -128,17 +163,32 @@ class ChatInvite(TLObject):  # type: ignore
         scam = True if flags & (1 << 8) else False
         fake = True if flags & (1 << 9) else False
         title = String.read(b)
-        
+
         about = String.read(b) if flags & (1 << 5) else None
         photo = TLObject.read(b)
-        
+
         participants_count = Int.read(b)
-        
+
         participants = TLObject.read(b) if flags & (1 << 4) else []
-        
+
         color = Int.read(b)
-        
-        return ChatInvite(title=title, photo=photo, participants_count=participants_count, color=color, channel=channel, broadcast=broadcast, public=public, megagroup=megagroup, request_needed=request_needed, verified=verified, scam=scam, fake=fake, about=about, participants=participants)
+
+        return ChatInvite(
+            title=title,
+            photo=photo,
+            participants_count=participants_count,
+            color=color,
+            channel=channel,
+            broadcast=broadcast,
+            public=public,
+            megagroup=megagroup,
+            request_needed=request_needed,
+            verified=verified,
+            scam=scam,
+            fake=fake,
+            about=about,
+            participants=participants,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -156,19 +206,19 @@ class ChatInvite(TLObject):  # type: ignore
         flags |= (1 << 5) if self.about is not None else 0
         flags |= (1 << 4) if self.participants else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.title))
-        
+
         if self.about is not None:
             b.write(String(self.about))
-        
+
         b.write(self.photo.write())
-        
+
         b.write(Int(self.participants_count))
-        
+
         if self.participants is not None:
             b.write(Vector(self.participants))
-        
+
         b.write(Int(self.color))
-        
+
         return b.getvalue()

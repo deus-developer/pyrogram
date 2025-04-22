@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,12 +60,26 @@ class SentCodeTypeFirebaseSms(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["length", "nonce", "play_integrity_nonce", "receipt", "push_timeout"]
+    __slots__: list[str] = [
+        "length",
+        "nonce",
+        "play_integrity_nonce",
+        "push_timeout",
+        "receipt",
+    ]
 
-    ID = 0x13c90f17
+    ID = 0x13C90F17
     QUALNAME = "types.auth.SentCodeTypeFirebaseSms"
 
-    def __init__(self, *, length: int, nonce: Optional[bytes] = None, play_integrity_nonce: Optional[bytes] = None, receipt: Optional[str] = None, push_timeout: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        length: int,
+        nonce: bytes | None = None,
+        play_integrity_nonce: bytes | None = None,
+        receipt: str | None = None,
+        push_timeout: int | None = None,
+    ) -> None:
         self.length = length  # int
         self.nonce = nonce  # flags.0?bytes
         self.play_integrity_nonce = play_integrity_nonce  # flags.2?bytes
@@ -71,16 +88,21 @@ class SentCodeTypeFirebaseSms(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SentCodeTypeFirebaseSms":
-        
         flags = Int.read(b)
-        
+
         nonce = Bytes.read(b) if flags & (1 << 0) else None
         play_integrity_nonce = Bytes.read(b) if flags & (1 << 2) else None
         receipt = String.read(b) if flags & (1 << 1) else None
         push_timeout = Int.read(b) if flags & (1 << 1) else None
         length = Int.read(b)
-        
-        return SentCodeTypeFirebaseSms(length=length, nonce=nonce, play_integrity_nonce=play_integrity_nonce, receipt=receipt, push_timeout=push_timeout)
+
+        return SentCodeTypeFirebaseSms(
+            length=length,
+            nonce=nonce,
+            play_integrity_nonce=play_integrity_nonce,
+            receipt=receipt,
+            push_timeout=push_timeout,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -92,19 +114,19 @@ class SentCodeTypeFirebaseSms(TLObject):  # type: ignore
         flags |= (1 << 1) if self.receipt is not None else 0
         flags |= (1 << 1) if self.push_timeout is not None else 0
         b.write(Int(flags))
-        
+
         if self.nonce is not None:
             b.write(Bytes(self.nonce))
-        
+
         if self.play_integrity_nonce is not None:
             b.write(Bytes(self.play_integrity_nonce))
-        
+
         if self.receipt is not None:
             b.write(String(self.receipt))
-        
+
         if self.push_timeout is not None:
             b.write(Int(self.push_timeout))
-        
+
         b.write(Int(self.length))
-        
+
         return b.getvalue()

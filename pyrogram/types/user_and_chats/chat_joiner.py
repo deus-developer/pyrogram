@@ -17,10 +17,10 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Dict
 
 import pyrogram
 from pyrogram import raw, types, utils
+
 from ..object import Object
 
 
@@ -68,14 +68,20 @@ class ChatJoiner(Object):
         joiner: "raw.base.ChatInviteImporter",
     ) -> "ChatJoiner":
         return ChatJoiner(
-            user=types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=joiner.user_id)),
+            user=types.User.from_raw_tl(
+                client,
+                client.entity_cache.get_user(user_id=joiner.user_id),
+            ),
             date=utils.timestamp_to_datetime(joiner.date),
             pending=joiner.requested,
             bio=joiner.about,
             approved_by=(
-                types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=joiner.approved_by))
+                types.User.from_raw_tl(
+                    client,
+                    client.entity_cache.get_user(user_id=joiner.approved_by),
+                )
                 if joiner.approved_by
                 else None
             ),
-            client=client
+            client=client,
         )

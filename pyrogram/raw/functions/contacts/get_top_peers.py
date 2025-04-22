@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetTopPeers(TLObject):  # type: ignore
+class GetTopPeers(TLFunction["raw.base.contacts.TopPeers"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -75,12 +77,38 @@ class GetTopPeers(TLObject):  # type: ignore
         :obj:`contacts.TopPeers <pyrogram.raw.base.contacts.TopPeers>`
     """
 
-    __slots__: List[str] = ["offset", "limit", "hash", "correspondents", "bots_pm", "bots_inline", "phone_calls", "forward_users", "forward_chats", "groups", "channels"]
+    __slots__: list[str] = [
+        "bots_inline",
+        "bots_pm",
+        "channels",
+        "correspondents",
+        "forward_chats",
+        "forward_users",
+        "groups",
+        "hash",
+        "limit",
+        "offset",
+        "phone_calls",
+    ]
 
-    ID = 0x973478b6
+    ID = 0x973478B6
     QUALNAME = "functions.contacts.GetTopPeers"
 
-    def __init__(self, *, offset: int, limit: int, hash: int, correspondents: Optional[bool] = None, bots_pm: Optional[bool] = None, bots_inline: Optional[bool] = None, phone_calls: Optional[bool] = None, forward_users: Optional[bool] = None, forward_chats: Optional[bool] = None, groups: Optional[bool] = None, channels: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        offset: int,
+        limit: int,
+        hash: int,
+        correspondents: bool | None = None,
+        bots_pm: bool | None = None,
+        bots_inline: bool | None = None,
+        phone_calls: bool | None = None,
+        forward_users: bool | None = None,
+        forward_chats: bool | None = None,
+        groups: bool | None = None,
+        channels: bool | None = None,
+    ) -> None:
         self.offset = offset  # int
         self.limit = limit  # int
         self.hash = hash  # long
@@ -95,9 +123,8 @@ class GetTopPeers(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetTopPeers":
-        
         flags = Int.read(b)
-        
+
         correspondents = True if flags & (1 << 0) else False
         bots_pm = True if flags & (1 << 1) else False
         bots_inline = True if flags & (1 << 2) else False
@@ -107,12 +134,24 @@ class GetTopPeers(TLObject):  # type: ignore
         groups = True if flags & (1 << 10) else False
         channels = True if flags & (1 << 15) else False
         offset = Int.read(b)
-        
+
         limit = Int.read(b)
-        
+
         hash = Long.read(b)
-        
-        return GetTopPeers(offset=offset, limit=limit, hash=hash, correspondents=correspondents, bots_pm=bots_pm, bots_inline=bots_inline, phone_calls=phone_calls, forward_users=forward_users, forward_chats=forward_chats, groups=groups, channels=channels)
+
+        return GetTopPeers(
+            offset=offset,
+            limit=limit,
+            hash=hash,
+            correspondents=correspondents,
+            bots_pm=bots_pm,
+            bots_inline=bots_inline,
+            phone_calls=phone_calls,
+            forward_users=forward_users,
+            forward_chats=forward_chats,
+            groups=groups,
+            channels=channels,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -128,11 +167,11 @@ class GetTopPeers(TLObject):  # type: ignore
         flags |= (1 << 10) if self.groups else 0
         flags |= (1 << 15) if self.channels else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.offset))
-        
+
         b.write(Int(self.limit))
-        
+
         b.write(Long(self.hash))
-        
+
         return b.getvalue()

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -86,12 +89,30 @@ class MessagesSlice(TLObject):  # type: ignore
             channels.SearchPosts
     """
 
-    __slots__: List[str] = ["count", "messages", "chats", "users", "inexact", "next_rate", "offset_id_offset"]
+    __slots__: list[str] = [
+        "chats",
+        "count",
+        "inexact",
+        "messages",
+        "next_rate",
+        "offset_id_offset",
+        "users",
+    ]
 
-    ID = 0x3a54685e
+    ID = 0x3A54685E
     QUALNAME = "types.messages.MessagesSlice"
 
-    def __init__(self, *, count: int, messages: List["raw.base.Message"], chats: List["raw.base.Chat"], users: List["raw.base.User"], inexact: Optional[bool] = None, next_rate: Optional[int] = None, offset_id_offset: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        count: int,
+        messages: list["raw.base.Message"],
+        chats: list["raw.base.Chat"],
+        users: list["raw.base.User"],
+        inexact: bool | None = None,
+        next_rate: int | None = None,
+        offset_id_offset: int | None = None,
+    ) -> None:
         self.count = count  # int
         self.messages = messages  # Vector<Message>
         self.chats = chats  # Vector<Chat>
@@ -102,21 +123,28 @@ class MessagesSlice(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessagesSlice":
-        
         flags = Int.read(b)
-        
+
         inexact = True if flags & (1 << 1) else False
         count = Int.read(b)
-        
+
         next_rate = Int.read(b) if flags & (1 << 0) else None
         offset_id_offset = Int.read(b) if flags & (1 << 2) else None
         messages = TLObject.read(b)
-        
+
         chats = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
-        return MessagesSlice(count=count, messages=messages, chats=chats, users=users, inexact=inexact, next_rate=next_rate, offset_id_offset=offset_id_offset)
+
+        return MessagesSlice(
+            count=count,
+            messages=messages,
+            chats=chats,
+            users=users,
+            inexact=inexact,
+            next_rate=next_rate,
+            offset_id_offset=offset_id_offset,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -127,19 +155,19 @@ class MessagesSlice(TLObject):  # type: ignore
         flags |= (1 << 0) if self.next_rate is not None else 0
         flags |= (1 << 2) if self.offset_id_offset is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.count))
-        
+
         if self.next_rate is not None:
             b.write(Int(self.next_rate))
-        
+
         if self.offset_id_offset is not None:
             b.write(Int(self.offset_id_offset))
-        
+
         b.write(Vector(self.messages))
-        
+
         b.write(Vector(self.chats))
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

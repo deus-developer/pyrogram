@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,19 +46,18 @@ class WebPageNotModified(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["cached_page_views"]
+    __slots__: list[str] = ["cached_page_views"]
 
-    ID = 0x7311ca11
+    ID = 0x7311CA11
     QUALNAME = "types.WebPageNotModified"
 
-    def __init__(self, *, cached_page_views: Optional[int] = None) -> None:
+    def __init__(self, *, cached_page_views: int | None = None) -> None:
         self.cached_page_views = cached_page_views  # flags.0?int
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "WebPageNotModified":
-        
         flags = Int.read(b)
-        
+
         cached_page_views = Int.read(b) if flags & (1 << 0) else None
         return WebPageNotModified(cached_page_views=cached_page_views)
 
@@ -68,8 +68,8 @@ class WebPageNotModified(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.cached_page_views is not None else 0
         b.write(Int(flags))
-        
+
         if self.cached_page_views is not None:
             b.write(Int(self.cached_page_views))
-        
+
         return b.getvalue()

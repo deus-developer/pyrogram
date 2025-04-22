@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +55,9 @@ class OutboxReadDate(TLObject):  # type: ignore
             messages.GetOutboxReadDate
     """
 
-    __slots__: List[str] = ["date"]
+    __slots__: list[str] = ["date"]
 
-    ID = 0x3bb842ac
+    ID = 0x3BB842AC
     QUALNAME = "types.OutboxReadDate"
 
     def __init__(self, *, date: int) -> None:
@@ -65,9 +66,9 @@ class OutboxReadDate(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "OutboxReadDate":
         # No flags
-        
+
         date = Int.read(b)
-        
+
         return OutboxReadDate(date=date)
 
     def write(self, *args) -> bytes:
@@ -75,7 +76,7 @@ class OutboxReadDate(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.date))
-        
+
         return b.getvalue()

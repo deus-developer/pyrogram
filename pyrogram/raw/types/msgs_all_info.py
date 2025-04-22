@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,23 +52,23 @@ class MsgsAllInfo(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["msg_ids", "info"]
+    __slots__: list[str] = ["info", "msg_ids"]
 
-    ID = 0x8cc0d131
+    ID = 0x8CC0D131
     QUALNAME = "types.MsgsAllInfo"
 
-    def __init__(self, *, msg_ids: List[int], info: str) -> None:
+    def __init__(self, *, msg_ids: list[int], info: str) -> None:
         self.msg_ids = msg_ids  # Vector<long>
         self.info = info  # string
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MsgsAllInfo":
         # No flags
-        
+
         msg_ids = TLObject.read(b, Long)
-        
+
         info = String.read(b)
-        
+
         return MsgsAllInfo(msg_ids=msg_ids, info=info)
 
     def write(self, *args) -> bytes:
@@ -72,9 +76,9 @@ class MsgsAllInfo(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.msg_ids, Long))
-        
+
         b.write(String(self.info))
-        
+
         return b.getvalue()

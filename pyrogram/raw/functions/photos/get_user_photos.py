@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetUserPhotos(TLObject):  # type: ignore
+class GetUserPhotos(TLFunction["raw.base.photos.Photos"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +57,19 @@ class GetUserPhotos(TLObject):  # type: ignore
         :obj:`photos.Photos <pyrogram.raw.base.photos.Photos>`
     """
 
-    __slots__: List[str] = ["user_id", "offset", "max_id", "limit"]
+    __slots__: list[str] = ["limit", "max_id", "offset", "user_id"]
 
-    ID = 0x91cd32a8
+    ID = 0x91CD32A8
     QUALNAME = "functions.photos.GetUserPhotos"
 
-    def __init__(self, *, user_id: "raw.base.InputUser", offset: int, max_id: int, limit: int) -> None:
+    def __init__(
+        self,
+        *,
+        user_id: "raw.base.InputUser",
+        offset: int,
+        max_id: int,
+        limit: int,
+    ) -> None:
         self.user_id = user_id  # InputUser
         self.offset = offset  # int
         self.max_id = max_id  # long
@@ -68,15 +78,15 @@ class GetUserPhotos(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetUserPhotos":
         # No flags
-        
+
         user_id = TLObject.read(b)
-        
+
         offset = Int.read(b)
-        
+
         max_id = Long.read(b)
-        
+
         limit = Int.read(b)
-        
+
         return GetUserPhotos(user_id=user_id, offset=offset, max_id=max_id, limit=limit)
 
     def write(self, *args) -> bytes:
@@ -84,13 +94,13 @@ class GetUserPhotos(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.user_id.write())
-        
+
         b.write(Int(self.offset))
-        
+
         b.write(Long(self.max_id))
-        
+
         b.write(Int(self.limit))
-        
+
         return b.getvalue()

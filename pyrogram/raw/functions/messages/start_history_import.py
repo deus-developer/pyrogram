@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class StartHistoryImport(TLObject):  # type: ignore
+class StartHistoryImport(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class StartHistoryImport(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["peer", "import_id"]
+    __slots__: list[str] = ["import_id", "peer"]
 
-    ID = 0xb43df344
+    ID = 0xB43DF344
     QUALNAME = "functions.messages.StartHistoryImport"
 
     def __init__(self, *, peer: "raw.base.InputPeer", import_id: int) -> None:
@@ -60,11 +63,11 @@ class StartHistoryImport(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "StartHistoryImport":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         import_id = Long.read(b)
-        
+
         return StartHistoryImport(peer=peer, import_id=import_id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class StartHistoryImport(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Long(self.import_id))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,9 +53,9 @@ class RestrictionReason(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["platform", "reason", "text"]
+    __slots__: list[str] = ["platform", "reason", "text"]
 
-    ID = 0xd072acb4
+    ID = 0xD072ACB4
     QUALNAME = "types.RestrictionReason"
 
     def __init__(self, *, platform: str, reason: str, text: str) -> None:
@@ -64,13 +66,13 @@ class RestrictionReason(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "RestrictionReason":
         # No flags
-        
+
         platform = String.read(b)
-        
+
         reason = String.read(b)
-        
+
         text = String.read(b)
-        
+
         return RestrictionReason(platform=platform, reason=reason, text=text)
 
     def write(self, *args) -> bytes:
@@ -78,11 +80,11 @@ class RestrictionReason(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.platform))
-        
+
         b.write(String(self.reason))
-        
+
         b.write(String(self.text))
-        
+
         return b.getvalue()

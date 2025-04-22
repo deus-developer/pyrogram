@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,22 +50,21 @@ class UpdateChannelTooLong(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["channel_id", "pts"]
+    __slots__: list[str] = ["channel_id", "pts"]
 
-    ID = 0x108d941f
+    ID = 0x108D941F
     QUALNAME = "types.UpdateChannelTooLong"
 
-    def __init__(self, *, channel_id: int, pts: Optional[int] = None) -> None:
+    def __init__(self, *, channel_id: int, pts: int | None = None) -> None:
         self.channel_id = channel_id  # long
         self.pts = pts  # flags.0?int
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateChannelTooLong":
-        
         flags = Int.read(b)
-        
+
         channel_id = Long.read(b)
-        
+
         pts = Int.read(b) if flags & (1 << 0) else None
         return UpdateChannelTooLong(channel_id=channel_id, pts=pts)
 
@@ -74,10 +75,10 @@ class UpdateChannelTooLong(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.pts is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.channel_id))
-        
+
         if self.pts is not None:
             b.write(Int(self.pts))
-        
+
         return b.getvalue()

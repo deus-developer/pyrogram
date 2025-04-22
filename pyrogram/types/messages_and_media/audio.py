@@ -17,12 +17,11 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import List
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
+from pyrogram import raw, types, utils
 from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType
+
 from ..object import Object
 
 
@@ -75,7 +74,7 @@ class Audio(Object):
         mime_type: str = None,
         file_size: int = None,
         date: datetime = None,
-        thumbs: List["types.Thumbnail"] = None
+        thumbs: list["types.Thumbnail"] = None,
     ):
         super().__init__(client)
 
@@ -95,7 +94,7 @@ class Audio(Object):
         client,
         audio: "raw.types.Document",
         audio_attributes: "raw.types.DocumentAttributeAudio",
-        file_name: str
+        file_name: str,
     ) -> "Audio":
         return Audio(
             file_id=FileId(
@@ -103,11 +102,11 @@ class Audio(Object):
                 dc_id=audio.dc_id,
                 media_id=audio.id,
                 access_hash=audio.access_hash,
-                file_reference=audio.file_reference
+                file_reference=audio.file_reference,
             ).encode(),
             file_unique_id=FileUniqueId(
                 file_unique_type=FileUniqueType.DOCUMENT,
-                media_id=audio.id
+                media_id=audio.id,
             ).encode(),
             duration=audio_attributes.duration,
             performer=audio_attributes.performer,
@@ -117,5 +116,5 @@ class Audio(Object):
             file_name=file_name,
             date=utils.timestamp_to_datetime(audio.date),
             thumbs=types.Thumbnail.from_raw_tl(client, audio),
-            client=client
+            client=client,
         )

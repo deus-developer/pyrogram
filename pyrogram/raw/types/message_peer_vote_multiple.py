@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,12 +55,18 @@ class MessagePeerVoteMultiple(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "options", "date"]
+    __slots__: list[str] = ["date", "options", "peer"]
 
-    ID = 0x4628f6e6
+    ID = 0x4628F6E6
     QUALNAME = "types.MessagePeerVoteMultiple"
 
-    def __init__(self, *, peer: "raw.base.Peer", options: List[bytes], date: int) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.Peer",
+        options: list[bytes],
+        date: int,
+    ) -> None:
         self.peer = peer  # Peer
         self.options = options  # Vector<bytes>
         self.date = date  # int
@@ -64,13 +74,13 @@ class MessagePeerVoteMultiple(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessagePeerVoteMultiple":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         options = TLObject.read(b, Bytes)
-        
+
         date = Int.read(b)
-        
+
         return MessagePeerVoteMultiple(peer=peer, options=options, date=date)
 
     def write(self, *args) -> bytes:
@@ -78,11 +88,11 @@ class MessagePeerVoteMultiple(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Vector(self.options, Bytes))
-        
+
         b.write(Int(self.date))
-        
+
         return b.getvalue()

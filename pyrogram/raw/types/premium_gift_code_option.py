@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -69,12 +72,28 @@ class PremiumGiftCodeOption(TLObject):  # type: ignore
             payments.GetPremiumGiftCodeOptions
     """
 
-    __slots__: List[str] = ["users", "months", "currency", "amount", "store_product", "store_quantity"]
+    __slots__: list[str] = [
+        "amount",
+        "currency",
+        "months",
+        "store_product",
+        "store_quantity",
+        "users",
+    ]
 
-    ID = 0x257e962b
+    ID = 0x257E962B
     QUALNAME = "types.PremiumGiftCodeOption"
 
-    def __init__(self, *, users: int, months: int, currency: str, amount: int, store_product: Optional[str] = None, store_quantity: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        users: int,
+        months: int,
+        currency: str,
+        amount: int,
+        store_product: str | None = None,
+        store_quantity: int | None = None,
+    ) -> None:
         self.users = users  # int
         self.months = months  # int
         self.currency = currency  # string
@@ -84,20 +103,26 @@ class PremiumGiftCodeOption(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PremiumGiftCodeOption":
-        
         flags = Int.read(b)
-        
+
         users = Int.read(b)
-        
+
         months = Int.read(b)
-        
+
         store_product = String.read(b) if flags & (1 << 0) else None
         store_quantity = Int.read(b) if flags & (1 << 1) else None
         currency = String.read(b)
-        
+
         amount = Long.read(b)
-        
-        return PremiumGiftCodeOption(users=users, months=months, currency=currency, amount=amount, store_product=store_product, store_quantity=store_quantity)
+
+        return PremiumGiftCodeOption(
+            users=users,
+            months=months,
+            currency=currency,
+            amount=amount,
+            store_product=store_product,
+            store_quantity=store_quantity,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -107,19 +132,19 @@ class PremiumGiftCodeOption(TLObject):  # type: ignore
         flags |= (1 << 0) if self.store_product is not None else 0
         flags |= (1 << 1) if self.store_quantity is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.users))
-        
+
         b.write(Int(self.months))
-        
+
         if self.store_product is not None:
             b.write(String(self.store_product))
-        
+
         if self.store_quantity is not None:
             b.write(Int(self.store_quantity))
-        
+
         b.write(String(self.currency))
-        
+
         b.write(Long(self.amount))
-        
+
         return b.getvalue()

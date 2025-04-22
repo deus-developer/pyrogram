@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class EditChatPhoto(TLObject):  # type: ignore
+class EditChatPhoto(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class EditChatPhoto(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["chat_id", "photo"]
+    __slots__: list[str] = ["chat_id", "photo"]
 
-    ID = 0x35ddd674
+    ID = 0x35DDD674
     QUALNAME = "functions.messages.EditChatPhoto"
 
     def __init__(self, *, chat_id: int, photo: "raw.base.InputChatPhoto") -> None:
@@ -60,11 +63,11 @@ class EditChatPhoto(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EditChatPhoto":
         # No flags
-        
+
         chat_id = Long.read(b)
-        
+
         photo = TLObject.read(b)
-        
+
         return EditChatPhoto(chat_id=chat_id, photo=photo)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class EditChatPhoto(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.chat_id))
-        
+
         b.write(self.photo.write())
-        
+
         return b.getvalue()

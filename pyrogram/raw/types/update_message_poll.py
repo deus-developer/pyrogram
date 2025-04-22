@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,27 +54,32 @@ class UpdateMessagePoll(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["poll_id", "results", "poll"]
+    __slots__: list[str] = ["poll", "poll_id", "results"]
 
-    ID = 0xaca1657b
+    ID = 0xACA1657B
     QUALNAME = "types.UpdateMessagePoll"
 
-    def __init__(self, *, poll_id: int, results: "raw.base.PollResults", poll: "raw.base.Poll" = None) -> None:
+    def __init__(
+        self,
+        *,
+        poll_id: int,
+        results: "raw.base.PollResults",
+        poll: "raw.base.Poll" = None,
+    ) -> None:
         self.poll_id = poll_id  # long
         self.results = results  # PollResults
         self.poll = poll  # flags.0?Poll
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateMessagePoll":
-        
         flags = Int.read(b)
-        
+
         poll_id = Long.read(b)
-        
+
         poll = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         results = TLObject.read(b)
-        
+
         return UpdateMessagePoll(poll_id=poll_id, results=results, poll=poll)
 
     def write(self, *args) -> bytes:
@@ -81,12 +89,12 @@ class UpdateMessagePoll(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.poll is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.poll_id))
-        
+
         if self.poll is not None:
             b.write(self.poll.write())
-        
+
         b.write(self.results.write())
-        
+
         return b.getvalue()

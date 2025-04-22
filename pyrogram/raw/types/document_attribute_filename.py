@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,7 +47,7 @@ class DocumentAttributeFilename(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["file_name"]
+    __slots__: list[str] = ["file_name"]
 
     ID = 0x15590068
     QUALNAME = "types.DocumentAttributeFilename"
@@ -56,9 +58,9 @@ class DocumentAttributeFilename(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DocumentAttributeFilename":
         # No flags
-        
+
         file_name = String.read(b)
-        
+
         return DocumentAttributeFilename(file_name=file_name)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class DocumentAttributeFilename(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.file_name))
-        
+
         return b.getvalue()

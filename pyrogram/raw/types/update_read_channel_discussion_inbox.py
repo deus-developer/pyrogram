@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,12 +59,26 @@ class UpdateReadChannelDiscussionInbox(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["channel_id", "top_msg_id", "read_max_id", "broadcast_id", "broadcast_post"]
+    __slots__: list[str] = [
+        "broadcast_id",
+        "broadcast_post",
+        "channel_id",
+        "read_max_id",
+        "top_msg_id",
+    ]
 
-    ID = 0xd6b19546
+    ID = 0xD6B19546
     QUALNAME = "types.UpdateReadChannelDiscussionInbox"
 
-    def __init__(self, *, channel_id: int, top_msg_id: int, read_max_id: int, broadcast_id: Optional[int] = None, broadcast_post: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        channel_id: int,
+        top_msg_id: int,
+        read_max_id: int,
+        broadcast_id: int | None = None,
+        broadcast_post: int | None = None,
+    ) -> None:
         self.channel_id = channel_id  # long
         self.top_msg_id = top_msg_id  # int
         self.read_max_id = read_max_id  # int
@@ -71,18 +87,23 @@ class UpdateReadChannelDiscussionInbox(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateReadChannelDiscussionInbox":
-        
         flags = Int.read(b)
-        
+
         channel_id = Long.read(b)
-        
+
         top_msg_id = Int.read(b)
-        
+
         read_max_id = Int.read(b)
-        
+
         broadcast_id = Long.read(b) if flags & (1 << 0) else None
         broadcast_post = Int.read(b) if flags & (1 << 0) else None
-        return UpdateReadChannelDiscussionInbox(channel_id=channel_id, top_msg_id=top_msg_id, read_max_id=read_max_id, broadcast_id=broadcast_id, broadcast_post=broadcast_post)
+        return UpdateReadChannelDiscussionInbox(
+            channel_id=channel_id,
+            top_msg_id=top_msg_id,
+            read_max_id=read_max_id,
+            broadcast_id=broadcast_id,
+            broadcast_post=broadcast_post,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -92,17 +113,17 @@ class UpdateReadChannelDiscussionInbox(TLObject):  # type: ignore
         flags |= (1 << 0) if self.broadcast_id is not None else 0
         flags |= (1 << 0) if self.broadcast_post is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.channel_id))
-        
+
         b.write(Int(self.top_msg_id))
-        
+
         b.write(Int(self.read_max_id))
-        
+
         if self.broadcast_id is not None:
             b.write(Long(self.broadcast_id))
-        
+
         if self.broadcast_post is not None:
             b.write(Int(self.broadcast_post))
-        
+
         return b.getvalue()

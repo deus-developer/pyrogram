@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetDocumentByHash(TLObject):  # type: ignore
+class GetDocumentByHash(TLFunction["raw.base.Document"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,9 +55,9 @@ class GetDocumentByHash(TLObject):  # type: ignore
         :obj:`Document <pyrogram.raw.base.Document>`
     """
 
-    __slots__: List[str] = ["sha256", "size", "mime_type"]
+    __slots__: list[str] = ["mime_type", "sha256", "size"]
 
-    ID = 0xb1f2061f
+    ID = 0xB1F2061F
     QUALNAME = "functions.messages.GetDocumentByHash"
 
     def __init__(self, *, sha256: bytes, size: int, mime_type: str) -> None:
@@ -64,13 +68,13 @@ class GetDocumentByHash(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetDocumentByHash":
         # No flags
-        
+
         sha256 = Bytes.read(b)
-        
+
         size = Long.read(b)
-        
+
         mime_type = String.read(b)
-        
+
         return GetDocumentByHash(sha256=sha256, size=size, mime_type=mime_type)
 
     def write(self, *args) -> bytes:
@@ -78,11 +82,11 @@ class GetDocumentByHash(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Bytes(self.sha256))
-        
+
         b.write(Long(self.size))
-        
+
         b.write(String(self.mime_type))
-        
+
         return b.getvalue()

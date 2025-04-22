@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class RefundStarsCharge(TLObject):  # type: ignore
+class RefundStarsCharge(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class RefundStarsCharge(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["user_id", "charge_id"]
+    __slots__: list[str] = ["charge_id", "user_id"]
 
-    ID = 0x25ae8f4a
+    ID = 0x25AE8F4A
     QUALNAME = "functions.payments.RefundStarsCharge"
 
     def __init__(self, *, user_id: "raw.base.InputUser", charge_id: str) -> None:
@@ -60,11 +63,11 @@ class RefundStarsCharge(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "RefundStarsCharge":
         # No flags
-        
+
         user_id = TLObject.read(b)
-        
+
         charge_id = String.read(b)
-        
+
         return RefundStarsCharge(user_id=user_id, charge_id=charge_id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class RefundStarsCharge(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.user_id.write())
-        
+
         b.write(String(self.charge_id))
-        
+
         return b.getvalue()

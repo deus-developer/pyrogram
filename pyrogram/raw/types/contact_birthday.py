@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +51,9 @@ class ContactBirthday(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["contact_id", "birthday"]
+    __slots__: list[str] = ["birthday", "contact_id"]
 
-    ID = 0x1d998733
+    ID = 0x1D998733
     QUALNAME = "types.ContactBirthday"
 
     def __init__(self, *, contact_id: int, birthday: "raw.base.Birthday") -> None:
@@ -60,11 +63,11 @@ class ContactBirthday(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ContactBirthday":
         # No flags
-        
+
         contact_id = Long.read(b)
-        
+
         birthday = TLObject.read(b)
-        
+
         return ContactBirthday(contact_id=contact_id, birthday=birthday)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class ContactBirthday(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.contact_id))
-        
+
         b.write(self.birthday.write())
-        
+
         return b.getvalue()

@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetAuthorizationTTL(TLObject):  # type: ignore
+class SetAuthorizationTTL(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +46,9 @@ class SetAuthorizationTTL(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["authorization_ttl_days"]
+    __slots__: list[str] = ["authorization_ttl_days"]
 
-    ID = 0xbf899aa0
+    ID = 0xBF899AA0
     QUALNAME = "functions.account.SetAuthorizationTTL"
 
     def __init__(self, *, authorization_ttl_days: int) -> None:
@@ -56,9 +57,9 @@ class SetAuthorizationTTL(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetAuthorizationTTL":
         # No flags
-        
+
         authorization_ttl_days = Int.read(b)
-        
+
         return SetAuthorizationTTL(authorization_ttl_days=authorization_ttl_days)
 
     def write(self, *args) -> bytes:
@@ -66,7 +67,7 @@ class SetAuthorizationTTL(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.authorization_ttl_days))
-        
+
         return b.getvalue()

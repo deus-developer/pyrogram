@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -66,12 +69,20 @@ class StarsTopupOption(TLObject):  # type: ignore
             payments.GetStarsTopupOptions
     """
 
-    __slots__: List[str] = ["stars", "currency", "amount", "extended", "store_product"]
+    __slots__: list[str] = ["amount", "currency", "extended", "stars", "store_product"]
 
-    ID = 0xbd915c0
+    ID = 0xBD915C0
     QUALNAME = "types.StarsTopupOption"
 
-    def __init__(self, *, stars: int, currency: str, amount: int, extended: Optional[bool] = None, store_product: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        stars: int,
+        currency: str,
+        amount: int,
+        extended: bool | None = None,
+        store_product: str | None = None,
+    ) -> None:
         self.stars = stars  # long
         self.currency = currency  # string
         self.amount = amount  # long
@@ -80,18 +91,23 @@ class StarsTopupOption(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "StarsTopupOption":
-        
         flags = Int.read(b)
-        
+
         extended = True if flags & (1 << 1) else False
         stars = Long.read(b)
-        
+
         store_product = String.read(b) if flags & (1 << 0) else None
         currency = String.read(b)
-        
+
         amount = Long.read(b)
-        
-        return StarsTopupOption(stars=stars, currency=currency, amount=amount, extended=extended, store_product=store_product)
+
+        return StarsTopupOption(
+            stars=stars,
+            currency=currency,
+            amount=amount,
+            extended=extended,
+            store_product=store_product,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -101,14 +117,14 @@ class StarsTopupOption(TLObject):  # type: ignore
         flags |= (1 << 1) if self.extended else 0
         flags |= (1 << 0) if self.store_product is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.stars))
-        
+
         if self.store_product is not None:
             b.write(String(self.store_product))
-        
+
         b.write(String(self.currency))
-        
+
         b.write(Long(self.amount))
-        
+
         return b.getvalue()

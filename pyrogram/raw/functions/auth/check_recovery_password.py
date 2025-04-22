@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class CheckRecoveryPassword(TLObject):  # type: ignore
+class CheckRecoveryPassword(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class CheckRecoveryPassword(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["code"]
+    __slots__: list[str] = ["code"]
 
-    ID = 0xd36bf79
+    ID = 0xD36BF79
     QUALNAME = "functions.auth.CheckRecoveryPassword"
 
     def __init__(self, *, code: str) -> None:
@@ -56,9 +58,9 @@ class CheckRecoveryPassword(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "CheckRecoveryPassword":
         # No flags
-        
+
         code = String.read(b)
-        
+
         return CheckRecoveryPassword(code=code)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class CheckRecoveryPassword(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.code))
-        
+
         return b.getvalue()

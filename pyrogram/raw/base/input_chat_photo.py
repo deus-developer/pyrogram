@@ -4,8 +4,10 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type InputChatPhoto = Union["raw.types.InputChatPhoto, raw.types.InputChatPhotoEmpty, raw.types.InputChatUploadedPhoto"]
+type InputChatPhoto = (
+    raw.types.InputChatPhoto
+    | raw.types.InputChatPhotoEmpty
+    | raw.types.InputChatUploadedPhoto
+)

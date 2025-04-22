@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class EmojiStatusUntil(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["document_id", "until"]
+    __slots__: list[str] = ["document_id", "until"]
 
-    ID = 0xfa30a8c7
+    ID = 0xFA30A8C7
     QUALNAME = "types.EmojiStatusUntil"
 
     def __init__(self, *, document_id: int, until: int) -> None:
@@ -60,11 +62,11 @@ class EmojiStatusUntil(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EmojiStatusUntil":
         # No flags
-        
+
         document_id = Long.read(b)
-        
+
         until = Int.read(b)
-        
+
         return EmojiStatusUntil(document_id=document_id, until=until)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class EmojiStatusUntil(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.document_id))
-        
+
         b.write(Int(self.until))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +47,9 @@ class UpdateLangPack(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["difference"]
+    __slots__: list[str] = ["difference"]
 
-    ID = 0x56022f4d
+    ID = 0x56022F4D
     QUALNAME = "types.UpdateLangPack"
 
     def __init__(self, *, difference: "raw.base.LangPackDifference") -> None:
@@ -56,9 +58,9 @@ class UpdateLangPack(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateLangPack":
         # No flags
-        
+
         difference = TLObject.read(b)
-        
+
         return UpdateLangPack(difference=difference)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class UpdateLangPack(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.difference.write())
-        
+
         return b.getvalue()

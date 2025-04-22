@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +47,9 @@ class InputMediaDice(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["emoticon"]
+    __slots__: list[str] = ["emoticon"]
 
-    ID = 0xe66fbf7b
+    ID = 0xE66FBF7B
     QUALNAME = "types.InputMediaDice"
 
     def __init__(self, *, emoticon: str) -> None:
@@ -56,9 +58,9 @@ class InputMediaDice(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputMediaDice":
         # No flags
-        
+
         emoticon = String.read(b)
-        
+
         return InputMediaDice(emoticon=emoticon)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class InputMediaDice(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.emoticon))
-        
+
         return b.getvalue()

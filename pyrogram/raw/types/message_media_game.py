@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -56,9 +58,9 @@ class MessageMediaGame(TLObject):  # type: ignore
             messages.UploadImportedMedia
     """
 
-    __slots__: List[str] = ["game"]
+    __slots__: list[str] = ["game"]
 
-    ID = 0xfdb19008
+    ID = 0xFDB19008
     QUALNAME = "types.MessageMediaGame"
 
     def __init__(self, *, game: "raw.base.Game") -> None:
@@ -67,9 +69,9 @@ class MessageMediaGame(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageMediaGame":
         # No flags
-        
+
         game = TLObject.read(b)
-        
+
         return MessageMediaGame(game=game)
 
     def write(self, *args) -> bytes:
@@ -77,7 +79,7 @@ class MessageMediaGame(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.game.write())
-        
+
         return b.getvalue()

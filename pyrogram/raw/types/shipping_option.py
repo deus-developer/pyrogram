@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,12 +55,18 @@ class ShippingOption(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "title", "prices"]
+    __slots__: list[str] = ["id", "prices", "title"]
 
-    ID = 0xb6213cdf
+    ID = 0xB6213CDF
     QUALNAME = "types.ShippingOption"
 
-    def __init__(self, *, id: str, title: str, prices: List["raw.base.LabeledPrice"]) -> None:
+    def __init__(
+        self,
+        *,
+        id: str,
+        title: str,
+        prices: list["raw.base.LabeledPrice"],
+    ) -> None:
         self.id = id  # string
         self.title = title  # string
         self.prices = prices  # Vector<LabeledPrice>
@@ -64,13 +74,13 @@ class ShippingOption(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ShippingOption":
         # No flags
-        
+
         id = String.read(b)
-        
+
         title = String.read(b)
-        
+
         prices = TLObject.read(b)
-        
+
         return ShippingOption(id=id, title=title, prices=prices)
 
     def write(self, *args) -> bytes:
@@ -78,11 +88,11 @@ class ShippingOption(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.id))
-        
+
         b.write(String(self.title))
-        
+
         b.write(Vector(self.prices))
-        
+
         return b.getvalue()

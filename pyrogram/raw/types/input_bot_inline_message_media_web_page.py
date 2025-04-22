@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -66,12 +70,32 @@ class InputBotInlineMessageMediaWebPage(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["message", "url", "invert_media", "force_large_media", "force_small_media", "optional", "entities", "reply_markup"]
+    __slots__: list[str] = [
+        "entities",
+        "force_large_media",
+        "force_small_media",
+        "invert_media",
+        "message",
+        "optional",
+        "reply_markup",
+        "url",
+    ]
 
-    ID = 0xbddcc510
+    ID = 0xBDDCC510
     QUALNAME = "types.InputBotInlineMessageMediaWebPage"
 
-    def __init__(self, *, message: str, url: str, invert_media: Optional[bool] = None, force_large_media: Optional[bool] = None, force_small_media: Optional[bool] = None, optional: Optional[bool] = None, entities: Optional[List["raw.base.MessageEntity"]] = None, reply_markup: "raw.base.ReplyMarkup" = None) -> None:
+    def __init__(
+        self,
+        *,
+        message: str,
+        url: str,
+        invert_media: bool | None = None,
+        force_large_media: bool | None = None,
+        force_small_media: bool | None = None,
+        optional: bool | None = None,
+        entities: list["raw.base.MessageEntity"] | None = None,
+        reply_markup: "raw.base.ReplyMarkup" = None,
+    ) -> None:
         self.message = message  # string
         self.url = url  # string
         self.invert_media = invert_media  # flags.3?true
@@ -83,22 +107,30 @@ class InputBotInlineMessageMediaWebPage(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputBotInlineMessageMediaWebPage":
-        
         flags = Int.read(b)
-        
+
         invert_media = True if flags & (1 << 3) else False
         force_large_media = True if flags & (1 << 4) else False
         force_small_media = True if flags & (1 << 5) else False
         optional = True if flags & (1 << 6) else False
         message = String.read(b)
-        
+
         entities = TLObject.read(b) if flags & (1 << 1) else []
-        
+
         url = String.read(b)
-        
+
         reply_markup = TLObject.read(b) if flags & (1 << 2) else None
-        
-        return InputBotInlineMessageMediaWebPage(message=message, url=url, invert_media=invert_media, force_large_media=force_large_media, force_small_media=force_small_media, optional=optional, entities=entities, reply_markup=reply_markup)
+
+        return InputBotInlineMessageMediaWebPage(
+            message=message,
+            url=url,
+            invert_media=invert_media,
+            force_large_media=force_large_media,
+            force_small_media=force_small_media,
+            optional=optional,
+            entities=entities,
+            reply_markup=reply_markup,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -112,15 +144,15 @@ class InputBotInlineMessageMediaWebPage(TLObject):  # type: ignore
         flags |= (1 << 1) if self.entities else 0
         flags |= (1 << 2) if self.reply_markup is not None else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.message))
-        
+
         if self.entities is not None:
             b.write(Vector(self.entities))
-        
+
         b.write(String(self.url))
-        
+
         if self.reply_markup is not None:
             b.write(self.reply_markup.write())
-        
+
         return b.getvalue()

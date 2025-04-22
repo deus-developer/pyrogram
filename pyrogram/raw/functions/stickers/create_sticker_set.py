@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class CreateStickerSet(TLObject):  # type: ignore
+class CreateStickerSet(TLFunction["raw.base.messages.StickerSet"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -69,12 +73,34 @@ class CreateStickerSet(TLObject):  # type: ignore
         :obj:`messages.StickerSet <pyrogram.raw.base.messages.StickerSet>`
     """
 
-    __slots__: List[str] = ["user_id", "title", "short_name", "stickers", "masks", "emojis", "text_color", "thumb", "software"]
+    __slots__: list[str] = [
+        "emojis",
+        "masks",
+        "short_name",
+        "software",
+        "stickers",
+        "text_color",
+        "thumb",
+        "title",
+        "user_id",
+    ]
 
-    ID = 0x9021ab67
+    ID = 0x9021AB67
     QUALNAME = "functions.stickers.CreateStickerSet"
 
-    def __init__(self, *, user_id: "raw.base.InputUser", title: str, short_name: str, stickers: List["raw.base.InputStickerSetItem"], masks: Optional[bool] = None, emojis: Optional[bool] = None, text_color: Optional[bool] = None, thumb: "raw.base.InputDocument" = None, software: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        user_id: "raw.base.InputUser",
+        title: str,
+        short_name: str,
+        stickers: list["raw.base.InputStickerSetItem"],
+        masks: bool | None = None,
+        emojis: bool | None = None,
+        text_color: bool | None = None,
+        thumb: "raw.base.InputDocument" = None,
+        software: str | None = None,
+    ) -> None:
         self.user_id = user_id  # InputUser
         self.title = title  # string
         self.short_name = short_name  # string
@@ -87,24 +113,33 @@ class CreateStickerSet(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "CreateStickerSet":
-        
         flags = Int.read(b)
-        
+
         masks = True if flags & (1 << 0) else False
         emojis = True if flags & (1 << 5) else False
         text_color = True if flags & (1 << 6) else False
         user_id = TLObject.read(b)
-        
+
         title = String.read(b)
-        
+
         short_name = String.read(b)
-        
+
         thumb = TLObject.read(b) if flags & (1 << 2) else None
-        
+
         stickers = TLObject.read(b)
-        
+
         software = String.read(b) if flags & (1 << 3) else None
-        return CreateStickerSet(user_id=user_id, title=title, short_name=short_name, stickers=stickers, masks=masks, emojis=emojis, text_color=text_color, thumb=thumb, software=software)
+        return CreateStickerSet(
+            user_id=user_id,
+            title=title,
+            short_name=short_name,
+            stickers=stickers,
+            masks=masks,
+            emojis=emojis,
+            text_color=text_color,
+            thumb=thumb,
+            software=software,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -117,19 +152,19 @@ class CreateStickerSet(TLObject):  # type: ignore
         flags |= (1 << 2) if self.thumb is not None else 0
         flags |= (1 << 3) if self.software is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.user_id.write())
-        
+
         b.write(String(self.title))
-        
+
         b.write(String(self.short_name))
-        
+
         if self.thumb is not None:
             b.write(self.thumb.write())
-        
+
         b.write(Vector(self.stickers))
-        
+
         if self.software is not None:
             b.write(String(self.software))
-        
+
         return b.getvalue()

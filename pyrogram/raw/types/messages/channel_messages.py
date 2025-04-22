@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -89,12 +92,32 @@ class ChannelMessages(TLObject):  # type: ignore
             channels.SearchPosts
     """
 
-    __slots__: List[str] = ["pts", "count", "messages", "topics", "chats", "users", "inexact", "offset_id_offset"]
+    __slots__: list[str] = [
+        "chats",
+        "count",
+        "inexact",
+        "messages",
+        "offset_id_offset",
+        "pts",
+        "topics",
+        "users",
+    ]
 
-    ID = 0xc776ba4e
+    ID = 0xC776BA4E
     QUALNAME = "types.messages.ChannelMessages"
 
-    def __init__(self, *, pts: int, count: int, messages: List["raw.base.Message"], topics: List["raw.base.ForumTopic"], chats: List["raw.base.Chat"], users: List["raw.base.User"], inexact: Optional[bool] = None, offset_id_offset: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        pts: int,
+        count: int,
+        messages: list["raw.base.Message"],
+        topics: list["raw.base.ForumTopic"],
+        chats: list["raw.base.Chat"],
+        users: list["raw.base.User"],
+        inexact: bool | None = None,
+        offset_id_offset: int | None = None,
+    ) -> None:
         self.pts = pts  # int
         self.count = count  # int
         self.messages = messages  # Vector<Message>
@@ -106,24 +129,32 @@ class ChannelMessages(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChannelMessages":
-        
         flags = Int.read(b)
-        
+
         inexact = True if flags & (1 << 1) else False
         pts = Int.read(b)
-        
+
         count = Int.read(b)
-        
+
         offset_id_offset = Int.read(b) if flags & (1 << 2) else None
         messages = TLObject.read(b)
-        
+
         topics = TLObject.read(b)
-        
+
         chats = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
-        return ChannelMessages(pts=pts, count=count, messages=messages, topics=topics, chats=chats, users=users, inexact=inexact, offset_id_offset=offset_id_offset)
+
+        return ChannelMessages(
+            pts=pts,
+            count=count,
+            messages=messages,
+            topics=topics,
+            chats=chats,
+            users=users,
+            inexact=inexact,
+            offset_id_offset=offset_id_offset,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -133,20 +164,20 @@ class ChannelMessages(TLObject):  # type: ignore
         flags |= (1 << 1) if self.inexact else 0
         flags |= (1 << 2) if self.offset_id_offset is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.pts))
-        
+
         b.write(Int(self.count))
-        
+
         if self.offset_id_offset is not None:
             b.write(Int(self.offset_id_offset))
-        
+
         b.write(Vector(self.messages))
-        
+
         b.write(Vector(self.topics))
-        
+
         b.write(Vector(self.chats))
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

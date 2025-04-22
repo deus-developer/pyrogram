@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetFutureSalts(TLObject):  # type: ignore
+class GetFutureSalts(TLFunction["raw.base.FutureSalts"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +46,9 @@ class GetFutureSalts(TLObject):  # type: ignore
         :obj:`FutureSalts <pyrogram.raw.base.FutureSalts>`
     """
 
-    __slots__: List[str] = ["num"]
+    __slots__: list[str] = ["num"]
 
-    ID = 0xb921bd04
+    ID = 0xB921BD04
     QUALNAME = "functions.GetFutureSalts"
 
     def __init__(self, *, num: int) -> None:
@@ -56,9 +57,9 @@ class GetFutureSalts(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetFutureSalts":
         # No flags
-        
+
         num = Int.read(b)
-        
+
         return GetFutureSalts(num=num)
 
     def write(self, *args) -> bytes:
@@ -66,7 +67,7 @@ class GetFutureSalts(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.num))
-        
+
         return b.getvalue()

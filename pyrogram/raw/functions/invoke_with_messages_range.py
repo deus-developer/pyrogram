@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class InvokeWithMessagesRange(TLObject):  # type: ignore
+class InvokeWithMessagesRange(TLFunction["raw.base.X"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class InvokeWithMessagesRange(TLObject):  # type: ignore
         Any object from :obj:`~pyrogram.raw.types`
     """
 
-    __slots__: List[str] = ["range", "query"]
+    __slots__: list[str] = ["query", "range"]
 
-    ID = 0x365275f2
+    ID = 0x365275F2
     QUALNAME = "functions.InvokeWithMessagesRange"
 
     def __init__(self, *, range: "raw.base.MessageRange", query: TLObject) -> None:
@@ -60,11 +62,11 @@ class InvokeWithMessagesRange(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InvokeWithMessagesRange":
         # No flags
-        
+
         range = TLObject.read(b)
-        
+
         query = TLObject.read(b)
-        
+
         return InvokeWithMessagesRange(range=range, query=query)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class InvokeWithMessagesRange(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.range.write())
-        
+
         b.write(self.query.write())
-        
+
         return b.getvalue()

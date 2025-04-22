@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -59,9 +61,9 @@ class SentEncryptedFile(TLObject):  # type: ignore
             messages.SendEncryptedService
     """
 
-    __slots__: List[str] = ["date", "file"]
+    __slots__: list[str] = ["date", "file"]
 
-    ID = 0x9493ff32
+    ID = 0x9493FF32
     QUALNAME = "types.messages.SentEncryptedFile"
 
     def __init__(self, *, date: int, file: "raw.base.EncryptedFile") -> None:
@@ -71,11 +73,11 @@ class SentEncryptedFile(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SentEncryptedFile":
         # No flags
-        
+
         date = Int.read(b)
-        
+
         file = TLObject.read(b)
-        
+
         return SentEncryptedFile(date=date, file=file)
 
     def write(self, *args) -> bytes:
@@ -83,9 +85,9 @@ class SentEncryptedFile(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.date))
-        
+
         b.write(self.file.write())
-        
+
         return b.getvalue()

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class AssignAppStoreTransaction(TLObject):  # type: ignore
+class AssignAppStoreTransaction(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +51,28 @@ class AssignAppStoreTransaction(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["receipt", "purpose"]
+    __slots__: list[str] = ["purpose", "receipt"]
 
-    ID = 0x80ed747d
+    ID = 0x80ED747D
     QUALNAME = "functions.payments.AssignAppStoreTransaction"
 
-    def __init__(self, *, receipt: bytes, purpose: "raw.base.InputStorePaymentPurpose") -> None:
+    def __init__(
+        self,
+        *,
+        receipt: bytes,
+        purpose: "raw.base.InputStorePaymentPurpose",
+    ) -> None:
         self.receipt = receipt  # bytes
         self.purpose = purpose  # InputStorePaymentPurpose
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "AssignAppStoreTransaction":
         # No flags
-        
+
         receipt = Bytes.read(b)
-        
+
         purpose = TLObject.read(b)
-        
+
         return AssignAppStoreTransaction(receipt=receipt, purpose=purpose)
 
     def write(self, *args) -> bytes:
@@ -72,9 +80,9 @@ class AssignAppStoreTransaction(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Bytes(self.receipt))
-        
+
         b.write(self.purpose.write())
-        
+
         return b.getvalue()

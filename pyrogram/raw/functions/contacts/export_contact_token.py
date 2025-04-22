@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ExportContactToken(TLObject):  # type: ignore
+class ExportContactToken(TLFunction["raw.base.ExportedContactToken"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -44,9 +45,9 @@ class ExportContactToken(TLObject):  # type: ignore
         :obj:`ExportedContactToken <pyrogram.raw.base.ExportedContactToken>`
     """
 
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
-    ID = 0xf8654027
+    ID = 0xF8654027
     QUALNAME = "functions.contacts.ExportContactToken"
 
     def __init__(self) -> None:
@@ -55,7 +56,7 @@ class ExportContactToken(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ExportContactToken":
         # No flags
-        
+
         return ExportContactToken()
 
     def write(self, *args) -> bytes:
@@ -63,5 +64,5 @@ class ExportContactToken(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         return b.getvalue()

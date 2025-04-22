@@ -16,7 +16,8 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from pyrogram import raw, types, utils
+from pyrogram import raw, types
+
 from ..object import Object
 
 
@@ -52,7 +53,7 @@ class GiftCode(Object):
         slug: str,
         via_giveaway: bool = None,
         is_unclaimed: bool = None,
-        boosted_chat: "types.Chat" = None
+        boosted_chat: "types.Chat" = None,
     ):
         super().__init__()
 
@@ -69,9 +70,9 @@ class GiftCode(Object):
         return GiftCode(
             months=giftcode.months,
             slug=giftcode.slug,
-            via_giveaway=getattr(giftcode, "via_giveaway"),
-            is_unclaimed=getattr(giftcode, "unclaimed"),
-            boosted_chat=types.Chat.from_raw_tl_chat(client, peer) if peer else None
+            via_giveaway=giftcode.via_giveaway,
+            is_unclaimed=giftcode.unclaimed,
+            boosted_chat=types.Chat.from_raw_tl_chat(client, peer) if peer else None,
         )
 
     @property

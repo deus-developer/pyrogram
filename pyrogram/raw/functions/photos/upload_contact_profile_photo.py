@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Double,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class UploadContactProfilePhoto(TLObject):  # type: ignore
+class UploadContactProfilePhoto(TLFunction["raw.base.photos.Photo"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -63,12 +66,30 @@ class UploadContactProfilePhoto(TLObject):  # type: ignore
         :obj:`photos.Photo <pyrogram.raw.base.photos.Photo>`
     """
 
-    __slots__: List[str] = ["user_id", "suggest", "save", "file", "video", "video_start_ts", "video_emoji_markup"]
+    __slots__: list[str] = [
+        "file",
+        "save",
+        "suggest",
+        "user_id",
+        "video",
+        "video_emoji_markup",
+        "video_start_ts",
+    ]
 
-    ID = 0xe14c4a71
+    ID = 0xE14C4A71
     QUALNAME = "functions.photos.UploadContactProfilePhoto"
 
-    def __init__(self, *, user_id: "raw.base.InputUser", suggest: Optional[bool] = None, save: Optional[bool] = None, file: "raw.base.InputFile" = None, video: "raw.base.InputFile" = None, video_start_ts: Optional[float] = None, video_emoji_markup: "raw.base.VideoSize" = None) -> None:
+    def __init__(
+        self,
+        *,
+        user_id: "raw.base.InputUser",
+        suggest: bool | None = None,
+        save: bool | None = None,
+        file: "raw.base.InputFile" = None,
+        video: "raw.base.InputFile" = None,
+        video_start_ts: float | None = None,
+        video_emoji_markup: "raw.base.VideoSize" = None,
+    ) -> None:
         self.user_id = user_id  # InputUser
         self.suggest = suggest  # flags.3?true
         self.save = save  # flags.4?true
@@ -79,21 +100,28 @@ class UploadContactProfilePhoto(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UploadContactProfilePhoto":
-        
         flags = Int.read(b)
-        
+
         suggest = True if flags & (1 << 3) else False
         save = True if flags & (1 << 4) else False
         user_id = TLObject.read(b)
-        
+
         file = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         video = TLObject.read(b) if flags & (1 << 1) else None
-        
+
         video_start_ts = Double.read(b) if flags & (1 << 2) else None
         video_emoji_markup = TLObject.read(b) if flags & (1 << 5) else None
-        
-        return UploadContactProfilePhoto(user_id=user_id, suggest=suggest, save=save, file=file, video=video, video_start_ts=video_start_ts, video_emoji_markup=video_emoji_markup)
+
+        return UploadContactProfilePhoto(
+            user_id=user_id,
+            suggest=suggest,
+            save=save,
+            file=file,
+            video=video,
+            video_start_ts=video_start_ts,
+            video_emoji_markup=video_emoji_markup,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -107,19 +135,19 @@ class UploadContactProfilePhoto(TLObject):  # type: ignore
         flags |= (1 << 2) if self.video_start_ts is not None else 0
         flags |= (1 << 5) if self.video_emoji_markup is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.user_id.write())
-        
+
         if self.file is not None:
             b.write(self.file.write())
-        
+
         if self.video is not None:
             b.write(self.video.write())
-        
+
         if self.video_start_ts is not None:
             b.write(Double(self.video_start_ts))
-        
+
         if self.video_emoji_markup is not None:
             b.write(self.video_emoji_markup.write())
-        
+
         return b.getvalue()

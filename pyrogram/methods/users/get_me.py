@@ -17,13 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class GetMe:
     async def get_me(
-        self: "pyrogram.Client"
+        self: "pyrogram.Client",
     ) -> "types.User":
         """Get your own user identity.
 
@@ -40,8 +39,11 @@ class GetMe:
         """
         r = await self.invoke(
             raw.functions.users.GetFullUser(
-                id=raw.types.InputUserSelf()
-            )
+                id=raw.types.InputUserSelf(),
+            ),
         )
 
-        return types.User.from_raw_tl(self, self.entity_cache.get_user(user_id=r.full_user.id))
+        return types.User.from_raw_tl(
+            self,
+            self.entity_cache.get_user(user_id=r.full_user.id),
+        )

@@ -4,8 +4,10 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type Dialogs = Union["raw.types.messages.Dialogs, raw.types.messages.DialogsNotModified, raw.types.messages.DialogsSlice"]
+type Dialogs = (
+    raw.types.messages.Dialogs
+    | raw.types.messages.DialogsNotModified
+    | raw.types.messages.DialogsSlice
+)

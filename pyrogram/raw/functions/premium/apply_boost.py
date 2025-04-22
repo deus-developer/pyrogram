@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ApplyBoost(TLObject):  # type: ignore
+class ApplyBoost(TLFunction["raw.base.premium.MyBoosts"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,24 +51,28 @@ class ApplyBoost(TLObject):  # type: ignore
         :obj:`premium.MyBoosts <pyrogram.raw.base.premium.MyBoosts>`
     """
 
-    __slots__: List[str] = ["peer", "slots"]
+    __slots__: list[str] = ["peer", "slots"]
 
-    ID = 0x6b7da746
+    ID = 0x6B7DA746
     QUALNAME = "functions.premium.ApplyBoost"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", slots: Optional[List[int]] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        slots: list[int] | None = None,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.slots = slots  # flags.0?Vector<int>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ApplyBoost":
-        
         flags = Int.read(b)
-        
+
         slots = TLObject.read(b, Int) if flags & (1 << 0) else []
-        
+
         peer = TLObject.read(b)
-        
+
         return ApplyBoost(peer=peer, slots=slots)
 
     def write(self, *args) -> bytes:
@@ -75,10 +82,10 @@ class ApplyBoost(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.slots else 0
         b.write(Int(flags))
-        
+
         if self.slots is not None:
             b.write(Vector(self.slots, Int))
-        
+
         b.write(self.peer.write())
-        
+
         return b.getvalue()

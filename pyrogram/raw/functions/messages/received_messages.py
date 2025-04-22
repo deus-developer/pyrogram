@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ReceivedMessages(TLObject):  # type: ignore
+class ReceivedMessages(TLFunction[list["raw.base.ReceivedNotifyMessage"]]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class ReceivedMessages(TLObject):  # type: ignore
         List of :obj:`ReceivedNotifyMessage <pyrogram.raw.base.ReceivedNotifyMessage>`
     """
 
-    __slots__: List[str] = ["max_id"]
+    __slots__: list[str] = ["max_id"]
 
-    ID = 0x5a954c0
+    ID = 0x5A954C0
     QUALNAME = "functions.messages.ReceivedMessages"
 
     def __init__(self, *, max_id: int) -> None:
@@ -56,9 +58,9 @@ class ReceivedMessages(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ReceivedMessages":
         # No flags
-        
+
         max_id = Int.read(b)
-        
+
         return ReceivedMessages(max_id=max_id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class ReceivedMessages(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.max_id))
-        
+
         return b.getvalue()

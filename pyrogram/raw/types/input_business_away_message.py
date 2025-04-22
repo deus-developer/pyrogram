@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +56,19 @@ class InputBusinessAwayMessage(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["shortcut_id", "schedule", "recipients", "offline_only"]
+    __slots__: list[str] = ["offline_only", "recipients", "schedule", "shortcut_id"]
 
-    ID = 0x832175e0
+    ID = 0x832175E0
     QUALNAME = "types.InputBusinessAwayMessage"
 
-    def __init__(self, *, shortcut_id: int, schedule: "raw.base.BusinessAwayMessageSchedule", recipients: "raw.base.InputBusinessRecipients", offline_only: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        shortcut_id: int,
+        schedule: "raw.base.BusinessAwayMessageSchedule",
+        recipients: "raw.base.InputBusinessRecipients",
+        offline_only: bool | None = None,
+    ) -> None:
         self.shortcut_id = shortcut_id  # int
         self.schedule = schedule  # BusinessAwayMessageSchedule
         self.recipients = recipients  # InputBusinessRecipients
@@ -67,17 +76,21 @@ class InputBusinessAwayMessage(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputBusinessAwayMessage":
-        
         flags = Int.read(b)
-        
+
         offline_only = True if flags & (1 << 0) else False
         shortcut_id = Int.read(b)
-        
+
         schedule = TLObject.read(b)
-        
+
         recipients = TLObject.read(b)
-        
-        return InputBusinessAwayMessage(shortcut_id=shortcut_id, schedule=schedule, recipients=recipients, offline_only=offline_only)
+
+        return InputBusinessAwayMessage(
+            shortcut_id=shortcut_id,
+            schedule=schedule,
+            recipients=recipients,
+            offline_only=offline_only,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -86,11 +99,11 @@ class InputBusinessAwayMessage(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.offline_only else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.shortcut_id))
-        
+
         b.write(self.schedule.write())
-        
+
         b.write(self.recipients.write())
-        
+
         return b.getvalue()

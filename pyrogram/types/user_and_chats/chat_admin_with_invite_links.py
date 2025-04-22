@@ -16,11 +16,10 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Dict
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
+
 from ..object import Object
 
 
@@ -39,10 +38,11 @@ class ChatAdminWithInviteLinks(Object):
     """
 
     def __init__(
-        self, *,
+        self,
+        *,
         admin: "types.User",
         chat_invite_links_count: int,
-        revoked_chat_invite_links_count: int = None
+        revoked_chat_invite_links_count: int = None,
     ):
         super().__init__()
 
@@ -56,7 +56,10 @@ class ChatAdminWithInviteLinks(Object):
         admin: "raw.types.ChatAdminWithInvites",
     ) -> "ChatAdminWithInviteLinks":
         return ChatAdminWithInviteLinks(
-            admin=types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=admin.admin_id)),
+            admin=types.User.from_raw_tl(
+                client,
+                client.entity_cache.get_user(user_id=admin.admin_id),
+            ),
             chat_invite_links_count=admin.invites_count,
-            revoked_chat_invite_links_count=admin.revoked_invites_count
+            revoked_chat_invite_links_count=admin.revoked_invites_count,
         )

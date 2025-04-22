@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetStickers(TLObject):  # type: ignore
+class GetStickers(TLFunction["raw.base.messages.Stickers"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class GetStickers(TLObject):  # type: ignore
         :obj:`messages.Stickers <pyrogram.raw.base.messages.Stickers>`
     """
 
-    __slots__: List[str] = ["emoticon", "hash"]
+    __slots__: list[str] = ["emoticon", "hash"]
 
-    ID = 0xd5a5d3a1
+    ID = 0xD5A5D3A1
     QUALNAME = "functions.messages.GetStickers"
 
     def __init__(self, *, emoticon: str, hash: int) -> None:
@@ -60,11 +63,11 @@ class GetStickers(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetStickers":
         # No flags
-        
+
         emoticon = String.read(b)
-        
+
         hash = Long.read(b)
-        
+
         return GetStickers(emoticon=emoticon, hash=hash)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class GetStickers(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.emoticon))
-        
+
         b.write(Long(self.hash))
-        
+
         return b.getvalue()

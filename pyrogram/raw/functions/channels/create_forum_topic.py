@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class CreateForumTopic(TLObject):  # type: ignore
+class CreateForumTopic(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -60,12 +64,28 @@ class CreateForumTopic(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["channel", "title", "random_id", "icon_color", "icon_emoji_id", "send_as"]
+    __slots__: list[str] = [
+        "channel",
+        "icon_color",
+        "icon_emoji_id",
+        "random_id",
+        "send_as",
+        "title",
+    ]
 
-    ID = 0xf40c0224
+    ID = 0xF40C0224
     QUALNAME = "functions.channels.CreateForumTopic"
 
-    def __init__(self, *, channel: "raw.base.InputChannel", title: str, random_id: int, icon_color: Optional[int] = None, icon_emoji_id: Optional[int] = None, send_as: "raw.base.InputPeer" = None) -> None:
+    def __init__(
+        self,
+        *,
+        channel: "raw.base.InputChannel",
+        title: str,
+        random_id: int,
+        icon_color: int | None = None,
+        icon_emoji_id: int | None = None,
+        send_as: "raw.base.InputPeer" = None,
+    ) -> None:
         self.channel = channel  # InputChannel
         self.title = title  # string
         self.random_id = random_id  # long
@@ -75,20 +95,26 @@ class CreateForumTopic(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "CreateForumTopic":
-        
         flags = Int.read(b)
-        
+
         channel = TLObject.read(b)
-        
+
         title = String.read(b)
-        
+
         icon_color = Int.read(b) if flags & (1 << 0) else None
         icon_emoji_id = Long.read(b) if flags & (1 << 3) else None
         random_id = Long.read(b)
-        
+
         send_as = TLObject.read(b) if flags & (1 << 2) else None
-        
-        return CreateForumTopic(channel=channel, title=title, random_id=random_id, icon_color=icon_color, icon_emoji_id=icon_emoji_id, send_as=send_as)
+
+        return CreateForumTopic(
+            channel=channel,
+            title=title,
+            random_id=random_id,
+            icon_color=icon_color,
+            icon_emoji_id=icon_emoji_id,
+            send_as=send_as,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -99,20 +125,20 @@ class CreateForumTopic(TLObject):  # type: ignore
         flags |= (1 << 3) if self.icon_emoji_id is not None else 0
         flags |= (1 << 2) if self.send_as is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.channel.write())
-        
+
         b.write(String(self.title))
-        
+
         if self.icon_color is not None:
             b.write(Int(self.icon_color))
-        
+
         if self.icon_emoji_id is not None:
             b.write(Long(self.icon_emoji_id))
-        
+
         b.write(Long(self.random_id))
-        
+
         if self.send_as is not None:
             b.write(self.send_as.write())
-        
+
         return b.getvalue()

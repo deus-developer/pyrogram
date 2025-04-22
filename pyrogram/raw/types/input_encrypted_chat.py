@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class InputEncryptedChat(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["chat_id", "access_hash"]
+    __slots__: list[str] = ["access_hash", "chat_id"]
 
-    ID = 0xf141b5e1
+    ID = 0xF141B5E1
     QUALNAME = "types.InputEncryptedChat"
 
     def __init__(self, *, chat_id: int, access_hash: int) -> None:
@@ -60,11 +62,11 @@ class InputEncryptedChat(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputEncryptedChat":
         # No flags
-        
+
         chat_id = Int.read(b)
-        
+
         access_hash = Long.read(b)
-        
+
         return InputEncryptedChat(chat_id=chat_id, access_hash=access_hash)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class InputEncryptedChat(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.chat_id))
-        
+
         b.write(Long(self.access_hash))
-        
+
         return b.getvalue()

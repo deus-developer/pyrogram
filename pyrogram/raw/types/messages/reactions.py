@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -59,23 +63,23 @@ class Reactions(TLObject):  # type: ignore
             messages.GetDefaultTagReactions
     """
 
-    __slots__: List[str] = ["hash", "reactions"]
+    __slots__: list[str] = ["hash", "reactions"]
 
-    ID = 0xeafdf716
+    ID = 0xEAFDF716
     QUALNAME = "types.messages.Reactions"
 
-    def __init__(self, *, hash: int, reactions: List["raw.base.Reaction"]) -> None:
+    def __init__(self, *, hash: int, reactions: list["raw.base.Reaction"]) -> None:
         self.hash = hash  # long
         self.reactions = reactions  # Vector<Reaction>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "Reactions":
         # No flags
-        
+
         hash = Long.read(b)
-        
+
         reactions = TLObject.read(b)
-        
+
         return Reactions(hash=hash, reactions=reactions)
 
     def write(self, *args) -> bytes:
@@ -83,9 +87,9 @@ class Reactions(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.hash))
-        
+
         b.write(Vector(self.reactions))
-        
+
         return b.getvalue()

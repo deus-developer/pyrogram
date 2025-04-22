@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ReadStories(TLObject):  # type: ignore
+class ReadStories(TLFunction[list[int]]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class ReadStories(TLObject):  # type: ignore
         List of ``int`` ``32-bit``
     """
 
-    __slots__: List[str] = ["peer", "max_id"]
+    __slots__: list[str] = ["max_id", "peer"]
 
-    ID = 0xa556dac8
+    ID = 0xA556DAC8
     QUALNAME = "functions.stories.ReadStories"
 
     def __init__(self, *, peer: "raw.base.InputPeer", max_id: int) -> None:
@@ -60,11 +62,11 @@ class ReadStories(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ReadStories":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         max_id = Int.read(b)
-        
+
         return ReadStories(peer=peer, max_id=max_id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class ReadStories(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.max_id))
-        
+
         return b.getvalue()

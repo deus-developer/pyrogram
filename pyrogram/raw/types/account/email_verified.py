@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +56,9 @@ class EmailVerified(TLObject):  # type: ignore
             account.VerifyEmail
     """
 
-    __slots__: List[str] = ["email"]
+    __slots__: list[str] = ["email"]
 
-    ID = 0x2b96cd1b
+    ID = 0x2B96CD1B
     QUALNAME = "types.account.EmailVerified"
 
     def __init__(self, *, email: str) -> None:
@@ -65,9 +67,9 @@ class EmailVerified(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EmailVerified":
         # No flags
-        
+
         email = String.read(b)
-        
+
         return EmailVerified(email=email)
 
     def write(self, *args) -> bytes:
@@ -75,7 +77,7 @@ class EmailVerified(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.email))
-        
+
         return b.getvalue()

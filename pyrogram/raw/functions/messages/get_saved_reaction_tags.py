@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetSavedReactionTags(TLObject):  # type: ignore
+class GetSavedReactionTags(TLFunction["raw.base.messages.SavedReactionTags"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class GetSavedReactionTags(TLObject):  # type: ignore
         :obj:`messages.SavedReactionTags <pyrogram.raw.base.messages.SavedReactionTags>`
     """
 
-    __slots__: List[str] = ["hash", "peer"]
+    __slots__: list[str] = ["hash", "peer"]
 
-    ID = 0x3637e05b
+    ID = 0x3637E05B
     QUALNAME = "functions.messages.GetSavedReactionTags"
 
     def __init__(self, *, hash: int, peer: "raw.base.InputPeer" = None) -> None:
@@ -59,13 +62,12 @@ class GetSavedReactionTags(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetSavedReactionTags":
-        
         flags = Int.read(b)
-        
+
         peer = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         hash = Long.read(b)
-        
+
         return GetSavedReactionTags(hash=hash, peer=peer)
 
     def write(self, *args) -> bytes:
@@ -75,10 +77,10 @@ class GetSavedReactionTags(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.peer is not None else 0
         b.write(Int(flags))
-        
+
         if self.peer is not None:
             b.write(self.peer.write())
-        
+
         b.write(Long(self.hash))
-        
+
         return b.getvalue()

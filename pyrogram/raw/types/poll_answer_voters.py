@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +56,19 @@ class PollAnswerVoters(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["option", "voters", "chosen", "correct"]
+    __slots__: list[str] = ["chosen", "correct", "option", "voters"]
 
-    ID = 0x3b6ddad2
+    ID = 0x3B6DDAD2
     QUALNAME = "types.PollAnswerVoters"
 
-    def __init__(self, *, option: bytes, voters: int, chosen: Optional[bool] = None, correct: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        option: bytes,
+        voters: int,
+        chosen: bool | None = None,
+        correct: bool | None = None,
+    ) -> None:
         self.option = option  # bytes
         self.voters = voters  # int
         self.chosen = chosen  # flags.0?true
@@ -67,16 +76,20 @@ class PollAnswerVoters(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PollAnswerVoters":
-        
         flags = Int.read(b)
-        
+
         chosen = True if flags & (1 << 0) else False
         correct = True if flags & (1 << 1) else False
         option = Bytes.read(b)
-        
+
         voters = Int.read(b)
-        
-        return PollAnswerVoters(option=option, voters=voters, chosen=chosen, correct=correct)
+
+        return PollAnswerVoters(
+            option=option,
+            voters=voters,
+            chosen=chosen,
+            correct=correct,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -86,9 +99,9 @@ class PollAnswerVoters(TLObject):  # type: ignore
         flags |= (1 << 0) if self.chosen else 0
         flags |= (1 << 1) if self.correct else 0
         b.write(Int(flags))
-        
+
         b.write(Bytes(self.option))
-        
+
         b.write(Int(self.voters))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +56,9 @@ class PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow(TLObject
 
     """
 
-    __slots__: List[str] = ["salt1", "salt2", "g", "p"]
+    __slots__: list[str] = ["g", "p", "salt1", "salt2"]
 
-    ID = 0x3a912d4a
+    ID = 0x3A912D4A
     QUALNAME = "types.PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow"
 
     def __init__(self, *, salt1: bytes, salt2: bytes, g: int, p: bytes) -> None:
@@ -66,31 +68,39 @@ class PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow(TLObject
         self.p = p  # bytes
 
     @staticmethod
-    def read(b: BytesIO, *args: Any) -> "PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow":
+    def read(
+        b: BytesIO,
+        *args: Any,
+    ) -> "PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow":
         # No flags
-        
+
         salt1 = Bytes.read(b)
-        
+
         salt2 = Bytes.read(b)
-        
+
         g = Int.read(b)
-        
+
         p = Bytes.read(b)
-        
-        return PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow(salt1=salt1, salt2=salt2, g=g, p=p)
+
+        return PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow(
+            salt1=salt1,
+            salt2=salt2,
+            g=g,
+            p=p,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Bytes(self.salt1))
-        
+
         b.write(Bytes(self.salt2))
-        
+
         b.write(Int(self.g))
-        
+
         b.write(Bytes(self.p))
-        
+
         return b.getvalue()

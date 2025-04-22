@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetCallConfig(TLObject):  # type: ignore
+class GetCallConfig(TLFunction["raw.base.DataJSON"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -44,9 +45,9 @@ class GetCallConfig(TLObject):  # type: ignore
         :obj:`DataJSON <pyrogram.raw.base.DataJSON>`
     """
 
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
-    ID = 0x55451fa9
+    ID = 0x55451FA9
     QUALNAME = "functions.phone.GetCallConfig"
 
     def __init__(self) -> None:
@@ -55,7 +56,7 @@ class GetCallConfig(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetCallConfig":
         # No flags
-        
+
         return GetCallConfig()
 
     def write(self, *args) -> bytes:
@@ -63,5 +64,5 @@ class GetCallConfig(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         return b.getvalue()

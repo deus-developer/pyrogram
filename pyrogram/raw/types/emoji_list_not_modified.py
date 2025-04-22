@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,9 +58,9 @@ class EmojiListNotModified(TLObject):  # type: ignore
             messages.SearchCustomEmoji
     """
 
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
-    ID = 0x481eadfa
+    ID = 0x481EADFA
     QUALNAME = "types.EmojiListNotModified"
 
     def __init__(self) -> None:
@@ -68,7 +69,7 @@ class EmojiListNotModified(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EmojiListNotModified":
         # No flags
-        
+
         return EmojiListNotModified()
 
     def write(self, *args) -> bytes:
@@ -76,5 +77,5 @@ class EmojiListNotModified(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         return b.getvalue()

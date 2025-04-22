@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,20 +48,20 @@ class JsonObject(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["value"]
+    __slots__: list[str] = ["value"]
 
-    ID = 0x99c1d49d
+    ID = 0x99C1D49D
     QUALNAME = "types.JsonObject"
 
-    def __init__(self, *, value: List["raw.base.JSONObjectValue"]) -> None:
+    def __init__(self, *, value: list["raw.base.JSONObjectValue"]) -> None:
         self.value = value  # Vector<JSONObjectValue>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "JsonObject":
         # No flags
-        
+
         value = TLObject.read(b)
-        
+
         return JsonObject(value=value)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class JsonObject(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.value))
-        
+
         return b.getvalue()

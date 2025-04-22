@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,23 +61,23 @@ class SavedGifs(TLObject):  # type: ignore
             messages.GetSavedGifs
     """
 
-    __slots__: List[str] = ["hash", "gifs"]
+    __slots__: list[str] = ["gifs", "hash"]
 
-    ID = 0x84a02a0d
+    ID = 0x84A02A0D
     QUALNAME = "types.messages.SavedGifs"
 
-    def __init__(self, *, hash: int, gifs: List["raw.base.Document"]) -> None:
+    def __init__(self, *, hash: int, gifs: list["raw.base.Document"]) -> None:
         self.hash = hash  # long
         self.gifs = gifs  # Vector<Document>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SavedGifs":
         # No flags
-        
+
         hash = Long.read(b)
-        
+
         gifs = TLObject.read(b)
-        
+
         return SavedGifs(hash=hash, gifs=gifs)
 
     def write(self, *args) -> bytes:
@@ -81,9 +85,9 @@ class SavedGifs(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.hash))
-        
+
         b.write(Vector(self.gifs))
-        
+
         return b.getvalue()

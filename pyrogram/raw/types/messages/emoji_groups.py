@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,23 +63,23 @@ class EmojiGroups(TLObject):  # type: ignore
             messages.GetEmojiStickerGroups
     """
 
-    __slots__: List[str] = ["hash", "groups"]
+    __slots__: list[str] = ["groups", "hash"]
 
-    ID = 0x881fb94b
+    ID = 0x881FB94B
     QUALNAME = "types.messages.EmojiGroups"
 
-    def __init__(self, *, hash: int, groups: List["raw.base.EmojiGroup"]) -> None:
+    def __init__(self, *, hash: int, groups: list["raw.base.EmojiGroup"]) -> None:
         self.hash = hash  # int
         self.groups = groups  # Vector<EmojiGroup>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EmojiGroups":
         # No flags
-        
+
         hash = Int.read(b)
-        
+
         groups = TLObject.read(b)
-        
+
         return EmojiGroups(hash=hash, groups=groups)
 
     def write(self, *args) -> bytes:
@@ -84,9 +87,9 @@ class EmojiGroups(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.hash))
-        
+
         b.write(Vector(self.groups))
-        
+
         return b.getvalue()

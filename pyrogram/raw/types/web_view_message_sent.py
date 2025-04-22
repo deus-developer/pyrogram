@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +56,9 @@ class WebViewMessageSent(TLObject):  # type: ignore
             messages.SendWebViewResultMessage
     """
 
-    __slots__: List[str] = ["msg_id"]
+    __slots__: list[str] = ["msg_id"]
 
-    ID = 0xc94511c
+    ID = 0xC94511C
     QUALNAME = "types.WebViewMessageSent"
 
     def __init__(self, *, msg_id: "raw.base.InputBotInlineMessageID" = None) -> None:
@@ -64,11 +66,10 @@ class WebViewMessageSent(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "WebViewMessageSent":
-        
         flags = Int.read(b)
-        
+
         msg_id = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         return WebViewMessageSent(msg_id=msg_id)
 
     def write(self, *args) -> bytes:
@@ -78,8 +79,8 @@ class WebViewMessageSent(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.msg_id is not None else 0
         b.write(Int(flags))
-        
+
         if self.msg_id is not None:
             b.write(self.msg_id.write())
-        
+
         return b.getvalue()

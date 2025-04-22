@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetAvailableReactions(TLObject):  # type: ignore
+class GetAvailableReactions(TLFunction["raw.base.messages.AvailableReactions"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +46,9 @@ class GetAvailableReactions(TLObject):  # type: ignore
         :obj:`messages.AvailableReactions <pyrogram.raw.base.messages.AvailableReactions>`
     """
 
-    __slots__: List[str] = ["hash"]
+    __slots__: list[str] = ["hash"]
 
-    ID = 0x18dea0ac
+    ID = 0x18DEA0AC
     QUALNAME = "functions.messages.GetAvailableReactions"
 
     def __init__(self, *, hash: int) -> None:
@@ -56,9 +57,9 @@ class GetAvailableReactions(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetAvailableReactions":
         # No flags
-        
+
         hash = Int.read(b)
-        
+
         return GetAvailableReactions(hash=hash)
 
     def write(self, *args) -> bytes:
@@ -66,7 +67,7 @@ class GetAvailableReactions(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.hash))
-        
+
         return b.getvalue()

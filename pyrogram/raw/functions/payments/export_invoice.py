@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ExportInvoice(TLObject):  # type: ignore
+class ExportInvoice(TLFunction["raw.base.payments.ExportedInvoice"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class ExportInvoice(TLObject):  # type: ignore
         :obj:`payments.ExportedInvoice <pyrogram.raw.base.payments.ExportedInvoice>`
     """
 
-    __slots__: List[str] = ["invoice_media"]
+    __slots__: list[str] = ["invoice_media"]
 
-    ID = 0xf91b065
+    ID = 0xF91B065
     QUALNAME = "functions.payments.ExportInvoice"
 
     def __init__(self, *, invoice_media: "raw.base.InputMedia") -> None:
@@ -56,9 +58,9 @@ class ExportInvoice(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ExportInvoice":
         # No flags
-        
+
         invoice_media = TLObject.read(b)
-        
+
         return ExportInvoice(invoice_media=invoice_media)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class ExportInvoice(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.invoice_media.write())
-        
+
         return b.getvalue()

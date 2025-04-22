@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +47,9 @@ class TextFixed(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["text"]
+    __slots__: list[str] = ["text"]
 
-    ID = 0x6c3f19b9
+    ID = 0x6C3F19B9
     QUALNAME = "types.TextFixed"
 
     def __init__(self, *, text: "raw.base.RichText") -> None:
@@ -56,9 +58,9 @@ class TextFixed(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "TextFixed":
         # No flags
-        
+
         text = TLObject.read(b)
-        
+
         return TextFixed(text=text)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class TextFixed(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.text.write())
-        
+
         return b.getvalue()

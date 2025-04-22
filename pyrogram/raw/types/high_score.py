@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,9 +53,9 @@ class HighScore(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["pos", "user_id", "score"]
+    __slots__: list[str] = ["pos", "score", "user_id"]
 
-    ID = 0x73a379eb
+    ID = 0x73A379EB
     QUALNAME = "types.HighScore"
 
     def __init__(self, *, pos: int, user_id: int, score: int) -> None:
@@ -64,13 +66,13 @@ class HighScore(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "HighScore":
         # No flags
-        
+
         pos = Int.read(b)
-        
+
         user_id = Long.read(b)
-        
+
         score = Int.read(b)
-        
+
         return HighScore(pos=pos, user_id=user_id, score=score)
 
     def write(self, *args) -> bytes:
@@ -78,11 +80,11 @@ class HighScore(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.pos))
-        
+
         b.write(Long(self.user_id))
-        
+
         b.write(Int(self.score))
-        
+
         return b.getvalue()

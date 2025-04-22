@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,9 +62,9 @@ class SmsJob(TLObject):  # type: ignore
             smsjobs.GetSmsJob
     """
 
-    __slots__: List[str] = ["job_id", "phone_number", "text"]
+    __slots__: list[str] = ["job_id", "phone_number", "text"]
 
-    ID = 0xe6a1eeb8
+    ID = 0xE6A1EEB8
     QUALNAME = "types.SmsJob"
 
     def __init__(self, *, job_id: str, phone_number: str, text: str) -> None:
@@ -73,13 +75,13 @@ class SmsJob(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SmsJob":
         # No flags
-        
+
         job_id = String.read(b)
-        
+
         phone_number = String.read(b)
-        
+
         text = String.read(b)
-        
+
         return SmsJob(job_id=job_id, phone_number=phone_number, text=text)
 
     def write(self, *args) -> bytes:
@@ -87,11 +89,11 @@ class SmsJob(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.job_id))
-        
+
         b.write(String(self.phone_number))
-        
+
         b.write(String(self.text))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,9 +62,9 @@ class RpcAnswerDropped(TLObject):  # type: ignore
             RpcDropAnswer
     """
 
-    __slots__: List[str] = ["msg_id", "seq_no", "bytes"]
+    __slots__: list[str] = ["bytes", "msg_id", "seq_no"]
 
-    ID = 0xa43ad8b7
+    ID = 0xA43AD8B7
     QUALNAME = "types.RpcAnswerDropped"
 
     def __init__(self, *, msg_id: int, seq_no: int, bytes: int) -> None:
@@ -73,13 +75,13 @@ class RpcAnswerDropped(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "RpcAnswerDropped":
         # No flags
-        
+
         msg_id = Long.read(b)
-        
+
         seq_no = Int.read(b)
-        
+
         bytes = Int.read(b)
-        
+
         return RpcAnswerDropped(msg_id=msg_id, seq_no=seq_no, bytes=bytes)
 
     def write(self, *args) -> bytes:
@@ -87,11 +89,11 @@ class RpcAnswerDropped(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.msg_id))
-        
+
         b.write(Int(self.seq_no))
-        
+
         b.write(Int(self.bytes))
-        
+
         return b.getvalue()

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -63,12 +66,19 @@ class Found(TLObject):  # type: ignore
             contacts.Search
     """
 
-    __slots__: List[str] = ["my_results", "results", "chats", "users"]
+    __slots__: list[str] = ["chats", "my_results", "results", "users"]
 
-    ID = 0xb3134d9d
+    ID = 0xB3134D9D
     QUALNAME = "types.contacts.Found"
 
-    def __init__(self, *, my_results: List["raw.base.Peer"], results: List["raw.base.Peer"], chats: List["raw.base.Chat"], users: List["raw.base.User"]) -> None:
+    def __init__(
+        self,
+        *,
+        my_results: list["raw.base.Peer"],
+        results: list["raw.base.Peer"],
+        chats: list["raw.base.Chat"],
+        users: list["raw.base.User"],
+    ) -> None:
         self.my_results = my_results  # Vector<Peer>
         self.results = results  # Vector<Peer>
         self.chats = chats  # Vector<Chat>
@@ -77,15 +87,15 @@ class Found(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "Found":
         # No flags
-        
+
         my_results = TLObject.read(b)
-        
+
         results = TLObject.read(b)
-        
+
         chats = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
+
         return Found(my_results=my_results, results=results, chats=chats, users=users)
 
     def write(self, *args) -> bytes:
@@ -93,13 +103,13 @@ class Found(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.my_results))
-        
+
         b.write(Vector(self.results))
-        
+
         b.write(Vector(self.chats))
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

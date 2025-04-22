@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ChangeAuthorizationSettings(TLObject):  # type: ignore
+class ChangeAuthorizationSettings(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +57,24 @@ class ChangeAuthorizationSettings(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["hash", "confirmed", "encrypted_requests_disabled", "call_requests_disabled"]
+    __slots__: list[str] = [
+        "call_requests_disabled",
+        "confirmed",
+        "encrypted_requests_disabled",
+        "hash",
+    ]
 
-    ID = 0x40f48462
+    ID = 0x40F48462
     QUALNAME = "functions.account.ChangeAuthorizationSettings"
 
-    def __init__(self, *, hash: int, confirmed: Optional[bool] = None, encrypted_requests_disabled: Optional[bool] = None, call_requests_disabled: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        hash: int,
+        confirmed: bool | None = None,
+        encrypted_requests_disabled: bool | None = None,
+        call_requests_disabled: bool | None = None,
+    ) -> None:
         self.hash = hash  # long
         self.confirmed = confirmed  # flags.3?true
         self.encrypted_requests_disabled = encrypted_requests_disabled  # flags.0?Bool
@@ -67,15 +82,19 @@ class ChangeAuthorizationSettings(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChangeAuthorizationSettings":
-        
         flags = Int.read(b)
-        
+
         confirmed = True if flags & (1 << 3) else False
         hash = Long.read(b)
-        
+
         encrypted_requests_disabled = Bool.read(b) if flags & (1 << 0) else None
         call_requests_disabled = Bool.read(b) if flags & (1 << 1) else None
-        return ChangeAuthorizationSettings(hash=hash, confirmed=confirmed, encrypted_requests_disabled=encrypted_requests_disabled, call_requests_disabled=call_requests_disabled)
+        return ChangeAuthorizationSettings(
+            hash=hash,
+            confirmed=confirmed,
+            encrypted_requests_disabled=encrypted_requests_disabled,
+            call_requests_disabled=call_requests_disabled,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -86,13 +105,13 @@ class ChangeAuthorizationSettings(TLObject):  # type: ignore
         flags |= (1 << 0) if self.encrypted_requests_disabled is not None else 0
         flags |= (1 << 1) if self.call_requests_disabled is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.hash))
-        
+
         if self.encrypted_requests_disabled is not None:
             b.write(Bool(self.encrypted_requests_disabled))
-        
+
         if self.call_requests_disabled is not None:
             b.write(Bool(self.call_requests_disabled))
-        
+
         return b.getvalue()

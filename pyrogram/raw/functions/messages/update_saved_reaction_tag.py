@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class UpdateSavedReactionTag(TLObject):  # type: ignore
+class UpdateSavedReactionTag(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,22 +51,26 @@ class UpdateSavedReactionTag(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["reaction", "title"]
+    __slots__: list[str] = ["reaction", "title"]
 
-    ID = 0x60297dec
+    ID = 0x60297DEC
     QUALNAME = "functions.messages.UpdateSavedReactionTag"
 
-    def __init__(self, *, reaction: "raw.base.Reaction", title: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        reaction: "raw.base.Reaction",
+        title: str | None = None,
+    ) -> None:
         self.reaction = reaction  # Reaction
         self.title = title  # flags.0?string
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateSavedReactionTag":
-        
         flags = Int.read(b)
-        
+
         reaction = TLObject.read(b)
-        
+
         title = String.read(b) if flags & (1 << 0) else None
         return UpdateSavedReactionTag(reaction=reaction, title=title)
 
@@ -74,10 +81,10 @@ class UpdateSavedReactionTag(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.title is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.reaction.write())
-        
+
         if self.title is not None:
             b.write(String(self.title))
-        
+
         return b.getvalue()

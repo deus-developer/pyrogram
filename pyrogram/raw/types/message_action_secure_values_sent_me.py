@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,23 +51,28 @@ class MessageActionSecureValuesSentMe(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["values", "credentials"]
+    __slots__: list[str] = ["credentials", "values"]
 
-    ID = 0x1b287353
+    ID = 0x1B287353
     QUALNAME = "types.MessageActionSecureValuesSentMe"
 
-    def __init__(self, *, values: List["raw.base.SecureValue"], credentials: "raw.base.SecureCredentialsEncrypted") -> None:
+    def __init__(
+        self,
+        *,
+        values: list["raw.base.SecureValue"],
+        credentials: "raw.base.SecureCredentialsEncrypted",
+    ) -> None:
         self.values = values  # Vector<SecureValue>
         self.credentials = credentials  # SecureCredentialsEncrypted
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageActionSecureValuesSentMe":
         # No flags
-        
+
         values = TLObject.read(b)
-        
+
         credentials = TLObject.read(b)
-        
+
         return MessageActionSecureValuesSentMe(values=values, credentials=credentials)
 
     def write(self, *args) -> bytes:
@@ -72,9 +80,9 @@ class MessageActionSecureValuesSentMe(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.values))
-        
+
         b.write(self.credentials.write())
-        
+
         return b.getvalue()

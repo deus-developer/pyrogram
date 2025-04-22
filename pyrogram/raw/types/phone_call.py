@@ -17,11 +17,16 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Long,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -81,12 +86,42 @@ class PhoneCall(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "access_hash", "date", "admin_id", "participant_id", "g_a_or_b", "key_fingerprint", "protocol", "connections", "start_date", "p2p_allowed", "video", "custom_parameters"]
+    __slots__: list[str] = [
+        "access_hash",
+        "admin_id",
+        "connections",
+        "custom_parameters",
+        "date",
+        "g_a_or_b",
+        "id",
+        "key_fingerprint",
+        "p2p_allowed",
+        "participant_id",
+        "protocol",
+        "start_date",
+        "video",
+    ]
 
-    ID = 0x30535af5
+    ID = 0x30535AF5
     QUALNAME = "types.PhoneCall"
 
-    def __init__(self, *, id: int, access_hash: int, date: int, admin_id: int, participant_id: int, g_a_or_b: bytes, key_fingerprint: int, protocol: "raw.base.PhoneCallProtocol", connections: List["raw.base.PhoneConnection"], start_date: int, p2p_allowed: Optional[bool] = None, video: Optional[bool] = None, custom_parameters: "raw.base.DataJSON" = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: int,
+        access_hash: int,
+        date: int,
+        admin_id: int,
+        participant_id: int,
+        g_a_or_b: bytes,
+        key_fingerprint: int,
+        protocol: "raw.base.PhoneCallProtocol",
+        connections: list["raw.base.PhoneConnection"],
+        start_date: int,
+        p2p_allowed: bool | None = None,
+        video: bool | None = None,
+        custom_parameters: "raw.base.DataJSON" = None,
+    ) -> None:
         self.id = id  # long
         self.access_hash = access_hash  # long
         self.date = date  # int
@@ -103,34 +138,47 @@ class PhoneCall(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PhoneCall":
-        
         flags = Int.read(b)
-        
+
         p2p_allowed = True if flags & (1 << 5) else False
         video = True if flags & (1 << 6) else False
         id = Long.read(b)
-        
+
         access_hash = Long.read(b)
-        
+
         date = Int.read(b)
-        
+
         admin_id = Long.read(b)
-        
+
         participant_id = Long.read(b)
-        
+
         g_a_or_b = Bytes.read(b)
-        
+
         key_fingerprint = Long.read(b)
-        
+
         protocol = TLObject.read(b)
-        
+
         connections = TLObject.read(b)
-        
+
         start_date = Int.read(b)
-        
+
         custom_parameters = TLObject.read(b) if flags & (1 << 7) else None
-        
-        return PhoneCall(id=id, access_hash=access_hash, date=date, admin_id=admin_id, participant_id=participant_id, g_a_or_b=g_a_or_b, key_fingerprint=key_fingerprint, protocol=protocol, connections=connections, start_date=start_date, p2p_allowed=p2p_allowed, video=video, custom_parameters=custom_parameters)
+
+        return PhoneCall(
+            id=id,
+            access_hash=access_hash,
+            date=date,
+            admin_id=admin_id,
+            participant_id=participant_id,
+            g_a_or_b=g_a_or_b,
+            key_fingerprint=key_fingerprint,
+            protocol=protocol,
+            connections=connections,
+            start_date=start_date,
+            p2p_allowed=p2p_allowed,
+            video=video,
+            custom_parameters=custom_parameters,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -141,28 +189,28 @@ class PhoneCall(TLObject):  # type: ignore
         flags |= (1 << 6) if self.video else 0
         flags |= (1 << 7) if self.custom_parameters is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.id))
-        
+
         b.write(Long(self.access_hash))
-        
+
         b.write(Int(self.date))
-        
+
         b.write(Long(self.admin_id))
-        
+
         b.write(Long(self.participant_id))
-        
+
         b.write(Bytes(self.g_a_or_b))
-        
+
         b.write(Long(self.key_fingerprint))
-        
+
         b.write(self.protocol.write())
-        
+
         b.write(Vector(self.connections))
-        
+
         b.write(Int(self.start_date))
-        
+
         if self.custom_parameters is not None:
             b.write(self.custom_parameters.write())
-        
+
         return b.getvalue()

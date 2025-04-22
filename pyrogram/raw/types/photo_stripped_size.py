@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +51,9 @@ class PhotoStrippedSize(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["type", "bytes"]
+    __slots__: list[str] = ["bytes", "type"]
 
-    ID = 0xe0b0bc2e
+    ID = 0xE0B0BC2E
     QUALNAME = "types.PhotoStrippedSize"
 
     def __init__(self, *, type: str, bytes: bytes) -> None:
@@ -60,11 +63,11 @@ class PhotoStrippedSize(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PhotoStrippedSize":
         # No flags
-        
+
         type = String.read(b)
-        
+
         bytes = Bytes.read(b)
-        
+
         return PhotoStrippedSize(type=type, bytes=bytes)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class PhotoStrippedSize(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.type))
-        
+
         b.write(Bytes(self.bytes))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SignUp(TLObject):  # type: ignore
+class SignUp(TLFunction["raw.base.auth.Authorization"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -57,12 +59,26 @@ class SignUp(TLObject):  # type: ignore
         :obj:`auth.Authorization <pyrogram.raw.base.auth.Authorization>`
     """
 
-    __slots__: List[str] = ["phone_number", "phone_code_hash", "first_name", "last_name", "no_joined_notifications"]
+    __slots__: list[str] = [
+        "first_name",
+        "last_name",
+        "no_joined_notifications",
+        "phone_code_hash",
+        "phone_number",
+    ]
 
-    ID = 0xaac7b717
+    ID = 0xAAC7B717
     QUALNAME = "functions.auth.SignUp"
 
-    def __init__(self, *, phone_number: str, phone_code_hash: str, first_name: str, last_name: str, no_joined_notifications: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        phone_number: str,
+        phone_code_hash: str,
+        first_name: str,
+        last_name: str,
+        no_joined_notifications: bool | None = None,
+    ) -> None:
         self.phone_number = phone_number  # string
         self.phone_code_hash = phone_code_hash  # string
         self.first_name = first_name  # string
@@ -71,19 +87,24 @@ class SignUp(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SignUp":
-        
         flags = Int.read(b)
-        
+
         no_joined_notifications = True if flags & (1 << 0) else False
         phone_number = String.read(b)
-        
+
         phone_code_hash = String.read(b)
-        
+
         first_name = String.read(b)
-        
+
         last_name = String.read(b)
-        
-        return SignUp(phone_number=phone_number, phone_code_hash=phone_code_hash, first_name=first_name, last_name=last_name, no_joined_notifications=no_joined_notifications)
+
+        return SignUp(
+            phone_number=phone_number,
+            phone_code_hash=phone_code_hash,
+            first_name=first_name,
+            last_name=last_name,
+            no_joined_notifications=no_joined_notifications,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -92,13 +113,13 @@ class SignUp(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.no_joined_notifications else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.phone_number))
-        
+
         b.write(String(self.phone_code_hash))
-        
+
         b.write(String(self.first_name))
-        
+
         b.write(String(self.last_name))
-        
+
         return b.getvalue()

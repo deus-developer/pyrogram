@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -25,7 +24,7 @@ from pyrogram import raw
 class BlockUser:
     async def block_user(
         self: "pyrogram.Client",
-        user_id: Union[int, str]
+        user_id: int | str,
     ) -> bool:
         """Block a user.
 
@@ -48,7 +47,7 @@ class BlockUser:
         return bool(
             await self.invoke(
                 raw.functions.contacts.Block(
-                    id=await self.resolve_peer(user_id)
-                )
-            )
+                    id=await self.resolve_peer(user_id),
+                ),
+            ),
         )

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SearchSentMedia(TLObject):  # type: ignore
+class SearchSentMedia(TLFunction["raw.base.messages.Messages"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +54,18 @@ class SearchSentMedia(TLObject):  # type: ignore
         :obj:`messages.Messages <pyrogram.raw.base.messages.Messages>`
     """
 
-    __slots__: List[str] = ["q", "filter", "limit"]
+    __slots__: list[str] = ["filter", "limit", "q"]
 
-    ID = 0x107e31a0
+    ID = 0x107E31A0
     QUALNAME = "functions.messages.SearchSentMedia"
 
-    def __init__(self, *, q: str, filter: "raw.base.MessagesFilter", limit: int) -> None:
+    def __init__(
+        self,
+        *,
+        q: str,
+        filter: "raw.base.MessagesFilter",
+        limit: int,
+    ) -> None:
         self.q = q  # string
         self.filter = filter  # MessagesFilter
         self.limit = limit  # int
@@ -64,13 +73,13 @@ class SearchSentMedia(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SearchSentMedia":
         # No flags
-        
+
         q = String.read(b)
-        
+
         filter = TLObject.read(b)
-        
+
         limit = Int.read(b)
-        
+
         return SearchSentMedia(q=q, filter=filter, limit=limit)
 
     def write(self, *args) -> bytes:
@@ -78,11 +87,11 @@ class SearchSentMedia(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.q))
-        
+
         b.write(self.filter.write())
-        
+
         b.write(Int(self.limit))
-        
+
         return b.getvalue()

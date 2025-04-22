@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,25 +53,34 @@ class AutoSaveSettings(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["photos", "videos", "video_max_size"]
+    __slots__: list[str] = ["photos", "video_max_size", "videos"]
 
-    ID = 0xc84834ce
+    ID = 0xC84834CE
     QUALNAME = "types.AutoSaveSettings"
 
-    def __init__(self, *, photos: Optional[bool] = None, videos: Optional[bool] = None, video_max_size: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        photos: bool | None = None,
+        videos: bool | None = None,
+        video_max_size: int | None = None,
+    ) -> None:
         self.photos = photos  # flags.0?true
         self.videos = videos  # flags.1?true
         self.video_max_size = video_max_size  # flags.2?long
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "AutoSaveSettings":
-        
         flags = Int.read(b)
-        
+
         photos = True if flags & (1 << 0) else False
         videos = True if flags & (1 << 1) else False
         video_max_size = Long.read(b) if flags & (1 << 2) else None
-        return AutoSaveSettings(photos=photos, videos=videos, video_max_size=video_max_size)
+        return AutoSaveSettings(
+            photos=photos,
+            videos=videos,
+            video_max_size=video_max_size,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -80,8 +91,8 @@ class AutoSaveSettings(TLObject):  # type: ignore
         flags |= (1 << 1) if self.videos else 0
         flags |= (1 << 2) if self.video_max_size is not None else 0
         b.write(Int(flags))
-        
+
         if self.video_max_size is not None:
             b.write(Long(self.video_max_size))
-        
+
         return b.getvalue()

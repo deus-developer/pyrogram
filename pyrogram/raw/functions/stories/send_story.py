@@ -17,11 +17,16 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +35,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SendStory(TLObject):  # type: ignore
+class SendStory(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -81,12 +86,42 @@ class SendStory(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["peer", "media", "privacy_rules", "random_id", "pinned", "noforwards", "fwd_modified", "media_areas", "caption", "entities", "period", "fwd_from_id", "fwd_from_story"]
+    __slots__: list[str] = [
+        "caption",
+        "entities",
+        "fwd_from_id",
+        "fwd_from_story",
+        "fwd_modified",
+        "media",
+        "media_areas",
+        "noforwards",
+        "peer",
+        "period",
+        "pinned",
+        "privacy_rules",
+        "random_id",
+    ]
 
-    ID = 0xe4e6694b
+    ID = 0xE4E6694B
     QUALNAME = "functions.stories.SendStory"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", media: "raw.base.InputMedia", privacy_rules: List["raw.base.InputPrivacyRule"], random_id: int, pinned: Optional[bool] = None, noforwards: Optional[bool] = None, fwd_modified: Optional[bool] = None, media_areas: Optional[List["raw.base.MediaArea"]] = None, caption: Optional[str] = None, entities: Optional[List["raw.base.MessageEntity"]] = None, period: Optional[int] = None, fwd_from_id: "raw.base.InputPeer" = None, fwd_from_story: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        media: "raw.base.InputMedia",
+        privacy_rules: list["raw.base.InputPrivacyRule"],
+        random_id: int,
+        pinned: bool | None = None,
+        noforwards: bool | None = None,
+        fwd_modified: bool | None = None,
+        media_areas: list["raw.base.MediaArea"] | None = None,
+        caption: str | None = None,
+        entities: list["raw.base.MessageEntity"] | None = None,
+        period: int | None = None,
+        fwd_from_id: "raw.base.InputPeer" = None,
+        fwd_from_story: int | None = None,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.media = media  # InputMedia
         self.privacy_rules = privacy_rules  # Vector<InputPrivacyRule>
@@ -103,30 +138,43 @@ class SendStory(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SendStory":
-        
         flags = Int.read(b)
-        
+
         pinned = True if flags & (1 << 2) else False
         noforwards = True if flags & (1 << 4) else False
         fwd_modified = True if flags & (1 << 7) else False
         peer = TLObject.read(b)
-        
+
         media = TLObject.read(b)
-        
+
         media_areas = TLObject.read(b) if flags & (1 << 5) else []
-        
+
         caption = String.read(b) if flags & (1 << 0) else None
         entities = TLObject.read(b) if flags & (1 << 1) else []
-        
+
         privacy_rules = TLObject.read(b)
-        
+
         random_id = Long.read(b)
-        
+
         period = Int.read(b) if flags & (1 << 3) else None
         fwd_from_id = TLObject.read(b) if flags & (1 << 6) else None
-        
+
         fwd_from_story = Int.read(b) if flags & (1 << 6) else None
-        return SendStory(peer=peer, media=media, privacy_rules=privacy_rules, random_id=random_id, pinned=pinned, noforwards=noforwards, fwd_modified=fwd_modified, media_areas=media_areas, caption=caption, entities=entities, period=period, fwd_from_id=fwd_from_id, fwd_from_story=fwd_from_story)
+        return SendStory(
+            peer=peer,
+            media=media,
+            privacy_rules=privacy_rules,
+            random_id=random_id,
+            pinned=pinned,
+            noforwards=noforwards,
+            fwd_modified=fwd_modified,
+            media_areas=media_areas,
+            caption=caption,
+            entities=entities,
+            period=period,
+            fwd_from_id=fwd_from_id,
+            fwd_from_story=fwd_from_story,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -143,31 +191,31 @@ class SendStory(TLObject):  # type: ignore
         flags |= (1 << 6) if self.fwd_from_id is not None else 0
         flags |= (1 << 6) if self.fwd_from_story is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(self.media.write())
-        
+
         if self.media_areas is not None:
             b.write(Vector(self.media_areas))
-        
+
         if self.caption is not None:
             b.write(String(self.caption))
-        
+
         if self.entities is not None:
             b.write(Vector(self.entities))
-        
+
         b.write(Vector(self.privacy_rules))
-        
+
         b.write(Long(self.random_id))
-        
+
         if self.period is not None:
             b.write(Int(self.period))
-        
+
         if self.fwd_from_id is not None:
             b.write(self.fwd_from_id.write())
-        
+
         if self.fwd_from_story is not None:
             b.write(Int(self.fwd_from_story))
-        
+
         return b.getvalue()

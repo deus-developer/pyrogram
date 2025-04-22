@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,9 +53,9 @@ class TextImage(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["document_id", "w", "h"]
+    __slots__: list[str] = ["document_id", "h", "w"]
 
-    ID = 0x81ccf4f
+    ID = 0x81CCF4F
     QUALNAME = "types.TextImage"
 
     def __init__(self, *, document_id: int, w: int, h: int) -> None:
@@ -64,13 +66,13 @@ class TextImage(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "TextImage":
         # No flags
-        
+
         document_id = Long.read(b)
-        
+
         w = Int.read(b)
-        
+
         h = Int.read(b)
-        
+
         return TextImage(document_id=document_id, w=w, h=h)
 
     def write(self, *args) -> bytes:
@@ -78,11 +80,11 @@ class TextImage(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.document_id))
-        
+
         b.write(Int(self.w))
-        
+
         b.write(Int(self.h))
-        
+
         return b.getvalue()

@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -44,9 +45,9 @@ class NotifyUsers(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
-    ID = 0xb4c83b4c
+    ID = 0xB4C83B4C
     QUALNAME = "types.NotifyUsers"
 
     def __init__(self) -> None:
@@ -55,7 +56,7 @@ class NotifyUsers(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "NotifyUsers":
         # No flags
-        
+
         return NotifyUsers()
 
     def write(self, *args) -> bytes:
@@ -63,5 +64,5 @@ class NotifyUsers(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         return b.getvalue()

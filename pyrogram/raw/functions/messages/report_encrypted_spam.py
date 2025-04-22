@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ReportEncryptedSpam(TLObject):  # type: ignore
+class ReportEncryptedSpam(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class ReportEncryptedSpam(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["peer"]
+    __slots__: list[str] = ["peer"]
 
-    ID = 0x4b0c8c0f
+    ID = 0x4B0C8C0F
     QUALNAME = "functions.messages.ReportEncryptedSpam"
 
     def __init__(self, *, peer: "raw.base.InputEncryptedChat") -> None:
@@ -56,9 +58,9 @@ class ReportEncryptedSpam(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ReportEncryptedSpam":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         return ReportEncryptedSpam(peer=peer)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class ReportEncryptedSpam(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         return b.getvalue()

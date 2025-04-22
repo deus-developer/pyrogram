@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class MarkDialogUnread(TLObject):  # type: ignore
+class MarkDialogUnread(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,27 @@ class MarkDialogUnread(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["peer", "unread"]
+    __slots__: list[str] = ["peer", "unread"]
 
-    ID = 0xc286d98f
+    ID = 0xC286D98F
     QUALNAME = "functions.messages.MarkDialogUnread"
 
-    def __init__(self, *, peer: "raw.base.InputDialogPeer", unread: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputDialogPeer",
+        unread: bool | None = None,
+    ) -> None:
         self.peer = peer  # InputDialogPeer
         self.unread = unread  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MarkDialogUnread":
-        
         flags = Int.read(b)
-        
+
         unread = True if flags & (1 << 0) else False
         peer = TLObject.read(b)
-        
+
         return MarkDialogUnread(peer=peer, unread=unread)
 
     def write(self, *args) -> bytes:
@@ -74,7 +80,7 @@ class MarkDialogUnread(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.unread else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         return b.getvalue()

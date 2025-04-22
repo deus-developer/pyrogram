@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class AcceptContact(TLObject):  # type: ignore
+class AcceptContact(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class AcceptContact(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["id"]
+    __slots__: list[str] = ["id"]
 
-    ID = 0xf831a20f
+    ID = 0xF831A20F
     QUALNAME = "functions.contacts.AcceptContact"
 
     def __init__(self, *, id: "raw.base.InputUser") -> None:
@@ -56,9 +58,9 @@ class AcceptContact(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "AcceptContact":
         # No flags
-        
+
         id = TLObject.read(b)
-        
+
         return AcceptContact(id=id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class AcceptContact(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.id.write())
-        
+
         return b.getvalue()

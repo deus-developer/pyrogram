@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class RequestSimpleWebView(TLObject):  # type: ignore
+class RequestSimpleWebView(TLFunction["raw.base.SimpleWebViewResult"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -63,12 +66,30 @@ class RequestSimpleWebView(TLObject):  # type: ignore
         :obj:`SimpleWebViewResult <pyrogram.raw.base.SimpleWebViewResult>`
     """
 
-    __slots__: List[str] = ["bot", "platform", "from_switch_webview", "from_side_menu", "url", "start_param", "theme_params"]
+    __slots__: list[str] = [
+        "bot",
+        "from_side_menu",
+        "from_switch_webview",
+        "platform",
+        "start_param",
+        "theme_params",
+        "url",
+    ]
 
-    ID = 0x1a46500a
+    ID = 0x1A46500A
     QUALNAME = "functions.messages.RequestSimpleWebView"
 
-    def __init__(self, *, bot: "raw.base.InputUser", platform: str, from_switch_webview: Optional[bool] = None, from_side_menu: Optional[bool] = None, url: Optional[str] = None, start_param: Optional[str] = None, theme_params: "raw.base.DataJSON" = None) -> None:
+    def __init__(
+        self,
+        *,
+        bot: "raw.base.InputUser",
+        platform: str,
+        from_switch_webview: bool | None = None,
+        from_side_menu: bool | None = None,
+        url: str | None = None,
+        start_param: str | None = None,
+        theme_params: "raw.base.DataJSON" = None,
+    ) -> None:
         self.bot = bot  # InputUser
         self.platform = platform  # string
         self.from_switch_webview = from_switch_webview  # flags.1?true
@@ -79,20 +100,27 @@ class RequestSimpleWebView(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "RequestSimpleWebView":
-        
         flags = Int.read(b)
-        
+
         from_switch_webview = True if flags & (1 << 1) else False
         from_side_menu = True if flags & (1 << 2) else False
         bot = TLObject.read(b)
-        
+
         url = String.read(b) if flags & (1 << 3) else None
         start_param = String.read(b) if flags & (1 << 4) else None
         theme_params = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         platform = String.read(b)
-        
-        return RequestSimpleWebView(bot=bot, platform=platform, from_switch_webview=from_switch_webview, from_side_menu=from_side_menu, url=url, start_param=start_param, theme_params=theme_params)
+
+        return RequestSimpleWebView(
+            bot=bot,
+            platform=platform,
+            from_switch_webview=from_switch_webview,
+            from_side_menu=from_side_menu,
+            url=url,
+            start_param=start_param,
+            theme_params=theme_params,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -105,18 +133,18 @@ class RequestSimpleWebView(TLObject):  # type: ignore
         flags |= (1 << 4) if self.start_param is not None else 0
         flags |= (1 << 0) if self.theme_params is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.bot.write())
-        
+
         if self.url is not None:
             b.write(String(self.url))
-        
+
         if self.start_param is not None:
             b.write(String(self.start_param))
-        
+
         if self.theme_params is not None:
             b.write(self.theme_params.write())
-        
+
         b.write(String(self.platform))
-        
+
         return b.getvalue()

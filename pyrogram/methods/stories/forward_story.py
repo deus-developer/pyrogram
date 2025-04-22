@@ -17,18 +17,17 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Union, Optional
+from typing import Optional
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import raw, types, utils
+
 
 class ForwardStory:
     async def forward_story(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        from_chat_id: Union[int, str],
+        chat_id: int | str,
+        from_chat_id: int | str,
         story_id: int,
         disable_notification: bool = None,
         message_thread_id: int = None,
@@ -77,23 +76,29 @@ class ForwardStory:
                 peer=await self.resolve_peer(chat_id),
                 media=raw.types.InputMediaStory(
                     peer=await self.resolve_peer(from_chat_id),
-                    id=story_id
+                    id=story_id,
                 ),
                 silent=disable_notification or None,
                 random_id=self.rnd_id(),
                 schedule_date=utils.datetime_to_timestamp(schedule_date),
                 message="",
                 reply_to=utils.get_reply_to(
-                    message_thread_id=message_thread_id
+                    message_thread_id=message_thread_id,
                 ),
-            )
+            ),
         )
 
         for i in r.updates:
-            if isinstance(i, (raw.types.UpdateNewMessage,
-                                raw.types.UpdateNewChannelMessage,
-                                raw.types.UpdateNewScheduledMessage)):
+            if isinstance(
+                i,
+                (
+                    raw.types.UpdateNewMessage,
+                    raw.types.UpdateNewChannelMessage,
+                    raw.types.UpdateNewScheduledMessage,
+                ),
+            ):
                 return await types.Message.from_raw_tl(
-                    self, i.message,
-                    is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage)
+                    self,
+                    i.message,
+                    is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
                 )

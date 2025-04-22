@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class CheckGroupCall(TLObject):  # type: ignore
+class CheckGroupCall(TLFunction[list[int]]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +51,23 @@ class CheckGroupCall(TLObject):  # type: ignore
         List of ``int`` ``32-bit``
     """
 
-    __slots__: List[str] = ["call", "sources"]
+    __slots__: list[str] = ["call", "sources"]
 
-    ID = 0xb59cf977
+    ID = 0xB59CF977
     QUALNAME = "functions.phone.CheckGroupCall"
 
-    def __init__(self, *, call: "raw.base.InputGroupCall", sources: List[int]) -> None:
+    def __init__(self, *, call: "raw.base.InputGroupCall", sources: list[int]) -> None:
         self.call = call  # InputGroupCall
         self.sources = sources  # Vector<int>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "CheckGroupCall":
         # No flags
-        
+
         call = TLObject.read(b)
-        
+
         sources = TLObject.read(b, Int)
-        
+
         return CheckGroupCall(call=call, sources=sources)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class CheckGroupCall(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.call.write())
-        
+
         b.write(Vector(self.sources, Int))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -68,12 +70,26 @@ class MessageMediaWebPage(TLObject):  # type: ignore
             messages.UploadImportedMedia
     """
 
-    __slots__: List[str] = ["webpage", "force_large_media", "force_small_media", "manual", "safe"]
+    __slots__: list[str] = [
+        "force_large_media",
+        "force_small_media",
+        "manual",
+        "safe",
+        "webpage",
+    ]
 
-    ID = 0xddf10c3b
+    ID = 0xDDF10C3B
     QUALNAME = "types.MessageMediaWebPage"
 
-    def __init__(self, *, webpage: "raw.base.WebPage", force_large_media: Optional[bool] = None, force_small_media: Optional[bool] = None, manual: Optional[bool] = None, safe: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        webpage: "raw.base.WebPage",
+        force_large_media: bool | None = None,
+        force_small_media: bool | None = None,
+        manual: bool | None = None,
+        safe: bool | None = None,
+    ) -> None:
         self.webpage = webpage  # WebPage
         self.force_large_media = force_large_media  # flags.0?true
         self.force_small_media = force_small_media  # flags.1?true
@@ -82,16 +98,21 @@ class MessageMediaWebPage(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageMediaWebPage":
-        
         flags = Int.read(b)
-        
+
         force_large_media = True if flags & (1 << 0) else False
         force_small_media = True if flags & (1 << 1) else False
         manual = True if flags & (1 << 3) else False
         safe = True if flags & (1 << 4) else False
         webpage = TLObject.read(b)
-        
-        return MessageMediaWebPage(webpage=webpage, force_large_media=force_large_media, force_small_media=force_small_media, manual=manual, safe=safe)
+
+        return MessageMediaWebPage(
+            webpage=webpage,
+            force_large_media=force_large_media,
+            force_small_media=force_small_media,
+            manual=manual,
+            safe=safe,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -103,7 +124,7 @@ class MessageMediaWebPage(TLObject):  # type: ignore
         flags |= (1 << 3) if self.manual else 0
         flags |= (1 << 4) if self.safe else 0
         b.write(Int(flags))
-        
+
         b.write(self.webpage.write())
-        
+
         return b.getvalue()

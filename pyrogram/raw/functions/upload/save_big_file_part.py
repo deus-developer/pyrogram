@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SaveBigFilePart(TLObject):  # type: ignore
+class SaveBigFilePart(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +57,19 @@ class SaveBigFilePart(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["file_id", "file_part", "file_total_parts", "bytes"]
+    __slots__: list[str] = ["bytes", "file_id", "file_part", "file_total_parts"]
 
-    ID = 0xde7b673d
+    ID = 0xDE7B673D
     QUALNAME = "functions.upload.SaveBigFilePart"
 
-    def __init__(self, *, file_id: int, file_part: int, file_total_parts: int, bytes: bytes) -> None:
+    def __init__(
+        self,
+        *,
+        file_id: int,
+        file_part: int,
+        file_total_parts: int,
+        bytes: bytes,
+    ) -> None:
         self.file_id = file_id  # long
         self.file_part = file_part  # int
         self.file_total_parts = file_total_parts  # int
@@ -68,29 +78,34 @@ class SaveBigFilePart(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SaveBigFilePart":
         # No flags
-        
+
         file_id = Long.read(b)
-        
+
         file_part = Int.read(b)
-        
+
         file_total_parts = Int.read(b)
-        
+
         bytes = Bytes.read(b)
-        
-        return SaveBigFilePart(file_id=file_id, file_part=file_part, file_total_parts=file_total_parts, bytes=bytes)
+
+        return SaveBigFilePart(
+            file_id=file_id,
+            file_part=file_part,
+            file_total_parts=file_total_parts,
+            bytes=bytes,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.file_id))
-        
+
         b.write(Int(self.file_part))
-        
+
         b.write(Int(self.file_total_parts))
-        
+
         b.write(Bytes(self.bytes))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetGlobalPrivacySettings(TLObject):  # type: ignore
+class SetGlobalPrivacySettings(TLFunction["raw.base.GlobalPrivacySettings"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class SetGlobalPrivacySettings(TLObject):  # type: ignore
         :obj:`GlobalPrivacySettings <pyrogram.raw.base.GlobalPrivacySettings>`
     """
 
-    __slots__: List[str] = ["settings"]
+    __slots__: list[str] = ["settings"]
 
-    ID = 0x1edaaac2
+    ID = 0x1EDAAAC2
     QUALNAME = "functions.account.SetGlobalPrivacySettings"
 
     def __init__(self, *, settings: "raw.base.GlobalPrivacySettings") -> None:
@@ -56,9 +58,9 @@ class SetGlobalPrivacySettings(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetGlobalPrivacySettings":
         # No flags
-        
+
         settings = TLObject.read(b)
-        
+
         return SetGlobalPrivacySettings(settings=settings)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class SetGlobalPrivacySettings(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.settings.write())
-        
+
         return b.getvalue()

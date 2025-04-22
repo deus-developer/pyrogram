@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +51,9 @@ class PageBlockAudio(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["audio_id", "caption"]
+    __slots__: list[str] = ["audio_id", "caption"]
 
-    ID = 0x804361ea
+    ID = 0x804361EA
     QUALNAME = "types.PageBlockAudio"
 
     def __init__(self, *, audio_id: int, caption: "raw.base.PageCaption") -> None:
@@ -60,11 +63,11 @@ class PageBlockAudio(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PageBlockAudio":
         # No flags
-        
+
         audio_id = Long.read(b)
-        
+
         caption = TLObject.read(b)
-        
+
         return PageBlockAudio(audio_id=audio_id, caption=caption)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class PageBlockAudio(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.audio_id))
-        
+
         b.write(self.caption.write())
-        
+
         return b.getvalue()

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,12 +60,20 @@ class PremiumGiftOption(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["months", "currency", "amount", "bot_url", "store_product"]
+    __slots__: list[str] = ["amount", "bot_url", "currency", "months", "store_product"]
 
-    ID = 0x74c34319
+    ID = 0x74C34319
     QUALNAME = "types.PremiumGiftOption"
 
-    def __init__(self, *, months: int, currency: str, amount: int, bot_url: str, store_product: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        months: int,
+        currency: str,
+        amount: int,
+        bot_url: str,
+        store_product: str | None = None,
+    ) -> None:
         self.months = months  # int
         self.currency = currency  # string
         self.amount = amount  # long
@@ -71,19 +82,24 @@ class PremiumGiftOption(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PremiumGiftOption":
-        
         flags = Int.read(b)
-        
+
         months = Int.read(b)
-        
+
         currency = String.read(b)
-        
+
         amount = Long.read(b)
-        
+
         bot_url = String.read(b)
-        
+
         store_product = String.read(b) if flags & (1 << 0) else None
-        return PremiumGiftOption(months=months, currency=currency, amount=amount, bot_url=bot_url, store_product=store_product)
+        return PremiumGiftOption(
+            months=months,
+            currency=currency,
+            amount=amount,
+            bot_url=bot_url,
+            store_product=store_product,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -92,16 +108,16 @@ class PremiumGiftOption(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.store_product is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.months))
-        
+
         b.write(String(self.currency))
-        
+
         b.write(Long(self.amount))
-        
+
         b.write(String(self.bot_url))
-        
+
         if self.store_product is not None:
             b.write(String(self.store_product))
-        
+
         return b.getvalue()

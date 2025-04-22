@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,12 +60,20 @@ class DocumentAttributeAudio(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["duration", "voice", "title", "performer", "waveform"]
+    __slots__: list[str] = ["duration", "performer", "title", "voice", "waveform"]
 
-    ID = 0x9852f9c6
+    ID = 0x9852F9C6
     QUALNAME = "types.DocumentAttributeAudio"
 
-    def __init__(self, *, duration: int, voice: Optional[bool] = None, title: Optional[str] = None, performer: Optional[str] = None, waveform: Optional[bytes] = None) -> None:
+    def __init__(
+        self,
+        *,
+        duration: int,
+        voice: bool | None = None,
+        title: str | None = None,
+        performer: str | None = None,
+        waveform: bytes | None = None,
+    ) -> None:
         self.duration = duration  # int
         self.voice = voice  # flags.10?true
         self.title = title  # flags.0?string
@@ -71,16 +82,21 @@ class DocumentAttributeAudio(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DocumentAttributeAudio":
-        
         flags = Int.read(b)
-        
+
         voice = True if flags & (1 << 10) else False
         duration = Int.read(b)
-        
+
         title = String.read(b) if flags & (1 << 0) else None
         performer = String.read(b) if flags & (1 << 1) else None
         waveform = Bytes.read(b) if flags & (1 << 2) else None
-        return DocumentAttributeAudio(duration=duration, voice=voice, title=title, performer=performer, waveform=waveform)
+        return DocumentAttributeAudio(
+            duration=duration,
+            voice=voice,
+            title=title,
+            performer=performer,
+            waveform=waveform,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -92,16 +108,16 @@ class DocumentAttributeAudio(TLObject):  # type: ignore
         flags |= (1 << 1) if self.performer is not None else 0
         flags |= (1 << 2) if self.waveform is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.duration))
-        
+
         if self.title is not None:
             b.write(String(self.title))
-        
+
         if self.performer is not None:
             b.write(String(self.performer))
-        
+
         if self.waveform is not None:
             b.write(Bytes(self.waveform))
-        
+
         return b.getvalue()

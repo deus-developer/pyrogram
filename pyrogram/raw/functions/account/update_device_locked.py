@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class UpdateDeviceLocked(TLObject):  # type: ignore
+class UpdateDeviceLocked(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +46,9 @@ class UpdateDeviceLocked(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["period"]
+    __slots__: list[str] = ["period"]
 
-    ID = 0x38df3532
+    ID = 0x38DF3532
     QUALNAME = "functions.account.UpdateDeviceLocked"
 
     def __init__(self, *, period: int) -> None:
@@ -56,9 +57,9 @@ class UpdateDeviceLocked(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateDeviceLocked":
         # No flags
-        
+
         period = Int.read(b)
-        
+
         return UpdateDeviceLocked(period=period)
 
     def write(self, *args) -> bytes:
@@ -66,7 +67,7 @@ class UpdateDeviceLocked(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.period))
-        
+
         return b.getvalue()

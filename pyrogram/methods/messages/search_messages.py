@@ -16,22 +16,22 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, List, AsyncGenerator, Optional
+from collections.abc import AsyncGenerator
 
 import pyrogram
-from pyrogram import raw, types, utils, enums
+from pyrogram import enums, raw, types, utils
 
 
 # noinspection PyShadowingBuiltins
 async def get_chunk(
     client,
-    chat_id: Union[int, str],
+    chat_id: int | str,
     query: str = "",
     filter: "enums.MessagesFilter" = enums.MessagesFilter.EMPTY,
     offset: int = 0,
     limit: int = 100,
-    from_user: Union[int, str] = None
-) -> List["types.Message"]:
+    from_user: int | str = None,
+) -> list["types.Message"]:
     r = await client.invoke(
         raw.functions.messages.Search(
             peer=await client.resolve_peer(chat_id),
@@ -44,14 +44,10 @@ async def get_chunk(
             limit=limit,
             min_id=0,
             max_id=0,
-            from_id=(
-                await client.resolve_peer(from_user)
-                if from_user
-                else None
-            ),
-            hash=0
+            from_id=(await client.resolve_peer(from_user) if from_user else None),
+            hash=0,
         ),
-        sleep_threshold=60
+        sleep_threshold=60,
     )
 
     return await utils.parse_messages(client, r, replies=0)
@@ -61,12 +57,12 @@ class SearchMessages:
     # noinspection PyShadowingBuiltins
     async def search_messages(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         query: str = "",
         offset: int = 0,
         filter: "enums.MessagesFilter" = enums.MessagesFilter.EMPTY,
         limit: int = 0,
-        from_user: Union[int, str] = None
+        from_user: int | str = None,
     ) -> AsyncGenerator["types.Message", None]:
         """Search for text and media messages inside a specific chat.
 
@@ -110,18 +106,21 @@ class SearchMessages:
                 from pyrogram import enums
 
                 # Search for text messages in chat. Get the last 120 results
-                async for message in app.search_messages(chat_id, query="hello", limit=120):
+                async for message in app.search_messages(
+                    chat_id, query="hello", limit=120
+                ):
                     print(message.text)
 
                 # Search for pinned messages in chat
-                async for message in app.search_messages(chat_id, filter=enums.MessagesFilter.PINNED):
+                async for message in app.search_messages(
+                    chat_id, filter=enums.MessagesFilter.PINNED
+                ):
                     print(message.text)
 
                 # Search for messages containing "hello" sent by yourself in chat
                 async for message in app.search_messages(chat, "hello", from_user="me"):
                     print(message.text)
         """
-
         current = 0
         total = abs(limit) or (1 << 31) - 1
         limit = min(100, total)
@@ -134,7 +133,7 @@ class SearchMessages:
                 filter=filter,
                 offset=offset,
                 limit=limit,
-                from_user=from_user
+                from_user=from_user,
             )
 
             if not messages:

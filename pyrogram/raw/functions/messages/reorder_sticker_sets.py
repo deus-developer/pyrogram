@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ReorderStickerSets(TLObject):  # type: ignore
+class ReorderStickerSets(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,25 +54,30 @@ class ReorderStickerSets(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["order", "masks", "emojis"]
+    __slots__: list[str] = ["emojis", "masks", "order"]
 
     ID = 0x78337739
     QUALNAME = "functions.messages.ReorderStickerSets"
 
-    def __init__(self, *, order: List[int], masks: Optional[bool] = None, emojis: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        order: list[int],
+        masks: bool | None = None,
+        emojis: bool | None = None,
+    ) -> None:
         self.order = order  # Vector<long>
         self.masks = masks  # flags.0?true
         self.emojis = emojis  # flags.1?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ReorderStickerSets":
-        
         flags = Int.read(b)
-        
+
         masks = True if flags & (1 << 0) else False
         emojis = True if flags & (1 << 1) else False
         order = TLObject.read(b, Long)
-        
+
         return ReorderStickerSets(order=order, masks=masks, emojis=emojis)
 
     def write(self, *args) -> bytes:
@@ -80,7 +88,7 @@ class ReorderStickerSets(TLObject):  # type: ignore
         flags |= (1 << 0) if self.masks else 0
         flags |= (1 << 1) if self.emojis else 0
         b.write(Int(flags))
-        
+
         b.write(Vector(self.order, Long))
-        
+
         return b.getvalue()

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,9 +60,9 @@ class DialogFilterSuggested(TLObject):  # type: ignore
             messages.GetSuggestedDialogFilters
     """
 
-    __slots__: List[str] = ["filter", "description"]
+    __slots__: list[str] = ["description", "filter"]
 
-    ID = 0x77744d4a
+    ID = 0x77744D4A
     QUALNAME = "types.DialogFilterSuggested"
 
     def __init__(self, *, filter: "raw.base.DialogFilter", description: str) -> None:
@@ -69,11 +72,11 @@ class DialogFilterSuggested(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DialogFilterSuggested":
         # No flags
-        
+
         filter = TLObject.read(b)
-        
+
         description = String.read(b)
-        
+
         return DialogFilterSuggested(filter=filter, description=description)
 
     def write(self, *args) -> bytes:
@@ -81,9 +84,9 @@ class DialogFilterSuggested(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.filter.write())
-        
+
         b.write(String(self.description))
-        
+
         return b.getvalue()

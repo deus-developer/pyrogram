@@ -17,11 +17,16 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,12 +56,18 @@ class SecureValueErrorTranslationFiles(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["type", "file_hash", "text"]
+    __slots__: list[str] = ["file_hash", "text", "type"]
 
-    ID = 0x34636dd8
+    ID = 0x34636DD8
     QUALNAME = "types.SecureValueErrorTranslationFiles"
 
-    def __init__(self, *, type: "raw.base.SecureValueType", file_hash: List[bytes], text: str) -> None:
+    def __init__(
+        self,
+        *,
+        type: "raw.base.SecureValueType",
+        file_hash: list[bytes],
+        text: str,
+    ) -> None:
         self.type = type  # SecureValueType
         self.file_hash = file_hash  # Vector<bytes>
         self.text = text  # string
@@ -64,25 +75,29 @@ class SecureValueErrorTranslationFiles(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SecureValueErrorTranslationFiles":
         # No flags
-        
+
         type = TLObject.read(b)
-        
+
         file_hash = TLObject.read(b, Bytes)
-        
+
         text = String.read(b)
-        
-        return SecureValueErrorTranslationFiles(type=type, file_hash=file_hash, text=text)
+
+        return SecureValueErrorTranslationFiles(
+            type=type,
+            file_hash=file_hash,
+            text=text,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.type.write())
-        
+
         b.write(Vector(self.file_hash, Bytes))
-        
+
         b.write(String(self.text))
-        
+
         return b.getvalue()

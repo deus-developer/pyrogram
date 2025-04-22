@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class DestroySession(TLObject):  # type: ignore
+class DestroySession(TLFunction["raw.base.DestroySessionRes"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class DestroySession(TLObject):  # type: ignore
         :obj:`DestroySessionRes <pyrogram.raw.base.DestroySessionRes>`
     """
 
-    __slots__: List[str] = ["session_id"]
+    __slots__: list[str] = ["session_id"]
 
-    ID = 0xe7512126
+    ID = 0xE7512126
     QUALNAME = "functions.DestroySession"
 
     def __init__(self, *, session_id: int) -> None:
@@ -56,9 +58,9 @@ class DestroySession(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DestroySession":
         # No flags
-        
+
         session_id = Long.read(b)
-        
+
         return DestroySession(session_id=session_id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class DestroySession(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.session_id))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class InputMessageCallbackQuery(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "query_id"]
+    __slots__: list[str] = ["id", "query_id"]
 
-    ID = 0xacfa1a7e
+    ID = 0xACFA1A7E
     QUALNAME = "types.InputMessageCallbackQuery"
 
     def __init__(self, *, id: int, query_id: int) -> None:
@@ -60,11 +62,11 @@ class InputMessageCallbackQuery(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputMessageCallbackQuery":
         # No flags
-        
+
         id = Int.read(b)
-        
+
         query_id = Long.read(b)
-        
+
         return InputMessageCallbackQuery(id=id, query_id=query_id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class InputMessageCallbackQuery(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.id))
-        
+
         b.write(Long(self.query_id))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class UpdateProfilePhoto(TLObject):  # type: ignore
+class UpdateProfilePhoto(TLFunction["raw.base.photos.Photo"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,26 +53,31 @@ class UpdateProfilePhoto(TLObject):  # type: ignore
         :obj:`photos.Photo <pyrogram.raw.base.photos.Photo>`
     """
 
-    __slots__: List[str] = ["id", "fallback", "bot"]
+    __slots__: list[str] = ["bot", "fallback", "id"]
 
-    ID = 0x9e82039
+    ID = 0x9E82039
     QUALNAME = "functions.photos.UpdateProfilePhoto"
 
-    def __init__(self, *, id: "raw.base.InputPhoto", fallback: Optional[bool] = None, bot: "raw.base.InputUser" = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: "raw.base.InputPhoto",
+        fallback: bool | None = None,
+        bot: "raw.base.InputUser" = None,
+    ) -> None:
         self.id = id  # InputPhoto
         self.fallback = fallback  # flags.0?true
         self.bot = bot  # flags.1?InputUser
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateProfilePhoto":
-        
         flags = Int.read(b)
-        
+
         fallback = True if flags & (1 << 0) else False
         bot = TLObject.read(b) if flags & (1 << 1) else None
-        
+
         id = TLObject.read(b)
-        
+
         return UpdateProfilePhoto(id=id, fallback=fallback, bot=bot)
 
     def write(self, *args) -> bytes:
@@ -81,10 +88,10 @@ class UpdateProfilePhoto(TLObject):  # type: ignore
         flags |= (1 << 0) if self.fallback else 0
         flags |= (1 << 1) if self.bot is not None else 0
         b.write(Int(flags))
-        
+
         if self.bot is not None:
             b.write(self.bot.write())
-        
+
         b.write(self.id.write())
-        
+
         return b.getvalue()

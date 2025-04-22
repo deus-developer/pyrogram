@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,12 +64,28 @@ class ReplyKeyboardMarkup(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["rows", "resize", "single_use", "selective", "persistent", "placeholder"]
+    __slots__: list[str] = [
+        "persistent",
+        "placeholder",
+        "resize",
+        "rows",
+        "selective",
+        "single_use",
+    ]
 
-    ID = 0x85dd99d1
+    ID = 0x85DD99D1
     QUALNAME = "types.ReplyKeyboardMarkup"
 
-    def __init__(self, *, rows: List["raw.base.KeyboardButtonRow"], resize: Optional[bool] = None, single_use: Optional[bool] = None, selective: Optional[bool] = None, persistent: Optional[bool] = None, placeholder: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        rows: list["raw.base.KeyboardButtonRow"],
+        resize: bool | None = None,
+        single_use: bool | None = None,
+        selective: bool | None = None,
+        persistent: bool | None = None,
+        placeholder: str | None = None,
+    ) -> None:
         self.rows = rows  # Vector<KeyboardButtonRow>
         self.resize = resize  # flags.0?true
         self.single_use = single_use  # flags.1?true
@@ -75,17 +95,23 @@ class ReplyKeyboardMarkup(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ReplyKeyboardMarkup":
-        
         flags = Int.read(b)
-        
+
         resize = True if flags & (1 << 0) else False
         single_use = True if flags & (1 << 1) else False
         selective = True if flags & (1 << 2) else False
         persistent = True if flags & (1 << 4) else False
         rows = TLObject.read(b)
-        
+
         placeholder = String.read(b) if flags & (1 << 3) else None
-        return ReplyKeyboardMarkup(rows=rows, resize=resize, single_use=single_use, selective=selective, persistent=persistent, placeholder=placeholder)
+        return ReplyKeyboardMarkup(
+            rows=rows,
+            resize=resize,
+            single_use=single_use,
+            selective=selective,
+            persistent=persistent,
+            placeholder=placeholder,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -98,10 +124,10 @@ class ReplyKeyboardMarkup(TLObject):  # type: ignore
         flags |= (1 << 4) if self.persistent else 0
         flags |= (1 << 3) if self.placeholder is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Vector(self.rows))
-        
+
         if self.placeholder is not None:
             b.write(String(self.placeholder))
-        
+
         return b.getvalue()

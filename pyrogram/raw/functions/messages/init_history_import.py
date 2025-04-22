@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class InitHistoryImport(TLObject):  # type: ignore
+class InitHistoryImport(TLFunction["raw.base.messages.HistoryImport"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +53,18 @@ class InitHistoryImport(TLObject):  # type: ignore
         :obj:`messages.HistoryImport <pyrogram.raw.base.messages.HistoryImport>`
     """
 
-    __slots__: List[str] = ["peer", "file", "media_count"]
+    __slots__: list[str] = ["file", "media_count", "peer"]
 
-    ID = 0x34090c3b
+    ID = 0x34090C3B
     QUALNAME = "functions.messages.InitHistoryImport"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", file: "raw.base.InputFile", media_count: int) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        file: "raw.base.InputFile",
+        media_count: int,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.file = file  # InputFile
         self.media_count = media_count  # int
@@ -64,13 +72,13 @@ class InitHistoryImport(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InitHistoryImport":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         file = TLObject.read(b)
-        
+
         media_count = Int.read(b)
-        
+
         return InitHistoryImport(peer=peer, file=file, media_count=media_count)
 
     def write(self, *args) -> bytes:
@@ -78,11 +86,11 @@ class InitHistoryImport(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(self.file.write())
-        
+
         b.write(Int(self.media_count))
-        
+
         return b.getvalue()

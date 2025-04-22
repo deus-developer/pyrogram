@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -67,12 +71,20 @@ class PublicForwards(TLObject):  # type: ignore
             stats.GetStoryPublicForwards
     """
 
-    __slots__: List[str] = ["count", "forwards", "chats", "users", "next_offset"]
+    __slots__: list[str] = ["chats", "count", "forwards", "next_offset", "users"]
 
-    ID = 0x93037e20
+    ID = 0x93037E20
     QUALNAME = "types.stats.PublicForwards"
 
-    def __init__(self, *, count: int, forwards: List["raw.base.PublicForward"], chats: List["raw.base.Chat"], users: List["raw.base.User"], next_offset: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        count: int,
+        forwards: list["raw.base.PublicForward"],
+        chats: list["raw.base.Chat"],
+        users: list["raw.base.User"],
+        next_offset: str | None = None,
+    ) -> None:
         self.count = count  # int
         self.forwards = forwards  # Vector<PublicForward>
         self.chats = chats  # Vector<Chat>
@@ -81,19 +93,24 @@ class PublicForwards(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PublicForwards":
-        
         flags = Int.read(b)
-        
+
         count = Int.read(b)
-        
+
         forwards = TLObject.read(b)
-        
+
         next_offset = String.read(b) if flags & (1 << 0) else None
         chats = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
-        return PublicForwards(count=count, forwards=forwards, chats=chats, users=users, next_offset=next_offset)
+
+        return PublicForwards(
+            count=count,
+            forwards=forwards,
+            chats=chats,
+            users=users,
+            next_offset=next_offset,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -102,16 +119,16 @@ class PublicForwards(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.next_offset is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.count))
-        
+
         b.write(Vector(self.forwards))
-        
+
         if self.next_offset is not None:
             b.write(String(self.next_offset))
-        
+
         b.write(Vector(self.chats))
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

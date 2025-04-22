@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ConfirmPhone(TLObject):  # type: ignore
+class ConfirmPhone(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class ConfirmPhone(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["phone_code_hash", "phone_code"]
+    __slots__: list[str] = ["phone_code", "phone_code_hash"]
 
-    ID = 0x5f2178c3
+    ID = 0x5F2178C3
     QUALNAME = "functions.account.ConfirmPhone"
 
     def __init__(self, *, phone_code_hash: str, phone_code: str) -> None:
@@ -60,11 +62,11 @@ class ConfirmPhone(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ConfirmPhone":
         # No flags
-        
+
         phone_code_hash = String.read(b)
-        
+
         phone_code = String.read(b)
-        
+
         return ConfirmPhone(phone_code_hash=phone_code_hash, phone_code=phone_code)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class ConfirmPhone(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.phone_code_hash))
-        
+
         b.write(String(self.phone_code))
-        
+
         return b.getvalue()

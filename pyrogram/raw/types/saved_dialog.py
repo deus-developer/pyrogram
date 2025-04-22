@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,26 +53,31 @@ class SavedDialog(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "top_message", "pinned"]
+    __slots__: list[str] = ["peer", "pinned", "top_message"]
 
-    ID = 0xbd87cb6c
+    ID = 0xBD87CB6C
     QUALNAME = "types.SavedDialog"
 
-    def __init__(self, *, peer: "raw.base.Peer", top_message: int, pinned: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.Peer",
+        top_message: int,
+        pinned: bool | None = None,
+    ) -> None:
         self.peer = peer  # Peer
         self.top_message = top_message  # int
         self.pinned = pinned  # flags.2?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SavedDialog":
-        
         flags = Int.read(b)
-        
+
         pinned = True if flags & (1 << 2) else False
         peer = TLObject.read(b)
-        
+
         top_message = Int.read(b)
-        
+
         return SavedDialog(peer=peer, top_message=top_message, pinned=pinned)
 
     def write(self, *args) -> bytes:
@@ -80,9 +87,9 @@ class SavedDialog(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 2) if self.pinned else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.top_message))
-        
+
         return b.getvalue()

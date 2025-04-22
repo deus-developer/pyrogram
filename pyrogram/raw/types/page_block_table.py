@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +57,19 @@ class PageBlockTable(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["title", "rows", "bordered", "striped"]
+    __slots__: list[str] = ["bordered", "rows", "striped", "title"]
 
-    ID = 0xbf4dea82
+    ID = 0xBF4DEA82
     QUALNAME = "types.PageBlockTable"
 
-    def __init__(self, *, title: "raw.base.RichText", rows: List["raw.base.PageTableRow"], bordered: Optional[bool] = None, striped: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        title: "raw.base.RichText",
+        rows: list["raw.base.PageTableRow"],
+        bordered: bool | None = None,
+        striped: bool | None = None,
+    ) -> None:
         self.title = title  # RichText
         self.rows = rows  # Vector<PageTableRow>
         self.bordered = bordered  # flags.0?true
@@ -67,16 +77,20 @@ class PageBlockTable(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PageBlockTable":
-        
         flags = Int.read(b)
-        
+
         bordered = True if flags & (1 << 0) else False
         striped = True if flags & (1 << 1) else False
         title = TLObject.read(b)
-        
+
         rows = TLObject.read(b)
-        
-        return PageBlockTable(title=title, rows=rows, bordered=bordered, striped=striped)
+
+        return PageBlockTable(
+            title=title,
+            rows=rows,
+            bordered=bordered,
+            striped=striped,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -86,9 +100,9 @@ class PageBlockTable(TLObject):  # type: ignore
         flags |= (1 << 0) if self.bordered else 0
         flags |= (1 << 1) if self.striped else 0
         b.write(Int(flags))
-        
+
         b.write(self.title.write())
-        
+
         b.write(Vector(self.rows))
-        
+
         return b.getvalue()

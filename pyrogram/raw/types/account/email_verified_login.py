@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,9 +60,9 @@ class EmailVerifiedLogin(TLObject):  # type: ignore
             account.VerifyEmail
     """
 
-    __slots__: List[str] = ["email", "sent_code"]
+    __slots__: list[str] = ["email", "sent_code"]
 
-    ID = 0xe1bb0d61
+    ID = 0xE1BB0D61
     QUALNAME = "types.account.EmailVerifiedLogin"
 
     def __init__(self, *, email: str, sent_code: "raw.base.auth.SentCode") -> None:
@@ -69,11 +72,11 @@ class EmailVerifiedLogin(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EmailVerifiedLogin":
         # No flags
-        
+
         email = String.read(b)
-        
+
         sent_code = TLObject.read(b)
-        
+
         return EmailVerifiedLogin(email=email, sent_code=sent_code)
 
     def write(self, *args) -> bytes:
@@ -81,9 +84,9 @@ class EmailVerifiedLogin(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.email))
-        
+
         b.write(self.sent_code.write())
-        
+
         return b.getvalue()

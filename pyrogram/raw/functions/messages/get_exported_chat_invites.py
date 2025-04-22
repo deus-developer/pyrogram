@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetExportedChatInvites(TLObject):  # type: ignore
+class GetExportedChatInvites(TLFunction["raw.base.messages.ExportedChatInvites"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -60,12 +63,28 @@ class GetExportedChatInvites(TLObject):  # type: ignore
         :obj:`messages.ExportedChatInvites <pyrogram.raw.base.messages.ExportedChatInvites>`
     """
 
-    __slots__: List[str] = ["peer", "admin_id", "limit", "revoked", "offset_date", "offset_link"]
+    __slots__: list[str] = [
+        "admin_id",
+        "limit",
+        "offset_date",
+        "offset_link",
+        "peer",
+        "revoked",
+    ]
 
-    ID = 0xa2b5a3f6
+    ID = 0xA2B5A3F6
     QUALNAME = "functions.messages.GetExportedChatInvites"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", admin_id: "raw.base.InputUser", limit: int, revoked: Optional[bool] = None, offset_date: Optional[int] = None, offset_link: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        admin_id: "raw.base.InputUser",
+        limit: int,
+        revoked: bool | None = None,
+        offset_date: int | None = None,
+        offset_link: str | None = None,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.admin_id = admin_id  # InputUser
         self.limit = limit  # int
@@ -75,19 +94,25 @@ class GetExportedChatInvites(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetExportedChatInvites":
-        
         flags = Int.read(b)
-        
+
         revoked = True if flags & (1 << 3) else False
         peer = TLObject.read(b)
-        
+
         admin_id = TLObject.read(b)
-        
+
         offset_date = Int.read(b) if flags & (1 << 2) else None
         offset_link = String.read(b) if flags & (1 << 2) else None
         limit = Int.read(b)
-        
-        return GetExportedChatInvites(peer=peer, admin_id=admin_id, limit=limit, revoked=revoked, offset_date=offset_date, offset_link=offset_link)
+
+        return GetExportedChatInvites(
+            peer=peer,
+            admin_id=admin_id,
+            limit=limit,
+            revoked=revoked,
+            offset_date=offset_date,
+            offset_link=offset_link,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -98,17 +123,17 @@ class GetExportedChatInvites(TLObject):  # type: ignore
         flags |= (1 << 2) if self.offset_date is not None else 0
         flags |= (1 << 2) if self.offset_link is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(self.admin_id.write())
-        
+
         if self.offset_date is not None:
             b.write(Int(self.offset_date))
-        
+
         if self.offset_link is not None:
             b.write(String(self.offset_link))
-        
+
         b.write(Int(self.limit))
-        
+
         return b.getvalue()

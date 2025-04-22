@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetMyBoosts(TLObject):  # type: ignore
+class GetMyBoosts(TLFunction["raw.base.premium.MyBoosts"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -44,9 +45,9 @@ class GetMyBoosts(TLObject):  # type: ignore
         :obj:`premium.MyBoosts <pyrogram.raw.base.premium.MyBoosts>`
     """
 
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
-    ID = 0xbe77b4a
+    ID = 0xBE77B4A
     QUALNAME = "functions.premium.GetMyBoosts"
 
     def __init__(self) -> None:
@@ -55,7 +56,7 @@ class GetMyBoosts(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetMyBoosts":
         # No flags
-        
+
         return GetMyBoosts()
 
     def write(self, *args) -> bytes:
@@ -63,5 +64,5 @@ class GetMyBoosts(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         return b.getvalue()

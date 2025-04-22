@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +56,9 @@ class SavedRingtoneConverted(TLObject):  # type: ignore
             account.SaveRingtone
     """
 
-    __slots__: List[str] = ["document"]
+    __slots__: list[str] = ["document"]
 
-    ID = 0x1f307eb7
+    ID = 0x1F307EB7
     QUALNAME = "types.account.SavedRingtoneConverted"
 
     def __init__(self, *, document: "raw.base.Document") -> None:
@@ -65,9 +67,9 @@ class SavedRingtoneConverted(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SavedRingtoneConverted":
         # No flags
-        
+
         document = TLObject.read(b)
-        
+
         return SavedRingtoneConverted(document=document)
 
     def write(self, *args) -> bytes:
@@ -75,7 +77,7 @@ class SavedRingtoneConverted(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.document.write())
-        
+
         return b.getvalue()

@@ -25,7 +25,7 @@ class AddHandler:
     def add_handler(
         self: "pyrogram.Client",
         handler: "Handler",
-        group: int = 0
+        group: int = 0,
     ):
         """Register an update handler.
 
@@ -50,8 +50,10 @@ class AddHandler:
                 from pyrogram import Client
                 from pyrogram.handlers import MessageHandler
 
+
                 async def hello(client, message):
                     print(message)
+
 
                 app = Client("my_account")
 

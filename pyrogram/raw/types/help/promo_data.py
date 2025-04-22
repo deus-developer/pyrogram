@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -72,12 +76,30 @@ class PromoData(TLObject):  # type: ignore
             help.GetPromoData
     """
 
-    __slots__: List[str] = ["expires", "peer", "chats", "users", "proxy", "psa_type", "psa_message"]
+    __slots__: list[str] = [
+        "chats",
+        "expires",
+        "peer",
+        "proxy",
+        "psa_message",
+        "psa_type",
+        "users",
+    ]
 
-    ID = 0x8c39793f
+    ID = 0x8C39793F
     QUALNAME = "types.help.PromoData"
 
-    def __init__(self, *, expires: int, peer: "raw.base.Peer", chats: List["raw.base.Chat"], users: List["raw.base.User"], proxy: Optional[bool] = None, psa_type: Optional[str] = None, psa_message: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        expires: int,
+        peer: "raw.base.Peer",
+        chats: list["raw.base.Chat"],
+        users: list["raw.base.User"],
+        proxy: bool | None = None,
+        psa_type: str | None = None,
+        psa_message: str | None = None,
+    ) -> None:
         self.expires = expires  # int
         self.peer = peer  # Peer
         self.chats = chats  # Vector<Chat>
@@ -88,21 +110,28 @@ class PromoData(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PromoData":
-        
         flags = Int.read(b)
-        
+
         proxy = True if flags & (1 << 0) else False
         expires = Int.read(b)
-        
+
         peer = TLObject.read(b)
-        
+
         chats = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
+
         psa_type = String.read(b) if flags & (1 << 1) else None
         psa_message = String.read(b) if flags & (1 << 2) else None
-        return PromoData(expires=expires, peer=peer, chats=chats, users=users, proxy=proxy, psa_type=psa_type, psa_message=psa_message)
+        return PromoData(
+            expires=expires,
+            peer=peer,
+            chats=chats,
+            users=users,
+            proxy=proxy,
+            psa_type=psa_type,
+            psa_message=psa_message,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -113,19 +142,19 @@ class PromoData(TLObject):  # type: ignore
         flags |= (1 << 1) if self.psa_type is not None else 0
         flags |= (1 << 2) if self.psa_message is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.expires))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Vector(self.chats))
-        
+
         b.write(Vector(self.users))
-        
+
         if self.psa_type is not None:
             b.write(String(self.psa_type))
-        
+
         if self.psa_message is not None:
             b.write(String(self.psa_message))
-        
+
         return b.getvalue()

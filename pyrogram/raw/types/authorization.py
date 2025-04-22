@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -105,12 +108,52 @@ class Authorization(TLObject):  # type: ignore
             auth.AcceptLoginToken
     """
 
-    __slots__: List[str] = ["hash", "device_model", "platform", "system_version", "api_id", "app_name", "app_version", "date_created", "date_active", "ip", "country", "region", "current", "official_app", "password_pending", "encrypted_requests_disabled", "call_requests_disabled", "unconfirmed"]
+    __slots__: list[str] = [
+        "api_id",
+        "app_name",
+        "app_version",
+        "call_requests_disabled",
+        "country",
+        "current",
+        "date_active",
+        "date_created",
+        "device_model",
+        "encrypted_requests_disabled",
+        "hash",
+        "ip",
+        "official_app",
+        "password_pending",
+        "platform",
+        "region",
+        "system_version",
+        "unconfirmed",
+    ]
 
-    ID = 0xad01d61d
+    ID = 0xAD01D61D
     QUALNAME = "types.Authorization"
 
-    def __init__(self, *, hash: int, device_model: str, platform: str, system_version: str, api_id: int, app_name: str, app_version: str, date_created: int, date_active: int, ip: str, country: str, region: str, current: Optional[bool] = None, official_app: Optional[bool] = None, password_pending: Optional[bool] = None, encrypted_requests_disabled: Optional[bool] = None, call_requests_disabled: Optional[bool] = None, unconfirmed: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        hash: int,
+        device_model: str,
+        platform: str,
+        system_version: str,
+        api_id: int,
+        app_name: str,
+        app_version: str,
+        date_created: int,
+        date_active: int,
+        ip: str,
+        country: str,
+        region: str,
+        current: bool | None = None,
+        official_app: bool | None = None,
+        password_pending: bool | None = None,
+        encrypted_requests_disabled: bool | None = None,
+        call_requests_disabled: bool | None = None,
+        unconfirmed: bool | None = None,
+    ) -> None:
         self.hash = hash  # long
         self.device_model = device_model  # string
         self.platform = platform  # string
@@ -132,9 +175,8 @@ class Authorization(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "Authorization":
-        
         flags = Int.read(b)
-        
+
         current = True if flags & (1 << 0) else False
         official_app = True if flags & (1 << 1) else False
         password_pending = True if flags & (1 << 2) else False
@@ -142,30 +184,49 @@ class Authorization(TLObject):  # type: ignore
         call_requests_disabled = True if flags & (1 << 4) else False
         unconfirmed = True if flags & (1 << 5) else False
         hash = Long.read(b)
-        
+
         device_model = String.read(b)
-        
+
         platform = String.read(b)
-        
+
         system_version = String.read(b)
-        
+
         api_id = Int.read(b)
-        
+
         app_name = String.read(b)
-        
+
         app_version = String.read(b)
-        
+
         date_created = Int.read(b)
-        
+
         date_active = Int.read(b)
-        
+
         ip = String.read(b)
-        
+
         country = String.read(b)
-        
+
         region = String.read(b)
-        
-        return Authorization(hash=hash, device_model=device_model, platform=platform, system_version=system_version, api_id=api_id, app_name=app_name, app_version=app_version, date_created=date_created, date_active=date_active, ip=ip, country=country, region=region, current=current, official_app=official_app, password_pending=password_pending, encrypted_requests_disabled=encrypted_requests_disabled, call_requests_disabled=call_requests_disabled, unconfirmed=unconfirmed)
+
+        return Authorization(
+            hash=hash,
+            device_model=device_model,
+            platform=platform,
+            system_version=system_version,
+            api_id=api_id,
+            app_name=app_name,
+            app_version=app_version,
+            date_created=date_created,
+            date_active=date_active,
+            ip=ip,
+            country=country,
+            region=region,
+            current=current,
+            official_app=official_app,
+            password_pending=password_pending,
+            encrypted_requests_disabled=encrypted_requests_disabled,
+            call_requests_disabled=call_requests_disabled,
+            unconfirmed=unconfirmed,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -179,29 +240,29 @@ class Authorization(TLObject):  # type: ignore
         flags |= (1 << 4) if self.call_requests_disabled else 0
         flags |= (1 << 5) if self.unconfirmed else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.hash))
-        
+
         b.write(String(self.device_model))
-        
+
         b.write(String(self.platform))
-        
+
         b.write(String(self.system_version))
-        
+
         b.write(Int(self.api_id))
-        
+
         b.write(String(self.app_name))
-        
+
         b.write(String(self.app_version))
-        
+
         b.write(Int(self.date_created))
-        
+
         b.write(Int(self.date_active))
-        
+
         b.write(String(self.ip))
-        
+
         b.write(String(self.country))
-        
+
         b.write(String(self.region))
-        
+
         return b.getvalue()

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ReorderPinnedSavedDialogs(TLObject):  # type: ignore
+class ReorderPinnedSavedDialogs(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +51,27 @@ class ReorderPinnedSavedDialogs(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["order", "force"]
+    __slots__: list[str] = ["force", "order"]
 
-    ID = 0x8b716587
+    ID = 0x8B716587
     QUALNAME = "functions.messages.ReorderPinnedSavedDialogs"
 
-    def __init__(self, *, order: List["raw.base.InputDialogPeer"], force: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        order: list["raw.base.InputDialogPeer"],
+        force: bool | None = None,
+    ) -> None:
         self.order = order  # Vector<InputDialogPeer>
         self.force = force  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ReorderPinnedSavedDialogs":
-        
         flags = Int.read(b)
-        
+
         force = True if flags & (1 << 0) else False
         order = TLObject.read(b)
-        
+
         return ReorderPinnedSavedDialogs(order=order, force=force)
 
     def write(self, *args) -> bytes:
@@ -74,7 +81,7 @@ class ReorderPinnedSavedDialogs(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.force else 0
         b.write(Int(flags))
-        
+
         b.write(Vector(self.order))
-        
+
         return b.getvalue()

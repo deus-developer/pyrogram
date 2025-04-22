@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class PaymentCharge(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "provider_charge_id"]
+    __slots__: list[str] = ["id", "provider_charge_id"]
 
-    ID = 0xea02c27e
+    ID = 0xEA02C27E
     QUALNAME = "types.PaymentCharge"
 
     def __init__(self, *, id: str, provider_charge_id: str) -> None:
@@ -60,11 +62,11 @@ class PaymentCharge(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PaymentCharge":
         # No flags
-        
+
         id = String.read(b)
-        
+
         provider_charge_id = String.read(b)
-        
+
         return PaymentCharge(id=id, provider_charge_id=provider_charge_id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class PaymentCharge(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.id))
-        
+
         b.write(String(self.provider_charge_id))
-        
+
         return b.getvalue()

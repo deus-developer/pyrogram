@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetInlineGameHighScores(TLObject):  # type: ignore
+class GetInlineGameHighScores(TLFunction["raw.base.messages.HighScores"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,28 @@ class GetInlineGameHighScores(TLObject):  # type: ignore
         :obj:`messages.HighScores <pyrogram.raw.base.messages.HighScores>`
     """
 
-    __slots__: List[str] = ["id", "user_id"]
+    __slots__: list[str] = ["id", "user_id"]
 
-    ID = 0xf635e1b
+    ID = 0xF635E1B
     QUALNAME = "functions.messages.GetInlineGameHighScores"
 
-    def __init__(self, *, id: "raw.base.InputBotInlineMessageID", user_id: "raw.base.InputUser") -> None:
+    def __init__(
+        self,
+        *,
+        id: "raw.base.InputBotInlineMessageID",
+        user_id: "raw.base.InputUser",
+    ) -> None:
         self.id = id  # InputBotInlineMessageID
         self.user_id = user_id  # InputUser
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetInlineGameHighScores":
         # No flags
-        
+
         id = TLObject.read(b)
-        
+
         user_id = TLObject.read(b)
-        
+
         return GetInlineGameHighScores(id=id, user_id=user_id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +79,9 @@ class GetInlineGameHighScores(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.id.write())
-        
+
         b.write(self.user_id.write())
-        
+
         return b.getvalue()

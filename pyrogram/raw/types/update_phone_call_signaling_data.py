@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +51,9 @@ class UpdatePhoneCallSignalingData(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["phone_call_id", "data"]
+    __slots__: list[str] = ["data", "phone_call_id"]
 
-    ID = 0x2661bf09
+    ID = 0x2661BF09
     QUALNAME = "types.UpdatePhoneCallSignalingData"
 
     def __init__(self, *, phone_call_id: int, data: bytes) -> None:
@@ -60,11 +63,11 @@ class UpdatePhoneCallSignalingData(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdatePhoneCallSignalingData":
         # No flags
-        
+
         phone_call_id = Long.read(b)
-        
+
         data = Bytes.read(b)
-        
+
         return UpdatePhoneCallSignalingData(phone_call_id=phone_call_id, data=data)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class UpdatePhoneCallSignalingData(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.phone_call_id))
-        
+
         b.write(Bytes(self.data))
-        
+
         return b.getvalue()

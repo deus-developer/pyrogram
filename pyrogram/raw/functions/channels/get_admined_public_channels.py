@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetAdminedPublicChannels(TLObject):  # type: ignore
+class GetAdminedPublicChannels(TLFunction["raw.base.messages.Chats"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,25 +52,34 @@ class GetAdminedPublicChannels(TLObject):  # type: ignore
         :obj:`messages.Chats <pyrogram.raw.base.messages.Chats>`
     """
 
-    __slots__: List[str] = ["by_location", "check_limit", "for_personal"]
+    __slots__: list[str] = ["by_location", "check_limit", "for_personal"]
 
-    ID = 0xf8b036af
+    ID = 0xF8B036AF
     QUALNAME = "functions.channels.GetAdminedPublicChannels"
 
-    def __init__(self, *, by_location: Optional[bool] = None, check_limit: Optional[bool] = None, for_personal: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        by_location: bool | None = None,
+        check_limit: bool | None = None,
+        for_personal: bool | None = None,
+    ) -> None:
         self.by_location = by_location  # flags.0?true
         self.check_limit = check_limit  # flags.1?true
         self.for_personal = for_personal  # flags.2?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetAdminedPublicChannels":
-        
         flags = Int.read(b)
-        
+
         by_location = True if flags & (1 << 0) else False
         check_limit = True if flags & (1 << 1) else False
         for_personal = True if flags & (1 << 2) else False
-        return GetAdminedPublicChannels(by_location=by_location, check_limit=check_limit, for_personal=for_personal)
+        return GetAdminedPublicChannels(
+            by_location=by_location,
+            check_limit=check_limit,
+            for_personal=for_personal,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -80,5 +90,5 @@ class GetAdminedPublicChannels(TLObject):  # type: ignore
         flags |= (1 << 1) if self.check_limit else 0
         flags |= (1 << 2) if self.for_personal else 0
         b.write(Int(flags))
-        
+
         return b.getvalue()

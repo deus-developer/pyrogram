@@ -4,8 +4,6 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type ChannelLocation = Union["raw.types.ChannelLocation, raw.types.ChannelLocationEmpty"]
+type ChannelLocation = raw.types.ChannelLocation | raw.types.ChannelLocationEmpty

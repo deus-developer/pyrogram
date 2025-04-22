@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +57,9 @@ class PhotoCachedSize(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["type", "w", "h", "bytes"]
+    __slots__: list[str] = ["bytes", "h", "type", "w"]
 
-    ID = 0x21e1ad6
+    ID = 0x21E1AD6
     QUALNAME = "types.PhotoCachedSize"
 
     def __init__(self, *, type: str, w: int, h: int, bytes: bytes) -> None:
@@ -68,15 +71,15 @@ class PhotoCachedSize(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PhotoCachedSize":
         # No flags
-        
+
         type = String.read(b)
-        
+
         w = Int.read(b)
-        
+
         h = Int.read(b)
-        
+
         bytes = Bytes.read(b)
-        
+
         return PhotoCachedSize(type=type, w=w, h=h, bytes=bytes)
 
     def write(self, *args) -> bytes:
@@ -84,13 +87,13 @@ class PhotoCachedSize(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.type))
-        
+
         b.write(Int(self.w))
-        
+
         b.write(Int(self.h))
-        
+
         b.write(Bytes(self.bytes))
-        
+
         return b.getvalue()

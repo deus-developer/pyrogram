@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,19 +47,18 @@ class SentCodeTypeSmsWord(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["beginning"]
+    __slots__: list[str] = ["beginning"]
 
-    ID = 0xa416ac81
+    ID = 0xA416AC81
     QUALNAME = "types.auth.SentCodeTypeSmsWord"
 
-    def __init__(self, *, beginning: Optional[str] = None) -> None:
+    def __init__(self, *, beginning: str | None = None) -> None:
         self.beginning = beginning  # flags.0?string
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SentCodeTypeSmsWord":
-        
         flags = Int.read(b)
-        
+
         beginning = String.read(b) if flags & (1 << 0) else None
         return SentCodeTypeSmsWord(beginning=beginning)
 
@@ -68,8 +69,8 @@ class SentCodeTypeSmsWord(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.beginning is not None else 0
         b.write(Int(flags))
-        
+
         if self.beginning is not None:
             b.write(String(self.beginning))
-        
+
         return b.getvalue()

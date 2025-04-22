@@ -17,15 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import asyncio
-from typing import List
 
 import pyrogram
+
 from .idle import idle
 
 
 async def compose(
-    clients: List["pyrogram.Client"],
-    sequential: bool = False
+    clients: list["pyrogram.Client"],
+    sequential: bool = False,
 ):
     """Run multiple clients at once.
 
@@ -49,11 +49,7 @@ async def compose(
 
 
             async def main():
-                apps = [
-                    Client("account1"),
-                    Client("account2"),
-                    Client("account3")
-                ]
+                apps = [Client("account1"), Client("account2"), Client("account3")]
 
                 ...
 

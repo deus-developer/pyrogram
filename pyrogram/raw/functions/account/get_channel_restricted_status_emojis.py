@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetChannelRestrictedStatusEmojis(TLObject):  # type: ignore
+class GetChannelRestrictedStatusEmojis(TLFunction["raw.base.EmojiList"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetChannelRestrictedStatusEmojis(TLObject):  # type: ignore
         :obj:`EmojiList <pyrogram.raw.base.EmojiList>`
     """
 
-    __slots__: List[str] = ["hash"]
+    __slots__: list[str] = ["hash"]
 
-    ID = 0x35a9e0d5
+    ID = 0x35A9E0D5
     QUALNAME = "functions.account.GetChannelRestrictedStatusEmojis"
 
     def __init__(self, *, hash: int) -> None:
@@ -56,9 +58,9 @@ class GetChannelRestrictedStatusEmojis(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetChannelRestrictedStatusEmojis":
         # No flags
-        
+
         hash = Long.read(b)
-        
+
         return GetChannelRestrictedStatusEmojis(hash=hash)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class GetChannelRestrictedStatusEmojis(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.hash))
-        
+
         return b.getvalue()

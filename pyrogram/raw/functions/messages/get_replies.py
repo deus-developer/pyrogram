@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetReplies(TLObject):  # type: ignore
+class GetReplies(TLFunction["raw.base.messages.Messages"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -69,12 +72,34 @@ class GetReplies(TLObject):  # type: ignore
         :obj:`messages.Messages <pyrogram.raw.base.messages.Messages>`
     """
 
-    __slots__: List[str] = ["peer", "msg_id", "offset_id", "offset_date", "add_offset", "limit", "max_id", "min_id", "hash"]
+    __slots__: list[str] = [
+        "add_offset",
+        "hash",
+        "limit",
+        "max_id",
+        "min_id",
+        "msg_id",
+        "offset_date",
+        "offset_id",
+        "peer",
+    ]
 
-    ID = 0x22ddd30c
+    ID = 0x22DDD30C
     QUALNAME = "functions.messages.GetReplies"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", msg_id: int, offset_id: int, offset_date: int, add_offset: int, limit: int, max_id: int, min_id: int, hash: int) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        msg_id: int,
+        offset_id: int,
+        offset_date: int,
+        add_offset: int,
+        limit: int,
+        max_id: int,
+        min_id: int,
+        hash: int,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.msg_id = msg_id  # int
         self.offset_id = offset_id  # int
@@ -88,49 +113,59 @@ class GetReplies(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetReplies":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         msg_id = Int.read(b)
-        
+
         offset_id = Int.read(b)
-        
+
         offset_date = Int.read(b)
-        
+
         add_offset = Int.read(b)
-        
+
         limit = Int.read(b)
-        
+
         max_id = Int.read(b)
-        
+
         min_id = Int.read(b)
-        
+
         hash = Long.read(b)
-        
-        return GetReplies(peer=peer, msg_id=msg_id, offset_id=offset_id, offset_date=offset_date, add_offset=add_offset, limit=limit, max_id=max_id, min_id=min_id, hash=hash)
+
+        return GetReplies(
+            peer=peer,
+            msg_id=msg_id,
+            offset_id=offset_id,
+            offset_date=offset_date,
+            add_offset=add_offset,
+            limit=limit,
+            max_id=max_id,
+            min_id=min_id,
+            hash=hash,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.msg_id))
-        
+
         b.write(Int(self.offset_id))
-        
+
         b.write(Int(self.offset_date))
-        
+
         b.write(Int(self.add_offset))
-        
+
         b.write(Int(self.limit))
-        
+
         b.write(Int(self.max_id))
-        
+
         b.write(Int(self.min_id))
-        
+
         b.write(Long(self.hash))
-        
+
         return b.getvalue()

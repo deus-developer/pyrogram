@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class AnswerWebhookJSONQuery(TLObject):  # type: ignore
+class AnswerWebhookJSONQuery(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class AnswerWebhookJSONQuery(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["query_id", "data"]
+    __slots__: list[str] = ["data", "query_id"]
 
-    ID = 0xe6213f4d
+    ID = 0xE6213F4D
     QUALNAME = "functions.bots.AnswerWebhookJSONQuery"
 
     def __init__(self, *, query_id: int, data: "raw.base.DataJSON") -> None:
@@ -60,11 +63,11 @@ class AnswerWebhookJSONQuery(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "AnswerWebhookJSONQuery":
         # No flags
-        
+
         query_id = Long.read(b)
-        
+
         data = TLObject.read(b)
-        
+
         return AnswerWebhookJSONQuery(query_id=query_id, data=data)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class AnswerWebhookJSONQuery(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.query_id))
-        
+
         b.write(self.data.write())
-        
+
         return b.getvalue()

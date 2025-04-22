@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetHistoryTTL(TLObject):  # type: ignore
+class SetHistoryTTL(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class SetHistoryTTL(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["peer", "period"]
+    __slots__: list[str] = ["peer", "period"]
 
-    ID = 0xb80e5fe4
+    ID = 0xB80E5FE4
     QUALNAME = "functions.messages.SetHistoryTTL"
 
     def __init__(self, *, peer: "raw.base.InputPeer", period: int) -> None:
@@ -60,11 +62,11 @@ class SetHistoryTTL(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetHistoryTTL":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         period = Int.read(b)
-        
+
         return SetHistoryTTL(peer=peer, period=period)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class SetHistoryTTL(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.period))
-        
+
         return b.getvalue()

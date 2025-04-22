@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class DeleteStickerSet(TLObject):  # type: ignore
+class DeleteStickerSet(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,7 +47,7 @@ class DeleteStickerSet(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["stickerset"]
+    __slots__: list[str] = ["stickerset"]
 
     ID = 0x87704394
     QUALNAME = "functions.stickers.DeleteStickerSet"
@@ -56,9 +58,9 @@ class DeleteStickerSet(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DeleteStickerSet":
         # No flags
-        
+
         stickerset = TLObject.read(b)
-        
+
         return DeleteStickerSet(stickerset=stickerset)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class DeleteStickerSet(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.stickerset.write())
-        
+
         return b.getvalue()

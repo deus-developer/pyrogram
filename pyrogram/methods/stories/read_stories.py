@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import List, Union
 
 import pyrogram
 from pyrogram import raw, types
@@ -25,9 +24,9 @@ from pyrogram import raw, types
 class ReadStories:
     async def read_stories(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         max_id: int = 0,
-    ) -> List[int]:
+    ) -> list[int]:
         """Read stories.
 
         .. include:: /_includes/usable-by/users.rst
@@ -56,8 +55,8 @@ class ReadStories:
         r = await self.invoke(
             raw.functions.stories.ReadStories(
                 peer=await self.resolve_peer(chat_id),
-                max_id=max_id or (1 << 31) - 1
-            )
+                max_id=max_id or (1 << 31) - 1,
+            ),
         )
 
         return types.List(r)

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,20 +48,20 @@ class UpdateDcOptions(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["dc_options"]
+    __slots__: list[str] = ["dc_options"]
 
-    ID = 0x8e5e9873
+    ID = 0x8E5E9873
     QUALNAME = "types.UpdateDcOptions"
 
-    def __init__(self, *, dc_options: List["raw.base.DcOption"]) -> None:
+    def __init__(self, *, dc_options: list["raw.base.DcOption"]) -> None:
         self.dc_options = dc_options  # Vector<DcOption>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateDcOptions":
         # No flags
-        
+
         dc_options = TLObject.read(b)
-        
+
         return UpdateDcOptions(dc_options=dc_options)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class UpdateDcOptions(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.dc_options))
-        
+
         return b.getvalue()

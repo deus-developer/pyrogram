@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,19 +55,18 @@ class MessageEditData(TLObject):  # type: ignore
             messages.GetMessageEditData
     """
 
-    __slots__: List[str] = ["caption"]
+    __slots__: list[str] = ["caption"]
 
-    ID = 0x26b5dde6
+    ID = 0x26B5DDE6
     QUALNAME = "types.messages.MessageEditData"
 
-    def __init__(self, *, caption: Optional[bool] = None) -> None:
+    def __init__(self, *, caption: bool | None = None) -> None:
         self.caption = caption  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageEditData":
-        
         flags = Int.read(b)
-        
+
         caption = True if flags & (1 << 0) else False
         return MessageEditData(caption=caption)
 
@@ -77,5 +77,5 @@ class MessageEditData(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.caption else 0
         b.write(Int(flags))
-        
+
         return b.getvalue()

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,12 +63,28 @@ class BotBusinessConnection(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["connection_id", "user_id", "dc_id", "date", "can_reply", "disabled"]
+    __slots__: list[str] = [
+        "can_reply",
+        "connection_id",
+        "date",
+        "dc_id",
+        "disabled",
+        "user_id",
+    ]
 
-    ID = 0x896433b4
+    ID = 0x896433B4
     QUALNAME = "types.BotBusinessConnection"
 
-    def __init__(self, *, connection_id: str, user_id: int, dc_id: int, date: int, can_reply: Optional[bool] = None, disabled: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        connection_id: str,
+        user_id: int,
+        dc_id: int,
+        date: int,
+        can_reply: bool | None = None,
+        disabled: bool | None = None,
+    ) -> None:
         self.connection_id = connection_id  # string
         self.user_id = user_id  # long
         self.dc_id = dc_id  # int
@@ -75,20 +94,26 @@ class BotBusinessConnection(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "BotBusinessConnection":
-        
         flags = Int.read(b)
-        
+
         can_reply = True if flags & (1 << 0) else False
         disabled = True if flags & (1 << 1) else False
         connection_id = String.read(b)
-        
+
         user_id = Long.read(b)
-        
+
         dc_id = Int.read(b)
-        
+
         date = Int.read(b)
-        
-        return BotBusinessConnection(connection_id=connection_id, user_id=user_id, dc_id=dc_id, date=date, can_reply=can_reply, disabled=disabled)
+
+        return BotBusinessConnection(
+            connection_id=connection_id,
+            user_id=user_id,
+            dc_id=dc_id,
+            date=date,
+            can_reply=can_reply,
+            disabled=disabled,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -98,13 +123,13 @@ class BotBusinessConnection(TLObject):  # type: ignore
         flags |= (1 << 0) if self.can_reply else 0
         flags |= (1 << 1) if self.disabled else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.connection_id))
-        
+
         b.write(Long(self.user_id))
-        
+
         b.write(Int(self.dc_id))
-        
+
         b.write(Int(self.date))
-        
+
         return b.getvalue()

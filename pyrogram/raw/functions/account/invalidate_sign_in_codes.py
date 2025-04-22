@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class InvalidateSignInCodes(TLObject):  # type: ignore
+class InvalidateSignInCodes(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,20 +48,20 @@ class InvalidateSignInCodes(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["codes"]
+    __slots__: list[str] = ["codes"]
 
-    ID = 0xca8ae8ba
+    ID = 0xCA8AE8BA
     QUALNAME = "functions.account.InvalidateSignInCodes"
 
-    def __init__(self, *, codes: List[str]) -> None:
+    def __init__(self, *, codes: list[str]) -> None:
         self.codes = codes  # Vector<string>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InvalidateSignInCodes":
         # No flags
-        
+
         codes = TLObject.read(b, String)
-        
+
         return InvalidateSignInCodes(codes=codes)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class InvalidateSignInCodes(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.codes, String))
-        
+
         return b.getvalue()

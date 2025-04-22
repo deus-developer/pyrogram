@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,12 +55,18 @@ class VideoSizeStickerMarkup(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["stickerset", "sticker_id", "background_colors"]
+    __slots__: list[str] = ["background_colors", "sticker_id", "stickerset"]
 
-    ID = 0xda082fe
+    ID = 0xDA082FE
     QUALNAME = "types.VideoSizeStickerMarkup"
 
-    def __init__(self, *, stickerset: "raw.base.InputStickerSet", sticker_id: int, background_colors: List[int]) -> None:
+    def __init__(
+        self,
+        *,
+        stickerset: "raw.base.InputStickerSet",
+        sticker_id: int,
+        background_colors: list[int],
+    ) -> None:
         self.stickerset = stickerset  # InputStickerSet
         self.sticker_id = sticker_id  # long
         self.background_colors = background_colors  # Vector<int>
@@ -64,25 +74,29 @@ class VideoSizeStickerMarkup(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "VideoSizeStickerMarkup":
         # No flags
-        
+
         stickerset = TLObject.read(b)
-        
+
         sticker_id = Long.read(b)
-        
+
         background_colors = TLObject.read(b, Int)
-        
-        return VideoSizeStickerMarkup(stickerset=stickerset, sticker_id=sticker_id, background_colors=background_colors)
+
+        return VideoSizeStickerMarkup(
+            stickerset=stickerset,
+            sticker_id=sticker_id,
+            background_colors=background_colors,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.stickerset.write())
-        
+
         b.write(Long(self.sticker_id))
-        
+
         b.write(Vector(self.background_colors, Int))
-        
+
         return b.getvalue()

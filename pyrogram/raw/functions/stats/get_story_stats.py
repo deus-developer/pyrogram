@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetStoryStats(TLObject):  # type: ignore
+class GetStoryStats(TLFunction["raw.base.stats.StoryStats"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,26 +53,31 @@ class GetStoryStats(TLObject):  # type: ignore
         :obj:`stats.StoryStats <pyrogram.raw.base.stats.StoryStats>`
     """
 
-    __slots__: List[str] = ["peer", "id", "dark"]
+    __slots__: list[str] = ["dark", "id", "peer"]
 
-    ID = 0x374fef40
+    ID = 0x374FEF40
     QUALNAME = "functions.stats.GetStoryStats"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", id: int, dark: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        id: int,
+        dark: bool | None = None,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.id = id  # int
         self.dark = dark  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetStoryStats":
-        
         flags = Int.read(b)
-        
+
         dark = True if flags & (1 << 0) else False
         peer = TLObject.read(b)
-        
+
         id = Int.read(b)
-        
+
         return GetStoryStats(peer=peer, id=id, dark=dark)
 
     def write(self, *args) -> bytes:
@@ -80,9 +87,9 @@ class GetStoryStats(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.dark else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.id))
-        
+
         return b.getvalue()

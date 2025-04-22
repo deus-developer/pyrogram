@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,9 +53,9 @@ class NewSessionCreated(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["first_msg_id", "unique_id", "server_salt"]
+    __slots__: list[str] = ["first_msg_id", "server_salt", "unique_id"]
 
-    ID = 0x9ec20908
+    ID = 0x9EC20908
     QUALNAME = "types.NewSessionCreated"
 
     def __init__(self, *, first_msg_id: int, unique_id: int, server_salt: int) -> None:
@@ -64,25 +66,29 @@ class NewSessionCreated(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "NewSessionCreated":
         # No flags
-        
+
         first_msg_id = Long.read(b)
-        
+
         unique_id = Long.read(b)
-        
+
         server_salt = Long.read(b)
-        
-        return NewSessionCreated(first_msg_id=first_msg_id, unique_id=unique_id, server_salt=server_salt)
+
+        return NewSessionCreated(
+            first_msg_id=first_msg_id,
+            unique_id=unique_id,
+            server_salt=server_salt,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.first_msg_id))
-        
+
         b.write(Long(self.unique_id))
-        
+
         b.write(Long(self.server_salt))
-        
+
         return b.getvalue()

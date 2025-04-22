@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class DeleteChatUser(TLObject):  # type: ignore
+class DeleteChatUser(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,27 +54,36 @@ class DeleteChatUser(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["chat_id", "user_id", "revoke_history"]
+    __slots__: list[str] = ["chat_id", "revoke_history", "user_id"]
 
-    ID = 0xa2185cab
+    ID = 0xA2185CAB
     QUALNAME = "functions.messages.DeleteChatUser"
 
-    def __init__(self, *, chat_id: int, user_id: "raw.base.InputUser", revoke_history: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        chat_id: int,
+        user_id: "raw.base.InputUser",
+        revoke_history: bool | None = None,
+    ) -> None:
         self.chat_id = chat_id  # long
         self.user_id = user_id  # InputUser
         self.revoke_history = revoke_history  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DeleteChatUser":
-        
         flags = Int.read(b)
-        
+
         revoke_history = True if flags & (1 << 0) else False
         chat_id = Long.read(b)
-        
+
         user_id = TLObject.read(b)
-        
-        return DeleteChatUser(chat_id=chat_id, user_id=user_id, revoke_history=revoke_history)
+
+        return DeleteChatUser(
+            chat_id=chat_id,
+            user_id=user_id,
+            revoke_history=revoke_history,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -80,9 +92,9 @@ class DeleteChatUser(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.revoke_history else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.chat_id))
-        
+
         b.write(self.user_id.write())
-        
+
         return b.getvalue()

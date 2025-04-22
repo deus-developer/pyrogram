@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,33 +50,41 @@ class ChannelAdminLogEventActionChangePeerColor(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["prev_value", "new_value"]
+    __slots__: list[str] = ["new_value", "prev_value"]
 
-    ID = 0x5796e780
+    ID = 0x5796E780
     QUALNAME = "types.ChannelAdminLogEventActionChangePeerColor"
 
-    def __init__(self, *, prev_value: "raw.base.PeerColor", new_value: "raw.base.PeerColor") -> None:
+    def __init__(
+        self,
+        *,
+        prev_value: "raw.base.PeerColor",
+        new_value: "raw.base.PeerColor",
+    ) -> None:
         self.prev_value = prev_value  # PeerColor
         self.new_value = new_value  # PeerColor
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChannelAdminLogEventActionChangePeerColor":
         # No flags
-        
+
         prev_value = TLObject.read(b)
-        
+
         new_value = TLObject.read(b)
-        
-        return ChannelAdminLogEventActionChangePeerColor(prev_value=prev_value, new_value=new_value)
+
+        return ChannelAdminLogEventActionChangePeerColor(
+            prev_value=prev_value,
+            new_value=new_value,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.prev_value.write())
-        
+
         b.write(self.new_value.write())
-        
+
         return b.getvalue()

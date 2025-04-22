@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class JoinChatlistInvite(TLObject):  # type: ignore
+class JoinChatlistInvite(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +52,23 @@ class JoinChatlistInvite(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["slug", "peers"]
+    __slots__: list[str] = ["peers", "slug"]
 
-    ID = 0xa6b1e39a
+    ID = 0xA6B1E39A
     QUALNAME = "functions.chatlists.JoinChatlistInvite"
 
-    def __init__(self, *, slug: str, peers: List["raw.base.InputPeer"]) -> None:
+    def __init__(self, *, slug: str, peers: list["raw.base.InputPeer"]) -> None:
         self.slug = slug  # string
         self.peers = peers  # Vector<InputPeer>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "JoinChatlistInvite":
         # No flags
-        
+
         slug = String.read(b)
-        
+
         peers = TLObject.read(b)
-        
+
         return JoinChatlistInvite(slug=slug, peers=peers)
 
     def write(self, *args) -> bytes:
@@ -72,9 +76,9 @@ class JoinChatlistInvite(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.slug))
-        
+
         b.write(Vector(self.peers))
-        
+
         return b.getvalue()

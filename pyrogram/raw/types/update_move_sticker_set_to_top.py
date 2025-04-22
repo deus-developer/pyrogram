@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,26 +53,35 @@ class UpdateMoveStickerSetToTop(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["stickerset", "masks", "emojis"]
+    __slots__: list[str] = ["emojis", "masks", "stickerset"]
 
-    ID = 0x86fccf85
+    ID = 0x86FCCF85
     QUALNAME = "types.UpdateMoveStickerSetToTop"
 
-    def __init__(self, *, stickerset: int, masks: Optional[bool] = None, emojis: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        stickerset: int,
+        masks: bool | None = None,
+        emojis: bool | None = None,
+    ) -> None:
         self.stickerset = stickerset  # long
         self.masks = masks  # flags.0?true
         self.emojis = emojis  # flags.1?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateMoveStickerSetToTop":
-        
         flags = Int.read(b)
-        
+
         masks = True if flags & (1 << 0) else False
         emojis = True if flags & (1 << 1) else False
         stickerset = Long.read(b)
-        
-        return UpdateMoveStickerSetToTop(stickerset=stickerset, masks=masks, emojis=emojis)
+
+        return UpdateMoveStickerSetToTop(
+            stickerset=stickerset,
+            masks=masks,
+            emojis=emojis,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -80,7 +91,7 @@ class UpdateMoveStickerSetToTop(TLObject):  # type: ignore
         flags |= (1 << 0) if self.masks else 0
         flags |= (1 << 1) if self.emojis else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.stickerset))
-        
+
         return b.getvalue()

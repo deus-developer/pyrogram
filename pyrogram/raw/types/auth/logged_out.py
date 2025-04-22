@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,19 +56,18 @@ class LoggedOut(TLObject):  # type: ignore
             auth.LogOut
     """
 
-    __slots__: List[str] = ["future_auth_token"]
+    __slots__: list[str] = ["future_auth_token"]
 
-    ID = 0xc3a2835f
+    ID = 0xC3A2835F
     QUALNAME = "types.auth.LoggedOut"
 
-    def __init__(self, *, future_auth_token: Optional[bytes] = None) -> None:
+    def __init__(self, *, future_auth_token: bytes | None = None) -> None:
         self.future_auth_token = future_auth_token  # flags.0?bytes
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "LoggedOut":
-        
         flags = Int.read(b)
-        
+
         future_auth_token = Bytes.read(b) if flags & (1 << 0) else None
         return LoggedOut(future_auth_token=future_auth_token)
 
@@ -77,8 +78,8 @@ class LoggedOut(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.future_auth_token is not None else 0
         b.write(Int(flags))
-        
+
         if self.future_auth_token is not None:
             b.write(Bytes(self.future_auth_token))
-        
+
         return b.getvalue()

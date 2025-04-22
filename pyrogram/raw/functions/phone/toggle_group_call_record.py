@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ToggleGroupCallRecord(TLObject):  # type: ignore
+class ToggleGroupCallRecord(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -57,12 +61,20 @@ class ToggleGroupCallRecord(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["call", "start", "video", "title", "video_portrait"]
+    __slots__: list[str] = ["call", "start", "title", "video", "video_portrait"]
 
-    ID = 0xf128c708
+    ID = 0xF128C708
     QUALNAME = "functions.phone.ToggleGroupCallRecord"
 
-    def __init__(self, *, call: "raw.base.InputGroupCall", start: Optional[bool] = None, video: Optional[bool] = None, title: Optional[str] = None, video_portrait: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        call: "raw.base.InputGroupCall",
+        start: bool | None = None,
+        video: bool | None = None,
+        title: str | None = None,
+        video_portrait: bool | None = None,
+    ) -> None:
         self.call = call  # InputGroupCall
         self.start = start  # flags.0?true
         self.video = video  # flags.2?true
@@ -71,16 +83,21 @@ class ToggleGroupCallRecord(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ToggleGroupCallRecord":
-        
         flags = Int.read(b)
-        
+
         start = True if flags & (1 << 0) else False
         video = True if flags & (1 << 2) else False
         call = TLObject.read(b)
-        
+
         title = String.read(b) if flags & (1 << 1) else None
         video_portrait = Bool.read(b) if flags & (1 << 2) else None
-        return ToggleGroupCallRecord(call=call, start=start, video=video, title=title, video_portrait=video_portrait)
+        return ToggleGroupCallRecord(
+            call=call,
+            start=start,
+            video=video,
+            title=title,
+            video_portrait=video_portrait,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -92,13 +109,13 @@ class ToggleGroupCallRecord(TLObject):  # type: ignore
         flags |= (1 << 1) if self.title is not None else 0
         flags |= (1 << 2) if self.video_portrait is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.call.write())
-        
+
         if self.title is not None:
             b.write(String(self.title))
-        
+
         if self.video_portrait is not None:
             b.write(Bool(self.video_portrait))
-        
+
         return b.getvalue()

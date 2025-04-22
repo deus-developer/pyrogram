@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -177,12 +180,32 @@ class UpdateShortSentMessage(TLObject):  # type: ignore
             stories.GetAllReadPeerStories
     """
 
-    __slots__: List[str] = ["id", "pts", "pts_count", "date", "out", "media", "entities", "ttl_period"]
+    __slots__: list[str] = [
+        "date",
+        "entities",
+        "id",
+        "media",
+        "out",
+        "pts",
+        "pts_count",
+        "ttl_period",
+    ]
 
-    ID = 0x9015e101
+    ID = 0x9015E101
     QUALNAME = "types.UpdateShortSentMessage"
 
-    def __init__(self, *, id: int, pts: int, pts_count: int, date: int, out: Optional[bool] = None, media: "raw.base.MessageMedia" = None, entities: Optional[List["raw.base.MessageEntity"]] = None, ttl_period: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: int,
+        pts: int,
+        pts_count: int,
+        date: int,
+        out: bool | None = None,
+        media: "raw.base.MessageMedia" = None,
+        entities: list["raw.base.MessageEntity"] | None = None,
+        ttl_period: int | None = None,
+    ) -> None:
         self.id = id  # int
         self.pts = pts  # int
         self.pts_count = pts_count  # int
@@ -194,24 +217,32 @@ class UpdateShortSentMessage(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateShortSentMessage":
-        
         flags = Int.read(b)
-        
+
         out = True if flags & (1 << 1) else False
         id = Int.read(b)
-        
+
         pts = Int.read(b)
-        
+
         pts_count = Int.read(b)
-        
+
         date = Int.read(b)
-        
+
         media = TLObject.read(b) if flags & (1 << 9) else None
-        
+
         entities = TLObject.read(b) if flags & (1 << 7) else []
-        
+
         ttl_period = Int.read(b) if flags & (1 << 25) else None
-        return UpdateShortSentMessage(id=id, pts=pts, pts_count=pts_count, date=date, out=out, media=media, entities=entities, ttl_period=ttl_period)
+        return UpdateShortSentMessage(
+            id=id,
+            pts=pts,
+            pts_count=pts_count,
+            date=date,
+            out=out,
+            media=media,
+            entities=entities,
+            ttl_period=ttl_period,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -223,22 +254,22 @@ class UpdateShortSentMessage(TLObject):  # type: ignore
         flags |= (1 << 7) if self.entities else 0
         flags |= (1 << 25) if self.ttl_period is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.id))
-        
+
         b.write(Int(self.pts))
-        
+
         b.write(Int(self.pts_count))
-        
+
         b.write(Int(self.date))
-        
+
         if self.media is not None:
             b.write(self.media.write())
-        
+
         if self.entities is not None:
             b.write(Vector(self.entities))
-        
+
         if self.ttl_period is not None:
             b.write(Int(self.ttl_period))
-        
+
         return b.getvalue()

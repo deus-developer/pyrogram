@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +57,19 @@ class ChatPhoto(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["photo_id", "dc_id", "has_video", "stripped_thumb"]
+    __slots__: list[str] = ["dc_id", "has_video", "photo_id", "stripped_thumb"]
 
-    ID = 0x1c6e1c11
+    ID = 0x1C6E1C11
     QUALNAME = "types.ChatPhoto"
 
-    def __init__(self, *, photo_id: int, dc_id: int, has_video: Optional[bool] = None, stripped_thumb: Optional[bytes] = None) -> None:
+    def __init__(
+        self,
+        *,
+        photo_id: int,
+        dc_id: int,
+        has_video: bool | None = None,
+        stripped_thumb: bytes | None = None,
+    ) -> None:
         self.photo_id = photo_id  # long
         self.dc_id = dc_id  # int
         self.has_video = has_video  # flags.0?true
@@ -67,16 +77,20 @@ class ChatPhoto(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChatPhoto":
-        
         flags = Int.read(b)
-        
+
         has_video = True if flags & (1 << 0) else False
         photo_id = Long.read(b)
-        
+
         stripped_thumb = Bytes.read(b) if flags & (1 << 1) else None
         dc_id = Int.read(b)
-        
-        return ChatPhoto(photo_id=photo_id, dc_id=dc_id, has_video=has_video, stripped_thumb=stripped_thumb)
+
+        return ChatPhoto(
+            photo_id=photo_id,
+            dc_id=dc_id,
+            has_video=has_video,
+            stripped_thumb=stripped_thumb,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -86,12 +100,12 @@ class ChatPhoto(TLObject):  # type: ignore
         flags |= (1 << 0) if self.has_video else 0
         flags |= (1 << 1) if self.stripped_thumb is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.photo_id))
-        
+
         if self.stripped_thumb is not None:
             b.write(Bytes(self.stripped_thumb))
-        
+
         b.write(Int(self.dc_id))
-        
+
         return b.getvalue()

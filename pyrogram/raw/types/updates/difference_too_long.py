@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +55,9 @@ class DifferenceTooLong(TLObject):  # type: ignore
             updates.GetDifference
     """
 
-    __slots__: List[str] = ["pts"]
+    __slots__: list[str] = ["pts"]
 
-    ID = 0x4afe8f6d
+    ID = 0x4AFE8F6D
     QUALNAME = "types.updates.DifferenceTooLong"
 
     def __init__(self, *, pts: int) -> None:
@@ -65,9 +66,9 @@ class DifferenceTooLong(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DifferenceTooLong":
         # No flags
-        
+
         pts = Int.read(b)
-        
+
         return DifferenceTooLong(pts=pts)
 
     def write(self, *args) -> bytes:
@@ -75,7 +76,7 @@ class DifferenceTooLong(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.pts))
-        
+
         return b.getvalue()

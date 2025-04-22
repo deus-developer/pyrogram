@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,23 +50,28 @@ class UpdateBotBusinessConnect(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["connection", "qts"]
+    __slots__: list[str] = ["connection", "qts"]
 
-    ID = 0x8ae5c97a
+    ID = 0x8AE5C97A
     QUALNAME = "types.UpdateBotBusinessConnect"
 
-    def __init__(self, *, connection: "raw.base.BotBusinessConnection", qts: int) -> None:
+    def __init__(
+        self,
+        *,
+        connection: "raw.base.BotBusinessConnection",
+        qts: int,
+    ) -> None:
         self.connection = connection  # BotBusinessConnection
         self.qts = qts  # int
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateBotBusinessConnect":
         # No flags
-        
+
         connection = TLObject.read(b)
-        
+
         qts = Int.read(b)
-        
+
         return UpdateBotBusinessConnect(connection=connection, qts=qts)
 
     def write(self, *args) -> bytes:
@@ -72,9 +79,9 @@ class UpdateBotBusinessConnect(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.connection.write())
-        
+
         b.write(Int(self.qts))
-        
+
         return b.getvalue()

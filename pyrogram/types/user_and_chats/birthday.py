@@ -19,6 +19,7 @@
 from typing import Optional
 
 from pyrogram import raw
+
 from ..object import Object
 
 
@@ -41,8 +42,7 @@ class Birthday(Object):
         *,
         day: int,
         month: int,
-        year: int = None
-
+        year: int = None,
     ):
         self.day = day
         self.month = month
@@ -50,13 +50,13 @@ class Birthday(Object):
 
     @staticmethod
     def from_raw_tl(
-        birthday: "raw.types.Birthday" = None
+        birthday: "raw.types.Birthday" = None,
     ) -> Optional["Birthday"]:
         if not birthday:
-            return
+            return None
 
         return Birthday(
             day=birthday.day,
             month=birthday.month,
-            year=getattr(birthday, "year", None)
+            year=getattr(birthday, "year", None),
         )

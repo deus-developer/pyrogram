@@ -28,8 +28,9 @@ class RequestPollInfo(Object):
     """
 
     def __init__(
-        self, *,
-        is_quiz: bool = None
+        self,
+        *,
+        is_quiz: bool = None,
     ):
         super().__init__()
 

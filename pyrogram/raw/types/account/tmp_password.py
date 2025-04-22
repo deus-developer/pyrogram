@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,9 +59,9 @@ class TmpPassword(TLObject):  # type: ignore
             account.GetTmpPassword
     """
 
-    __slots__: List[str] = ["tmp_password", "valid_until"]
+    __slots__: list[str] = ["tmp_password", "valid_until"]
 
-    ID = 0xdb64fd34
+    ID = 0xDB64FD34
     QUALNAME = "types.account.TmpPassword"
 
     def __init__(self, *, tmp_password: bytes, valid_until: int) -> None:
@@ -69,11 +71,11 @@ class TmpPassword(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "TmpPassword":
         # No flags
-        
+
         tmp_password = Bytes.read(b)
-        
+
         valid_until = Int.read(b)
-        
+
         return TmpPassword(tmp_password=tmp_password, valid_until=valid_until)
 
     def write(self, *args) -> bytes:
@@ -81,9 +83,9 @@ class TmpPassword(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Bytes(self.tmp_password))
-        
+
         b.write(Int(self.valid_until))
-        
+
         return b.getvalue()

@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +46,9 @@ class SendMessageUploadDocumentAction(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["progress"]
+    __slots__: list[str] = ["progress"]
 
-    ID = 0xaa0cd9e4
+    ID = 0xAA0CD9E4
     QUALNAME = "types.SendMessageUploadDocumentAction"
 
     def __init__(self, *, progress: int) -> None:
@@ -56,9 +57,9 @@ class SendMessageUploadDocumentAction(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SendMessageUploadDocumentAction":
         # No flags
-        
+
         progress = Int.read(b)
-        
+
         return SendMessageUploadDocumentAction(progress=progress)
 
     def write(self, *args) -> bytes:
@@ -66,7 +67,7 @@ class SendMessageUploadDocumentAction(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.progress))
-        
+
         return b.getvalue()

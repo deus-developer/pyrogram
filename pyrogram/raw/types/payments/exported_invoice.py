@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +56,9 @@ class ExportedInvoice(TLObject):  # type: ignore
             payments.ExportInvoice
     """
 
-    __slots__: List[str] = ["url"]
+    __slots__: list[str] = ["url"]
 
-    ID = 0xaed0cbd9
+    ID = 0xAED0CBD9
     QUALNAME = "types.payments.ExportedInvoice"
 
     def __init__(self, *, url: str) -> None:
@@ -65,9 +67,9 @@ class ExportedInvoice(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ExportedInvoice":
         # No flags
-        
+
         url = String.read(b)
-        
+
         return ExportedInvoice(url=url)
 
     def write(self, *args) -> bytes:
@@ -75,7 +77,7 @@ class ExportedInvoice(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.url))
-        
+
         return b.getvalue()

@@ -16,10 +16,11 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional, List
+from typing import Optional
 
 import pyrogram
 from pyrogram import raw, types
+
 from ..object import Object
 
 
@@ -35,7 +36,7 @@ class MessageReactions(Object):
         self,
         *,
         client: "pyrogram.Client" = None,
-        reactions: Optional[List["types.Reaction"]] = None,
+        reactions: list["types.Reaction"] | None = None,
     ):
         super().__init__(client)
 
@@ -44,13 +45,15 @@ class MessageReactions(Object):
     @staticmethod
     def from_raw_tl(
         client: "pyrogram.Client",
-        message_reactions: Optional["raw.base.MessageReactions"] = None
+        message_reactions: Optional["raw.base.MessageReactions"] = None,
     ) -> Optional["MessageReactions"]:
         if not message_reactions:
             return None
 
         return MessageReactions(
             client=client,
-            reactions=[types.Reaction.from_raw_tl_count(client, reaction)
-                       for reaction in message_reactions.results]
+            reactions=[
+                types.Reaction.from_raw_tl_count(client, reaction)
+                for reaction in message_reactions.results
+            ],
         )

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -63,12 +66,30 @@ class BroadcastRevenueTransactionWithdrawal(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["amount", "date", "provider", "pending", "failed", "transaction_date", "transaction_url"]
+    __slots__: list[str] = [
+        "amount",
+        "date",
+        "failed",
+        "pending",
+        "provider",
+        "transaction_date",
+        "transaction_url",
+    ]
 
-    ID = 0x5a590978
+    ID = 0x5A590978
     QUALNAME = "types.BroadcastRevenueTransactionWithdrawal"
 
-    def __init__(self, *, amount: int, date: int, provider: str, pending: Optional[bool] = None, failed: Optional[bool] = None, transaction_date: Optional[int] = None, transaction_url: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        amount: int,
+        date: int,
+        provider: str,
+        pending: bool | None = None,
+        failed: bool | None = None,
+        transaction_date: int | None = None,
+        transaction_url: str | None = None,
+    ) -> None:
         self.amount = amount  # long
         self.date = date  # int
         self.provider = provider  # string
@@ -79,20 +100,27 @@ class BroadcastRevenueTransactionWithdrawal(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "BroadcastRevenueTransactionWithdrawal":
-        
         flags = Int.read(b)
-        
+
         pending = True if flags & (1 << 0) else False
         failed = True if flags & (1 << 2) else False
         amount = Long.read(b)
-        
+
         date = Int.read(b)
-        
+
         provider = String.read(b)
-        
+
         transaction_date = Int.read(b) if flags & (1 << 1) else None
         transaction_url = String.read(b) if flags & (1 << 1) else None
-        return BroadcastRevenueTransactionWithdrawal(amount=amount, date=date, provider=provider, pending=pending, failed=failed, transaction_date=transaction_date, transaction_url=transaction_url)
+        return BroadcastRevenueTransactionWithdrawal(
+            amount=amount,
+            date=date,
+            provider=provider,
+            pending=pending,
+            failed=failed,
+            transaction_date=transaction_date,
+            transaction_url=transaction_url,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -104,17 +132,17 @@ class BroadcastRevenueTransactionWithdrawal(TLObject):  # type: ignore
         flags |= (1 << 1) if self.transaction_date is not None else 0
         flags |= (1 << 1) if self.transaction_url is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.amount))
-        
+
         b.write(Int(self.date))
-        
+
         b.write(String(self.provider))
-        
+
         if self.transaction_date is not None:
             b.write(Int(self.transaction_date))
-        
+
         if self.transaction_url is not None:
             b.write(String(self.transaction_url))
-        
+
         return b.getvalue()

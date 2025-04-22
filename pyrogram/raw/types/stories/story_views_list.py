@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -75,12 +79,32 @@ class StoryViewsList(TLObject):  # type: ignore
             stories.GetStoryViewsList
     """
 
-    __slots__: List[str] = ["count", "views_count", "forwards_count", "reactions_count", "views", "chats", "users", "next_offset"]
+    __slots__: list[str] = [
+        "chats",
+        "count",
+        "forwards_count",
+        "next_offset",
+        "reactions_count",
+        "users",
+        "views",
+        "views_count",
+    ]
 
-    ID = 0x59d78fc5
+    ID = 0x59D78FC5
     QUALNAME = "types.stories.StoryViewsList"
 
-    def __init__(self, *, count: int, views_count: int, forwards_count: int, reactions_count: int, views: List["raw.base.StoryView"], chats: List["raw.base.Chat"], users: List["raw.base.User"], next_offset: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        count: int,
+        views_count: int,
+        forwards_count: int,
+        reactions_count: int,
+        views: list["raw.base.StoryView"],
+        chats: list["raw.base.Chat"],
+        users: list["raw.base.User"],
+        next_offset: str | None = None,
+    ) -> None:
         self.count = count  # int
         self.views_count = views_count  # int
         self.forwards_count = forwards_count  # int
@@ -92,25 +116,33 @@ class StoryViewsList(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "StoryViewsList":
-        
         flags = Int.read(b)
-        
+
         count = Int.read(b)
-        
+
         views_count = Int.read(b)
-        
+
         forwards_count = Int.read(b)
-        
+
         reactions_count = Int.read(b)
-        
+
         views = TLObject.read(b)
-        
+
         chats = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
+
         next_offset = String.read(b) if flags & (1 << 0) else None
-        return StoryViewsList(count=count, views_count=views_count, forwards_count=forwards_count, reactions_count=reactions_count, views=views, chats=chats, users=users, next_offset=next_offset)
+        return StoryViewsList(
+            count=count,
+            views_count=views_count,
+            forwards_count=forwards_count,
+            reactions_count=reactions_count,
+            views=views,
+            chats=chats,
+            users=users,
+            next_offset=next_offset,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -119,22 +151,22 @@ class StoryViewsList(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.next_offset is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.count))
-        
+
         b.write(Int(self.views_count))
-        
+
         b.write(Int(self.forwards_count))
-        
+
         b.write(Int(self.reactions_count))
-        
+
         b.write(Vector(self.views))
-        
+
         b.write(Vector(self.chats))
-        
+
         b.write(Vector(self.users))
-        
+
         if self.next_offset is not None:
             b.write(String(self.next_offset))
-        
+
         return b.getvalue()

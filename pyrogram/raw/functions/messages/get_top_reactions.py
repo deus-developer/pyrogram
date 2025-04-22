@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetTopReactions(TLObject):  # type: ignore
+class GetTopReactions(TLFunction["raw.base.messages.Reactions"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class GetTopReactions(TLObject):  # type: ignore
         :obj:`messages.Reactions <pyrogram.raw.base.messages.Reactions>`
     """
 
-    __slots__: List[str] = ["limit", "hash"]
+    __slots__: list[str] = ["hash", "limit"]
 
-    ID = 0xbb8125ba
+    ID = 0xBB8125BA
     QUALNAME = "functions.messages.GetTopReactions"
 
     def __init__(self, *, limit: int, hash: int) -> None:
@@ -60,11 +62,11 @@ class GetTopReactions(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetTopReactions":
         # No flags
-        
+
         limit = Int.read(b)
-        
+
         hash = Long.read(b)
-        
+
         return GetTopReactions(limit=limit, hash=hash)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class GetTopReactions(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.limit))
-        
+
         b.write(Long(self.hash))
-        
+
         return b.getvalue()

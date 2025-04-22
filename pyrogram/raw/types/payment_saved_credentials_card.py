@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class PaymentSavedCredentialsCard(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "title"]
+    __slots__: list[str] = ["id", "title"]
 
-    ID = 0xcdc27a1f
+    ID = 0xCDC27A1F
     QUALNAME = "types.PaymentSavedCredentialsCard"
 
     def __init__(self, *, id: str, title: str) -> None:
@@ -60,11 +62,11 @@ class PaymentSavedCredentialsCard(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PaymentSavedCredentialsCard":
         # No flags
-        
+
         id = String.read(b)
-        
+
         title = String.read(b)
-        
+
         return PaymentSavedCredentialsCard(id=id, title=title)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class PaymentSavedCredentialsCard(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.id))
-        
+
         b.write(String(self.title))
-        
+
         return b.getvalue()

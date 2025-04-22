@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class EditGroupCallTitle(TLObject):  # type: ignore
+class EditGroupCallTitle(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class EditGroupCallTitle(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["call", "title"]
+    __slots__: list[str] = ["call", "title"]
 
-    ID = 0x1ca6ac0a
+    ID = 0x1CA6AC0A
     QUALNAME = "functions.phone.EditGroupCallTitle"
 
     def __init__(self, *, call: "raw.base.InputGroupCall", title: str) -> None:
@@ -60,11 +63,11 @@ class EditGroupCallTitle(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EditGroupCallTitle":
         # No flags
-        
+
         call = TLObject.read(b)
-        
+
         title = String.read(b)
-        
+
         return EditGroupCallTitle(call=call, title=title)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class EditGroupCallTitle(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.call.write())
-        
+
         b.write(String(self.title))
-        
+
         return b.getvalue()

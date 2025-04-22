@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,9 +52,9 @@ class HttpWait(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["max_delay", "wait_after", "max_wait"]
+    __slots__: list[str] = ["max_delay", "max_wait", "wait_after"]
 
-    ID = 0x9299359f
+    ID = 0x9299359F
     QUALNAME = "types.HttpWait"
 
     def __init__(self, *, max_delay: int, wait_after: int, max_wait: int) -> None:
@@ -64,13 +65,13 @@ class HttpWait(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "HttpWait":
         # No flags
-        
+
         max_delay = Int.read(b)
-        
+
         wait_after = Int.read(b)
-        
+
         max_wait = Int.read(b)
-        
+
         return HttpWait(max_delay=max_delay, wait_after=wait_after, max_wait=max_wait)
 
     def write(self, *args) -> bytes:
@@ -78,11 +79,11 @@ class HttpWait(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.max_delay))
-        
+
         b.write(Int(self.wait_after))
-        
+
         b.write(Int(self.max_wait))
-        
+
         return b.getvalue()

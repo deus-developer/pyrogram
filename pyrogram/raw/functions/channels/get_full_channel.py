@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetFullChannel(TLObject):  # type: ignore
+class GetFullChannel(TLFunction["raw.base.messages.ChatFull"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetFullChannel(TLObject):  # type: ignore
         :obj:`messages.ChatFull <pyrogram.raw.base.messages.ChatFull>`
     """
 
-    __slots__: List[str] = ["channel"]
+    __slots__: list[str] = ["channel"]
 
-    ID = 0x8736a09
+    ID = 0x8736A09
     QUALNAME = "functions.channels.GetFullChannel"
 
     def __init__(self, *, channel: "raw.base.InputChannel") -> None:
@@ -56,9 +58,9 @@ class GetFullChannel(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetFullChannel":
         # No flags
-        
+
         channel = TLObject.read(b)
-        
+
         return GetFullChannel(channel=channel)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class GetFullChannel(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.channel.write())
-        
+
         return b.getvalue()

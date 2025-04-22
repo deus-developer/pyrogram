@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetParticipants(TLObject):  # type: ignore
+class GetParticipants(TLFunction["raw.base.channels.ChannelParticipants"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -57,12 +60,20 @@ class GetParticipants(TLObject):  # type: ignore
         :obj:`channels.ChannelParticipants <pyrogram.raw.base.channels.ChannelParticipants>`
     """
 
-    __slots__: List[str] = ["channel", "filter", "offset", "limit", "hash"]
+    __slots__: list[str] = ["channel", "filter", "hash", "limit", "offset"]
 
-    ID = 0x77ced9d0
+    ID = 0x77CED9D0
     QUALNAME = "functions.channels.GetParticipants"
 
-    def __init__(self, *, channel: "raw.base.InputChannel", filter: "raw.base.ChannelParticipantsFilter", offset: int, limit: int, hash: int) -> None:
+    def __init__(
+        self,
+        *,
+        channel: "raw.base.InputChannel",
+        filter: "raw.base.ChannelParticipantsFilter",
+        offset: int,
+        limit: int,
+        hash: int,
+    ) -> None:
         self.channel = channel  # InputChannel
         self.filter = filter  # ChannelParticipantsFilter
         self.offset = offset  # int
@@ -72,33 +83,39 @@ class GetParticipants(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetParticipants":
         # No flags
-        
+
         channel = TLObject.read(b)
-        
+
         filter = TLObject.read(b)
-        
+
         offset = Int.read(b)
-        
+
         limit = Int.read(b)
-        
+
         hash = Long.read(b)
-        
-        return GetParticipants(channel=channel, filter=filter, offset=offset, limit=limit, hash=hash)
+
+        return GetParticipants(
+            channel=channel,
+            filter=filter,
+            offset=offset,
+            limit=limit,
+            hash=hash,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.channel.write())
-        
+
         b.write(self.filter.write())
-        
+
         b.write(Int(self.offset))
-        
+
         b.write(Int(self.limit))
-        
+
         b.write(Long(self.hash))
-        
+
         return b.getvalue()

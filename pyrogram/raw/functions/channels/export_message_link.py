@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ExportMessageLink(TLObject):  # type: ignore
+class ExportMessageLink(TLFunction["raw.base.ExportedMessageLink"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +56,19 @@ class ExportMessageLink(TLObject):  # type: ignore
         :obj:`ExportedMessageLink <pyrogram.raw.base.ExportedMessageLink>`
     """
 
-    __slots__: List[str] = ["channel", "id", "grouped", "thread"]
+    __slots__: list[str] = ["channel", "grouped", "id", "thread"]
 
-    ID = 0xe63fadeb
+    ID = 0xE63FADEB
     QUALNAME = "functions.channels.ExportMessageLink"
 
-    def __init__(self, *, channel: "raw.base.InputChannel", id: int, grouped: Optional[bool] = None, thread: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        channel: "raw.base.InputChannel",
+        id: int,
+        grouped: bool | None = None,
+        thread: bool | None = None,
+    ) -> None:
         self.channel = channel  # InputChannel
         self.id = id  # int
         self.grouped = grouped  # flags.0?true
@@ -67,15 +76,14 @@ class ExportMessageLink(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ExportMessageLink":
-        
         flags = Int.read(b)
-        
+
         grouped = True if flags & (1 << 0) else False
         thread = True if flags & (1 << 1) else False
         channel = TLObject.read(b)
-        
+
         id = Int.read(b)
-        
+
         return ExportMessageLink(channel=channel, id=id, grouped=grouped, thread=thread)
 
     def write(self, *args) -> bytes:
@@ -86,9 +94,9 @@ class ExportMessageLink(TLObject):  # type: ignore
         flags |= (1 << 0) if self.grouped else 0
         flags |= (1 << 1) if self.thread else 0
         b.write(Int(flags))
-        
+
         b.write(self.channel.write())
-        
+
         b.write(Int(self.id))
-        
+
         return b.getvalue()

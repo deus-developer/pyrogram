@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ImportLoginToken(TLObject):  # type: ignore
+class ImportLoginToken(TLFunction["raw.base.auth.LoginToken"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class ImportLoginToken(TLObject):  # type: ignore
         :obj:`auth.LoginToken <pyrogram.raw.base.auth.LoginToken>`
     """
 
-    __slots__: List[str] = ["token"]
+    __slots__: list[str] = ["token"]
 
-    ID = 0x95ac5ce4
+    ID = 0x95AC5CE4
     QUALNAME = "functions.auth.ImportLoginToken"
 
     def __init__(self, *, token: bytes) -> None:
@@ -56,9 +58,9 @@ class ImportLoginToken(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ImportLoginToken":
         # No flags
-        
+
         token = Bytes.read(b)
-        
+
         return ImportLoginToken(token=token)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class ImportLoginToken(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Bytes(self.token))
-        
+
         return b.getvalue()

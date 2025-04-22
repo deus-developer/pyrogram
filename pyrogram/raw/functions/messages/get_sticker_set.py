@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetStickerSet(TLObject):  # type: ignore
+class GetStickerSet(TLFunction["raw.base.messages.StickerSet"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class GetStickerSet(TLObject):  # type: ignore
         :obj:`messages.StickerSet <pyrogram.raw.base.messages.StickerSet>`
     """
 
-    __slots__: List[str] = ["stickerset", "hash"]
+    __slots__: list[str] = ["hash", "stickerset"]
 
-    ID = 0xc8a0ec74
+    ID = 0xC8A0EC74
     QUALNAME = "functions.messages.GetStickerSet"
 
     def __init__(self, *, stickerset: "raw.base.InputStickerSet", hash: int) -> None:
@@ -60,11 +62,11 @@ class GetStickerSet(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetStickerSet":
         # No flags
-        
+
         stickerset = TLObject.read(b)
-        
+
         hash = Int.read(b)
-        
+
         return GetStickerSet(stickerset=stickerset, hash=hash)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class GetStickerSet(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.stickerset.write())
-        
+
         b.write(Int(self.hash))
-        
+
         return b.getvalue()

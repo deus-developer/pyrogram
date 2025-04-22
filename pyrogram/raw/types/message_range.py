@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,9 +58,9 @@ class MessageRange(TLObject):  # type: ignore
             messages.GetSplitRanges
     """
 
-    __slots__: List[str] = ["min_id", "max_id"]
+    __slots__: list[str] = ["max_id", "min_id"]
 
-    ID = 0xae30253
+    ID = 0xAE30253
     QUALNAME = "types.MessageRange"
 
     def __init__(self, *, min_id: int, max_id: int) -> None:
@@ -69,11 +70,11 @@ class MessageRange(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageRange":
         # No flags
-        
+
         min_id = Int.read(b)
-        
+
         max_id = Int.read(b)
-        
+
         return MessageRange(min_id=min_id, max_id=max_id)
 
     def write(self, *args) -> bytes:
@@ -81,9 +82,9 @@ class MessageRange(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.min_id))
-        
+
         b.write(Int(self.max_id))
-        
+
         return b.getvalue()

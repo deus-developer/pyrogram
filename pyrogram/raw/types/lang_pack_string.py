@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,9 +59,9 @@ class LangPackString(TLObject):  # type: ignore
             langpack.GetStrings
     """
 
-    __slots__: List[str] = ["key", "value"]
+    __slots__: list[str] = ["key", "value"]
 
-    ID = 0xcad181f6
+    ID = 0xCAD181F6
     QUALNAME = "types.LangPackString"
 
     def __init__(self, *, key: str, value: str) -> None:
@@ -69,11 +71,11 @@ class LangPackString(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "LangPackString":
         # No flags
-        
+
         key = String.read(b)
-        
+
         value = String.read(b)
-        
+
         return LangPackString(key=key, value=value)
 
     def write(self, *args) -> bytes:
@@ -81,9 +83,9 @@ class LangPackString(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.key))
-        
+
         b.write(String(self.value))
-        
+
         return b.getvalue()

@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +55,9 @@ class AccountDaysTTL(TLObject):  # type: ignore
             account.GetAccountTTL
     """
 
-    __slots__: List[str] = ["days"]
+    __slots__: list[str] = ["days"]
 
-    ID = 0xb8d0afdf
+    ID = 0xB8D0AFDF
     QUALNAME = "types.AccountDaysTTL"
 
     def __init__(self, *, days: int) -> None:
@@ -65,9 +66,9 @@ class AccountDaysTTL(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "AccountDaysTTL":
         # No flags
-        
+
         days = Int.read(b)
-        
+
         return AccountDaysTTL(days=days)
 
     def write(self, *args) -> bytes:
@@ -75,7 +76,7 @@ class AccountDaysTTL(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.days))
-        
+
         return b.getvalue()

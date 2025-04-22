@@ -16,10 +16,11 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional, List
+from typing import Optional
 
 import pyrogram
 from pyrogram import raw, types
+
 from ..object import Object
 
 
@@ -40,9 +41,9 @@ class ChatReactions(Object):
         self,
         *,
         client: "pyrogram.Client" = None,
-        all_are_enabled: Optional[bool] = None,
-        allow_custom_emoji: Optional[bool] = None,
-        reactions: Optional[List["types.Reaction"]] = None,
+        all_are_enabled: bool | None = None,
+        allow_custom_emoji: bool | None = None,
+        reactions: list["types.Reaction"] | None = None,
     ):
         super().__init__(client)
 
@@ -51,19 +52,24 @@ class ChatReactions(Object):
         self.reactions = reactions
 
     @staticmethod
-    def from_raw_tl(client, chat_reactions: "raw.base.ChatReactions") -> Optional["ChatReactions"]:
+    def from_raw_tl(
+        client,
+        chat_reactions: "raw.base.ChatReactions",
+    ) -> Optional["ChatReactions"]:
         if isinstance(chat_reactions, raw.types.ChatReactionsAll):
             return ChatReactions(
                 client=client,
                 all_are_enabled=True,
-                allow_custom_emoji=chat_reactions.allow_custom
+                allow_custom_emoji=chat_reactions.allow_custom,
             )
 
         if isinstance(chat_reactions, raw.types.ChatReactionsSome):
             return ChatReactions(
                 client=client,
-                reactions=[types.Reaction.from_raw_tl(client, reaction)
-                           for reaction in chat_reactions.reactions]
+                reactions=[
+                    types.Reaction.from_raw_tl(client, reaction)
+                    for reaction in chat_reactions.reactions
+                ],
             )
 
         return None

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,20 +47,23 @@ class ChannelAdminLogEventActionExportedInviteDelete(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["invite"]
+    __slots__: list[str] = ["invite"]
 
-    ID = 0x5a50fca4
+    ID = 0x5A50FCA4
     QUALNAME = "types.ChannelAdminLogEventActionExportedInviteDelete"
 
     def __init__(self, *, invite: "raw.base.ExportedChatInvite") -> None:
         self.invite = invite  # ExportedChatInvite
 
     @staticmethod
-    def read(b: BytesIO, *args: Any) -> "ChannelAdminLogEventActionExportedInviteDelete":
+    def read(
+        b: BytesIO,
+        *args: Any,
+    ) -> "ChannelAdminLogEventActionExportedInviteDelete":
         # No flags
-        
+
         invite = TLObject.read(b)
-        
+
         return ChannelAdminLogEventActionExportedInviteDelete(invite=invite)
 
     def write(self, *args) -> bytes:
@@ -66,7 +71,7 @@ class ChannelAdminLogEventActionExportedInviteDelete(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.invite.write())
-        
+
         return b.getvalue()

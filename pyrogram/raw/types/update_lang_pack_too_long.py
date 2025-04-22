@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,7 +47,7 @@ class UpdateLangPackTooLong(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["lang_code"]
+    __slots__: list[str] = ["lang_code"]
 
     ID = 0x46560264
     QUALNAME = "types.UpdateLangPackTooLong"
@@ -56,9 +58,9 @@ class UpdateLangPackTooLong(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateLangPackTooLong":
         # No flags
-        
+
         lang_code = String.read(b)
-        
+
         return UpdateLangPackTooLong(lang_code=lang_code)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class UpdateLangPackTooLong(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.lang_code))
-        
+
         return b.getvalue()

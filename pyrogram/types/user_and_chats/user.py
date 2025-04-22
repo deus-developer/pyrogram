@@ -18,12 +18,11 @@
 
 import html
 from datetime import datetime
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 import pyrogram
-from pyrogram import enums, utils
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import enums, raw, types, utils
+
 from ..object import Object
 from ..update import Update
 
@@ -204,16 +203,16 @@ class User(Object, Update):
         last_online_date: datetime = None,
         next_offline_date: datetime = None,
         username: str = None,
-        usernames: List["types.Username"] = None,
+        usernames: list["types.Username"] = None,
         language_code: str = None,
         emoji_status: Optional["types.EmojiStatus"] = None,
         dc_id: int = None,
         phone_number: str = None,
         photo: "types.ChatPhoto" = None,
-        restrictions: List["types.Restriction"] = None,
+        restrictions: list["types.Restriction"] = None,
         reply_color: "types.ChatColor" = None,
         profile_color: "types.ChatColor" = None,
-        raw: Union["raw.base.User", "raw.base.UserStatus"] = None
+        raw: Union["raw.base.User", "raw.base.UserStatus"] = None,
     ):
         super().__init__(client)
 
@@ -260,7 +259,7 @@ class User(Object, Update):
         return Link(
             f"tg://user?id={self.id}",
             self.first_name or "Deleted Account",
-            self._client.parse_mode
+            self._client.parse_mode,
         )
 
     @staticmethod
@@ -289,18 +288,32 @@ class User(Object, Update):
             first_name=user.first_name,
             last_name=user.last_name,
             **User.from_raw_tl_status(user.status, user.bot),
-            username=user.username or (user.usernames[0].username if user.usernames else None),
-            usernames=types.List([types.Username.from_raw_tl(r) for r in user.usernames]) or None,
+            username=user.username
+            or (user.usernames[0].username if user.usernames else None),
+            usernames=types.List(
+                [types.Username.from_raw_tl(r) for r in user.usernames],
+            )
+            or None,
             language_code=user.lang_code,
             emoji_status=types.EmojiStatus.from_raw_tl(client, user.emoji_status),
             dc_id=getattr(user.photo, "dc_id", None),
             phone_number=user.phone,
-            photo=types.ChatPhoto.from_raw_tl(client, user.photo, user.id, user.access_hash),
-            restrictions=types.List([types.Restriction.from_raw_tl(r) for r in user.restriction_reason]) or None,
+            photo=types.ChatPhoto.from_raw_tl(
+                client,
+                user.photo,
+                user.id,
+                user.access_hash,
+            ),
+            restrictions=types.List(
+                [types.Restriction.from_raw_tl(r) for r in user.restriction_reason],
+            )
+            or None,
             reply_color=types.ChatColor.from_raw_tl(getattr(user, "color", None)),
-            profile_color=types.ChatColor.from_raw_tl_profile_color(getattr(user, "profile_color", None)),
+            profile_color=types.ChatColor.from_raw_tl_profile_color(
+                getattr(user, "profile_color", None),
+            ),
             raw=user,
-            client=client
+            client=client,
         )
 
     @staticmethod
@@ -333,7 +346,7 @@ class User(Object, Update):
         return {
             "status": status,
             "last_online_date": last_online_date,
-            "next_offline_date": next_offline_date
+            "next_offline_date": next_offline_date,
         }
 
     @staticmethod
@@ -342,7 +355,7 @@ class User(Object, Update):
             id=user_status.user_id,
             **User.from_raw_tl_status(user_status.status),
             raw=user_status,
-            client=client
+            client=client,
         )
 
     async def archive(self):
@@ -365,7 +378,6 @@ class User(Object, Update):
         Raises:
             RPCError: In case of a Telegram RPC error.
         """
-
         return await self._client.archive_chats(self.id)
 
     async def unarchive(self):
@@ -388,7 +400,6 @@ class User(Object, Update):
         Raises:
             RPCError: In case of a Telegram RPC error.
         """
-
         return await self._client.unarchive_chats(self.id)
 
     def block(self):
@@ -411,7 +422,6 @@ class User(Object, Update):
         Raises:
             RPCError: In case of a Telegram RPC error.
         """
-
         return self._client.block_user(self.id)
 
     def unblock(self):
@@ -434,7 +444,6 @@ class User(Object, Update):
         Raises:
             RPCError: In case of a Telegram RPC error.
         """
-
         return self._client.unblock_user(self.id)
 
     def get_common_chats(self):
@@ -457,5 +466,4 @@ class User(Object, Update):
         Raises:
             RPCError: In case of a Telegram RPC error.
         """
-
         return self._client.get_common_chats(self.id)

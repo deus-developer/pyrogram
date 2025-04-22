@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class UploadEncryptedFile(TLObject):  # type: ignore
+class UploadEncryptedFile(TLFunction["raw.base.EncryptedFile"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,28 @@ class UploadEncryptedFile(TLObject):  # type: ignore
         :obj:`EncryptedFile <pyrogram.raw.base.EncryptedFile>`
     """
 
-    __slots__: List[str] = ["peer", "file"]
+    __slots__: list[str] = ["file", "peer"]
 
-    ID = 0x5057c497
+    ID = 0x5057C497
     QUALNAME = "functions.messages.UploadEncryptedFile"
 
-    def __init__(self, *, peer: "raw.base.InputEncryptedChat", file: "raw.base.InputEncryptedFile") -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputEncryptedChat",
+        file: "raw.base.InputEncryptedFile",
+    ) -> None:
         self.peer = peer  # InputEncryptedChat
         self.file = file  # InputEncryptedFile
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UploadEncryptedFile":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         file = TLObject.read(b)
-        
+
         return UploadEncryptedFile(peer=peer, file=file)
 
     def write(self, *args) -> bytes:
@@ -72,9 +79,9 @@ class UploadEncryptedFile(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(self.file.write())
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class UpdateStoryID(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "random_id"]
+    __slots__: list[str] = ["id", "random_id"]
 
-    ID = 0x1bf335b9
+    ID = 0x1BF335B9
     QUALNAME = "types.UpdateStoryID"
 
     def __init__(self, *, id: int, random_id: int) -> None:
@@ -60,11 +62,11 @@ class UpdateStoryID(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateStoryID":
         # No flags
-        
+
         id = Int.read(b)
-        
+
         random_id = Long.read(b)
-        
+
         return UpdateStoryID(id=id, random_id=random_id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class UpdateStoryID(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.id))
-        
+
         b.write(Long(self.random_id))
-        
+
         return b.getvalue()

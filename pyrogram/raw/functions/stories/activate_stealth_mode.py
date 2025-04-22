@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ActivateStealthMode(TLObject):  # type: ignore
+class ActivateStealthMode(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,20 +49,24 @@ class ActivateStealthMode(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["past", "future"]
+    __slots__: list[str] = ["future", "past"]
 
-    ID = 0x57bbd166
+    ID = 0x57BBD166
     QUALNAME = "functions.stories.ActivateStealthMode"
 
-    def __init__(self, *, past: Optional[bool] = None, future: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        past: bool | None = None,
+        future: bool | None = None,
+    ) -> None:
         self.past = past  # flags.0?true
         self.future = future  # flags.1?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ActivateStealthMode":
-        
         flags = Int.read(b)
-        
+
         past = True if flags & (1 << 0) else False
         future = True if flags & (1 << 1) else False
         return ActivateStealthMode(past=past, future=future)
@@ -74,5 +79,5 @@ class ActivateStealthMode(TLObject):  # type: ignore
         flags |= (1 << 0) if self.past else 0
         flags |= (1 << 1) if self.future else 0
         b.write(Int(flags))
-        
+
         return b.getvalue()

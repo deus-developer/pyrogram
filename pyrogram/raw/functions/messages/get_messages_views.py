@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetMessagesViews(TLObject):  # type: ignore
+class GetMessagesViews(TLFunction["raw.base.messages.MessageViews"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +55,18 @@ class GetMessagesViews(TLObject):  # type: ignore
         :obj:`messages.MessageViews <pyrogram.raw.base.messages.MessageViews>`
     """
 
-    __slots__: List[str] = ["peer", "id", "increment"]
+    __slots__: list[str] = ["id", "increment", "peer"]
 
-    ID = 0x5784d3e1
+    ID = 0x5784D3E1
     QUALNAME = "functions.messages.GetMessagesViews"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", id: List[int], increment: bool) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        id: list[int],
+        increment: bool,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.id = id  # Vector<int>
         self.increment = increment  # Bool
@@ -64,13 +74,13 @@ class GetMessagesViews(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetMessagesViews":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         id = TLObject.read(b, Int)
-        
+
         increment = Bool.read(b)
-        
+
         return GetMessagesViews(peer=peer, id=id, increment=increment)
 
     def write(self, *args) -> bytes:
@@ -78,11 +88,11 @@ class GetMessagesViews(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Vector(self.id, Int))
-        
+
         b.write(Bool(self.increment))
-        
+
         return b.getvalue()

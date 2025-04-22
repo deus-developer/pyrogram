@@ -16,19 +16,18 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
+
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
-from typing import Union
+from pyrogram import raw, types
 
 
 class CreateForumTopic:
     async def create_forum_topic(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         title: str,
         icon_color: int = None,
-        icon_emoji_id: int = None
+        icon_emoji_id: int = None,
     ) -> "types.ForumTopicCreated":
         """Create a new forum topic.
 
@@ -61,8 +60,8 @@ class CreateForumTopic:
                 title=title,
                 random_id=self.rnd_id(),
                 icon_color=icon_color,
-                icon_emoji_id=icon_emoji_id
-            )
+                icon_emoji_id=icon_emoji_id,
+            ),
         )
 
         return types.ForumTopicCreated.from_raw_tl(r.updates[1].message)

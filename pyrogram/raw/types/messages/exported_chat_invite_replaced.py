@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -61,12 +64,18 @@ class ExportedChatInviteReplaced(TLObject):  # type: ignore
             messages.EditExportedChatInvite
     """
 
-    __slots__: List[str] = ["invite", "new_invite", "users"]
+    __slots__: list[str] = ["invite", "new_invite", "users"]
 
-    ID = 0x222600ef
+    ID = 0x222600EF
     QUALNAME = "types.messages.ExportedChatInviteReplaced"
 
-    def __init__(self, *, invite: "raw.base.ExportedChatInvite", new_invite: "raw.base.ExportedChatInvite", users: List["raw.base.User"]) -> None:
+    def __init__(
+        self,
+        *,
+        invite: "raw.base.ExportedChatInvite",
+        new_invite: "raw.base.ExportedChatInvite",
+        users: list["raw.base.User"],
+    ) -> None:
         self.invite = invite  # ExportedChatInvite
         self.new_invite = new_invite  # ExportedChatInvite
         self.users = users  # Vector<User>
@@ -74,25 +83,29 @@ class ExportedChatInviteReplaced(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ExportedChatInviteReplaced":
         # No flags
-        
+
         invite = TLObject.read(b)
-        
+
         new_invite = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
-        return ExportedChatInviteReplaced(invite=invite, new_invite=new_invite, users=users)
+
+        return ExportedChatInviteReplaced(
+            invite=invite,
+            new_invite=new_invite,
+            users=users,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.invite.write())
-        
+
         b.write(self.new_invite.write())
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

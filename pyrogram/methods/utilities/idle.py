@@ -19,14 +19,15 @@
 import asyncio
 import logging
 import signal
-from contextlib import suppress
-from signal import signal as signal_fn, SIGINT, SIGTERM, SIGABRT
+from signal import SIGABRT, SIGINT, SIGTERM
+from signal import signal as signal_fn
 
 log = logging.getLogger(__name__)
 
 # Signal number to name
 signals = {
-    k: v for v, k in signal.__dict__.items()
+    k: v
+    for v, k in signal.__dict__.items()
     if v.startswith("SIG") and not v.startswith("SIG_")
 }
 
@@ -51,11 +52,7 @@ async def idle():
 
 
             async def main():
-                apps = [
-                    Client("account1"),
-                    Client("account2"),
-                    Client("account3")
-                ]
+                apps = [Client("account1"), Client("account2"), Client("account3")]
 
                 ...  # Set up handlers
 

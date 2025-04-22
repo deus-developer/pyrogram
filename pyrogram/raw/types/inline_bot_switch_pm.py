@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class InlineBotSwitchPM(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["text", "start_param"]
+    __slots__: list[str] = ["start_param", "text"]
 
-    ID = 0x3c20629f
+    ID = 0x3C20629F
     QUALNAME = "types.InlineBotSwitchPM"
 
     def __init__(self, *, text: str, start_param: str) -> None:
@@ -60,11 +62,11 @@ class InlineBotSwitchPM(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InlineBotSwitchPM":
         # No flags
-        
+
         text = String.read(b)
-        
+
         start_param = String.read(b)
-        
+
         return InlineBotSwitchPM(text=text, start_param=start_param)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class InlineBotSwitchPM(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.text))
-        
+
         b.write(String(self.start_param))
-        
+
         return b.getvalue()

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SaveSecureValue(TLObject):  # type: ignore
+class SaveSecureValue(TLFunction["raw.base.SecureValue"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +51,28 @@ class SaveSecureValue(TLObject):  # type: ignore
         :obj:`SecureValue <pyrogram.raw.base.SecureValue>`
     """
 
-    __slots__: List[str] = ["value", "secure_secret_id"]
+    __slots__: list[str] = ["secure_secret_id", "value"]
 
-    ID = 0x899fe31d
+    ID = 0x899FE31D
     QUALNAME = "functions.account.SaveSecureValue"
 
-    def __init__(self, *, value: "raw.base.InputSecureValue", secure_secret_id: int) -> None:
+    def __init__(
+        self,
+        *,
+        value: "raw.base.InputSecureValue",
+        secure_secret_id: int,
+    ) -> None:
         self.value = value  # InputSecureValue
         self.secure_secret_id = secure_secret_id  # long
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SaveSecureValue":
         # No flags
-        
+
         value = TLObject.read(b)
-        
+
         secure_secret_id = Long.read(b)
-        
+
         return SaveSecureValue(value=value, secure_secret_id=secure_secret_id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +80,9 @@ class SaveSecureValue(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.value.write())
-        
+
         b.write(Long(self.secure_secret_id))
-        
+
         return b.getvalue()

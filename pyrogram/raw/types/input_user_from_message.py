@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,12 +54,18 @@ class InputUserFromMessage(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "msg_id", "user_id"]
+    __slots__: list[str] = ["msg_id", "peer", "user_id"]
 
-    ID = 0x1da448e2
+    ID = 0x1DA448E2
     QUALNAME = "types.InputUserFromMessage"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", msg_id: int, user_id: int) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        msg_id: int,
+        user_id: int,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.msg_id = msg_id  # int
         self.user_id = user_id  # long
@@ -64,13 +73,13 @@ class InputUserFromMessage(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputUserFromMessage":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         msg_id = Int.read(b)
-        
+
         user_id = Long.read(b)
-        
+
         return InputUserFromMessage(peer=peer, msg_id=msg_id, user_id=user_id)
 
     def write(self, *args) -> bytes:
@@ -78,11 +87,11 @@ class InputUserFromMessage(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.msg_id))
-        
+
         b.write(Long(self.user_id))
-        
+
         return b.getvalue()

@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -66,12 +70,20 @@ class ResolvedBusinessChatLinks(TLObject):  # type: ignore
             account.ResolveBusinessChatLink
     """
 
-    __slots__: List[str] = ["peer", "message", "chats", "users", "entities"]
+    __slots__: list[str] = ["chats", "entities", "message", "peer", "users"]
 
-    ID = 0x9a23af21
+    ID = 0x9A23AF21
     QUALNAME = "types.account.ResolvedBusinessChatLinks"
 
-    def __init__(self, *, peer: "raw.base.Peer", message: str, chats: List["raw.base.Chat"], users: List["raw.base.User"], entities: Optional[List["raw.base.MessageEntity"]] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.Peer",
+        message: str,
+        chats: list["raw.base.Chat"],
+        users: list["raw.base.User"],
+        entities: list["raw.base.MessageEntity"] | None = None,
+    ) -> None:
         self.peer = peer  # Peer
         self.message = message  # string
         self.chats = chats  # Vector<Chat>
@@ -80,20 +92,25 @@ class ResolvedBusinessChatLinks(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ResolvedBusinessChatLinks":
-        
         flags = Int.read(b)
-        
+
         peer = TLObject.read(b)
-        
+
         message = String.read(b)
-        
+
         entities = TLObject.read(b) if flags & (1 << 0) else []
-        
+
         chats = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
-        return ResolvedBusinessChatLinks(peer=peer, message=message, chats=chats, users=users, entities=entities)
+
+        return ResolvedBusinessChatLinks(
+            peer=peer,
+            message=message,
+            chats=chats,
+            users=users,
+            entities=entities,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -102,16 +119,16 @@ class ResolvedBusinessChatLinks(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.entities else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(String(self.message))
-        
+
         if self.entities is not None:
             b.write(Vector(self.entities))
-        
+
         b.write(Vector(self.chats))
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

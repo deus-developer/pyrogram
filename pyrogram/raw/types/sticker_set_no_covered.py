@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +56,9 @@ class StickerSetNoCovered(TLObject):  # type: ignore
             messages.GetAttachedStickers
     """
 
-    __slots__: List[str] = ["set"]
+    __slots__: list[str] = ["set"]
 
-    ID = 0x77b15d1c
+    ID = 0x77B15D1C
     QUALNAME = "types.StickerSetNoCovered"
 
     def __init__(self, *, set: "raw.base.StickerSet") -> None:
@@ -65,9 +67,9 @@ class StickerSetNoCovered(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "StickerSetNoCovered":
         # No flags
-        
+
         set = TLObject.read(b)
-        
+
         return StickerSetNoCovered(set=set)
 
     def write(self, *args) -> bytes:
@@ -75,7 +77,7 @@ class StickerSetNoCovered(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.set.write())
-        
+
         return b.getvalue()

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -58,23 +61,28 @@ class PeerColors(TLObject):  # type: ignore
             help.GetPeerProfileColors
     """
 
-    __slots__: List[str] = ["hash", "colors"]
+    __slots__: list[str] = ["colors", "hash"]
 
-    ID = 0xf8ed08
+    ID = 0xF8ED08
     QUALNAME = "types.help.PeerColors"
 
-    def __init__(self, *, hash: int, colors: List["raw.base.help.PeerColorOption"]) -> None:
+    def __init__(
+        self,
+        *,
+        hash: int,
+        colors: list["raw.base.help.PeerColorOption"],
+    ) -> None:
         self.hash = hash  # int
         self.colors = colors  # Vector<help.PeerColorOption>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PeerColors":
         # No flags
-        
+
         hash = Int.read(b)
-        
+
         colors = TLObject.read(b)
-        
+
         return PeerColors(hash=hash, colors=colors)
 
     def write(self, *args) -> bytes:
@@ -82,9 +90,9 @@ class PeerColors(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.hash))
-        
+
         b.write(Vector(self.colors))
-        
+
         return b.getvalue()

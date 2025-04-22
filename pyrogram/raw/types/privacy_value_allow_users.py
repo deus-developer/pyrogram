@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,20 +48,20 @@ class PrivacyValueAllowUsers(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["users"]
+    __slots__: list[str] = ["users"]
 
-    ID = 0xb8905fb2
+    ID = 0xB8905FB2
     QUALNAME = "types.PrivacyValueAllowUsers"
 
-    def __init__(self, *, users: List[int]) -> None:
+    def __init__(self, *, users: list[int]) -> None:
         self.users = users  # Vector<long>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PrivacyValueAllowUsers":
         # No flags
-        
+
         users = TLObject.read(b, Long)
-        
+
         return PrivacyValueAllowUsers(users=users)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class PrivacyValueAllowUsers(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.users, Long))
-        
+
         return b.getvalue()

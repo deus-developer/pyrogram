@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SaveTheme(TLObject):  # type: ignore
+class SaveTheme(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class SaveTheme(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["theme", "unsave"]
+    __slots__: list[str] = ["theme", "unsave"]
 
-    ID = 0xf257106c
+    ID = 0xF257106C
     QUALNAME = "functions.account.SaveTheme"
 
     def __init__(self, *, theme: "raw.base.InputTheme", unsave: bool) -> None:
@@ -60,11 +63,11 @@ class SaveTheme(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SaveTheme":
         # No flags
-        
+
         theme = TLObject.read(b)
-        
+
         unsave = Bool.read(b)
-        
+
         return SaveTheme(theme=theme, unsave=unsave)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class SaveTheme(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.theme.write())
-        
+
         b.write(Bool(self.unsave))
-        
+
         return b.getvalue()

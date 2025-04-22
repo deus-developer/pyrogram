@@ -46,7 +46,10 @@ class CheckGiftCode:
                 # get information about a gift code
                 app.check_gift_code("t.me/giftcode/abc1234567def")
         """
-        match = re.match(r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/(?:giftcode/|\+))([\w-]+)$", link)
+        match = re.match(
+            r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/(?:giftcode/|\+))([\w-]+)$",
+            link,
+        )
 
         if match:
             slug = match.group(1)
@@ -57,8 +60,8 @@ class CheckGiftCode:
 
         r = await self.invoke(
             raw.functions.payments.CheckGiftCode(
-                slug=slug
-            )
+                slug=slug,
+            ),
         )
 
         return types.CheckedGiftCode.from_raw_tl(self, r)

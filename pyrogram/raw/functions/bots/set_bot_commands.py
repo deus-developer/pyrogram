@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetBotCommands(TLObject):  # type: ignore
+class SetBotCommands(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +55,18 @@ class SetBotCommands(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["scope", "lang_code", "commands"]
+    __slots__: list[str] = ["commands", "lang_code", "scope"]
 
-    ID = 0x517165a
+    ID = 0x517165A
     QUALNAME = "functions.bots.SetBotCommands"
 
-    def __init__(self, *, scope: "raw.base.BotCommandScope", lang_code: str, commands: List["raw.base.BotCommand"]) -> None:
+    def __init__(
+        self,
+        *,
+        scope: "raw.base.BotCommandScope",
+        lang_code: str,
+        commands: list["raw.base.BotCommand"],
+    ) -> None:
         self.scope = scope  # BotCommandScope
         self.lang_code = lang_code  # string
         self.commands = commands  # Vector<BotCommand>
@@ -64,13 +74,13 @@ class SetBotCommands(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetBotCommands":
         # No flags
-        
+
         scope = TLObject.read(b)
-        
+
         lang_code = String.read(b)
-        
+
         commands = TLObject.read(b)
-        
+
         return SetBotCommands(scope=scope, lang_code=lang_code, commands=commands)
 
     def write(self, *args) -> bytes:
@@ -78,11 +88,11 @@ class SetBotCommands(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.scope.write())
-        
+
         b.write(String(self.lang_code))
-        
+
         b.write(Vector(self.commands))
-        
+
         return b.getvalue()

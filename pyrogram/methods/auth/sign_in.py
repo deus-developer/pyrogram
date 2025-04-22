@@ -20,8 +20,7 @@ import logging
 from typing import Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 log = logging.getLogger(__name__)
 
@@ -31,7 +30,7 @@ class SignIn:
         self: "pyrogram.Client",
         phone_number: str,
         phone_code_hash: str,
-        phone_code: str
+        phone_code: str,
     ) -> Union["types.User", "types.TermsOfService", bool]:
         """Authorize a user in Telegram with a valid confirmation code.
 
@@ -64,17 +63,18 @@ class SignIn:
             raw.functions.auth.SignIn(
                 phone_number=phone_number,
                 phone_code_hash=phone_code_hash,
-                phone_code=phone_code
-            )
+                phone_code=phone_code,
+            ),
         )
 
         if isinstance(r, raw.types.auth.AuthorizationSignUpRequired):
             if r.terms_of_service:
-                return types.TermsOfService.from_raw_tl(terms_of_service=r.terms_of_service)
+                return types.TermsOfService.from_raw_tl(
+                    terms_of_service=r.terms_of_service,
+                )
 
             return False
-        else:
-            await self.storage.user_id(r.user.id)
-            await self.storage.is_bot(False)
+        await self.storage.user_id(r.user.id)
+        await self.storage.is_bot(False)
 
-            return types.User.from_raw_tl(self, r.user)
+        return types.User.from_raw_tl(self, r.user)

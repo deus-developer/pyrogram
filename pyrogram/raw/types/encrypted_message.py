@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,12 +61,20 @@ class EncryptedMessage(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["random_id", "chat_id", "date", "bytes", "file"]
+    __slots__: list[str] = ["bytes", "chat_id", "date", "file", "random_id"]
 
-    ID = 0xed18c118
+    ID = 0xED18C118
     QUALNAME = "types.EncryptedMessage"
 
-    def __init__(self, *, random_id: int, chat_id: int, date: int, bytes: bytes, file: "raw.base.EncryptedFile") -> None:
+    def __init__(
+        self,
+        *,
+        random_id: int,
+        chat_id: int,
+        date: int,
+        bytes: bytes,
+        file: "raw.base.EncryptedFile",
+    ) -> None:
         self.random_id = random_id  # long
         self.chat_id = chat_id  # int
         self.date = date  # int
@@ -72,33 +84,39 @@ class EncryptedMessage(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EncryptedMessage":
         # No flags
-        
+
         random_id = Long.read(b)
-        
+
         chat_id = Int.read(b)
-        
+
         date = Int.read(b)
-        
+
         bytes = Bytes.read(b)
-        
+
         file = TLObject.read(b)
-        
-        return EncryptedMessage(random_id=random_id, chat_id=chat_id, date=date, bytes=bytes, file=file)
+
+        return EncryptedMessage(
+            random_id=random_id,
+            chat_id=chat_id,
+            date=date,
+            bytes=bytes,
+            file=file,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.random_id))
-        
+
         b.write(Int(self.chat_id))
-        
+
         b.write(Int(self.date))
-        
+
         b.write(Bytes(self.bytes))
-        
+
         b.write(self.file.write())
-        
+
         return b.getvalue()

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetChatInviteImporters(TLObject):  # type: ignore
+class GetChatInviteImporters(TLFunction["raw.base.messages.ChatInviteImporters"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -63,12 +66,30 @@ class GetChatInviteImporters(TLObject):  # type: ignore
         :obj:`messages.ChatInviteImporters <pyrogram.raw.base.messages.ChatInviteImporters>`
     """
 
-    __slots__: List[str] = ["peer", "offset_date", "offset_user", "limit", "requested", "link", "q"]
+    __slots__: list[str] = [
+        "limit",
+        "link",
+        "offset_date",
+        "offset_user",
+        "peer",
+        "q",
+        "requested",
+    ]
 
-    ID = 0xdf04dd4e
+    ID = 0xDF04DD4E
     QUALNAME = "functions.messages.GetChatInviteImporters"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", offset_date: int, offset_user: "raw.base.InputUser", limit: int, requested: Optional[bool] = None, link: Optional[str] = None, q: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        offset_date: int,
+        offset_user: "raw.base.InputUser",
+        limit: int,
+        requested: bool | None = None,
+        link: str | None = None,
+        q: str | None = None,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.offset_date = offset_date  # int
         self.offset_user = offset_user  # InputUser
@@ -79,21 +100,28 @@ class GetChatInviteImporters(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetChatInviteImporters":
-        
         flags = Int.read(b)
-        
+
         requested = True if flags & (1 << 0) else False
         peer = TLObject.read(b)
-        
+
         link = String.read(b) if flags & (1 << 1) else None
         q = String.read(b) if flags & (1 << 2) else None
         offset_date = Int.read(b)
-        
+
         offset_user = TLObject.read(b)
-        
+
         limit = Int.read(b)
-        
-        return GetChatInviteImporters(peer=peer, offset_date=offset_date, offset_user=offset_user, limit=limit, requested=requested, link=link, q=q)
+
+        return GetChatInviteImporters(
+            peer=peer,
+            offset_date=offset_date,
+            offset_user=offset_user,
+            limit=limit,
+            requested=requested,
+            link=link,
+            q=q,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -104,19 +132,19 @@ class GetChatInviteImporters(TLObject):  # type: ignore
         flags |= (1 << 1) if self.link is not None else 0
         flags |= (1 << 2) if self.q is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         if self.link is not None:
             b.write(String(self.link))
-        
+
         if self.q is not None:
             b.write(String(self.q))
-        
+
         b.write(Int(self.offset_date))
-        
+
         b.write(self.offset_user.write())
-        
+
         b.write(Int(self.limit))
-        
+
         return b.getvalue()

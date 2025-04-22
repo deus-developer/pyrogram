@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -44,9 +45,9 @@ class InputPrivacyKeyPhoneP2P(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
-    ID = 0xdb9e70d2
+    ID = 0xDB9E70D2
     QUALNAME = "types.InputPrivacyKeyPhoneP2P"
 
     def __init__(self) -> None:
@@ -55,7 +56,7 @@ class InputPrivacyKeyPhoneP2P(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputPrivacyKeyPhoneP2P":
         # No flags
-        
+
         return InputPrivacyKeyPhoneP2P()
 
     def write(self, *args) -> bytes:
@@ -63,5 +64,5 @@ class InputPrivacyKeyPhoneP2P(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +47,9 @@ class TextItalic(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["text"]
+    __slots__: list[str] = ["text"]
 
-    ID = 0xd912a59c
+    ID = 0xD912A59C
     QUALNAME = "types.TextItalic"
 
     def __init__(self, *, text: "raw.base.RichText") -> None:
@@ -56,9 +58,9 @@ class TextItalic(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "TextItalic":
         # No flags
-        
+
         text = TLObject.read(b)
-        
+
         return TextItalic(text=text)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class TextItalic(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.text.write())
-        
+
         return b.getvalue()

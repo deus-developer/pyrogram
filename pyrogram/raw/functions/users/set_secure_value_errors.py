@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetSecureValueErrors(TLObject):  # type: ignore
+class SetSecureValueErrors(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +51,28 @@ class SetSecureValueErrors(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["id", "errors"]
+    __slots__: list[str] = ["errors", "id"]
 
-    ID = 0x90c894b5
+    ID = 0x90C894B5
     QUALNAME = "functions.users.SetSecureValueErrors"
 
-    def __init__(self, *, id: "raw.base.InputUser", errors: List["raw.base.SecureValueError"]) -> None:
+    def __init__(
+        self,
+        *,
+        id: "raw.base.InputUser",
+        errors: list["raw.base.SecureValueError"],
+    ) -> None:
         self.id = id  # InputUser
         self.errors = errors  # Vector<SecureValueError>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetSecureValueErrors":
         # No flags
-        
+
         id = TLObject.read(b)
-        
+
         errors = TLObject.read(b)
-        
+
         return SetSecureValueErrors(id=id, errors=errors)
 
     def write(self, *args) -> bytes:
@@ -72,9 +80,9 @@ class SetSecureValueErrors(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.id.write())
-        
+
         b.write(Vector(self.errors))
-        
+
         return b.getvalue()

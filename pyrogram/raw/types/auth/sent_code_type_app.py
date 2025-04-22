@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +46,9 @@ class SentCodeTypeApp(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["length"]
+    __slots__: list[str] = ["length"]
 
-    ID = 0x3dbb5986
+    ID = 0x3DBB5986
     QUALNAME = "types.auth.SentCodeTypeApp"
 
     def __init__(self, *, length: int) -> None:
@@ -56,9 +57,9 @@ class SentCodeTypeApp(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SentCodeTypeApp":
         # No flags
-        
+
         length = Int.read(b)
-        
+
         return SentCodeTypeApp(length=length)
 
     def write(self, *args) -> bytes:
@@ -66,7 +67,7 @@ class SentCodeTypeApp(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.length))
-        
+
         return b.getvalue()

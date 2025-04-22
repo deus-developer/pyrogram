@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetForumTopicsByID(TLObject):  # type: ignore
+class GetForumTopicsByID(TLFunction["raw.base.messages.ForumTopics"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +51,23 @@ class GetForumTopicsByID(TLObject):  # type: ignore
         :obj:`messages.ForumTopics <pyrogram.raw.base.messages.ForumTopics>`
     """
 
-    __slots__: List[str] = ["channel", "topics"]
+    __slots__: list[str] = ["channel", "topics"]
 
-    ID = 0xb0831eb9
+    ID = 0xB0831EB9
     QUALNAME = "functions.channels.GetForumTopicsByID"
 
-    def __init__(self, *, channel: "raw.base.InputChannel", topics: List[int]) -> None:
+    def __init__(self, *, channel: "raw.base.InputChannel", topics: list[int]) -> None:
         self.channel = channel  # InputChannel
         self.topics = topics  # Vector<int>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetForumTopicsByID":
         # No flags
-        
+
         channel = TLObject.read(b)
-        
+
         topics = TLObject.read(b, Int)
-        
+
         return GetForumTopicsByID(channel=channel, topics=topics)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class GetForumTopicsByID(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.channel.write())
-        
+
         b.write(Vector(self.topics, Int))
-        
+
         return b.getvalue()

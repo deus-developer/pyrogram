@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,23 +50,28 @@ class UpdateNotifySettings(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "notify_settings"]
+    __slots__: list[str] = ["notify_settings", "peer"]
 
-    ID = 0xbec268ef
+    ID = 0xBEC268EF
     QUALNAME = "types.UpdateNotifySettings"
 
-    def __init__(self, *, peer: "raw.base.NotifyPeer", notify_settings: "raw.base.PeerNotifySettings") -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.NotifyPeer",
+        notify_settings: "raw.base.PeerNotifySettings",
+    ) -> None:
         self.peer = peer  # NotifyPeer
         self.notify_settings = notify_settings  # PeerNotifySettings
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateNotifySettings":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         notify_settings = TLObject.read(b)
-        
+
         return UpdateNotifySettings(peer=peer, notify_settings=notify_settings)
 
     def write(self, *args) -> bytes:
@@ -72,9 +79,9 @@ class UpdateNotifySettings(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(self.notify_settings.write())
-        
+
         return b.getvalue()

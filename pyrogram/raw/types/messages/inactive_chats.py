@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,12 +63,18 @@ class InactiveChats(TLObject):  # type: ignore
             channels.GetInactiveChannels
     """
 
-    __slots__: List[str] = ["dates", "chats", "users"]
+    __slots__: list[str] = ["chats", "dates", "users"]
 
-    ID = 0xa927fec5
+    ID = 0xA927FEC5
     QUALNAME = "types.messages.InactiveChats"
 
-    def __init__(self, *, dates: List[int], chats: List["raw.base.Chat"], users: List["raw.base.User"]) -> None:
+    def __init__(
+        self,
+        *,
+        dates: list[int],
+        chats: list["raw.base.Chat"],
+        users: list["raw.base.User"],
+    ) -> None:
         self.dates = dates  # Vector<int>
         self.chats = chats  # Vector<Chat>
         self.users = users  # Vector<User>
@@ -73,13 +82,13 @@ class InactiveChats(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InactiveChats":
         # No flags
-        
+
         dates = TLObject.read(b, Int)
-        
+
         chats = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
+
         return InactiveChats(dates=dates, chats=chats, users=users)
 
     def write(self, *args) -> bytes:
@@ -87,11 +96,11 @@ class InactiveChats(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.dates, Int))
-        
+
         b.write(Vector(self.chats))
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

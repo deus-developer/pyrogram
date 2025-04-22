@@ -4,8 +4,10 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type RpcDropAnswer = Union["raw.types.RpcAnswerDropped, raw.types.RpcAnswerDroppedRunning, raw.types.RpcAnswerUnknown"]
+type RpcDropAnswer = (
+    raw.types.RpcAnswerDropped
+    | raw.types.RpcAnswerDroppedRunning
+    | raw.types.RpcAnswerUnknown
+)

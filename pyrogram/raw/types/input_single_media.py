@@ -17,11 +17,16 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +59,19 @@ class InputSingleMedia(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["media", "random_id", "message", "entities"]
+    __slots__: list[str] = ["entities", "media", "message", "random_id"]
 
-    ID = 0x1cc6e91f
+    ID = 0x1CC6E91F
     QUALNAME = "types.InputSingleMedia"
 
-    def __init__(self, *, media: "raw.base.InputMedia", random_id: int, message: str, entities: Optional[List["raw.base.MessageEntity"]] = None) -> None:
+    def __init__(
+        self,
+        *,
+        media: "raw.base.InputMedia",
+        random_id: int,
+        message: str,
+        entities: list["raw.base.MessageEntity"] | None = None,
+    ) -> None:
         self.media = media  # InputMedia
         self.random_id = random_id  # long
         self.message = message  # string
@@ -67,18 +79,22 @@ class InputSingleMedia(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputSingleMedia":
-        
         flags = Int.read(b)
-        
+
         media = TLObject.read(b)
-        
+
         random_id = Long.read(b)
-        
+
         message = String.read(b)
-        
+
         entities = TLObject.read(b) if flags & (1 << 0) else []
-        
-        return InputSingleMedia(media=media, random_id=random_id, message=message, entities=entities)
+
+        return InputSingleMedia(
+            media=media,
+            random_id=random_id,
+            message=message,
+            entities=entities,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -87,14 +103,14 @@ class InputSingleMedia(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.entities else 0
         b.write(Int(flags))
-        
+
         b.write(self.media.write())
-        
+
         b.write(Long(self.random_id))
-        
+
         b.write(String(self.message))
-        
+
         if self.entities is not None:
             b.write(Vector(self.entities))
-        
+
         return b.getvalue()

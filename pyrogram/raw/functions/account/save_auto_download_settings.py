@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SaveAutoDownloadSettings(TLObject):  # type: ignore
+class SaveAutoDownloadSettings(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,25 +53,30 @@ class SaveAutoDownloadSettings(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["settings", "low", "high"]
+    __slots__: list[str] = ["high", "low", "settings"]
 
-    ID = 0x76f36233
+    ID = 0x76F36233
     QUALNAME = "functions.account.SaveAutoDownloadSettings"
 
-    def __init__(self, *, settings: "raw.base.AutoDownloadSettings", low: Optional[bool] = None, high: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        settings: "raw.base.AutoDownloadSettings",
+        low: bool | None = None,
+        high: bool | None = None,
+    ) -> None:
         self.settings = settings  # AutoDownloadSettings
         self.low = low  # flags.0?true
         self.high = high  # flags.1?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SaveAutoDownloadSettings":
-        
         flags = Int.read(b)
-        
+
         low = True if flags & (1 << 0) else False
         high = True if flags & (1 << 1) else False
         settings = TLObject.read(b)
-        
+
         return SaveAutoDownloadSettings(settings=settings, low=low, high=high)
 
     def write(self, *args) -> bytes:
@@ -80,7 +87,7 @@ class SaveAutoDownloadSettings(TLObject):  # type: ignore
         flags |= (1 << 0) if self.low else 0
         flags |= (1 << 1) if self.high else 0
         b.write(Int(flags))
-        
+
         b.write(self.settings.write())
-        
+
         return b.getvalue()

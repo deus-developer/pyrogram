@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class UpdateNotifySettings(TLObject):  # type: ignore
+class UpdateNotifySettings(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,28 @@ class UpdateNotifySettings(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["peer", "settings"]
+    __slots__: list[str] = ["peer", "settings"]
 
-    ID = 0x84be5b93
+    ID = 0x84BE5B93
     QUALNAME = "functions.account.UpdateNotifySettings"
 
-    def __init__(self, *, peer: "raw.base.InputNotifyPeer", settings: "raw.base.InputPeerNotifySettings") -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputNotifyPeer",
+        settings: "raw.base.InputPeerNotifySettings",
+    ) -> None:
         self.peer = peer  # InputNotifyPeer
         self.settings = settings  # InputPeerNotifySettings
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateNotifySettings":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         settings = TLObject.read(b)
-        
+
         return UpdateNotifySettings(peer=peer, settings=settings)
 
     def write(self, *args) -> bytes:
@@ -72,9 +79,9 @@ class UpdateNotifySettings(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(self.settings.write())
-        
+
         return b.getvalue()

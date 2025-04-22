@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class SentCodeTypeFragmentSms(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["url", "length"]
+    __slots__: list[str] = ["length", "url"]
 
-    ID = 0xd9565c39
+    ID = 0xD9565C39
     QUALNAME = "types.auth.SentCodeTypeFragmentSms"
 
     def __init__(self, *, url: str, length: int) -> None:
@@ -60,11 +62,11 @@ class SentCodeTypeFragmentSms(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SentCodeTypeFragmentSms":
         # No flags
-        
+
         url = String.read(b)
-        
+
         length = Int.read(b)
-        
+
         return SentCodeTypeFragmentSms(url=url, length=length)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class SentCodeTypeFragmentSms(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.url))
-        
+
         b.write(Int(self.length))
-        
+
         return b.getvalue()

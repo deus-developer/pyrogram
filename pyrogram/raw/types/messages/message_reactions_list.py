@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -66,12 +70,20 @@ class MessageReactionsList(TLObject):  # type: ignore
             messages.GetMessageReactionsList
     """
 
-    __slots__: List[str] = ["count", "reactions", "chats", "users", "next_offset"]
+    __slots__: list[str] = ["chats", "count", "next_offset", "reactions", "users"]
 
-    ID = 0x31bd492d
+    ID = 0x31BD492D
     QUALNAME = "types.messages.MessageReactionsList"
 
-    def __init__(self, *, count: int, reactions: List["raw.base.MessagePeerReaction"], chats: List["raw.base.Chat"], users: List["raw.base.User"], next_offset: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        count: int,
+        reactions: list["raw.base.MessagePeerReaction"],
+        chats: list["raw.base.Chat"],
+        users: list["raw.base.User"],
+        next_offset: str | None = None,
+    ) -> None:
         self.count = count  # int
         self.reactions = reactions  # Vector<MessagePeerReaction>
         self.chats = chats  # Vector<Chat>
@@ -80,19 +92,24 @@ class MessageReactionsList(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageReactionsList":
-        
         flags = Int.read(b)
-        
+
         count = Int.read(b)
-        
+
         reactions = TLObject.read(b)
-        
+
         chats = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
+
         next_offset = String.read(b) if flags & (1 << 0) else None
-        return MessageReactionsList(count=count, reactions=reactions, chats=chats, users=users, next_offset=next_offset)
+        return MessageReactionsList(
+            count=count,
+            reactions=reactions,
+            chats=chats,
+            users=users,
+            next_offset=next_offset,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -101,16 +118,16 @@ class MessageReactionsList(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.next_offset is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.count))
-        
+
         b.write(Vector(self.reactions))
-        
+
         b.write(Vector(self.chats))
-        
+
         b.write(Vector(self.users))
-        
+
         if self.next_offset is not None:
             b.write(String(self.next_offset))
-        
+
         return b.getvalue()

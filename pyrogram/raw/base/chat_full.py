@@ -4,8 +4,6 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type ChatFull = Union["raw.types.ChannelFull, raw.types.ChatFull"]
+type ChatFull = raw.types.ChannelFull | raw.types.ChatFull

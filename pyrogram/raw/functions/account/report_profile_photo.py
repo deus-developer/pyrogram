@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ReportProfilePhoto(TLObject):  # type: ignore
+class ReportProfilePhoto(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +57,19 @@ class ReportProfilePhoto(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["peer", "photo_id", "reason", "message"]
+    __slots__: list[str] = ["message", "peer", "photo_id", "reason"]
 
-    ID = 0xfa8cc6f5
+    ID = 0xFA8CC6F5
     QUALNAME = "functions.account.ReportProfilePhoto"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", photo_id: "raw.base.InputPhoto", reason: "raw.base.ReportReason", message: str) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        photo_id: "raw.base.InputPhoto",
+        reason: "raw.base.ReportReason",
+        message: str,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.photo_id = photo_id  # InputPhoto
         self.reason = reason  # ReportReason
@@ -68,29 +78,34 @@ class ReportProfilePhoto(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ReportProfilePhoto":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         photo_id = TLObject.read(b)
-        
+
         reason = TLObject.read(b)
-        
+
         message = String.read(b)
-        
-        return ReportProfilePhoto(peer=peer, photo_id=photo_id, reason=reason, message=message)
+
+        return ReportProfilePhoto(
+            peer=peer,
+            photo_id=photo_id,
+            reason=reason,
+            message=message,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(self.photo_id.write())
-        
+
         b.write(self.reason.write())
-        
+
         b.write(String(self.message))
-        
+
         return b.getvalue()

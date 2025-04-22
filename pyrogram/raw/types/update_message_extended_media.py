@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,12 +53,18 @@ class UpdateMessageExtendedMedia(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "msg_id", "extended_media"]
+    __slots__: list[str] = ["extended_media", "msg_id", "peer"]
 
-    ID = 0x5a73a98c
+    ID = 0x5A73A98C
     QUALNAME = "types.UpdateMessageExtendedMedia"
 
-    def __init__(self, *, peer: "raw.base.Peer", msg_id: int, extended_media: "raw.base.MessageExtendedMedia") -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.Peer",
+        msg_id: int,
+        extended_media: "raw.base.MessageExtendedMedia",
+    ) -> None:
         self.peer = peer  # Peer
         self.msg_id = msg_id  # int
         self.extended_media = extended_media  # MessageExtendedMedia
@@ -64,25 +72,29 @@ class UpdateMessageExtendedMedia(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateMessageExtendedMedia":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         msg_id = Int.read(b)
-        
+
         extended_media = TLObject.read(b)
-        
-        return UpdateMessageExtendedMedia(peer=peer, msg_id=msg_id, extended_media=extended_media)
+
+        return UpdateMessageExtendedMedia(
+            peer=peer,
+            msg_id=msg_id,
+            extended_media=extended_media,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.msg_id))
-        
+
         b.write(self.extended_media.write())
-        
+
         return b.getvalue()

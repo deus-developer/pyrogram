@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class UploadTheme(TLObject):  # type: ignore
+class UploadTheme(TLFunction["raw.base.Document"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +57,19 @@ class UploadTheme(TLObject):  # type: ignore
         :obj:`Document <pyrogram.raw.base.Document>`
     """
 
-    __slots__: List[str] = ["file", "file_name", "mime_type", "thumb"]
+    __slots__: list[str] = ["file", "file_name", "mime_type", "thumb"]
 
-    ID = 0x1c3db333
+    ID = 0x1C3DB333
     QUALNAME = "functions.account.UploadTheme"
 
-    def __init__(self, *, file: "raw.base.InputFile", file_name: str, mime_type: str, thumb: "raw.base.InputFile" = None) -> None:
+    def __init__(
+        self,
+        *,
+        file: "raw.base.InputFile",
+        file_name: str,
+        mime_type: str,
+        thumb: "raw.base.InputFile" = None,
+    ) -> None:
         self.file = file  # InputFile
         self.file_name = file_name  # string
         self.mime_type = mime_type  # string
@@ -67,18 +77,22 @@ class UploadTheme(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UploadTheme":
-        
         flags = Int.read(b)
-        
+
         file = TLObject.read(b)
-        
+
         thumb = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         file_name = String.read(b)
-        
+
         mime_type = String.read(b)
-        
-        return UploadTheme(file=file, file_name=file_name, mime_type=mime_type, thumb=thumb)
+
+        return UploadTheme(
+            file=file,
+            file_name=file_name,
+            mime_type=mime_type,
+            thumb=thumb,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -87,14 +101,14 @@ class UploadTheme(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.thumb is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.file.write())
-        
+
         if self.thumb is not None:
             b.write(self.thumb.write())
-        
+
         b.write(String(self.file_name))
-        
+
         b.write(String(self.mime_type))
-        
+
         return b.getvalue()

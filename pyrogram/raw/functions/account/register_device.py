@@ -17,11 +17,17 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Bytes,
+    Int,
+    Long,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +36,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class RegisterDevice(TLObject):  # type: ignore
+class RegisterDevice(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -60,12 +66,28 @@ class RegisterDevice(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["token_type", "token", "app_sandbox", "secret", "other_uids", "no_muted"]
+    __slots__: list[str] = [
+        "app_sandbox",
+        "no_muted",
+        "other_uids",
+        "secret",
+        "token",
+        "token_type",
+    ]
 
-    ID = 0xec86017a
+    ID = 0xEC86017A
     QUALNAME = "functions.account.RegisterDevice"
 
-    def __init__(self, *, token_type: int, token: str, app_sandbox: bool, secret: bytes, other_uids: List[int], no_muted: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        token_type: int,
+        token: str,
+        app_sandbox: bool,
+        secret: bytes,
+        other_uids: list[int],
+        no_muted: bool | None = None,
+    ) -> None:
         self.token_type = token_type  # int
         self.token = token  # string
         self.app_sandbox = app_sandbox  # Bool
@@ -75,21 +97,27 @@ class RegisterDevice(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "RegisterDevice":
-        
         flags = Int.read(b)
-        
+
         no_muted = True if flags & (1 << 0) else False
         token_type = Int.read(b)
-        
+
         token = String.read(b)
-        
+
         app_sandbox = Bool.read(b)
-        
+
         secret = Bytes.read(b)
-        
+
         other_uids = TLObject.read(b, Long)
-        
-        return RegisterDevice(token_type=token_type, token=token, app_sandbox=app_sandbox, secret=secret, other_uids=other_uids, no_muted=no_muted)
+
+        return RegisterDevice(
+            token_type=token_type,
+            token=token,
+            app_sandbox=app_sandbox,
+            secret=secret,
+            other_uids=other_uids,
+            no_muted=no_muted,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -98,15 +126,15 @@ class RegisterDevice(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.no_muted else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.token_type))
-        
+
         b.write(String(self.token))
-        
+
         b.write(Bool(self.app_sandbox))
-        
+
         b.write(Bytes(self.secret))
-        
+
         b.write(Vector(self.other_uids, Long))
-        
+
         return b.getvalue()

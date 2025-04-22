@@ -16,27 +16,27 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
+from collections.abc import Iterable
 from datetime import datetime
-from typing import Union, List, Iterable
+from typing import Union
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
+from pyrogram import raw, types, utils
 
 
 class ForwardMessages:
     async def forward_messages(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        from_chat_id: Union[int, str],
-        message_ids: Union[int, Iterable[int]],
+        chat_id: int | str,
+        from_chat_id: int | str,
+        message_ids: int | Iterable[int],
         message_thread_id: int = None,
         disable_notification: bool = None,
         schedule_date: datetime = None,
         hide_sender_name: bool = None,
         hide_captions: bool = None,
-        protect_content: bool = None
-    ) -> Union["types.Message", List["types.Message"]]:
+        protect_content: bool = None,
+    ) -> Union["types.Message", list["types.Message"]]:
         """Forward messages of any kind.
 
         .. include:: /_includes/usable-by/users-bots.rst
@@ -88,7 +88,6 @@ class ForwardMessages:
                 # Forward multiple messages at once
                 await app.forward_messages(to_chat, from_chat, [1, 2, 3])
         """
-
         is_iterable = not isinstance(message_ids, int)
         message_ids = list(message_ids) if is_iterable else [message_ids]
 
@@ -103,20 +102,26 @@ class ForwardMessages:
                 drop_author=hide_sender_name,
                 drop_media_captions=hide_captions,
                 noforwards=protect_content,
-                top_msg_id=message_thread_id
-            )
+                top_msg_id=message_thread_id,
+            ),
         )
 
         forwarded_messages = []
 
         for i in r.updates:
-            if isinstance(i, (raw.types.UpdateNewMessage,
-                              raw.types.UpdateNewChannelMessage,
-                              raw.types.UpdateNewScheduledMessage)):
+            if isinstance(
+                i,
+                (
+                    raw.types.UpdateNewMessage,
+                    raw.types.UpdateNewChannelMessage,
+                    raw.types.UpdateNewScheduledMessage,
+                ),
+            ):
                 forwarded_messages.append(
                     await types.Message.from_raw_tl(
-                        self, i.message,
-                    )
+                        self,
+                        i.message,
+                    ),
                 )
 
         return types.List(forwarded_messages) if is_iterable else forwarded_messages[0]

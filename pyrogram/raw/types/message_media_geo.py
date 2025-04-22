@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -56,9 +58,9 @@ class MessageMediaGeo(TLObject):  # type: ignore
             messages.UploadImportedMedia
     """
 
-    __slots__: List[str] = ["geo"]
+    __slots__: list[str] = ["geo"]
 
-    ID = 0x56e0d474
+    ID = 0x56E0D474
     QUALNAME = "types.MessageMediaGeo"
 
     def __init__(self, *, geo: "raw.base.GeoPoint") -> None:
@@ -67,9 +69,9 @@ class MessageMediaGeo(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageMediaGeo":
         # No flags
-        
+
         geo = TLObject.read(b)
-        
+
         return MessageMediaGeo(geo=geo)
 
     def write(self, *args) -> bytes:
@@ -77,7 +79,7 @@ class MessageMediaGeo(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.geo.write())
-        
+
         return b.getvalue()

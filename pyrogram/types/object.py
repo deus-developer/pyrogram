@@ -61,7 +61,7 @@ class Object:
             return str(obj)
 
         attributes_to_hide = [
-            "raw"
+            "raw",
         ]
 
         filtered_attributes = {
@@ -75,7 +75,7 @@ class Object:
 
         return {
             "_": obj.__class__.__name__,
-            **filtered_attributes
+            **filtered_attributes,
         }
 
     def __str__(self) -> str:
@@ -85,10 +85,10 @@ class Object:
         return "pyrogram.types.{}({})".format(
             self.__class__.__name__,
             ", ".join(
-                f"{attr}={repr(getattr(self, attr))}"
+                f"{attr}={getattr(self, attr)!r}"
                 for attr in filter(lambda x: not x.startswith("_"), self.__dict__)
                 if getattr(self, attr) is not None
-            )
+            ),
         )
 
     def __eq__(self, other: "Object") -> bool:

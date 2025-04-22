@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetGroupCallStreamChannels(TLObject):  # type: ignore
+class GetGroupCallStreamChannels(TLFunction["raw.base.phone.GroupCallStreamChannels"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetGroupCallStreamChannels(TLObject):  # type: ignore
         :obj:`phone.GroupCallStreamChannels <pyrogram.raw.base.phone.GroupCallStreamChannels>`
     """
 
-    __slots__: List[str] = ["call"]
+    __slots__: list[str] = ["call"]
 
-    ID = 0x1ab21940
+    ID = 0x1AB21940
     QUALNAME = "functions.phone.GetGroupCallStreamChannels"
 
     def __init__(self, *, call: "raw.base.InputGroupCall") -> None:
@@ -56,9 +58,9 @@ class GetGroupCallStreamChannels(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetGroupCallStreamChannels":
         # No flags
-        
+
         call = TLObject.read(b)
-        
+
         return GetGroupCallStreamChannels(call=call)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class GetGroupCallStreamChannels(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.call.write())
-        
+
         return b.getvalue()

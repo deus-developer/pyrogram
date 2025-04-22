@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,33 +50,41 @@ class ChannelAdminLogEventActionDefaultBannedRights(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["prev_banned_rights", "new_banned_rights"]
+    __slots__: list[str] = ["new_banned_rights", "prev_banned_rights"]
 
-    ID = 0x2df5fc0a
+    ID = 0x2DF5FC0A
     QUALNAME = "types.ChannelAdminLogEventActionDefaultBannedRights"
 
-    def __init__(self, *, prev_banned_rights: "raw.base.ChatBannedRights", new_banned_rights: "raw.base.ChatBannedRights") -> None:
+    def __init__(
+        self,
+        *,
+        prev_banned_rights: "raw.base.ChatBannedRights",
+        new_banned_rights: "raw.base.ChatBannedRights",
+    ) -> None:
         self.prev_banned_rights = prev_banned_rights  # ChatBannedRights
         self.new_banned_rights = new_banned_rights  # ChatBannedRights
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChannelAdminLogEventActionDefaultBannedRights":
         # No flags
-        
+
         prev_banned_rights = TLObject.read(b)
-        
+
         new_banned_rights = TLObject.read(b)
-        
-        return ChannelAdminLogEventActionDefaultBannedRights(prev_banned_rights=prev_banned_rights, new_banned_rights=new_banned_rights)
+
+        return ChannelAdminLogEventActionDefaultBannedRights(
+            prev_banned_rights=prev_banned_rights,
+            new_banned_rights=new_banned_rights,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.prev_banned_rights.write())
-        
+
         b.write(self.new_banned_rights.write())
-        
+
         return b.getvalue()

@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -63,12 +67,19 @@ class FactCheck(TLObject):  # type: ignore
             messages.GetFactCheck
     """
 
-    __slots__: List[str] = ["hash", "need_check", "country", "text"]
+    __slots__: list[str] = ["country", "hash", "need_check", "text"]
 
-    ID = 0xb89bfccf
+    ID = 0xB89BFCCF
     QUALNAME = "types.FactCheck"
 
-    def __init__(self, *, hash: int, need_check: Optional[bool] = None, country: Optional[str] = None, text: "raw.base.TextWithEntities" = None) -> None:
+    def __init__(
+        self,
+        *,
+        hash: int,
+        need_check: bool | None = None,
+        country: str | None = None,
+        text: "raw.base.TextWithEntities" = None,
+    ) -> None:
         self.hash = hash  # long
         self.need_check = need_check  # flags.0?true
         self.country = country  # flags.1?string
@@ -76,15 +87,14 @@ class FactCheck(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "FactCheck":
-        
         flags = Int.read(b)
-        
+
         need_check = True if flags & (1 << 0) else False
         country = String.read(b) if flags & (1 << 1) else None
         text = TLObject.read(b) if flags & (1 << 1) else None
-        
+
         hash = Long.read(b)
-        
+
         return FactCheck(hash=hash, need_check=need_check, country=country, text=text)
 
     def write(self, *args) -> bytes:
@@ -96,13 +106,13 @@ class FactCheck(TLObject):  # type: ignore
         flags |= (1 << 1) if self.country is not None else 0
         flags |= (1 << 1) if self.text is not None else 0
         b.write(Int(flags))
-        
+
         if self.country is not None:
             b.write(String(self.country))
-        
+
         if self.text is not None:
             b.write(self.text.write())
-        
+
         b.write(Long(self.hash))
-        
+
         return b.getvalue()

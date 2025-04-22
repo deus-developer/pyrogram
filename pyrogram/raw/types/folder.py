@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,12 +63,28 @@ class Folder(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "title", "autofill_new_broadcasts", "autofill_public_groups", "autofill_new_correspondents", "photo"]
+    __slots__: list[str] = [
+        "autofill_new_broadcasts",
+        "autofill_new_correspondents",
+        "autofill_public_groups",
+        "id",
+        "photo",
+        "title",
+    ]
 
-    ID = 0xff544e65
+    ID = 0xFF544E65
     QUALNAME = "types.Folder"
 
-    def __init__(self, *, id: int, title: str, autofill_new_broadcasts: Optional[bool] = None, autofill_public_groups: Optional[bool] = None, autofill_new_correspondents: Optional[bool] = None, photo: "raw.base.ChatPhoto" = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: int,
+        title: str,
+        autofill_new_broadcasts: bool | None = None,
+        autofill_public_groups: bool | None = None,
+        autofill_new_correspondents: bool | None = None,
+        photo: "raw.base.ChatPhoto" = None,
+    ) -> None:
         self.id = id  # int
         self.title = title  # string
         self.autofill_new_broadcasts = autofill_new_broadcasts  # flags.0?true
@@ -75,19 +94,25 @@ class Folder(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "Folder":
-        
         flags = Int.read(b)
-        
+
         autofill_new_broadcasts = True if flags & (1 << 0) else False
         autofill_public_groups = True if flags & (1 << 1) else False
         autofill_new_correspondents = True if flags & (1 << 2) else False
         id = Int.read(b)
-        
+
         title = String.read(b)
-        
+
         photo = TLObject.read(b) if flags & (1 << 3) else None
-        
-        return Folder(id=id, title=title, autofill_new_broadcasts=autofill_new_broadcasts, autofill_public_groups=autofill_public_groups, autofill_new_correspondents=autofill_new_correspondents, photo=photo)
+
+        return Folder(
+            id=id,
+            title=title,
+            autofill_new_broadcasts=autofill_new_broadcasts,
+            autofill_public_groups=autofill_public_groups,
+            autofill_new_correspondents=autofill_new_correspondents,
+            photo=photo,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -99,12 +124,12 @@ class Folder(TLObject):  # type: ignore
         flags |= (1 << 2) if self.autofill_new_correspondents else 0
         flags |= (1 << 3) if self.photo is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.id))
-        
+
         b.write(String(self.title))
-        
+
         if self.photo is not None:
             b.write(self.photo.write())
-        
+
         return b.getvalue()

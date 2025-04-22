@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,21 +62,24 @@ class AuthorizationSignUpRequired(TLObject):  # type: ignore
             auth.ImportWebTokenAuthorization
     """
 
-    __slots__: List[str] = ["terms_of_service"]
+    __slots__: list[str] = ["terms_of_service"]
 
-    ID = 0x44747e9a
+    ID = 0x44747E9A
     QUALNAME = "types.auth.AuthorizationSignUpRequired"
 
-    def __init__(self, *, terms_of_service: "raw.base.help.TermsOfService" = None) -> None:
+    def __init__(
+        self,
+        *,
+        terms_of_service: "raw.base.help.TermsOfService" = None,
+    ) -> None:
         self.terms_of_service = terms_of_service  # flags.0?help.TermsOfService
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "AuthorizationSignUpRequired":
-        
         flags = Int.read(b)
-        
+
         terms_of_service = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         return AuthorizationSignUpRequired(terms_of_service=terms_of_service)
 
     def write(self, *args) -> bytes:
@@ -84,8 +89,8 @@ class AuthorizationSignUpRequired(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.terms_of_service is not None else 0
         b.write(Int(flags))
-        
+
         if self.terms_of_service is not None:
             b.write(self.terms_of_service.write())
-        
+
         return b.getvalue()

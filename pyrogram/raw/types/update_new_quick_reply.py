@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +47,9 @@ class UpdateNewQuickReply(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["quick_reply"]
+    __slots__: list[str] = ["quick_reply"]
 
-    ID = 0xf53da717
+    ID = 0xF53DA717
     QUALNAME = "types.UpdateNewQuickReply"
 
     def __init__(self, *, quick_reply: "raw.base.QuickReply") -> None:
@@ -56,9 +58,9 @@ class UpdateNewQuickReply(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateNewQuickReply":
         # No flags
-        
+
         quick_reply = TLObject.read(b)
-        
+
         return UpdateNewQuickReply(quick_reply=quick_reply)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class UpdateNewQuickReply(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.quick_reply.write())
-        
+
         return b.getvalue()

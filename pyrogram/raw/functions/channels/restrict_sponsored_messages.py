@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class RestrictSponsoredMessages(TLObject):  # type: ignore
+class RestrictSponsoredMessages(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class RestrictSponsoredMessages(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["channel", "restricted"]
+    __slots__: list[str] = ["channel", "restricted"]
 
-    ID = 0x9ae91519
+    ID = 0x9AE91519
     QUALNAME = "functions.channels.RestrictSponsoredMessages"
 
     def __init__(self, *, channel: "raw.base.InputChannel", restricted: bool) -> None:
@@ -60,11 +63,11 @@ class RestrictSponsoredMessages(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "RestrictSponsoredMessages":
         # No flags
-        
+
         channel = TLObject.read(b)
-        
+
         restricted = Bool.read(b)
-        
+
         return RestrictSponsoredMessages(channel=channel, restricted=restricted)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class RestrictSponsoredMessages(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.channel.write())
-        
+
         b.write(Bool(self.restricted))
-        
+
         return b.getvalue()

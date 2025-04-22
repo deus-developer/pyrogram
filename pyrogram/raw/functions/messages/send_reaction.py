@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SendReaction(TLObject):  # type: ignore
+class SendReaction(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -57,12 +60,20 @@ class SendReaction(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["peer", "msg_id", "big", "add_to_recent", "reaction"]
+    __slots__: list[str] = ["add_to_recent", "big", "msg_id", "peer", "reaction"]
 
-    ID = 0xd30d78d4
+    ID = 0xD30D78D4
     QUALNAME = "functions.messages.SendReaction"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", msg_id: int, big: Optional[bool] = None, add_to_recent: Optional[bool] = None, reaction: Optional[List["raw.base.Reaction"]] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        msg_id: int,
+        big: bool | None = None,
+        add_to_recent: bool | None = None,
+        reaction: list["raw.base.Reaction"] | None = None,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.msg_id = msg_id  # int
         self.big = big  # flags.1?true
@@ -71,18 +82,23 @@ class SendReaction(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SendReaction":
-        
         flags = Int.read(b)
-        
+
         big = True if flags & (1 << 1) else False
         add_to_recent = True if flags & (1 << 2) else False
         peer = TLObject.read(b)
-        
+
         msg_id = Int.read(b)
-        
+
         reaction = TLObject.read(b) if flags & (1 << 0) else []
-        
-        return SendReaction(peer=peer, msg_id=msg_id, big=big, add_to_recent=add_to_recent, reaction=reaction)
+
+        return SendReaction(
+            peer=peer,
+            msg_id=msg_id,
+            big=big,
+            add_to_recent=add_to_recent,
+            reaction=reaction,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -93,12 +109,12 @@ class SendReaction(TLObject):  # type: ignore
         flags |= (1 << 2) if self.add_to_recent else 0
         flags |= (1 << 0) if self.reaction else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.msg_id))
-        
+
         if self.reaction is not None:
             b.write(Vector(self.reaction))
-        
+
         return b.getvalue()

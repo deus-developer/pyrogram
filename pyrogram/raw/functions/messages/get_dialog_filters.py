@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetDialogFilters(TLObject):  # type: ignore
+class GetDialogFilters(TLFunction["raw.base.messages.DialogFilters"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -44,9 +45,9 @@ class GetDialogFilters(TLObject):  # type: ignore
         :obj:`messages.DialogFilters <pyrogram.raw.base.messages.DialogFilters>`
     """
 
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
-    ID = 0xefd48c89
+    ID = 0xEFD48C89
     QUALNAME = "functions.messages.GetDialogFilters"
 
     def __init__(self) -> None:
@@ -55,7 +56,7 @@ class GetDialogFilters(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetDialogFilters":
         # No flags
-        
+
         return GetDialogFilters()
 
     def write(self, *args) -> bytes:
@@ -63,5 +64,5 @@ class GetDialogFilters(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         return b.getvalue()

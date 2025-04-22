@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetDefaultProfilePhotoEmojis(TLObject):  # type: ignore
+class GetDefaultProfilePhotoEmojis(TLFunction["raw.base.EmojiList"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetDefaultProfilePhotoEmojis(TLObject):  # type: ignore
         :obj:`EmojiList <pyrogram.raw.base.EmojiList>`
     """
 
-    __slots__: List[str] = ["hash"]
+    __slots__: list[str] = ["hash"]
 
-    ID = 0xe2750328
+    ID = 0xE2750328
     QUALNAME = "functions.account.GetDefaultProfilePhotoEmojis"
 
     def __init__(self, *, hash: int) -> None:
@@ -56,9 +58,9 @@ class GetDefaultProfilePhotoEmojis(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetDefaultProfilePhotoEmojis":
         # No flags
-        
+
         hash = Long.read(b)
-        
+
         return GetDefaultProfilePhotoEmojis(hash=hash)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class GetDefaultProfilePhotoEmojis(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.hash))
-        
+
         return b.getvalue()

@@ -45,12 +45,13 @@ class RequestChannelInfo(Object):
     """
 
     def __init__(
-        self, *,
+        self,
+        *,
         button_id: int,
         is_creator: bool = None,
         has_username: bool = None,
         user_privileges: "types.ChatPrivileges" = None,
-        bot_privileges: "types.ChatPrivileges" = None
+        bot_privileges: "types.ChatPrivileges" = None,
     ):
         super().__init__()
 

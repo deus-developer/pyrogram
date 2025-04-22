@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -67,12 +71,20 @@ class BusinessChatLink(TLObject):  # type: ignore
             account.EditBusinessChatLink
     """
 
-    __slots__: List[str] = ["link", "message", "views", "entities", "title"]
+    __slots__: list[str] = ["entities", "link", "message", "title", "views"]
 
-    ID = 0xb4ae666f
+    ID = 0xB4AE666F
     QUALNAME = "types.BusinessChatLink"
 
-    def __init__(self, *, link: str, message: str, views: int, entities: Optional[List["raw.base.MessageEntity"]] = None, title: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        link: str,
+        message: str,
+        views: int,
+        entities: list["raw.base.MessageEntity"] | None = None,
+        title: str | None = None,
+    ) -> None:
         self.link = link  # string
         self.message = message  # string
         self.views = views  # int
@@ -81,19 +93,24 @@ class BusinessChatLink(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "BusinessChatLink":
-        
         flags = Int.read(b)
-        
+
         link = String.read(b)
-        
+
         message = String.read(b)
-        
+
         entities = TLObject.read(b) if flags & (1 << 0) else []
-        
+
         title = String.read(b) if flags & (1 << 1) else None
         views = Int.read(b)
-        
-        return BusinessChatLink(link=link, message=message, views=views, entities=entities, title=title)
+
+        return BusinessChatLink(
+            link=link,
+            message=message,
+            views=views,
+            entities=entities,
+            title=title,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -103,17 +120,17 @@ class BusinessChatLink(TLObject):  # type: ignore
         flags |= (1 << 0) if self.entities else 0
         flags |= (1 << 1) if self.title is not None else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.link))
-        
+
         b.write(String(self.message))
-        
+
         if self.entities is not None:
             b.write(Vector(self.entities))
-        
+
         if self.title is not None:
             b.write(String(self.title))
-        
+
         b.write(Int(self.views))
-        
+
         return b.getvalue()

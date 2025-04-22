@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class EditBanned(TLObject):  # type: ignore
+class EditBanned(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +53,18 @@ class EditBanned(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["channel", "participant", "banned_rights"]
+    __slots__: list[str] = ["banned_rights", "channel", "participant"]
 
-    ID = 0x96e6cd81
+    ID = 0x96E6CD81
     QUALNAME = "functions.channels.EditBanned"
 
-    def __init__(self, *, channel: "raw.base.InputChannel", participant: "raw.base.InputPeer", banned_rights: "raw.base.ChatBannedRights") -> None:
+    def __init__(
+        self,
+        *,
+        channel: "raw.base.InputChannel",
+        participant: "raw.base.InputPeer",
+        banned_rights: "raw.base.ChatBannedRights",
+    ) -> None:
         self.channel = channel  # InputChannel
         self.participant = participant  # InputPeer
         self.banned_rights = banned_rights  # ChatBannedRights
@@ -64,25 +72,29 @@ class EditBanned(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EditBanned":
         # No flags
-        
+
         channel = TLObject.read(b)
-        
+
         participant = TLObject.read(b)
-        
+
         banned_rights = TLObject.read(b)
-        
-        return EditBanned(channel=channel, participant=participant, banned_rights=banned_rights)
+
+        return EditBanned(
+            channel=channel,
+            participant=participant,
+            banned_rights=banned_rights,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.channel.write())
-        
+
         b.write(self.participant.write())
-        
+
         b.write(self.banned_rights.write())
-        
+
         return b.getvalue()

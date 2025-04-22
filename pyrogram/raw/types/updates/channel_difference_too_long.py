@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -69,12 +72,21 @@ class ChannelDifferenceTooLong(TLObject):  # type: ignore
             updates.GetChannelDifference
     """
 
-    __slots__: List[str] = ["dialog", "messages", "chats", "users", "final", "timeout"]
+    __slots__: list[str] = ["chats", "dialog", "final", "messages", "timeout", "users"]
 
-    ID = 0xa4bcc6fe
+    ID = 0xA4BCC6FE
     QUALNAME = "types.updates.ChannelDifferenceTooLong"
 
-    def __init__(self, *, dialog: "raw.base.Dialog", messages: List["raw.base.Message"], chats: List["raw.base.Chat"], users: List["raw.base.User"], final: Optional[bool] = None, timeout: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        dialog: "raw.base.Dialog",
+        messages: list["raw.base.Message"],
+        chats: list["raw.base.Chat"],
+        users: list["raw.base.User"],
+        final: bool | None = None,
+        timeout: int | None = None,
+    ) -> None:
         self.dialog = dialog  # Dialog
         self.messages = messages  # Vector<Message>
         self.chats = chats  # Vector<Chat>
@@ -84,20 +96,26 @@ class ChannelDifferenceTooLong(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChannelDifferenceTooLong":
-        
         flags = Int.read(b)
-        
+
         final = True if flags & (1 << 0) else False
         timeout = Int.read(b) if flags & (1 << 1) else None
         dialog = TLObject.read(b)
-        
+
         messages = TLObject.read(b)
-        
+
         chats = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
-        return ChannelDifferenceTooLong(dialog=dialog, messages=messages, chats=chats, users=users, final=final, timeout=timeout)
+
+        return ChannelDifferenceTooLong(
+            dialog=dialog,
+            messages=messages,
+            chats=chats,
+            users=users,
+            final=final,
+            timeout=timeout,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -107,16 +125,16 @@ class ChannelDifferenceTooLong(TLObject):  # type: ignore
         flags |= (1 << 0) if self.final else 0
         flags |= (1 << 1) if self.timeout is not None else 0
         b.write(Int(flags))
-        
+
         if self.timeout is not None:
             b.write(Int(self.timeout))
-        
+
         b.write(self.dialog.write())
-        
+
         b.write(Vector(self.messages))
-        
+
         b.write(Vector(self.chats))
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

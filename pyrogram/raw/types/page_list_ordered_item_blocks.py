@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,23 +52,23 @@ class PageListOrderedItemBlocks(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["num", "blocks"]
+    __slots__: list[str] = ["blocks", "num"]
 
-    ID = 0x98dd8936
+    ID = 0x98DD8936
     QUALNAME = "types.PageListOrderedItemBlocks"
 
-    def __init__(self, *, num: str, blocks: List["raw.base.PageBlock"]) -> None:
+    def __init__(self, *, num: str, blocks: list["raw.base.PageBlock"]) -> None:
         self.num = num  # string
         self.blocks = blocks  # Vector<PageBlock>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PageListOrderedItemBlocks":
         # No flags
-        
+
         num = String.read(b)
-        
+
         blocks = TLObject.read(b)
-        
+
         return PageListOrderedItemBlocks(num=num, blocks=blocks)
 
     def write(self, *args) -> bytes:
@@ -72,9 +76,9 @@ class PageListOrderedItemBlocks(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.num))
-        
+
         b.write(Vector(self.blocks))
-        
+
         return b.getvalue()

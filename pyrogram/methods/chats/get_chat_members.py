@@ -17,25 +17,27 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from typing import Union, Optional, AsyncGenerator
+from collections.abc import AsyncGenerator
 
 import pyrogram
-from pyrogram import raw, types, enums
+from pyrogram import enums, raw, types
 
 log = logging.getLogger(__name__)
 
 
 async def get_chunk(
     client: "pyrogram.Client",
-    chat_id: Union[int, str],
+    chat_id: int | str,
     offset: int,
     filter: "enums.ChatMembersFilter",
     limit: int,
     query: str,
 ):
-    is_queryable = filter in [enums.ChatMembersFilter.SEARCH,
-                              enums.ChatMembersFilter.BANNED,
-                              enums.ChatMembersFilter.RESTRICTED]
+    is_queryable = filter in [
+        enums.ChatMembersFilter.SEARCH,
+        enums.ChatMembersFilter.BANNED,
+        enums.ChatMembersFilter.RESTRICTED,
+    ]
 
     filter = filter.value(q=query) if is_queryable else filter.value()
 
@@ -45,9 +47,9 @@ async def get_chunk(
             filter=filter,
             offset=offset,
             limit=limit,
-            hash=0
+            hash=0,
         ),
-        sleep_threshold=60
+        sleep_threshold=60,
     )
 
     members = r.participants
@@ -58,10 +60,10 @@ async def get_chunk(
 class GetChatMembers:
     async def get_chat_members(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         query: str = "",
         limit: int = 0,
-        filter: "enums.ChatMembersFilter" = enums.ChatMembersFilter.SEARCH
+        filter: "enums.ChatMembersFilter" = enums.ChatMembersFilter.SEARCH,
     ) -> AsyncGenerator["types.ChatMember", None]:
         """Get the members list of a chat.
 
@@ -102,12 +104,16 @@ class GetChatMembers:
 
                 # Get administrators
                 administrators = []
-                async for m in app.get_chat_members(chat_id, filter=enums.ChatMembersFilter.ADMINISTRATORS):
+                async for m in app.get_chat_members(
+                    chat_id, filter=enums.ChatMembersFilter.ADMINISTRATORS
+                ):
                     administrators.append(m)
 
                 # Get bots
                 bots = []
-                async for m in app.get_chat_members(chat_id, filter=enums.ChatMembersFilter.BOTS):
+                async for m in app.get_chat_members(
+                    chat_id, filter=enums.ChatMembersFilter.BOTS
+                ):
                     bots.append(m)
         """
         peer = await self.resolve_peer(chat_id)
@@ -115,8 +121,8 @@ class GetChatMembers:
         if isinstance(peer, raw.types.InputPeerChat):
             r = await self.invoke(
                 raw.functions.messages.GetFullChat(
-                    chat_id=peer.chat_id
-                )
+                    chat_id=peer.chat_id,
+                ),
             )
 
             members = getattr(r.full_chat.participants, "participants", [])
@@ -138,7 +144,7 @@ class GetChatMembers:
                 offset=offset,
                 filter=filter,
                 limit=limit,
-                query=query
+                query=query,
             )
 
             if not members:

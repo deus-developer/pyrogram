@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -71,12 +74,19 @@ class StickerSet(TLObject):  # type: ignore
             stickers.ReplaceSticker
     """
 
-    __slots__: List[str] = ["set", "packs", "keywords", "documents"]
+    __slots__: list[str] = ["documents", "keywords", "packs", "set"]
 
-    ID = 0x6e153f16
+    ID = 0x6E153F16
     QUALNAME = "types.messages.StickerSet"
 
-    def __init__(self, *, set: "raw.base.StickerSet", packs: List["raw.base.StickerPack"], keywords: List["raw.base.StickerKeyword"], documents: List["raw.base.Document"]) -> None:
+    def __init__(
+        self,
+        *,
+        set: "raw.base.StickerSet",
+        packs: list["raw.base.StickerPack"],
+        keywords: list["raw.base.StickerKeyword"],
+        documents: list["raw.base.Document"],
+    ) -> None:
         self.set = set  # StickerSet
         self.packs = packs  # Vector<StickerPack>
         self.keywords = keywords  # Vector<StickerKeyword>
@@ -85,15 +95,15 @@ class StickerSet(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "StickerSet":
         # No flags
-        
+
         set = TLObject.read(b)
-        
+
         packs = TLObject.read(b)
-        
+
         keywords = TLObject.read(b)
-        
+
         documents = TLObject.read(b)
-        
+
         return StickerSet(set=set, packs=packs, keywords=keywords, documents=documents)
 
     def write(self, *args) -> bytes:
@@ -101,13 +111,13 @@ class StickerSet(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.set.write())
-        
+
         b.write(Vector(self.packs))
-        
+
         b.write(Vector(self.keywords))
-        
+
         b.write(Vector(self.documents))
-        
+
         return b.getvalue()

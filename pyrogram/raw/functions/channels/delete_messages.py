@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class DeleteMessages(TLObject):  # type: ignore
+class DeleteMessages(TLFunction["raw.base.messages.AffectedMessages"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +51,23 @@ class DeleteMessages(TLObject):  # type: ignore
         :obj:`messages.AffectedMessages <pyrogram.raw.base.messages.AffectedMessages>`
     """
 
-    __slots__: List[str] = ["channel", "id"]
+    __slots__: list[str] = ["channel", "id"]
 
-    ID = 0x84c1fd4e
+    ID = 0x84C1FD4E
     QUALNAME = "functions.channels.DeleteMessages"
 
-    def __init__(self, *, channel: "raw.base.InputChannel", id: List[int]) -> None:
+    def __init__(self, *, channel: "raw.base.InputChannel", id: list[int]) -> None:
         self.channel = channel  # InputChannel
         self.id = id  # Vector<int>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DeleteMessages":
         # No flags
-        
+
         channel = TLObject.read(b)
-        
+
         id = TLObject.read(b, Int)
-        
+
         return DeleteMessages(channel=channel, id=id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class DeleteMessages(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.channel.write())
-        
+
         b.write(Vector(self.id, Int))
-        
+
         return b.getvalue()

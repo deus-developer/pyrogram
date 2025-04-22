@@ -19,8 +19,8 @@
 from typing import Optional
 
 import pyrogram
-from pyrogram import raw, enums
-from pyrogram import types
+from pyrogram import enums, raw, types
+
 from ..object import Object
 
 
@@ -67,7 +67,7 @@ class MessageEntity(Object):
         user: "types.User" = None,
         language: str = None,
         custom_emoji_id: int = None,
-        expandable: bool = None
+        expandable: bool = None,
     ):
         super().__init__(client)
 
@@ -81,7 +81,10 @@ class MessageEntity(Object):
         self.expandable = expandable
 
     @staticmethod
-    def from_raw_tl(client, entity: "raw.base.MessageEntity") -> Optional["MessageEntity"]:
+    def from_raw_tl(
+        client,
+        entity: "raw.base.MessageEntity",
+    ) -> Optional["MessageEntity"]:
         # Special case for InputMessageEntityMentionName -> MessageEntityType.TEXT_MENTION
         # This happens in case of UpdateShortSentMessage inside send_message() where entities are parsed from the input
         if isinstance(entity, raw.types.InputMessageEntityMentionName):
@@ -96,11 +99,14 @@ class MessageEntity(Object):
             offset=entity.offset,
             length=entity.length,
             url=getattr(entity, "url", None),
-            user=types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=user_id)),
+            user=types.User.from_raw_tl(
+                client,
+                client.entity_cache.get_user(user_id=user_id),
+            ),
             language=getattr(entity, "language", None),
             custom_emoji_id=getattr(entity, "document_id", None),
             expandable=getattr(entity, "collapsed", None),
-            client=client
+            client=client,
         )
 
     async def write(self):

@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,23 +49,30 @@ class StoriesStealthMode(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["active_until_date", "cooldown_until_date"]
+    __slots__: list[str] = ["active_until_date", "cooldown_until_date"]
 
-    ID = 0x712e27fd
+    ID = 0x712E27FD
     QUALNAME = "types.StoriesStealthMode"
 
-    def __init__(self, *, active_until_date: Optional[int] = None, cooldown_until_date: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        active_until_date: int | None = None,
+        cooldown_until_date: int | None = None,
+    ) -> None:
         self.active_until_date = active_until_date  # flags.0?int
         self.cooldown_until_date = cooldown_until_date  # flags.1?int
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "StoriesStealthMode":
-        
         flags = Int.read(b)
-        
+
         active_until_date = Int.read(b) if flags & (1 << 0) else None
         cooldown_until_date = Int.read(b) if flags & (1 << 1) else None
-        return StoriesStealthMode(active_until_date=active_until_date, cooldown_until_date=cooldown_until_date)
+        return StoriesStealthMode(
+            active_until_date=active_until_date,
+            cooldown_until_date=cooldown_until_date,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -74,11 +82,11 @@ class StoriesStealthMode(TLObject):  # type: ignore
         flags |= (1 << 0) if self.active_until_date is not None else 0
         flags |= (1 << 1) if self.cooldown_until_date is not None else 0
         b.write(Int(flags))
-        
+
         if self.active_until_date is not None:
             b.write(Int(self.active_until_date))
-        
+
         if self.cooldown_until_date is not None:
             b.write(Int(self.cooldown_until_date))
-        
+
         return b.getvalue()

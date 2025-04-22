@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SendEncryptedService(TLObject):  # type: ignore
+class SendEncryptedService(TLFunction["raw.base.messages.SentEncryptedMessage"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +55,18 @@ class SendEncryptedService(TLObject):  # type: ignore
         :obj:`messages.SentEncryptedMessage <pyrogram.raw.base.messages.SentEncryptedMessage>`
     """
 
-    __slots__: List[str] = ["peer", "random_id", "data"]
+    __slots__: list[str] = ["data", "peer", "random_id"]
 
-    ID = 0x32d439a4
+    ID = 0x32D439A4
     QUALNAME = "functions.messages.SendEncryptedService"
 
-    def __init__(self, *, peer: "raw.base.InputEncryptedChat", random_id: int, data: bytes) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputEncryptedChat",
+        random_id: int,
+        data: bytes,
+    ) -> None:
         self.peer = peer  # InputEncryptedChat
         self.random_id = random_id  # long
         self.data = data  # bytes
@@ -64,13 +74,13 @@ class SendEncryptedService(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SendEncryptedService":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         random_id = Long.read(b)
-        
+
         data = Bytes.read(b)
-        
+
         return SendEncryptedService(peer=peer, random_id=random_id, data=data)
 
     def write(self, *args) -> bytes:
@@ -78,11 +88,11 @@ class SendEncryptedService(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Long(self.random_id))
-        
+
         b.write(Bytes(self.data))
-        
+
         return b.getvalue()

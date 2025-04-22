@@ -4,8 +4,11 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type ReplyMarkup = Union["raw.types.ReplyInlineMarkup, raw.types.ReplyKeyboardForceReply, raw.types.ReplyKeyboardHide, raw.types.ReplyKeyboardMarkup"]
+type ReplyMarkup = (
+    raw.types.ReplyInlineMarkup
+    | raw.types.ReplyKeyboardForceReply
+    | raw.types.ReplyKeyboardHide
+    | raw.types.ReplyKeyboardMarkup
+)

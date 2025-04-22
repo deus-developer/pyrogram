@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class FaveSticker(TLObject):  # type: ignore
+class FaveSticker(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class FaveSticker(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["id", "unfave"]
+    __slots__: list[str] = ["id", "unfave"]
 
-    ID = 0xb9ffc55b
+    ID = 0xB9FFC55B
     QUALNAME = "functions.messages.FaveSticker"
 
     def __init__(self, *, id: "raw.base.InputDocument", unfave: bool) -> None:
@@ -60,11 +63,11 @@ class FaveSticker(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "FaveSticker":
         # No flags
-        
+
         id = TLObject.read(b)
-        
+
         unfave = Bool.read(b)
-        
+
         return FaveSticker(id=id, unfave=unfave)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class FaveSticker(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.id.write())
-        
+
         b.write(Bool(self.unfave))
-        
+
         return b.getvalue()

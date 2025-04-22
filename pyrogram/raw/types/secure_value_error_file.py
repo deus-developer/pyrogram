@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,12 +55,18 @@ class SecureValueErrorFile(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["type", "file_hash", "text"]
+    __slots__: list[str] = ["file_hash", "text", "type"]
 
-    ID = 0x7a700873
+    ID = 0x7A700873
     QUALNAME = "types.SecureValueErrorFile"
 
-    def __init__(self, *, type: "raw.base.SecureValueType", file_hash: bytes, text: str) -> None:
+    def __init__(
+        self,
+        *,
+        type: "raw.base.SecureValueType",
+        file_hash: bytes,
+        text: str,
+    ) -> None:
         self.type = type  # SecureValueType
         self.file_hash = file_hash  # bytes
         self.text = text  # string
@@ -64,13 +74,13 @@ class SecureValueErrorFile(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SecureValueErrorFile":
         # No flags
-        
+
         type = TLObject.read(b)
-        
+
         file_hash = Bytes.read(b)
-        
+
         text = String.read(b)
-        
+
         return SecureValueErrorFile(type=type, file_hash=file_hash, text=text)
 
     def write(self, *args) -> bytes:
@@ -78,11 +88,11 @@ class SecureValueErrorFile(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.type.write())
-        
+
         b.write(Bytes(self.file_hash))
-        
+
         b.write(String(self.text))
-        
+
         return b.getvalue()

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +57,19 @@ class InputPhoneContact(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["client_id", "phone", "first_name", "last_name"]
+    __slots__: list[str] = ["client_id", "first_name", "last_name", "phone"]
 
-    ID = 0xf392b7f4
+    ID = 0xF392B7F4
     QUALNAME = "types.InputPhoneContact"
 
-    def __init__(self, *, client_id: int, phone: str, first_name: str, last_name: str) -> None:
+    def __init__(
+        self,
+        *,
+        client_id: int,
+        phone: str,
+        first_name: str,
+        last_name: str,
+    ) -> None:
         self.client_id = client_id  # long
         self.phone = phone  # string
         self.first_name = first_name  # string
@@ -68,29 +78,34 @@ class InputPhoneContact(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputPhoneContact":
         # No flags
-        
+
         client_id = Long.read(b)
-        
+
         phone = String.read(b)
-        
+
         first_name = String.read(b)
-        
+
         last_name = String.read(b)
-        
-        return InputPhoneContact(client_id=client_id, phone=phone, first_name=first_name, last_name=last_name)
+
+        return InputPhoneContact(
+            client_id=client_id,
+            phone=phone,
+            first_name=first_name,
+            last_name=last_name,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.client_id))
-        
+
         b.write(String(self.phone))
-        
+
         b.write(String(self.first_name))
-        
+
         b.write(String(self.last_name))
-        
+
         return b.getvalue()

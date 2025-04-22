@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,33 +50,44 @@ class ChannelAdminLogEventActionChangeEmojiStickerSet(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["prev_stickerset", "new_stickerset"]
+    __slots__: list[str] = ["new_stickerset", "prev_stickerset"]
 
-    ID = 0x46d840ab
+    ID = 0x46D840AB
     QUALNAME = "types.ChannelAdminLogEventActionChangeEmojiStickerSet"
 
-    def __init__(self, *, prev_stickerset: "raw.base.InputStickerSet", new_stickerset: "raw.base.InputStickerSet") -> None:
+    def __init__(
+        self,
+        *,
+        prev_stickerset: "raw.base.InputStickerSet",
+        new_stickerset: "raw.base.InputStickerSet",
+    ) -> None:
         self.prev_stickerset = prev_stickerset  # InputStickerSet
         self.new_stickerset = new_stickerset  # InputStickerSet
 
     @staticmethod
-    def read(b: BytesIO, *args: Any) -> "ChannelAdminLogEventActionChangeEmojiStickerSet":
+    def read(
+        b: BytesIO,
+        *args: Any,
+    ) -> "ChannelAdminLogEventActionChangeEmojiStickerSet":
         # No flags
-        
+
         prev_stickerset = TLObject.read(b)
-        
+
         new_stickerset = TLObject.read(b)
-        
-        return ChannelAdminLogEventActionChangeEmojiStickerSet(prev_stickerset=prev_stickerset, new_stickerset=new_stickerset)
+
+        return ChannelAdminLogEventActionChangeEmojiStickerSet(
+            prev_stickerset=prev_stickerset,
+            new_stickerset=new_stickerset,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.prev_stickerset.write())
-        
+
         b.write(self.new_stickerset.write())
-        
+
         return b.getvalue()

@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class InvokeWithLayer(TLObject):  # type: ignore
+class InvokeWithLayer(TLFunction["raw.base.X"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +49,9 @@ class InvokeWithLayer(TLObject):  # type: ignore
         Any object from :obj:`~pyrogram.raw.types`
     """
 
-    __slots__: List[str] = ["layer", "query"]
+    __slots__: list[str] = ["layer", "query"]
 
-    ID = 0xda9b0d0d
+    ID = 0xDA9B0D0D
     QUALNAME = "functions.InvokeWithLayer"
 
     def __init__(self, *, layer: int, query: TLObject) -> None:
@@ -60,11 +61,11 @@ class InvokeWithLayer(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InvokeWithLayer":
         # No flags
-        
+
         layer = Int.read(b)
-        
+
         query = TLObject.read(b)
-        
+
         return InvokeWithLayer(layer=layer, query=query)
 
     def write(self, *args) -> bytes:
@@ -72,9 +73,9 @@ class InvokeWithLayer(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.layer))
-        
+
         b.write(self.query.write())
-        
+
         return b.getvalue()

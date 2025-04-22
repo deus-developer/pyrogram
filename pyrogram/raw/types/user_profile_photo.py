@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,12 +60,26 @@ class UserProfilePhoto(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["photo_id", "dc_id", "has_video", "personal", "stripped_thumb"]
+    __slots__: list[str] = [
+        "dc_id",
+        "has_video",
+        "personal",
+        "photo_id",
+        "stripped_thumb",
+    ]
 
-    ID = 0x82d1f706
+    ID = 0x82D1F706
     QUALNAME = "types.UserProfilePhoto"
 
-    def __init__(self, *, photo_id: int, dc_id: int, has_video: Optional[bool] = None, personal: Optional[bool] = None, stripped_thumb: Optional[bytes] = None) -> None:
+    def __init__(
+        self,
+        *,
+        photo_id: int,
+        dc_id: int,
+        has_video: bool | None = None,
+        personal: bool | None = None,
+        stripped_thumb: bytes | None = None,
+    ) -> None:
         self.photo_id = photo_id  # long
         self.dc_id = dc_id  # int
         self.has_video = has_video  # flags.0?true
@@ -71,17 +88,22 @@ class UserProfilePhoto(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UserProfilePhoto":
-        
         flags = Int.read(b)
-        
+
         has_video = True if flags & (1 << 0) else False
         personal = True if flags & (1 << 2) else False
         photo_id = Long.read(b)
-        
+
         stripped_thumb = Bytes.read(b) if flags & (1 << 1) else None
         dc_id = Int.read(b)
-        
-        return UserProfilePhoto(photo_id=photo_id, dc_id=dc_id, has_video=has_video, personal=personal, stripped_thumb=stripped_thumb)
+
+        return UserProfilePhoto(
+            photo_id=photo_id,
+            dc_id=dc_id,
+            has_video=has_video,
+            personal=personal,
+            stripped_thumb=stripped_thumb,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -92,12 +114,12 @@ class UserProfilePhoto(TLObject):  # type: ignore
         flags |= (1 << 2) if self.personal else 0
         flags |= (1 << 1) if self.stripped_thumb is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.photo_id))
-        
+
         if self.stripped_thumb is not None:
             b.write(Bytes(self.stripped_thumb))
-        
+
         b.write(Int(self.dc_id))
-        
+
         return b.getvalue()

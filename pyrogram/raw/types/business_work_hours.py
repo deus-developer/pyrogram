@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,27 +55,36 @@ class BusinessWorkHours(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["timezone_id", "weekly_open", "open_now"]
+    __slots__: list[str] = ["open_now", "timezone_id", "weekly_open"]
 
-    ID = 0x8c92b098
+    ID = 0x8C92B098
     QUALNAME = "types.BusinessWorkHours"
 
-    def __init__(self, *, timezone_id: str, weekly_open: List["raw.base.BusinessWeeklyOpen"], open_now: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        timezone_id: str,
+        weekly_open: list["raw.base.BusinessWeeklyOpen"],
+        open_now: bool | None = None,
+    ) -> None:
         self.timezone_id = timezone_id  # string
         self.weekly_open = weekly_open  # Vector<BusinessWeeklyOpen>
         self.open_now = open_now  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "BusinessWorkHours":
-        
         flags = Int.read(b)
-        
+
         open_now = True if flags & (1 << 0) else False
         timezone_id = String.read(b)
-        
+
         weekly_open = TLObject.read(b)
-        
-        return BusinessWorkHours(timezone_id=timezone_id, weekly_open=weekly_open, open_now=open_now)
+
+        return BusinessWorkHours(
+            timezone_id=timezone_id,
+            weekly_open=weekly_open,
+            open_now=open_now,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -80,9 +93,9 @@ class BusinessWorkHours(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.open_now else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.timezone_id))
-        
+
         b.write(Vector(self.weekly_open))
-        
+
         return b.getvalue()

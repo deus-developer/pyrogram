@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,23 +50,28 @@ class MediaAreaGeoPoint(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["coordinates", "geo"]
+    __slots__: list[str] = ["coordinates", "geo"]
 
-    ID = 0xdf8b3b22
+    ID = 0xDF8B3B22
     QUALNAME = "types.MediaAreaGeoPoint"
 
-    def __init__(self, *, coordinates: "raw.base.MediaAreaCoordinates", geo: "raw.base.GeoPoint") -> None:
+    def __init__(
+        self,
+        *,
+        coordinates: "raw.base.MediaAreaCoordinates",
+        geo: "raw.base.GeoPoint",
+    ) -> None:
         self.coordinates = coordinates  # MediaAreaCoordinates
         self.geo = geo  # GeoPoint
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MediaAreaGeoPoint":
         # No flags
-        
+
         coordinates = TLObject.read(b)
-        
+
         geo = TLObject.read(b)
-        
+
         return MediaAreaGeoPoint(coordinates=coordinates, geo=geo)
 
     def write(self, *args) -> bytes:
@@ -72,9 +79,9 @@ class MediaAreaGeoPoint(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.coordinates.write())
-        
+
         b.write(self.geo.write())
-        
+
         return b.getvalue()

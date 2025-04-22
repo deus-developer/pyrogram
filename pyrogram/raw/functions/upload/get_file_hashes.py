@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetFileHashes(TLObject):  # type: ignore
+class GetFileHashes(TLFunction[list["raw.base.FileHash"]]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class GetFileHashes(TLObject):  # type: ignore
         List of :obj:`FileHash <pyrogram.raw.base.FileHash>`
     """
 
-    __slots__: List[str] = ["location", "offset"]
+    __slots__: list[str] = ["location", "offset"]
 
-    ID = 0x9156982a
+    ID = 0x9156982A
     QUALNAME = "functions.upload.GetFileHashes"
 
     def __init__(self, *, location: "raw.base.InputFileLocation", offset: int) -> None:
@@ -60,11 +63,11 @@ class GetFileHashes(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetFileHashes":
         # No flags
-        
+
         location = TLObject.read(b)
-        
+
         offset = Long.read(b)
-        
+
         return GetFileHashes(location=location, offset=offset)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class GetFileHashes(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.location.write())
-        
+
         b.write(Long(self.offset))
-        
+
         return b.getvalue()

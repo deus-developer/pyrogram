@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +57,19 @@ class InputMediaUploadedPhoto(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["file", "spoiler", "stickers", "ttl_seconds"]
+    __slots__: list[str] = ["file", "spoiler", "stickers", "ttl_seconds"]
 
-    ID = 0x1e287d04
+    ID = 0x1E287D04
     QUALNAME = "types.InputMediaUploadedPhoto"
 
-    def __init__(self, *, file: "raw.base.InputFile", spoiler: Optional[bool] = None, stickers: Optional[List["raw.base.InputDocument"]] = None, ttl_seconds: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        file: "raw.base.InputFile",
+        spoiler: bool | None = None,
+        stickers: list["raw.base.InputDocument"] | None = None,
+        ttl_seconds: int | None = None,
+    ) -> None:
         self.file = file  # InputFile
         self.spoiler = spoiler  # flags.2?true
         self.stickers = stickers  # flags.0?Vector<InputDocument>
@@ -67,16 +77,20 @@ class InputMediaUploadedPhoto(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputMediaUploadedPhoto":
-        
         flags = Int.read(b)
-        
+
         spoiler = True if flags & (1 << 2) else False
         file = TLObject.read(b)
-        
+
         stickers = TLObject.read(b) if flags & (1 << 0) else []
-        
+
         ttl_seconds = Int.read(b) if flags & (1 << 1) else None
-        return InputMediaUploadedPhoto(file=file, spoiler=spoiler, stickers=stickers, ttl_seconds=ttl_seconds)
+        return InputMediaUploadedPhoto(
+            file=file,
+            spoiler=spoiler,
+            stickers=stickers,
+            ttl_seconds=ttl_seconds,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -87,13 +101,13 @@ class InputMediaUploadedPhoto(TLObject):  # type: ignore
         flags |= (1 << 0) if self.stickers else 0
         flags |= (1 << 1) if self.ttl_seconds is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.file.write())
-        
+
         if self.stickers is not None:
             b.write(Vector(self.stickers))
-        
+
         if self.ttl_seconds is not None:
             b.write(Int(self.ttl_seconds))
-        
+
         return b.getvalue()

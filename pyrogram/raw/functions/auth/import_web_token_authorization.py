@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ImportWebTokenAuthorization(TLObject):  # type: ignore
+class ImportWebTokenAuthorization(TLFunction["raw.base.auth.Authorization"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,9 +53,9 @@ class ImportWebTokenAuthorization(TLObject):  # type: ignore
         :obj:`auth.Authorization <pyrogram.raw.base.auth.Authorization>`
     """
 
-    __slots__: List[str] = ["api_id", "api_hash", "web_auth_token"]
+    __slots__: list[str] = ["api_hash", "api_id", "web_auth_token"]
 
-    ID = 0x2db873a9
+    ID = 0x2DB873A9
     QUALNAME = "functions.auth.ImportWebTokenAuthorization"
 
     def __init__(self, *, api_id: int, api_hash: str, web_auth_token: str) -> None:
@@ -64,25 +66,29 @@ class ImportWebTokenAuthorization(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ImportWebTokenAuthorization":
         # No flags
-        
+
         api_id = Int.read(b)
-        
+
         api_hash = String.read(b)
-        
+
         web_auth_token = String.read(b)
-        
-        return ImportWebTokenAuthorization(api_id=api_id, api_hash=api_hash, web_auth_token=web_auth_token)
+
+        return ImportWebTokenAuthorization(
+            api_id=api_id,
+            api_hash=api_hash,
+            web_auth_token=web_auth_token,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.api_id))
-        
+
         b.write(String(self.api_hash))
-        
+
         b.write(String(self.web_auth_token))
-        
+
         return b.getvalue()

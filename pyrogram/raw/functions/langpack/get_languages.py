@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetLanguages(TLObject):  # type: ignore
+class GetLanguages(TLFunction[list["raw.base.LangPackLanguage"]]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +48,9 @@ class GetLanguages(TLObject):  # type: ignore
         List of :obj:`LangPackLanguage <pyrogram.raw.base.LangPackLanguage>`
     """
 
-    __slots__: List[str] = ["lang_pack"]
+    __slots__: list[str] = ["lang_pack"]
 
-    ID = 0x42c6978f
+    ID = 0x42C6978F
     QUALNAME = "functions.langpack.GetLanguages"
 
     def __init__(self, *, lang_pack: str) -> None:
@@ -56,9 +59,9 @@ class GetLanguages(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetLanguages":
         # No flags
-        
+
         lang_pack = String.read(b)
-        
+
         return GetLanguages(lang_pack=lang_pack)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class GetLanguages(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.lang_pack))
-        
+
         return b.getvalue()

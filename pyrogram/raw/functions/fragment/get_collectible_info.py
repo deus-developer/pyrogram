@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetCollectibleInfo(TLObject):  # type: ignore
+class GetCollectibleInfo(TLFunction["raw.base.fragment.CollectibleInfo"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetCollectibleInfo(TLObject):  # type: ignore
         :obj:`fragment.CollectibleInfo <pyrogram.raw.base.fragment.CollectibleInfo>`
     """
 
-    __slots__: List[str] = ["collectible"]
+    __slots__: list[str] = ["collectible"]
 
-    ID = 0xbe1e85ba
+    ID = 0xBE1E85BA
     QUALNAME = "functions.fragment.GetCollectibleInfo"
 
     def __init__(self, *, collectible: "raw.base.InputCollectible") -> None:
@@ -56,9 +58,9 @@ class GetCollectibleInfo(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetCollectibleInfo":
         # No flags
-        
+
         collectible = TLObject.read(b)
-        
+
         return GetCollectibleInfo(collectible=collectible)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class GetCollectibleInfo(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.collectible.write())
-        
+
         return b.getvalue()

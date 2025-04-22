@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,20 +49,24 @@ class UpdateStickerSets(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["masks", "emojis"]
+    __slots__: list[str] = ["emojis", "masks"]
 
-    ID = 0x31c24808
+    ID = 0x31C24808
     QUALNAME = "types.UpdateStickerSets"
 
-    def __init__(self, *, masks: Optional[bool] = None, emojis: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        masks: bool | None = None,
+        emojis: bool | None = None,
+    ) -> None:
         self.masks = masks  # flags.0?true
         self.emojis = emojis  # flags.1?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateStickerSets":
-        
         flags = Int.read(b)
-        
+
         masks = True if flags & (1 << 0) else False
         emojis = True if flags & (1 << 1) else False
         return UpdateStickerSets(masks=masks, emojis=emojis)
@@ -74,5 +79,5 @@ class UpdateStickerSets(TLObject):  # type: ignore
         flags |= (1 << 0) if self.masks else 0
         flags |= (1 << 1) if self.emojis else 0
         b.write(Int(flags))
-        
+
         return b.getvalue()

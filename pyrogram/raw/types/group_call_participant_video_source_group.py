@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,33 +51,36 @@ class GroupCallParticipantVideoSourceGroup(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["semantics", "sources"]
+    __slots__: list[str] = ["semantics", "sources"]
 
-    ID = 0xdcb118b7
+    ID = 0xDCB118B7
     QUALNAME = "types.GroupCallParticipantVideoSourceGroup"
 
-    def __init__(self, *, semantics: str, sources: List[int]) -> None:
+    def __init__(self, *, semantics: str, sources: list[int]) -> None:
         self.semantics = semantics  # string
         self.sources = sources  # Vector<int>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GroupCallParticipantVideoSourceGroup":
         # No flags
-        
+
         semantics = String.read(b)
-        
+
         sources = TLObject.read(b, Int)
-        
-        return GroupCallParticipantVideoSourceGroup(semantics=semantics, sources=sources)
+
+        return GroupCallParticipantVideoSourceGroup(
+            semantics=semantics,
+            sources=sources,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.semantics))
-        
+
         b.write(Vector(self.sources, Int))
-        
+
         return b.getvalue()

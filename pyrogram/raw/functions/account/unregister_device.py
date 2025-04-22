@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class UnregisterDevice(TLObject):  # type: ignore
+class UnregisterDevice(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +55,12 @@ class UnregisterDevice(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["token_type", "token", "other_uids"]
+    __slots__: list[str] = ["other_uids", "token", "token_type"]
 
-    ID = 0x6a0d3206
+    ID = 0x6A0D3206
     QUALNAME = "functions.account.UnregisterDevice"
 
-    def __init__(self, *, token_type: int, token: str, other_uids: List[int]) -> None:
+    def __init__(self, *, token_type: int, token: str, other_uids: list[int]) -> None:
         self.token_type = token_type  # int
         self.token = token  # string
         self.other_uids = other_uids  # Vector<long>
@@ -64,25 +68,29 @@ class UnregisterDevice(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UnregisterDevice":
         # No flags
-        
+
         token_type = Int.read(b)
-        
+
         token = String.read(b)
-        
+
         other_uids = TLObject.read(b, Long)
-        
-        return UnregisterDevice(token_type=token_type, token=token, other_uids=other_uids)
+
+        return UnregisterDevice(
+            token_type=token_type,
+            token=token,
+            other_uids=other_uids,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.token_type))
-        
+
         b.write(String(self.token))
-        
+
         b.write(Vector(self.other_uids, Long))
-        
+
         return b.getvalue()

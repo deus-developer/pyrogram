@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class DiscardCall(TLObject):  # type: ignore
+class DiscardCall(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -57,12 +60,20 @@ class DiscardCall(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["peer", "duration", "reason", "connection_id", "video"]
+    __slots__: list[str] = ["connection_id", "duration", "peer", "reason", "video"]
 
-    ID = 0xb2cbc1c0
+    ID = 0xB2CBC1C0
     QUALNAME = "functions.phone.DiscardCall"
 
-    def __init__(self, *, peer: "raw.base.InputPhoneCall", duration: int, reason: "raw.base.PhoneCallDiscardReason", connection_id: int, video: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPhoneCall",
+        duration: int,
+        reason: "raw.base.PhoneCallDiscardReason",
+        connection_id: int,
+        video: bool | None = None,
+    ) -> None:
         self.peer = peer  # InputPhoneCall
         self.duration = duration  # int
         self.reason = reason  # PhoneCallDiscardReason
@@ -71,19 +82,24 @@ class DiscardCall(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DiscardCall":
-        
         flags = Int.read(b)
-        
+
         video = True if flags & (1 << 0) else False
         peer = TLObject.read(b)
-        
+
         duration = Int.read(b)
-        
+
         reason = TLObject.read(b)
-        
+
         connection_id = Long.read(b)
-        
-        return DiscardCall(peer=peer, duration=duration, reason=reason, connection_id=connection_id, video=video)
+
+        return DiscardCall(
+            peer=peer,
+            duration=duration,
+            reason=reason,
+            connection_id=connection_id,
+            video=video,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -92,13 +108,13 @@ class DiscardCall(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.video else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.duration))
-        
+
         b.write(self.reason.write())
-        
+
         b.write(Long(self.connection_id))
-        
+
         return b.getvalue()

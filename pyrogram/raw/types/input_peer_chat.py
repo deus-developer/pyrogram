@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +47,9 @@ class InputPeerChat(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["chat_id"]
+    __slots__: list[str] = ["chat_id"]
 
-    ID = 0x35a95cb9
+    ID = 0x35A95CB9
     QUALNAME = "types.InputPeerChat"
 
     def __init__(self, *, chat_id: int) -> None:
@@ -56,9 +58,9 @@ class InputPeerChat(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputPeerChat":
         # No flags
-        
+
         chat_id = Long.read(b)
-        
+
         return InputPeerChat(chat_id=chat_id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class InputPeerChat(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.chat_id))
-        
+
         return b.getvalue()

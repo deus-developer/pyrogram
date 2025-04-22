@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class InstallWallPaper(TLObject):  # type: ignore
+class InstallWallPaper(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,28 @@ class InstallWallPaper(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["wallpaper", "settings"]
+    __slots__: list[str] = ["settings", "wallpaper"]
 
-    ID = 0xfeed5769
+    ID = 0xFEED5769
     QUALNAME = "functions.account.InstallWallPaper"
 
-    def __init__(self, *, wallpaper: "raw.base.InputWallPaper", settings: "raw.base.WallPaperSettings") -> None:
+    def __init__(
+        self,
+        *,
+        wallpaper: "raw.base.InputWallPaper",
+        settings: "raw.base.WallPaperSettings",
+    ) -> None:
         self.wallpaper = wallpaper  # InputWallPaper
         self.settings = settings  # WallPaperSettings
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InstallWallPaper":
         # No flags
-        
+
         wallpaper = TLObject.read(b)
-        
+
         settings = TLObject.read(b)
-        
+
         return InstallWallPaper(wallpaper=wallpaper, settings=settings)
 
     def write(self, *args) -> bytes:
@@ -72,9 +79,9 @@ class InstallWallPaper(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.wallpaper.write())
-        
+
         b.write(self.settings.write())
-        
+
         return b.getvalue()

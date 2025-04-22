@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +57,19 @@ class InputMediaDocument(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "spoiler", "ttl_seconds", "query"]
+    __slots__: list[str] = ["id", "query", "spoiler", "ttl_seconds"]
 
     ID = 0x33473058
     QUALNAME = "types.InputMediaDocument"
 
-    def __init__(self, *, id: "raw.base.InputDocument", spoiler: Optional[bool] = None, ttl_seconds: Optional[int] = None, query: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: "raw.base.InputDocument",
+        spoiler: bool | None = None,
+        ttl_seconds: int | None = None,
+        query: str | None = None,
+    ) -> None:
         self.id = id  # InputDocument
         self.spoiler = spoiler  # flags.2?true
         self.ttl_seconds = ttl_seconds  # flags.0?int
@@ -67,15 +77,19 @@ class InputMediaDocument(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputMediaDocument":
-        
         flags = Int.read(b)
-        
+
         spoiler = True if flags & (1 << 2) else False
         id = TLObject.read(b)
-        
+
         ttl_seconds = Int.read(b) if flags & (1 << 0) else None
         query = String.read(b) if flags & (1 << 1) else None
-        return InputMediaDocument(id=id, spoiler=spoiler, ttl_seconds=ttl_seconds, query=query)
+        return InputMediaDocument(
+            id=id,
+            spoiler=spoiler,
+            ttl_seconds=ttl_seconds,
+            query=query,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -86,13 +100,13 @@ class InputMediaDocument(TLObject):  # type: ignore
         flags |= (1 << 0) if self.ttl_seconds is not None else 0
         flags |= (1 << 1) if self.query is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.id.write())
-        
+
         if self.ttl_seconds is not None:
             b.write(Int(self.ttl_seconds))
-        
+
         if self.query is not None:
             b.write(String(self.query))
-        
+
         return b.getvalue()

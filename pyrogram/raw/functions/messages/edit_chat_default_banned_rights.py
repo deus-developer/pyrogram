@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class EditChatDefaultBannedRights(TLObject):  # type: ignore
+class EditChatDefaultBannedRights(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,28 @@ class EditChatDefaultBannedRights(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["peer", "banned_rights"]
+    __slots__: list[str] = ["banned_rights", "peer"]
 
-    ID = 0xa5866b41
+    ID = 0xA5866B41
     QUALNAME = "functions.messages.EditChatDefaultBannedRights"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", banned_rights: "raw.base.ChatBannedRights") -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        banned_rights: "raw.base.ChatBannedRights",
+    ) -> None:
         self.peer = peer  # InputPeer
         self.banned_rights = banned_rights  # ChatBannedRights
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EditChatDefaultBannedRights":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         banned_rights = TLObject.read(b)
-        
+
         return EditChatDefaultBannedRights(peer=peer, banned_rights=banned_rights)
 
     def write(self, *args) -> bytes:
@@ -72,9 +79,9 @@ class EditChatDefaultBannedRights(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(self.banned_rights.write())
-        
+
         return b.getvalue()

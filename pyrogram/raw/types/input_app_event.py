@@ -17,11 +17,16 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Double,
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +59,19 @@ class InputAppEvent(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["time", "type", "peer", "data"]
+    __slots__: list[str] = ["data", "peer", "time", "type"]
 
-    ID = 0x1d1b1245
+    ID = 0x1D1B1245
     QUALNAME = "types.InputAppEvent"
 
-    def __init__(self, *, time: float, type: str, peer: int, data: "raw.base.JSONValue") -> None:
+    def __init__(
+        self,
+        *,
+        time: float,
+        type: str,
+        peer: int,
+        data: "raw.base.JSONValue",
+    ) -> None:
         self.time = time  # double
         self.type = type  # string
         self.peer = peer  # long
@@ -68,15 +80,15 @@ class InputAppEvent(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputAppEvent":
         # No flags
-        
+
         time = Double.read(b)
-        
+
         type = String.read(b)
-        
+
         peer = Long.read(b)
-        
+
         data = TLObject.read(b)
-        
+
         return InputAppEvent(time=time, type=type, peer=peer, data=data)
 
     def write(self, *args) -> bytes:
@@ -84,13 +96,13 @@ class InputAppEvent(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Double(self.time))
-        
+
         b.write(String(self.type))
-        
+
         b.write(Long(self.peer))
-        
+
         b.write(self.data.write())
-        
+
         return b.getvalue()

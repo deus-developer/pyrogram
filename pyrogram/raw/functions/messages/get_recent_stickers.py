@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetRecentStickers(TLObject):  # type: ignore
+class GetRecentStickers(TLFunction["raw.base.messages.RecentStickers"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,22 @@ class GetRecentStickers(TLObject):  # type: ignore
         :obj:`messages.RecentStickers <pyrogram.raw.base.messages.RecentStickers>`
     """
 
-    __slots__: List[str] = ["hash", "attached"]
+    __slots__: list[str] = ["attached", "hash"]
 
-    ID = 0x9da9403b
+    ID = 0x9DA9403B
     QUALNAME = "functions.messages.GetRecentStickers"
 
-    def __init__(self, *, hash: int, attached: Optional[bool] = None) -> None:
+    def __init__(self, *, hash: int, attached: bool | None = None) -> None:
         self.hash = hash  # long
         self.attached = attached  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetRecentStickers":
-        
         flags = Int.read(b)
-        
+
         attached = True if flags & (1 << 0) else False
         hash = Long.read(b)
-        
+
         return GetRecentStickers(hash=hash, attached=attached)
 
     def write(self, *args) -> bytes:
@@ -74,7 +75,7 @@ class GetRecentStickers(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.attached else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.hash))
-        
+
         return b.getvalue()

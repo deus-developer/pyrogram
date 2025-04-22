@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetCountriesList(TLObject):  # type: ignore
+class GetCountriesList(TLFunction["raw.base.help.CountriesList"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class GetCountriesList(TLObject):  # type: ignore
         :obj:`help.CountriesList <pyrogram.raw.base.help.CountriesList>`
     """
 
-    __slots__: List[str] = ["lang_code", "hash"]
+    __slots__: list[str] = ["hash", "lang_code"]
 
-    ID = 0x735787a8
+    ID = 0x735787A8
     QUALNAME = "functions.help.GetCountriesList"
 
     def __init__(self, *, lang_code: str, hash: int) -> None:
@@ -60,11 +62,11 @@ class GetCountriesList(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetCountriesList":
         # No flags
-        
+
         lang_code = String.read(b)
-        
+
         hash = Int.read(b)
-        
+
         return GetCountriesList(lang_code=lang_code, hash=hash)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class GetCountriesList(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.lang_code))
-        
+
         b.write(Int(self.hash))
-        
+
         return b.getvalue()

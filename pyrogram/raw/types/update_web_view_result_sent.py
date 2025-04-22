@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +47,9 @@ class UpdateWebViewResultSent(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["query_id"]
+    __slots__: list[str] = ["query_id"]
 
-    ID = 0x1592b79d
+    ID = 0x1592B79D
     QUALNAME = "types.UpdateWebViewResultSent"
 
     def __init__(self, *, query_id: int) -> None:
@@ -56,9 +58,9 @@ class UpdateWebViewResultSent(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateWebViewResultSent":
         # No flags
-        
+
         query_id = Long.read(b)
-        
+
         return UpdateWebViewResultSent(query_id=query_id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class UpdateWebViewResultSent(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.query_id))
-        
+
         return b.getvalue()

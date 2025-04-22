@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class EditBusinessChatLink(TLObject):  # type: ignore
+class EditBusinessChatLink(TLFunction["raw.base.BusinessChatLink"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class EditBusinessChatLink(TLObject):  # type: ignore
         :obj:`BusinessChatLink <pyrogram.raw.base.BusinessChatLink>`
     """
 
-    __slots__: List[str] = ["slug", "link"]
+    __slots__: list[str] = ["link", "slug"]
 
-    ID = 0x8c3410af
+    ID = 0x8C3410AF
     QUALNAME = "functions.account.EditBusinessChatLink"
 
     def __init__(self, *, slug: str, link: "raw.base.InputBusinessChatLink") -> None:
@@ -60,11 +63,11 @@ class EditBusinessChatLink(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EditBusinessChatLink":
         # No flags
-        
+
         slug = String.read(b)
-        
+
         link = TLObject.read(b)
-        
+
         return EditBusinessChatLink(slug=slug, link=link)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class EditBusinessChatLink(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.slug))
-        
+
         b.write(self.link.write())
-        
+
         return b.getvalue()

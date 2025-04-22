@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +47,9 @@ class PageBlockCover(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["cover"]
+    __slots__: list[str] = ["cover"]
 
-    ID = 0x39f23300
+    ID = 0x39F23300
     QUALNAME = "types.PageBlockCover"
 
     def __init__(self, *, cover: "raw.base.PageBlock") -> None:
@@ -56,9 +58,9 @@ class PageBlockCover(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PageBlockCover":
         # No flags
-        
+
         cover = TLObject.read(b)
-        
+
         return PageBlockCover(cover=cover)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class PageBlockCover(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.cover.write())
-        
+
         return b.getvalue()

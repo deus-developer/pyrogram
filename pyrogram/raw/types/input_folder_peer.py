@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class InputFolderPeer(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "folder_id"]
+    __slots__: list[str] = ["folder_id", "peer"]
 
-    ID = 0xfbd2c296
+    ID = 0xFBD2C296
     QUALNAME = "types.InputFolderPeer"
 
     def __init__(self, *, peer: "raw.base.InputPeer", folder_id: int) -> None:
@@ -60,11 +62,11 @@ class InputFolderPeer(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputFolderPeer":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         folder_id = Int.read(b)
-        
+
         return InputFolderPeer(peer=peer, folder_id=folder_id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class InputFolderPeer(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.folder_id))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class MessageActionWebViewDataSentMe(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["text", "data"]
+    __slots__: list[str] = ["data", "text"]
 
-    ID = 0x47dd8079
+    ID = 0x47DD8079
     QUALNAME = "types.MessageActionWebViewDataSentMe"
 
     def __init__(self, *, text: str, data: str) -> None:
@@ -60,11 +62,11 @@ class MessageActionWebViewDataSentMe(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageActionWebViewDataSentMe":
         # No flags
-        
+
         text = String.read(b)
-        
+
         data = String.read(b)
-        
+
         return MessageActionWebViewDataSentMe(text=text, data=data)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class MessageActionWebViewDataSentMe(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.text))
-        
+
         b.write(String(self.data))
-        
+
         return b.getvalue()

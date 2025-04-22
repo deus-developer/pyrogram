@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,12 +62,28 @@ class PeerColorOption(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["color_id", "hidden", "colors", "dark_colors", "channel_min_level", "group_min_level"]
+    __slots__: list[str] = [
+        "channel_min_level",
+        "color_id",
+        "colors",
+        "dark_colors",
+        "group_min_level",
+        "hidden",
+    ]
 
-    ID = 0xadec6ebe
+    ID = 0xADEC6EBE
     QUALNAME = "types.help.PeerColorOption"
 
-    def __init__(self, *, color_id: int, hidden: Optional[bool] = None, colors: "raw.base.help.PeerColorSet" = None, dark_colors: "raw.base.help.PeerColorSet" = None, channel_min_level: Optional[int] = None, group_min_level: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        color_id: int,
+        hidden: bool | None = None,
+        colors: "raw.base.help.PeerColorSet" = None,
+        dark_colors: "raw.base.help.PeerColorSet" = None,
+        channel_min_level: int | None = None,
+        group_min_level: int | None = None,
+    ) -> None:
         self.color_id = color_id  # int
         self.hidden = hidden  # flags.0?true
         self.colors = colors  # flags.1?help.PeerColorSet
@@ -75,19 +93,25 @@ class PeerColorOption(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PeerColorOption":
-        
         flags = Int.read(b)
-        
+
         hidden = True if flags & (1 << 0) else False
         color_id = Int.read(b)
-        
+
         colors = TLObject.read(b) if flags & (1 << 1) else None
-        
+
         dark_colors = TLObject.read(b) if flags & (1 << 2) else None
-        
+
         channel_min_level = Int.read(b) if flags & (1 << 3) else None
         group_min_level = Int.read(b) if flags & (1 << 4) else None
-        return PeerColorOption(color_id=color_id, hidden=hidden, colors=colors, dark_colors=dark_colors, channel_min_level=channel_min_level, group_min_level=group_min_level)
+        return PeerColorOption(
+            color_id=color_id,
+            hidden=hidden,
+            colors=colors,
+            dark_colors=dark_colors,
+            channel_min_level=channel_min_level,
+            group_min_level=group_min_level,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -100,19 +124,19 @@ class PeerColorOption(TLObject):  # type: ignore
         flags |= (1 << 3) if self.channel_min_level is not None else 0
         flags |= (1 << 4) if self.group_min_level is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.color_id))
-        
+
         if self.colors is not None:
             b.write(self.colors.write())
-        
+
         if self.dark_colors is not None:
             b.write(self.dark_colors.write())
-        
+
         if self.channel_min_level is not None:
             b.write(Int(self.channel_min_level))
-        
+
         if self.group_min_level is not None:
             b.write(Int(self.group_min_level))
-        
+
         return b.getvalue()

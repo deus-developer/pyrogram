@@ -17,6 +17,7 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrogram import raw
+
 from ..object import Object
 
 
@@ -47,5 +48,5 @@ class WebAppData(Object):
     def from_raw_tl(action: "raw.types.MessageActionWebViewDataSentMe"):
         return WebAppData(
             data=action.data,
-            button_text=action.text
+            button_text=action.text,
         )

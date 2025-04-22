@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Double,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -63,12 +66,19 @@ class BroadcastRevenueStats(TLObject):  # type: ignore
             stats.GetBroadcastRevenueStats
     """
 
-    __slots__: List[str] = ["top_hours_graph", "revenue_graph", "balances", "usd_rate"]
+    __slots__: list[str] = ["balances", "revenue_graph", "top_hours_graph", "usd_rate"]
 
-    ID = 0x5407e297
+    ID = 0x5407E297
     QUALNAME = "types.stats.BroadcastRevenueStats"
 
-    def __init__(self, *, top_hours_graph: "raw.base.StatsGraph", revenue_graph: "raw.base.StatsGraph", balances: "raw.base.BroadcastRevenueBalances", usd_rate: float) -> None:
+    def __init__(
+        self,
+        *,
+        top_hours_graph: "raw.base.StatsGraph",
+        revenue_graph: "raw.base.StatsGraph",
+        balances: "raw.base.BroadcastRevenueBalances",
+        usd_rate: float,
+    ) -> None:
         self.top_hours_graph = top_hours_graph  # StatsGraph
         self.revenue_graph = revenue_graph  # StatsGraph
         self.balances = balances  # BroadcastRevenueBalances
@@ -77,29 +87,34 @@ class BroadcastRevenueStats(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "BroadcastRevenueStats":
         # No flags
-        
+
         top_hours_graph = TLObject.read(b)
-        
+
         revenue_graph = TLObject.read(b)
-        
+
         balances = TLObject.read(b)
-        
+
         usd_rate = Double.read(b)
-        
-        return BroadcastRevenueStats(top_hours_graph=top_hours_graph, revenue_graph=revenue_graph, balances=balances, usd_rate=usd_rate)
+
+        return BroadcastRevenueStats(
+            top_hours_graph=top_hours_graph,
+            revenue_graph=revenue_graph,
+            balances=balances,
+            usd_rate=usd_rate,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.top_hours_graph.write())
-        
+
         b.write(self.revenue_graph.write())
-        
+
         b.write(self.balances.write())
-        
+
         b.write(Double(self.usd_rate))
-        
+
         return b.getvalue()

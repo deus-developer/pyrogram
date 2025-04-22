@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,20 +47,20 @@ class PeerColorSet(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["colors"]
+    __slots__: list[str] = ["colors"]
 
-    ID = 0x26219a58
+    ID = 0x26219A58
     QUALNAME = "types.help.PeerColorSet"
 
-    def __init__(self, *, colors: List[int]) -> None:
+    def __init__(self, *, colors: list[int]) -> None:
         self.colors = colors  # Vector<int>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PeerColorSet":
         # No flags
-        
+
         colors = TLObject.read(b, Int)
-        
+
         return PeerColorSet(colors=colors)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class PeerColorSet(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.colors, Int))
-        
+
         return b.getvalue()

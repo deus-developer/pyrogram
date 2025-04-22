@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,9 +59,9 @@ class PassportConfig(TLObject):  # type: ignore
             help.GetPassportConfig
     """
 
-    __slots__: List[str] = ["hash", "countries_langs"]
+    __slots__: list[str] = ["countries_langs", "hash"]
 
-    ID = 0xa098d6af
+    ID = 0xA098D6AF
     QUALNAME = "types.help.PassportConfig"
 
     def __init__(self, *, hash: int, countries_langs: "raw.base.DataJSON") -> None:
@@ -69,11 +71,11 @@ class PassportConfig(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PassportConfig":
         # No flags
-        
+
         hash = Int.read(b)
-        
+
         countries_langs = TLObject.read(b)
-        
+
         return PassportConfig(hash=hash, countries_langs=countries_langs)
 
     def write(self, *args) -> bytes:
@@ -81,9 +83,9 @@ class PassportConfig(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.hash))
-        
+
         b.write(self.countries_langs.write())
-        
+
         return b.getvalue()

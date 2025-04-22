@@ -17,11 +17,16 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -156,12 +161,92 @@ class Message(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "peer_id", "date", "message", "out", "mentioned", "media_unread", "silent", "post", "from_scheduled", "legacy", "edit_hide", "pinned", "noforwards", "invert_media", "offline", "from_id", "from_boosts_applied", "saved_peer_id", "fwd_from", "via_bot_id", "via_business_bot_id", "reply_to", "media", "reply_markup", "entities", "views", "forwards", "replies", "edit_date", "post_author", "grouped_id", "reactions", "restriction_reason", "ttl_period", "quick_reply_shortcut_id", "effect", "factcheck"]
+    __slots__: list[str] = [
+        "date",
+        "edit_date",
+        "edit_hide",
+        "effect",
+        "entities",
+        "factcheck",
+        "forwards",
+        "from_boosts_applied",
+        "from_id",
+        "from_scheduled",
+        "fwd_from",
+        "grouped_id",
+        "id",
+        "invert_media",
+        "legacy",
+        "media",
+        "media_unread",
+        "mentioned",
+        "message",
+        "noforwards",
+        "offline",
+        "out",
+        "peer_id",
+        "pinned",
+        "post",
+        "post_author",
+        "quick_reply_shortcut_id",
+        "reactions",
+        "replies",
+        "reply_markup",
+        "reply_to",
+        "restriction_reason",
+        "saved_peer_id",
+        "silent",
+        "ttl_period",
+        "via_bot_id",
+        "via_business_bot_id",
+        "views",
+    ]
 
     ID = 0x94345242
     QUALNAME = "types.Message"
 
-    def __init__(self, *, id: int, peer_id: "raw.base.Peer", date: int, message: str, out: Optional[bool] = None, mentioned: Optional[bool] = None, media_unread: Optional[bool] = None, silent: Optional[bool] = None, post: Optional[bool] = None, from_scheduled: Optional[bool] = None, legacy: Optional[bool] = None, edit_hide: Optional[bool] = None, pinned: Optional[bool] = None, noforwards: Optional[bool] = None, invert_media: Optional[bool] = None, offline: Optional[bool] = None, from_id: "raw.base.Peer" = None, from_boosts_applied: Optional[int] = None, saved_peer_id: "raw.base.Peer" = None, fwd_from: "raw.base.MessageFwdHeader" = None, via_bot_id: Optional[int] = None, via_business_bot_id: Optional[int] = None, reply_to: "raw.base.MessageReplyHeader" = None, media: "raw.base.MessageMedia" = None, reply_markup: "raw.base.ReplyMarkup" = None, entities: Optional[List["raw.base.MessageEntity"]] = None, views: Optional[int] = None, forwards: Optional[int] = None, replies: "raw.base.MessageReplies" = None, edit_date: Optional[int] = None, post_author: Optional[str] = None, grouped_id: Optional[int] = None, reactions: "raw.base.MessageReactions" = None, restriction_reason: Optional[List["raw.base.RestrictionReason"]] = None, ttl_period: Optional[int] = None, quick_reply_shortcut_id: Optional[int] = None, effect: Optional[int] = None, factcheck: "raw.base.FactCheck" = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: int,
+        peer_id: "raw.base.Peer",
+        date: int,
+        message: str,
+        out: bool | None = None,
+        mentioned: bool | None = None,
+        media_unread: bool | None = None,
+        silent: bool | None = None,
+        post: bool | None = None,
+        from_scheduled: bool | None = None,
+        legacy: bool | None = None,
+        edit_hide: bool | None = None,
+        pinned: bool | None = None,
+        noforwards: bool | None = None,
+        invert_media: bool | None = None,
+        offline: bool | None = None,
+        from_id: "raw.base.Peer" = None,
+        from_boosts_applied: int | None = None,
+        saved_peer_id: "raw.base.Peer" = None,
+        fwd_from: "raw.base.MessageFwdHeader" = None,
+        via_bot_id: int | None = None,
+        via_business_bot_id: int | None = None,
+        reply_to: "raw.base.MessageReplyHeader" = None,
+        media: "raw.base.MessageMedia" = None,
+        reply_markup: "raw.base.ReplyMarkup" = None,
+        entities: list["raw.base.MessageEntity"] | None = None,
+        views: int | None = None,
+        forwards: int | None = None,
+        replies: "raw.base.MessageReplies" = None,
+        edit_date: int | None = None,
+        post_author: str | None = None,
+        grouped_id: int | None = None,
+        reactions: "raw.base.MessageReactions" = None,
+        restriction_reason: list["raw.base.RestrictionReason"] | None = None,
+        ttl_period: int | None = None,
+        quick_reply_shortcut_id: int | None = None,
+        effect: int | None = None,
+        factcheck: "raw.base.FactCheck" = None,
+    ) -> None:
         self.id = id  # int
         self.peer_id = peer_id  # Peer
         self.date = date  # int
@@ -195,7 +280,9 @@ class Message(TLObject):  # type: ignore
         self.post_author = post_author  # flags.16?string
         self.grouped_id = grouped_id  # flags.17?long
         self.reactions = reactions  # flags.20?MessageReactions
-        self.restriction_reason = restriction_reason  # flags.22?Vector<RestrictionReason>
+        self.restriction_reason = (
+            restriction_reason  # flags.22?Vector<RestrictionReason>
+        )
         self.ttl_period = ttl_period  # flags.25?int
         self.quick_reply_shortcut_id = quick_reply_shortcut_id  # flags.30?int
         self.effect = effect  # flags2.2?long
@@ -203,9 +290,8 @@ class Message(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "Message":
-        
         flags = Int.read(b)
-        
+
         out = True if flags & (1 << 1) else False
         mentioned = True if flags & (1 << 4) else False
         media_unread = True if flags & (1 << 5) else False
@@ -218,50 +304,89 @@ class Message(TLObject):  # type: ignore
         noforwards = True if flags & (1 << 26) else False
         invert_media = True if flags & (1 << 27) else False
         flags2 = Int.read(b)
-        
+
         offline = True if flags2 & (1 << 1) else False
         id = Int.read(b)
-        
+
         from_id = TLObject.read(b) if flags & (1 << 8) else None
-        
+
         from_boosts_applied = Int.read(b) if flags & (1 << 29) else None
         peer_id = TLObject.read(b)
-        
+
         saved_peer_id = TLObject.read(b) if flags & (1 << 28) else None
-        
+
         fwd_from = TLObject.read(b) if flags & (1 << 2) else None
-        
+
         via_bot_id = Long.read(b) if flags & (1 << 11) else None
         via_business_bot_id = Long.read(b) if flags2 & (1 << 0) else None
         reply_to = TLObject.read(b) if flags & (1 << 3) else None
-        
+
         date = Int.read(b)
-        
+
         message = String.read(b)
-        
+
         media = TLObject.read(b) if flags & (1 << 9) else None
-        
+
         reply_markup = TLObject.read(b) if flags & (1 << 6) else None
-        
+
         entities = TLObject.read(b) if flags & (1 << 7) else []
-        
+
         views = Int.read(b) if flags & (1 << 10) else None
         forwards = Int.read(b) if flags & (1 << 10) else None
         replies = TLObject.read(b) if flags & (1 << 23) else None
-        
+
         edit_date = Int.read(b) if flags & (1 << 15) else None
         post_author = String.read(b) if flags & (1 << 16) else None
         grouped_id = Long.read(b) if flags & (1 << 17) else None
         reactions = TLObject.read(b) if flags & (1 << 20) else None
-        
+
         restriction_reason = TLObject.read(b) if flags & (1 << 22) else []
-        
+
         ttl_period = Int.read(b) if flags & (1 << 25) else None
         quick_reply_shortcut_id = Int.read(b) if flags & (1 << 30) else None
         effect = Long.read(b) if flags2 & (1 << 2) else None
         factcheck = TLObject.read(b) if flags2 & (1 << 3) else None
-        
-        return Message(id=id, peer_id=peer_id, date=date, message=message, out=out, mentioned=mentioned, media_unread=media_unread, silent=silent, post=post, from_scheduled=from_scheduled, legacy=legacy, edit_hide=edit_hide, pinned=pinned, noforwards=noforwards, invert_media=invert_media, offline=offline, from_id=from_id, from_boosts_applied=from_boosts_applied, saved_peer_id=saved_peer_id, fwd_from=fwd_from, via_bot_id=via_bot_id, via_business_bot_id=via_business_bot_id, reply_to=reply_to, media=media, reply_markup=reply_markup, entities=entities, views=views, forwards=forwards, replies=replies, edit_date=edit_date, post_author=post_author, grouped_id=grouped_id, reactions=reactions, restriction_reason=restriction_reason, ttl_period=ttl_period, quick_reply_shortcut_id=quick_reply_shortcut_id, effect=effect, factcheck=factcheck)
+
+        return Message(
+            id=id,
+            peer_id=peer_id,
+            date=date,
+            message=message,
+            out=out,
+            mentioned=mentioned,
+            media_unread=media_unread,
+            silent=silent,
+            post=post,
+            from_scheduled=from_scheduled,
+            legacy=legacy,
+            edit_hide=edit_hide,
+            pinned=pinned,
+            noforwards=noforwards,
+            invert_media=invert_media,
+            offline=offline,
+            from_id=from_id,
+            from_boosts_applied=from_boosts_applied,
+            saved_peer_id=saved_peer_id,
+            fwd_from=fwd_from,
+            via_bot_id=via_bot_id,
+            via_business_bot_id=via_business_bot_id,
+            reply_to=reply_to,
+            media=media,
+            reply_markup=reply_markup,
+            entities=entities,
+            views=views,
+            forwards=forwards,
+            replies=replies,
+            edit_date=edit_date,
+            post_author=post_author,
+            grouped_id=grouped_id,
+            reactions=reactions,
+            restriction_reason=restriction_reason,
+            ttl_period=ttl_period,
+            quick_reply_shortcut_id=quick_reply_shortcut_id,
+            effect=effect,
+            factcheck=factcheck,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -305,79 +430,79 @@ class Message(TLObject):  # type: ignore
         flags2 |= (1 << 2) if self.effect is not None else 0
         flags2 |= (1 << 3) if self.factcheck is not None else 0
         b.write(Int(flags2))
-        
+
         b.write(Int(self.id))
-        
+
         if self.from_id is not None:
             b.write(self.from_id.write())
-        
+
         if self.from_boosts_applied is not None:
             b.write(Int(self.from_boosts_applied))
-        
+
         b.write(self.peer_id.write())
-        
+
         if self.saved_peer_id is not None:
             b.write(self.saved_peer_id.write())
-        
+
         if self.fwd_from is not None:
             b.write(self.fwd_from.write())
-        
+
         if self.via_bot_id is not None:
             b.write(Long(self.via_bot_id))
-        
+
         if self.via_business_bot_id is not None:
             b.write(Long(self.via_business_bot_id))
-        
+
         if self.reply_to is not None:
             b.write(self.reply_to.write())
-        
+
         b.write(Int(self.date))
-        
+
         b.write(String(self.message))
-        
+
         if self.media is not None:
             b.write(self.media.write())
-        
+
         if self.reply_markup is not None:
             b.write(self.reply_markup.write())
-        
+
         if self.entities is not None:
             b.write(Vector(self.entities))
-        
+
         if self.views is not None:
             b.write(Int(self.views))
-        
+
         if self.forwards is not None:
             b.write(Int(self.forwards))
-        
+
         if self.replies is not None:
             b.write(self.replies.write())
-        
+
         if self.edit_date is not None:
             b.write(Int(self.edit_date))
-        
+
         if self.post_author is not None:
             b.write(String(self.post_author))
-        
+
         if self.grouped_id is not None:
             b.write(Long(self.grouped_id))
-        
+
         if self.reactions is not None:
             b.write(self.reactions.write())
-        
+
         if self.restriction_reason is not None:
             b.write(Vector(self.restriction_reason))
-        
+
         if self.ttl_period is not None:
             b.write(Int(self.ttl_period))
-        
+
         if self.quick_reply_shortcut_id is not None:
             b.write(Int(self.quick_reply_shortcut_id))
-        
+
         if self.effect is not None:
             b.write(Long(self.effect))
-        
+
         if self.factcheck is not None:
             b.write(self.factcheck.write())
-        
+
         return b.getvalue()

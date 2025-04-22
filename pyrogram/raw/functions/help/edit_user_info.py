@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class EditUserInfo(TLObject):  # type: ignore
+class EditUserInfo(TLFunction["raw.base.help.UserInfo"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +55,18 @@ class EditUserInfo(TLObject):  # type: ignore
         :obj:`help.UserInfo <pyrogram.raw.base.help.UserInfo>`
     """
 
-    __slots__: List[str] = ["user_id", "message", "entities"]
+    __slots__: list[str] = ["entities", "message", "user_id"]
 
-    ID = 0x66b91b70
+    ID = 0x66B91B70
     QUALNAME = "functions.help.EditUserInfo"
 
-    def __init__(self, *, user_id: "raw.base.InputUser", message: str, entities: List["raw.base.MessageEntity"]) -> None:
+    def __init__(
+        self,
+        *,
+        user_id: "raw.base.InputUser",
+        message: str,
+        entities: list["raw.base.MessageEntity"],
+    ) -> None:
         self.user_id = user_id  # InputUser
         self.message = message  # string
         self.entities = entities  # Vector<MessageEntity>
@@ -64,13 +74,13 @@ class EditUserInfo(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EditUserInfo":
         # No flags
-        
+
         user_id = TLObject.read(b)
-        
+
         message = String.read(b)
-        
+
         entities = TLObject.read(b)
-        
+
         return EditUserInfo(user_id=user_id, message=message, entities=entities)
 
     def write(self, *args) -> bytes:
@@ -78,11 +88,11 @@ class EditUserInfo(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.user_id.write())
-        
+
         b.write(String(self.message))
-        
+
         b.write(Vector(self.entities))
-        
+
         return b.getvalue()

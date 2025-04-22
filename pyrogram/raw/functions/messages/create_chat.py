@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class CreateChat(TLObject):  # type: ignore
+class CreateChat(TLFunction["raw.base.messages.InvitedUsers"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,25 +55,30 @@ class CreateChat(TLObject):  # type: ignore
         :obj:`messages.InvitedUsers <pyrogram.raw.base.messages.InvitedUsers>`
     """
 
-    __slots__: List[str] = ["users", "title", "ttl_period"]
+    __slots__: list[str] = ["title", "ttl_period", "users"]
 
-    ID = 0x92ceddd4
+    ID = 0x92CEDDD4
     QUALNAME = "functions.messages.CreateChat"
 
-    def __init__(self, *, users: List["raw.base.InputUser"], title: str, ttl_period: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        users: list["raw.base.InputUser"],
+        title: str,
+        ttl_period: int | None = None,
+    ) -> None:
         self.users = users  # Vector<InputUser>
         self.title = title  # string
         self.ttl_period = ttl_period  # flags.0?int
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "CreateChat":
-        
         flags = Int.read(b)
-        
+
         users = TLObject.read(b)
-        
+
         title = String.read(b)
-        
+
         ttl_period = Int.read(b) if flags & (1 << 0) else None
         return CreateChat(users=users, title=title, ttl_period=ttl_period)
 
@@ -80,12 +89,12 @@ class CreateChat(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.ttl_period is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Vector(self.users))
-        
+
         b.write(String(self.title))
-        
+
         if self.ttl_period is not None:
             b.write(Int(self.ttl_period))
-        
+
         return b.getvalue()

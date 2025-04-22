@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetScheduledMessages(TLObject):  # type: ignore
+class GetScheduledMessages(TLFunction["raw.base.messages.Messages"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +51,23 @@ class GetScheduledMessages(TLObject):  # type: ignore
         :obj:`messages.Messages <pyrogram.raw.base.messages.Messages>`
     """
 
-    __slots__: List[str] = ["peer", "id"]
+    __slots__: list[str] = ["id", "peer"]
 
-    ID = 0xbdbb0464
+    ID = 0xBDBB0464
     QUALNAME = "functions.messages.GetScheduledMessages"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", id: List[int]) -> None:
+    def __init__(self, *, peer: "raw.base.InputPeer", id: list[int]) -> None:
         self.peer = peer  # InputPeer
         self.id = id  # Vector<int>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetScheduledMessages":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         id = TLObject.read(b, Int)
-        
+
         return GetScheduledMessages(peer=peer, id=id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class GetScheduledMessages(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Vector(self.id, Int))
-        
+
         return b.getvalue()

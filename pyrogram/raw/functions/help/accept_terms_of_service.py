@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class AcceptTermsOfService(TLObject):  # type: ignore
+class AcceptTermsOfService(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class AcceptTermsOfService(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["id"]
+    __slots__: list[str] = ["id"]
 
-    ID = 0xee72f79a
+    ID = 0xEE72F79A
     QUALNAME = "functions.help.AcceptTermsOfService"
 
     def __init__(self, *, id: "raw.base.DataJSON") -> None:
@@ -56,9 +58,9 @@ class AcceptTermsOfService(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "AcceptTermsOfService":
         # No flags
-        
+
         id = TLObject.read(b)
-        
+
         return AcceptTermsOfService(id=id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class AcceptTermsOfService(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.id.write())
-        
+
         return b.getvalue()

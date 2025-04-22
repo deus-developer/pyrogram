@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -55,9 +57,9 @@ class LoginTokenSuccess(TLObject):  # type: ignore
             auth.ImportLoginToken
     """
 
-    __slots__: List[str] = ["authorization"]
+    __slots__: list[str] = ["authorization"]
 
-    ID = 0x390d5c5e
+    ID = 0x390D5C5E
     QUALNAME = "types.auth.LoginTokenSuccess"
 
     def __init__(self, *, authorization: "raw.base.auth.Authorization") -> None:
@@ -66,9 +68,9 @@ class LoginTokenSuccess(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "LoginTokenSuccess":
         # No flags
-        
+
         authorization = TLObject.read(b)
-        
+
         return LoginTokenSuccess(authorization=authorization)
 
     def write(self, *args) -> bytes:
@@ -76,7 +78,7 @@ class LoginTokenSuccess(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.authorization.write())
-        
+
         return b.getvalue()

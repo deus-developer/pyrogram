@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +58,19 @@ class WebDocumentNoProxy(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["url", "size", "mime_type", "attributes"]
+    __slots__: list[str] = ["attributes", "mime_type", "size", "url"]
 
-    ID = 0xf9c8bcc6
+    ID = 0xF9C8BCC6
     QUALNAME = "types.WebDocumentNoProxy"
 
-    def __init__(self, *, url: str, size: int, mime_type: str, attributes: List["raw.base.DocumentAttribute"]) -> None:
+    def __init__(
+        self,
+        *,
+        url: str,
+        size: int,
+        mime_type: str,
+        attributes: list["raw.base.DocumentAttribute"],
+    ) -> None:
         self.url = url  # string
         self.size = size  # int
         self.mime_type = mime_type  # string
@@ -68,29 +79,34 @@ class WebDocumentNoProxy(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "WebDocumentNoProxy":
         # No flags
-        
+
         url = String.read(b)
-        
+
         size = Int.read(b)
-        
+
         mime_type = String.read(b)
-        
+
         attributes = TLObject.read(b)
-        
-        return WebDocumentNoProxy(url=url, size=size, mime_type=mime_type, attributes=attributes)
+
+        return WebDocumentNoProxy(
+            url=url,
+            size=size,
+            mime_type=mime_type,
+            attributes=attributes,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.url))
-        
+
         b.write(Int(self.size))
-        
+
         b.write(String(self.mime_type))
-        
+
         b.write(Vector(self.attributes))
-        
+
         return b.getvalue()

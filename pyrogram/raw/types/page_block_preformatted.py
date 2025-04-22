@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +51,9 @@ class PageBlockPreformatted(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["text", "language"]
+    __slots__: list[str] = ["language", "text"]
 
-    ID = 0xc070d93e
+    ID = 0xC070D93E
     QUALNAME = "types.PageBlockPreformatted"
 
     def __init__(self, *, text: "raw.base.RichText", language: str) -> None:
@@ -60,11 +63,11 @@ class PageBlockPreformatted(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PageBlockPreformatted":
         # No flags
-        
+
         text = TLObject.read(b)
-        
+
         language = String.read(b)
-        
+
         return PageBlockPreformatted(text=text, language=language)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class PageBlockPreformatted(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.text.write())
-        
+
         b.write(String(self.language))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -66,12 +68,32 @@ class DialogFolder(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["folder", "peer", "top_message", "unread_muted_peers_count", "unread_unmuted_peers_count", "unread_muted_messages_count", "unread_unmuted_messages_count", "pinned"]
+    __slots__: list[str] = [
+        "folder",
+        "peer",
+        "pinned",
+        "top_message",
+        "unread_muted_messages_count",
+        "unread_muted_peers_count",
+        "unread_unmuted_messages_count",
+        "unread_unmuted_peers_count",
+    ]
 
-    ID = 0x71bd134c
+    ID = 0x71BD134C
     QUALNAME = "types.DialogFolder"
 
-    def __init__(self, *, folder: "raw.base.Folder", peer: "raw.base.Peer", top_message: int, unread_muted_peers_count: int, unread_unmuted_peers_count: int, unread_muted_messages_count: int, unread_unmuted_messages_count: int, pinned: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        folder: "raw.base.Folder",
+        peer: "raw.base.Peer",
+        top_message: int,
+        unread_muted_peers_count: int,
+        unread_unmuted_peers_count: int,
+        unread_muted_messages_count: int,
+        unread_unmuted_messages_count: int,
+        pinned: bool | None = None,
+    ) -> None:
         self.folder = folder  # Folder
         self.peer = peer  # Peer
         self.top_message = top_message  # int
@@ -83,25 +105,33 @@ class DialogFolder(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DialogFolder":
-        
         flags = Int.read(b)
-        
+
         pinned = True if flags & (1 << 2) else False
         folder = TLObject.read(b)
-        
+
         peer = TLObject.read(b)
-        
+
         top_message = Int.read(b)
-        
+
         unread_muted_peers_count = Int.read(b)
-        
+
         unread_unmuted_peers_count = Int.read(b)
-        
+
         unread_muted_messages_count = Int.read(b)
-        
+
         unread_unmuted_messages_count = Int.read(b)
-        
-        return DialogFolder(folder=folder, peer=peer, top_message=top_message, unread_muted_peers_count=unread_muted_peers_count, unread_unmuted_peers_count=unread_unmuted_peers_count, unread_muted_messages_count=unread_muted_messages_count, unread_unmuted_messages_count=unread_unmuted_messages_count, pinned=pinned)
+
+        return DialogFolder(
+            folder=folder,
+            peer=peer,
+            top_message=top_message,
+            unread_muted_peers_count=unread_muted_peers_count,
+            unread_unmuted_peers_count=unread_unmuted_peers_count,
+            unread_muted_messages_count=unread_muted_messages_count,
+            unread_unmuted_messages_count=unread_unmuted_messages_count,
+            pinned=pinned,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -110,19 +140,19 @@ class DialogFolder(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 2) if self.pinned else 0
         b.write(Int(flags))
-        
+
         b.write(self.folder.write())
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.top_message))
-        
+
         b.write(Int(self.unread_muted_peers_count))
-        
+
         b.write(Int(self.unread_unmuted_peers_count))
-        
+
         b.write(Int(self.unread_muted_messages_count))
-        
+
         b.write(Int(self.unread_unmuted_messages_count))
-        
+
         return b.getvalue()

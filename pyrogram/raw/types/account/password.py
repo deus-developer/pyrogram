@@ -17,11 +17,16 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -90,12 +95,42 @@ class Password(TLObject):  # type: ignore
             account.GetPassword
     """
 
-    __slots__: List[str] = ["new_algo", "new_secure_algo", "secure_random", "has_recovery", "has_secure_values", "has_password", "current_algo", "srp_B", "srp_id", "hint", "email_unconfirmed_pattern", "pending_reset_date", "login_email_pattern"]
+    __slots__: list[str] = [
+        "current_algo",
+        "email_unconfirmed_pattern",
+        "has_password",
+        "has_recovery",
+        "has_secure_values",
+        "hint",
+        "login_email_pattern",
+        "new_algo",
+        "new_secure_algo",
+        "pending_reset_date",
+        "secure_random",
+        "srp_B",
+        "srp_id",
+    ]
 
-    ID = 0x957b50fb
+    ID = 0x957B50FB
     QUALNAME = "types.account.Password"
 
-    def __init__(self, *, new_algo: "raw.base.PasswordKdfAlgo", new_secure_algo: "raw.base.SecurePasswordKdfAlgo", secure_random: bytes, has_recovery: Optional[bool] = None, has_secure_values: Optional[bool] = None, has_password: Optional[bool] = None, current_algo: "raw.base.PasswordKdfAlgo" = None, srp_B: Optional[bytes] = None, srp_id: Optional[int] = None, hint: Optional[str] = None, email_unconfirmed_pattern: Optional[str] = None, pending_reset_date: Optional[int] = None, login_email_pattern: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        new_algo: "raw.base.PasswordKdfAlgo",
+        new_secure_algo: "raw.base.SecurePasswordKdfAlgo",
+        secure_random: bytes,
+        has_recovery: bool | None = None,
+        has_secure_values: bool | None = None,
+        has_password: bool | None = None,
+        current_algo: "raw.base.PasswordKdfAlgo" = None,
+        srp_B: bytes | None = None,
+        srp_id: int | None = None,
+        hint: str | None = None,
+        email_unconfirmed_pattern: str | None = None,
+        pending_reset_date: int | None = None,
+        login_email_pattern: str | None = None,
+    ) -> None:
         self.new_algo = new_algo  # PasswordKdfAlgo
         self.new_secure_algo = new_secure_algo  # SecurePasswordKdfAlgo
         self.secure_random = secure_random  # bytes
@@ -112,27 +147,40 @@ class Password(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "Password":
-        
         flags = Int.read(b)
-        
+
         has_recovery = True if flags & (1 << 0) else False
         has_secure_values = True if flags & (1 << 1) else False
         has_password = True if flags & (1 << 2) else False
         current_algo = TLObject.read(b) if flags & (1 << 2) else None
-        
+
         srp_B = Bytes.read(b) if flags & (1 << 2) else None
         srp_id = Long.read(b) if flags & (1 << 2) else None
         hint = String.read(b) if flags & (1 << 3) else None
         email_unconfirmed_pattern = String.read(b) if flags & (1 << 4) else None
         new_algo = TLObject.read(b)
-        
+
         new_secure_algo = TLObject.read(b)
-        
+
         secure_random = Bytes.read(b)
-        
+
         pending_reset_date = Int.read(b) if flags & (1 << 5) else None
         login_email_pattern = String.read(b) if flags & (1 << 6) else None
-        return Password(new_algo=new_algo, new_secure_algo=new_secure_algo, secure_random=secure_random, has_recovery=has_recovery, has_secure_values=has_secure_values, has_password=has_password, current_algo=current_algo, srp_B=srp_B, srp_id=srp_id, hint=hint, email_unconfirmed_pattern=email_unconfirmed_pattern, pending_reset_date=pending_reset_date, login_email_pattern=login_email_pattern)
+        return Password(
+            new_algo=new_algo,
+            new_secure_algo=new_secure_algo,
+            secure_random=secure_random,
+            has_recovery=has_recovery,
+            has_secure_values=has_secure_values,
+            has_password=has_password,
+            current_algo=current_algo,
+            srp_B=srp_B,
+            srp_id=srp_id,
+            hint=hint,
+            email_unconfirmed_pattern=email_unconfirmed_pattern,
+            pending_reset_date=pending_reset_date,
+            login_email_pattern=login_email_pattern,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -150,32 +198,32 @@ class Password(TLObject):  # type: ignore
         flags |= (1 << 5) if self.pending_reset_date is not None else 0
         flags |= (1 << 6) if self.login_email_pattern is not None else 0
         b.write(Int(flags))
-        
+
         if self.current_algo is not None:
             b.write(self.current_algo.write())
-        
+
         if self.srp_B is not None:
             b.write(Bytes(self.srp_B))
-        
+
         if self.srp_id is not None:
             b.write(Long(self.srp_id))
-        
+
         if self.hint is not None:
             b.write(String(self.hint))
-        
+
         if self.email_unconfirmed_pattern is not None:
             b.write(String(self.email_unconfirmed_pattern))
-        
+
         b.write(self.new_algo.write())
-        
+
         b.write(self.new_secure_algo.write())
-        
+
         b.write(Bytes(self.secure_random))
-        
+
         if self.pending_reset_date is not None:
             b.write(Int(self.pending_reset_date))
-        
+
         if self.login_email_pattern is not None:
             b.write(String(self.login_email_pattern))
-        
+
         return b.getvalue()

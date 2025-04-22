@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class InvokeWithTakeout(TLObject):  # type: ignore
+class InvokeWithTakeout(TLFunction["raw.base.X"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class InvokeWithTakeout(TLObject):  # type: ignore
         Any object from :obj:`~pyrogram.raw.types`
     """
 
-    __slots__: List[str] = ["takeout_id", "query"]
+    __slots__: list[str] = ["query", "takeout_id"]
 
-    ID = 0xaca9fd2e
+    ID = 0xACA9FD2E
     QUALNAME = "functions.InvokeWithTakeout"
 
     def __init__(self, *, takeout_id: int, query: TLObject) -> None:
@@ -60,11 +62,11 @@ class InvokeWithTakeout(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InvokeWithTakeout":
         # No flags
-        
+
         takeout_id = Long.read(b)
-        
+
         query = TLObject.read(b)
-        
+
         return InvokeWithTakeout(takeout_id=takeout_id, query=query)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class InvokeWithTakeout(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.takeout_id))
-        
+
         b.write(self.query.write())
-        
+
         return b.getvalue()

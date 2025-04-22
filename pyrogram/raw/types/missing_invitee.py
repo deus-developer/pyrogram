@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,26 +53,39 @@ class MissingInvitee(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["user_id", "premium_would_allow_invite", "premium_required_for_pm"]
+    __slots__: list[str] = [
+        "premium_required_for_pm",
+        "premium_would_allow_invite",
+        "user_id",
+    ]
 
-    ID = 0x628c9224
+    ID = 0x628C9224
     QUALNAME = "types.MissingInvitee"
 
-    def __init__(self, *, user_id: int, premium_would_allow_invite: Optional[bool] = None, premium_required_for_pm: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        user_id: int,
+        premium_would_allow_invite: bool | None = None,
+        premium_required_for_pm: bool | None = None,
+    ) -> None:
         self.user_id = user_id  # long
         self.premium_would_allow_invite = premium_would_allow_invite  # flags.0?true
         self.premium_required_for_pm = premium_required_for_pm  # flags.1?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MissingInvitee":
-        
         flags = Int.read(b)
-        
+
         premium_would_allow_invite = True if flags & (1 << 0) else False
         premium_required_for_pm = True if flags & (1 << 1) else False
         user_id = Long.read(b)
-        
-        return MissingInvitee(user_id=user_id, premium_would_allow_invite=premium_would_allow_invite, premium_required_for_pm=premium_required_for_pm)
+
+        return MissingInvitee(
+            user_id=user_id,
+            premium_would_allow_invite=premium_would_allow_invite,
+            premium_required_for_pm=premium_required_for_pm,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -80,7 +95,7 @@ class MissingInvitee(TLObject):  # type: ignore
         flags |= (1 << 0) if self.premium_would_allow_invite else 0
         flags |= (1 << 1) if self.premium_required_for_pm else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.user_id))
-        
+
         return b.getvalue()

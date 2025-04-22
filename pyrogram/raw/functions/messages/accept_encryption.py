@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class AcceptEncryption(TLObject):  # type: ignore
+class AcceptEncryption(TLFunction["raw.base.EncryptedChat"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +55,18 @@ class AcceptEncryption(TLObject):  # type: ignore
         :obj:`EncryptedChat <pyrogram.raw.base.EncryptedChat>`
     """
 
-    __slots__: List[str] = ["peer", "g_b", "key_fingerprint"]
+    __slots__: list[str] = ["g_b", "key_fingerprint", "peer"]
 
-    ID = 0x3dbc0415
+    ID = 0x3DBC0415
     QUALNAME = "functions.messages.AcceptEncryption"
 
-    def __init__(self, *, peer: "raw.base.InputEncryptedChat", g_b: bytes, key_fingerprint: int) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputEncryptedChat",
+        g_b: bytes,
+        key_fingerprint: int,
+    ) -> None:
         self.peer = peer  # InputEncryptedChat
         self.g_b = g_b  # bytes
         self.key_fingerprint = key_fingerprint  # long
@@ -64,13 +74,13 @@ class AcceptEncryption(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "AcceptEncryption":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         g_b = Bytes.read(b)
-        
+
         key_fingerprint = Long.read(b)
-        
+
         return AcceptEncryption(peer=peer, g_b=g_b, key_fingerprint=key_fingerprint)
 
     def write(self, *args) -> bytes:
@@ -78,11 +88,11 @@ class AcceptEncryption(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Bytes(self.g_b))
-        
+
         b.write(Long(self.key_fingerprint))
-        
+
         return b.getvalue()

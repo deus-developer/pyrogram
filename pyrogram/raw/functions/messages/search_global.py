@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SearchGlobal(TLObject):  # type: ignore
+class SearchGlobal(TLFunction["raw.base.messages.Messages"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -72,12 +75,36 @@ class SearchGlobal(TLObject):  # type: ignore
         :obj:`messages.Messages <pyrogram.raw.base.messages.Messages>`
     """
 
-    __slots__: List[str] = ["q", "filter", "min_date", "max_date", "offset_rate", "offset_peer", "offset_id", "limit", "broadcasts_only", "folder_id"]
+    __slots__: list[str] = [
+        "broadcasts_only",
+        "filter",
+        "folder_id",
+        "limit",
+        "max_date",
+        "min_date",
+        "offset_id",
+        "offset_peer",
+        "offset_rate",
+        "q",
+    ]
 
-    ID = 0x4bc6589a
+    ID = 0x4BC6589A
     QUALNAME = "functions.messages.SearchGlobal"
 
-    def __init__(self, *, q: str, filter: "raw.base.MessagesFilter", min_date: int, max_date: int, offset_rate: int, offset_peer: "raw.base.InputPeer", offset_id: int, limit: int, broadcasts_only: Optional[bool] = None, folder_id: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        q: str,
+        filter: "raw.base.MessagesFilter",
+        min_date: int,
+        max_date: int,
+        offset_rate: int,
+        offset_peer: "raw.base.InputPeer",
+        offset_id: int,
+        limit: int,
+        broadcasts_only: bool | None = None,
+        folder_id: int | None = None,
+    ) -> None:
         self.q = q  # string
         self.filter = filter  # MessagesFilter
         self.min_date = min_date  # int
@@ -91,28 +118,38 @@ class SearchGlobal(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SearchGlobal":
-        
         flags = Int.read(b)
-        
+
         broadcasts_only = True if flags & (1 << 1) else False
         folder_id = Int.read(b) if flags & (1 << 0) else None
         q = String.read(b)
-        
+
         filter = TLObject.read(b)
-        
+
         min_date = Int.read(b)
-        
+
         max_date = Int.read(b)
-        
+
         offset_rate = Int.read(b)
-        
+
         offset_peer = TLObject.read(b)
-        
+
         offset_id = Int.read(b)
-        
+
         limit = Int.read(b)
-        
-        return SearchGlobal(q=q, filter=filter, min_date=min_date, max_date=max_date, offset_rate=offset_rate, offset_peer=offset_peer, offset_id=offset_id, limit=limit, broadcasts_only=broadcasts_only, folder_id=folder_id)
+
+        return SearchGlobal(
+            q=q,
+            filter=filter,
+            min_date=min_date,
+            max_date=max_date,
+            offset_rate=offset_rate,
+            offset_peer=offset_peer,
+            offset_id=offset_id,
+            limit=limit,
+            broadcasts_only=broadcasts_only,
+            folder_id=folder_id,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -122,24 +159,24 @@ class SearchGlobal(TLObject):  # type: ignore
         flags |= (1 << 1) if self.broadcasts_only else 0
         flags |= (1 << 0) if self.folder_id is not None else 0
         b.write(Int(flags))
-        
+
         if self.folder_id is not None:
             b.write(Int(self.folder_id))
-        
+
         b.write(String(self.q))
-        
+
         b.write(self.filter.write())
-        
+
         b.write(Int(self.min_date))
-        
+
         b.write(Int(self.max_date))
-        
+
         b.write(Int(self.offset_rate))
-        
+
         b.write(self.offset_peer.write())
-        
+
         b.write(Int(self.offset_id))
-        
+
         b.write(Int(self.limit))
-        
+
         return b.getvalue()

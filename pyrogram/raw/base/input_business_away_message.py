@@ -4,8 +4,6 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type InputBusinessAwayMessage = Union["raw.types.InputBusinessAwayMessage"]
+type InputBusinessAwayMessage = raw.types.InputBusinessAwayMessage

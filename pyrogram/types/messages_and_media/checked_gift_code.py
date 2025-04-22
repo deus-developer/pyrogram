@@ -19,6 +19,7 @@
 from datetime import datetime
 
 from pyrogram import raw, types, utils
+
 from ..object import Object
 
 
@@ -57,7 +58,7 @@ class CheckedGiftCode(Object):
         from_chat: "types.Chat" = None,
         winner: "types.User" = None,
         giveaway_message_id: int = None,
-        used_date: datetime = None
+        used_date: datetime = None,
     ):
         super().__init__()
 
@@ -76,10 +77,14 @@ class CheckedGiftCode(Object):
 
         if getattr(checked_gift_code, "from_id", None):
             from_chat = types.Chat.from_raw_tl_chat(
-                client, client.entity_cache.get_peer(peer=checked_gift_code.from_id)
+                client,
+                client.entity_cache.get_peer(peer=checked_gift_code.from_id),
             )
         if getattr(checked_gift_code, "to_id", None):
-            winner = types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=checked_gift_code.to_id))
+            winner = types.User.from_raw_tl(
+                client,
+                client.entity_cache.get_user(user_id=checked_gift_code.to_id),
+            )
 
         return CheckedGiftCode(
             date=utils.timestamp_to_datetime(checked_gift_code.date),
@@ -88,5 +93,7 @@ class CheckedGiftCode(Object):
             from_chat=from_chat,
             winner=winner,
             giveaway_message_id=getattr(checked_gift_code, "giveaway_msg_id", None),
-            used_date=utils.timestamp_to_datetime(checked_gift_code.used_date) if getattr(checked_gift_code, "used_date") else None,
+            used_date=utils.timestamp_to_datetime(checked_gift_code.used_date)
+            if checked_gift_code.used_date
+            else None,
         )

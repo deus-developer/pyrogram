@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class UpdateNewEncryptedMessage(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["message", "qts"]
+    __slots__: list[str] = ["message", "qts"]
 
-    ID = 0x12bcbd9a
+    ID = 0x12BCBD9A
     QUALNAME = "types.UpdateNewEncryptedMessage"
 
     def __init__(self, *, message: "raw.base.EncryptedMessage", qts: int) -> None:
@@ -60,11 +62,11 @@ class UpdateNewEncryptedMessage(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateNewEncryptedMessage":
         # No flags
-        
+
         message = TLObject.read(b)
-        
+
         qts = Int.read(b)
-        
+
         return UpdateNewEncryptedMessage(message=message, qts=qts)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class UpdateNewEncryptedMessage(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.message.write())
-        
+
         b.write(Int(self.qts))
-        
+
         return b.getvalue()

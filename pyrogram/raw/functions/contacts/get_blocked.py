@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetBlocked(TLObject):  # type: ignore
+class GetBlocked(TLFunction["raw.base.contacts.Blocked"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,26 +52,31 @@ class GetBlocked(TLObject):  # type: ignore
         :obj:`contacts.Blocked <pyrogram.raw.base.contacts.Blocked>`
     """
 
-    __slots__: List[str] = ["offset", "limit", "my_stories_from"]
+    __slots__: list[str] = ["limit", "my_stories_from", "offset"]
 
-    ID = 0x9a868f80
+    ID = 0x9A868F80
     QUALNAME = "functions.contacts.GetBlocked"
 
-    def __init__(self, *, offset: int, limit: int, my_stories_from: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        offset: int,
+        limit: int,
+        my_stories_from: bool | None = None,
+    ) -> None:
         self.offset = offset  # int
         self.limit = limit  # int
         self.my_stories_from = my_stories_from  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetBlocked":
-        
         flags = Int.read(b)
-        
+
         my_stories_from = True if flags & (1 << 0) else False
         offset = Int.read(b)
-        
+
         limit = Int.read(b)
-        
+
         return GetBlocked(offset=offset, limit=limit, my_stories_from=my_stories_from)
 
     def write(self, *args) -> bytes:
@@ -80,9 +86,9 @@ class GetBlocked(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.my_stories_from else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.offset))
-        
+
         b.write(Int(self.limit))
-        
+
         return b.getvalue()

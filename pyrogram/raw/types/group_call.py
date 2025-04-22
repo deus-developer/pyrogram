@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -96,12 +99,52 @@ class GroupCall(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "access_hash", "participants_count", "unmuted_video_limit", "version", "join_muted", "can_change_join_muted", "join_date_asc", "schedule_start_subscribed", "can_start_video", "record_video_active", "rtmp_stream", "listeners_hidden", "title", "stream_dc_id", "record_start_date", "schedule_date", "unmuted_video_count"]
+    __slots__: list[str] = [
+        "access_hash",
+        "can_change_join_muted",
+        "can_start_video",
+        "id",
+        "join_date_asc",
+        "join_muted",
+        "listeners_hidden",
+        "participants_count",
+        "record_start_date",
+        "record_video_active",
+        "rtmp_stream",
+        "schedule_date",
+        "schedule_start_subscribed",
+        "stream_dc_id",
+        "title",
+        "unmuted_video_count",
+        "unmuted_video_limit",
+        "version",
+    ]
 
-    ID = 0xd597650c
+    ID = 0xD597650C
     QUALNAME = "types.GroupCall"
 
-    def __init__(self, *, id: int, access_hash: int, participants_count: int, unmuted_video_limit: int, version: int, join_muted: Optional[bool] = None, can_change_join_muted: Optional[bool] = None, join_date_asc: Optional[bool] = None, schedule_start_subscribed: Optional[bool] = None, can_start_video: Optional[bool] = None, record_video_active: Optional[bool] = None, rtmp_stream: Optional[bool] = None, listeners_hidden: Optional[bool] = None, title: Optional[str] = None, stream_dc_id: Optional[int] = None, record_start_date: Optional[int] = None, schedule_date: Optional[int] = None, unmuted_video_count: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: int,
+        access_hash: int,
+        participants_count: int,
+        unmuted_video_limit: int,
+        version: int,
+        join_muted: bool | None = None,
+        can_change_join_muted: bool | None = None,
+        join_date_asc: bool | None = None,
+        schedule_start_subscribed: bool | None = None,
+        can_start_video: bool | None = None,
+        record_video_active: bool | None = None,
+        rtmp_stream: bool | None = None,
+        listeners_hidden: bool | None = None,
+        title: str | None = None,
+        stream_dc_id: int | None = None,
+        record_start_date: int | None = None,
+        schedule_date: int | None = None,
+        unmuted_video_count: int | None = None,
+    ) -> None:
         self.id = id  # long
         self.access_hash = access_hash  # long
         self.participants_count = participants_count  # int
@@ -123,9 +166,8 @@ class GroupCall(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GroupCall":
-        
         flags = Int.read(b)
-        
+
         join_muted = True if flags & (1 << 1) else False
         can_change_join_muted = True if flags & (1 << 2) else False
         join_date_asc = True if flags & (1 << 6) else False
@@ -135,21 +177,40 @@ class GroupCall(TLObject):  # type: ignore
         rtmp_stream = True if flags & (1 << 12) else False
         listeners_hidden = True if flags & (1 << 13) else False
         id = Long.read(b)
-        
+
         access_hash = Long.read(b)
-        
+
         participants_count = Int.read(b)
-        
+
         title = String.read(b) if flags & (1 << 3) else None
         stream_dc_id = Int.read(b) if flags & (1 << 4) else None
         record_start_date = Int.read(b) if flags & (1 << 5) else None
         schedule_date = Int.read(b) if flags & (1 << 7) else None
         unmuted_video_count = Int.read(b) if flags & (1 << 10) else None
         unmuted_video_limit = Int.read(b)
-        
+
         version = Int.read(b)
-        
-        return GroupCall(id=id, access_hash=access_hash, participants_count=participants_count, unmuted_video_limit=unmuted_video_limit, version=version, join_muted=join_muted, can_change_join_muted=can_change_join_muted, join_date_asc=join_date_asc, schedule_start_subscribed=schedule_start_subscribed, can_start_video=can_start_video, record_video_active=record_video_active, rtmp_stream=rtmp_stream, listeners_hidden=listeners_hidden, title=title, stream_dc_id=stream_dc_id, record_start_date=record_start_date, schedule_date=schedule_date, unmuted_video_count=unmuted_video_count)
+
+        return GroupCall(
+            id=id,
+            access_hash=access_hash,
+            participants_count=participants_count,
+            unmuted_video_limit=unmuted_video_limit,
+            version=version,
+            join_muted=join_muted,
+            can_change_join_muted=can_change_join_muted,
+            join_date_asc=join_date_asc,
+            schedule_start_subscribed=schedule_start_subscribed,
+            can_start_video=can_start_video,
+            record_video_active=record_video_active,
+            rtmp_stream=rtmp_stream,
+            listeners_hidden=listeners_hidden,
+            title=title,
+            stream_dc_id=stream_dc_id,
+            record_start_date=record_start_date,
+            schedule_date=schedule_date,
+            unmuted_video_count=unmuted_video_count,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -170,30 +231,30 @@ class GroupCall(TLObject):  # type: ignore
         flags |= (1 << 7) if self.schedule_date is not None else 0
         flags |= (1 << 10) if self.unmuted_video_count is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.id))
-        
+
         b.write(Long(self.access_hash))
-        
+
         b.write(Int(self.participants_count))
-        
+
         if self.title is not None:
             b.write(String(self.title))
-        
+
         if self.stream_dc_id is not None:
             b.write(Int(self.stream_dc_id))
-        
+
         if self.record_start_date is not None:
             b.write(Int(self.record_start_date))
-        
+
         if self.schedule_date is not None:
             b.write(Int(self.schedule_date))
-        
+
         if self.unmuted_video_count is not None:
             b.write(Int(self.unmuted_video_count))
-        
+
         b.write(Int(self.unmuted_video_limit))
-        
+
         b.write(Int(self.version))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class VerifyPhone(TLObject):  # type: ignore
+class VerifyPhone(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +53,18 @@ class VerifyPhone(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["phone_number", "phone_code_hash", "phone_code"]
+    __slots__: list[str] = ["phone_code", "phone_code_hash", "phone_number"]
 
-    ID = 0x4dd3a7f6
+    ID = 0x4DD3A7F6
     QUALNAME = "functions.account.VerifyPhone"
 
-    def __init__(self, *, phone_number: str, phone_code_hash: str, phone_code: str) -> None:
+    def __init__(
+        self,
+        *,
+        phone_number: str,
+        phone_code_hash: str,
+        phone_code: str,
+    ) -> None:
         self.phone_number = phone_number  # string
         self.phone_code_hash = phone_code_hash  # string
         self.phone_code = phone_code  # string
@@ -64,25 +72,29 @@ class VerifyPhone(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "VerifyPhone":
         # No flags
-        
+
         phone_number = String.read(b)
-        
+
         phone_code_hash = String.read(b)
-        
+
         phone_code = String.read(b)
-        
-        return VerifyPhone(phone_number=phone_number, phone_code_hash=phone_code_hash, phone_code=phone_code)
+
+        return VerifyPhone(
+            phone_number=phone_number,
+            phone_code_hash=phone_code_hash,
+            phone_code=phone_code,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.phone_number))
-        
+
         b.write(String(self.phone_code_hash))
-        
+
         b.write(String(self.phone_code))
-        
+
         return b.getvalue()

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,7 +51,7 @@ class UpdateUserEmojiStatus(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["user_id", "emoji_status"]
+    __slots__: list[str] = ["emoji_status", "user_id"]
 
     ID = 0x28373599
     QUALNAME = "types.UpdateUserEmojiStatus"
@@ -60,11 +63,11 @@ class UpdateUserEmojiStatus(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateUserEmojiStatus":
         # No flags
-        
+
         user_id = Long.read(b)
-        
+
         emoji_status = TLObject.read(b)
-        
+
         return UpdateUserEmojiStatus(user_id=user_id, emoji_status=emoji_status)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class UpdateUserEmojiStatus(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.user_id))
-        
+
         b.write(self.emoji_status.write())
-        
+
         return b.getvalue()

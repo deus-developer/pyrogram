@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class FinishJob(TLObject):  # type: ignore
+class FinishJob(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,22 +50,21 @@ class FinishJob(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["job_id", "error"]
+    __slots__: list[str] = ["error", "job_id"]
 
-    ID = 0x4f1ebf24
+    ID = 0x4F1EBF24
     QUALNAME = "functions.smsjobs.FinishJob"
 
-    def __init__(self, *, job_id: str, error: Optional[str] = None) -> None:
+    def __init__(self, *, job_id: str, error: str | None = None) -> None:
         self.job_id = job_id  # string
         self.error = error  # flags.0?string
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "FinishJob":
-        
         flags = Int.read(b)
-        
+
         job_id = String.read(b)
-        
+
         error = String.read(b) if flags & (1 << 0) else None
         return FinishJob(job_id=job_id, error=error)
 
@@ -74,10 +75,10 @@ class FinishJob(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.error is not None else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.job_id))
-        
+
         if self.error is not None:
             b.write(String(self.error))
-        
+
         return b.getvalue()

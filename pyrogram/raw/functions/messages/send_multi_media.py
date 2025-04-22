@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SendMultiMedia(TLObject):  # type: ignore
+class SendMultiMedia(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -81,12 +85,42 @@ class SendMultiMedia(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["peer", "multi_media", "silent", "background", "clear_draft", "noforwards", "update_stickersets_order", "invert_media", "reply_to", "schedule_date", "send_as", "quick_reply_shortcut", "effect"]
+    __slots__: list[str] = [
+        "background",
+        "clear_draft",
+        "effect",
+        "invert_media",
+        "multi_media",
+        "noforwards",
+        "peer",
+        "quick_reply_shortcut",
+        "reply_to",
+        "schedule_date",
+        "send_as",
+        "silent",
+        "update_stickersets_order",
+    ]
 
-    ID = 0x37b74355
+    ID = 0x37B74355
     QUALNAME = "functions.messages.SendMultiMedia"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", multi_media: List["raw.base.InputSingleMedia"], silent: Optional[bool] = None, background: Optional[bool] = None, clear_draft: Optional[bool] = None, noforwards: Optional[bool] = None, update_stickersets_order: Optional[bool] = None, invert_media: Optional[bool] = None, reply_to: "raw.base.InputReplyTo" = None, schedule_date: Optional[int] = None, send_as: "raw.base.InputPeer" = None, quick_reply_shortcut: "raw.base.InputQuickReplyShortcut" = None, effect: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        multi_media: list["raw.base.InputSingleMedia"],
+        silent: bool | None = None,
+        background: bool | None = None,
+        clear_draft: bool | None = None,
+        noforwards: bool | None = None,
+        update_stickersets_order: bool | None = None,
+        invert_media: bool | None = None,
+        reply_to: "raw.base.InputReplyTo" = None,
+        schedule_date: int | None = None,
+        send_as: "raw.base.InputPeer" = None,
+        quick_reply_shortcut: "raw.base.InputQuickReplyShortcut" = None,
+        effect: int | None = None,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.multi_media = multi_media  # Vector<InputSingleMedia>
         self.silent = silent  # flags.5?true
@@ -98,14 +132,15 @@ class SendMultiMedia(TLObject):  # type: ignore
         self.reply_to = reply_to  # flags.0?InputReplyTo
         self.schedule_date = schedule_date  # flags.10?int
         self.send_as = send_as  # flags.13?InputPeer
-        self.quick_reply_shortcut = quick_reply_shortcut  # flags.17?InputQuickReplyShortcut
+        self.quick_reply_shortcut = (
+            quick_reply_shortcut  # flags.17?InputQuickReplyShortcut
+        )
         self.effect = effect  # flags.18?long
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SendMultiMedia":
-        
         flags = Int.read(b)
-        
+
         silent = True if flags & (1 << 5) else False
         background = True if flags & (1 << 6) else False
         clear_draft = True if flags & (1 << 7) else False
@@ -113,18 +148,32 @@ class SendMultiMedia(TLObject):  # type: ignore
         update_stickersets_order = True if flags & (1 << 15) else False
         invert_media = True if flags & (1 << 16) else False
         peer = TLObject.read(b)
-        
+
         reply_to = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         multi_media = TLObject.read(b)
-        
+
         schedule_date = Int.read(b) if flags & (1 << 10) else None
         send_as = TLObject.read(b) if flags & (1 << 13) else None
-        
+
         quick_reply_shortcut = TLObject.read(b) if flags & (1 << 17) else None
-        
+
         effect = Long.read(b) if flags & (1 << 18) else None
-        return SendMultiMedia(peer=peer, multi_media=multi_media, silent=silent, background=background, clear_draft=clear_draft, noforwards=noforwards, update_stickersets_order=update_stickersets_order, invert_media=invert_media, reply_to=reply_to, schedule_date=schedule_date, send_as=send_as, quick_reply_shortcut=quick_reply_shortcut, effect=effect)
+        return SendMultiMedia(
+            peer=peer,
+            multi_media=multi_media,
+            silent=silent,
+            background=background,
+            clear_draft=clear_draft,
+            noforwards=noforwards,
+            update_stickersets_order=update_stickersets_order,
+            invert_media=invert_media,
+            reply_to=reply_to,
+            schedule_date=schedule_date,
+            send_as=send_as,
+            quick_reply_shortcut=quick_reply_shortcut,
+            effect=effect,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -143,24 +192,24 @@ class SendMultiMedia(TLObject):  # type: ignore
         flags |= (1 << 17) if self.quick_reply_shortcut is not None else 0
         flags |= (1 << 18) if self.effect is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         if self.reply_to is not None:
             b.write(self.reply_to.write())
-        
+
         b.write(Vector(self.multi_media))
-        
+
         if self.schedule_date is not None:
             b.write(Int(self.schedule_date))
-        
+
         if self.send_as is not None:
             b.write(self.send_as.write())
-        
+
         if self.quick_reply_shortcut is not None:
             b.write(self.quick_reply_shortcut.write())
-        
+
         if self.effect is not None:
             b.write(Long(self.effect))
-        
+
         return b.getvalue()

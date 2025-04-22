@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class RpcDropAnswer(TLObject):  # type: ignore
+class RpcDropAnswer(TLFunction["raw.base.RpcDropAnswer"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class RpcDropAnswer(TLObject):  # type: ignore
         :obj:`RpcDropAnswer <pyrogram.raw.base.RpcDropAnswer>`
     """
 
-    __slots__: List[str] = ["req_msg_id"]
+    __slots__: list[str] = ["req_msg_id"]
 
-    ID = 0x58e4a740
+    ID = 0x58E4A740
     QUALNAME = "functions.RpcDropAnswer"
 
     def __init__(self, *, req_msg_id: int) -> None:
@@ -56,9 +58,9 @@ class RpcDropAnswer(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "RpcDropAnswer":
         # No flags
-        
+
         req_msg_id = Long.read(b)
-        
+
         return RpcDropAnswer(req_msg_id=req_msg_id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class RpcDropAnswer(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.req_msg_id))
-        
+
         return b.getvalue()

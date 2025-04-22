@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Double,
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,12 +60,20 @@ class VideoSize(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["type", "w", "h", "size", "video_start_ts"]
+    __slots__: list[str] = ["h", "size", "type", "video_start_ts", "w"]
 
-    ID = 0xde33b094
+    ID = 0xDE33B094
     QUALNAME = "types.VideoSize"
 
-    def __init__(self, *, type: str, w: int, h: int, size: int, video_start_ts: Optional[float] = None) -> None:
+    def __init__(
+        self,
+        *,
+        type: str,
+        w: int,
+        h: int,
+        size: int,
+        video_start_ts: float | None = None,
+    ) -> None:
         self.type = type  # string
         self.w = w  # int
         self.h = h  # int
@@ -71,17 +82,16 @@ class VideoSize(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "VideoSize":
-        
         flags = Int.read(b)
-        
+
         type = String.read(b)
-        
+
         w = Int.read(b)
-        
+
         h = Int.read(b)
-        
+
         size = Int.read(b)
-        
+
         video_start_ts = Double.read(b) if flags & (1 << 0) else None
         return VideoSize(type=type, w=w, h=h, size=size, video_start_ts=video_start_ts)
 
@@ -92,16 +102,16 @@ class VideoSize(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.video_start_ts is not None else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.type))
-        
+
         b.write(Int(self.w))
-        
+
         b.write(Int(self.h))
-        
+
         b.write(Int(self.size))
-        
+
         if self.video_start_ts is not None:
             b.write(Double(self.video_start_ts))
-        
+
         return b.getvalue()

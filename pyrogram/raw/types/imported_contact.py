@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class ImportedContact(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["user_id", "client_id"]
+    __slots__: list[str] = ["client_id", "user_id"]
 
-    ID = 0xc13e3c50
+    ID = 0xC13E3C50
     QUALNAME = "types.ImportedContact"
 
     def __init__(self, *, user_id: int, client_id: int) -> None:
@@ -60,11 +62,11 @@ class ImportedContact(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ImportedContact":
         # No flags
-        
+
         user_id = Long.read(b)
-        
+
         client_id = Long.read(b)
-        
+
         return ImportedContact(user_id=user_id, client_id=client_id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class ImportedContact(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.user_id))
-        
+
         b.write(Long(self.client_id))
-        
+
         return b.getvalue()

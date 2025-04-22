@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetDefaultHistoryTTL(TLObject):  # type: ignore
+class GetDefaultHistoryTTL(TLFunction["raw.base.DefaultHistoryTTL"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -44,9 +45,9 @@ class GetDefaultHistoryTTL(TLObject):  # type: ignore
         :obj:`DefaultHistoryTTL <pyrogram.raw.base.DefaultHistoryTTL>`
     """
 
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
-    ID = 0x658b7188
+    ID = 0x658B7188
     QUALNAME = "functions.messages.GetDefaultHistoryTTL"
 
     def __init__(self) -> None:
@@ -55,7 +56,7 @@ class GetDefaultHistoryTTL(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetDefaultHistoryTTL":
         # No flags
-        
+
         return GetDefaultHistoryTTL()
 
     def write(self, *args) -> bytes:
@@ -63,5 +64,5 @@ class GetDefaultHistoryTTL(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         return b.getvalue()

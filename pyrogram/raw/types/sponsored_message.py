@@ -17,11 +17,16 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -78,12 +83,40 @@ class SponsoredMessage(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["random_id", "url", "title", "message", "button_text", "recommended", "can_report", "entities", "photo", "color", "sponsor_info", "additional_info"]
+    __slots__: list[str] = [
+        "additional_info",
+        "button_text",
+        "can_report",
+        "color",
+        "entities",
+        "message",
+        "photo",
+        "random_id",
+        "recommended",
+        "sponsor_info",
+        "title",
+        "url",
+    ]
 
-    ID = 0xbdedf566
+    ID = 0xBDEDF566
     QUALNAME = "types.SponsoredMessage"
 
-    def __init__(self, *, random_id: bytes, url: str, title: str, message: str, button_text: str, recommended: Optional[bool] = None, can_report: Optional[bool] = None, entities: Optional[List["raw.base.MessageEntity"]] = None, photo: "raw.base.Photo" = None, color: "raw.base.PeerColor" = None, sponsor_info: Optional[str] = None, additional_info: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        random_id: bytes,
+        url: str,
+        title: str,
+        message: str,
+        button_text: str,
+        recommended: bool | None = None,
+        can_report: bool | None = None,
+        entities: list["raw.base.MessageEntity"] | None = None,
+        photo: "raw.base.Photo" = None,
+        color: "raw.base.PeerColor" = None,
+        sponsor_info: str | None = None,
+        additional_info: str | None = None,
+    ) -> None:
         self.random_id = random_id  # bytes
         self.url = url  # string
         self.title = title  # string
@@ -99,30 +132,42 @@ class SponsoredMessage(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SponsoredMessage":
-        
         flags = Int.read(b)
-        
+
         recommended = True if flags & (1 << 5) else False
         can_report = True if flags & (1 << 12) else False
         random_id = Bytes.read(b)
-        
+
         url = String.read(b)
-        
+
         title = String.read(b)
-        
+
         message = String.read(b)
-        
+
         entities = TLObject.read(b) if flags & (1 << 1) else []
-        
+
         photo = TLObject.read(b) if flags & (1 << 6) else None
-        
+
         color = TLObject.read(b) if flags & (1 << 13) else None
-        
+
         button_text = String.read(b)
-        
+
         sponsor_info = String.read(b) if flags & (1 << 7) else None
         additional_info = String.read(b) if flags & (1 << 8) else None
-        return SponsoredMessage(random_id=random_id, url=url, title=title, message=message, button_text=button_text, recommended=recommended, can_report=can_report, entities=entities, photo=photo, color=color, sponsor_info=sponsor_info, additional_info=additional_info)
+        return SponsoredMessage(
+            random_id=random_id,
+            url=url,
+            title=title,
+            message=message,
+            button_text=button_text,
+            recommended=recommended,
+            can_report=can_report,
+            entities=entities,
+            photo=photo,
+            color=color,
+            sponsor_info=sponsor_info,
+            additional_info=additional_info,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -137,30 +182,30 @@ class SponsoredMessage(TLObject):  # type: ignore
         flags |= (1 << 7) if self.sponsor_info is not None else 0
         flags |= (1 << 8) if self.additional_info is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Bytes(self.random_id))
-        
+
         b.write(String(self.url))
-        
+
         b.write(String(self.title))
-        
+
         b.write(String(self.message))
-        
+
         if self.entities is not None:
             b.write(Vector(self.entities))
-        
+
         if self.photo is not None:
             b.write(self.photo.write())
-        
+
         if self.color is not None:
             b.write(self.color.write())
-        
+
         b.write(String(self.button_text))
-        
+
         if self.sponsor_info is not None:
             b.write(String(self.sponsor_info))
-        
+
         if self.additional_info is not None:
             b.write(String(self.additional_info))
-        
+
         return b.getvalue()

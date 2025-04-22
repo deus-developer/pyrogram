@@ -69,6 +69,10 @@ include = [
 select = ["ALL"]
 ignore = []
 
+
+[tool.ruff.lint.per-file-ignores]
+"pyrogram/errors/exceptions/__init__.py" = ["ALL"]
+
 [tool.ruff.lint.isort]
 case-sensitive = true
 

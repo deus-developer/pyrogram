@@ -16,17 +16,17 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, AsyncGenerator
+from collections.abc import AsyncGenerator
 
 import pyrogram
-from pyrogram import types, raw, utils
+from pyrogram import raw, types, utils
 
 
 class GetForumTopics:
     async def get_forum_topics(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        limit: int = 0
+        chat_id: int | str,
+        limit: int = 0,
     ) -> AsyncGenerator["types.ForumTopic", None]:
         """Get one or more topic from a chat.
 
@@ -65,8 +65,8 @@ class GetForumTopics:
                     offset_date=offset_date,
                     offset_id=offset_id,
                     offset_topic=offset_topic,
-                    limit=limit
-                )
+                    limit=limit,
+                ),
             )
 
             messages = {}

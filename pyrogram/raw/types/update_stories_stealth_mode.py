@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +47,9 @@ class UpdateStoriesStealthMode(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["stealth_mode"]
+    __slots__: list[str] = ["stealth_mode"]
 
-    ID = 0x2c084dc1
+    ID = 0x2C084DC1
     QUALNAME = "types.UpdateStoriesStealthMode"
 
     def __init__(self, *, stealth_mode: "raw.base.StoriesStealthMode") -> None:
@@ -56,9 +58,9 @@ class UpdateStoriesStealthMode(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateStoriesStealthMode":
         # No flags
-        
+
         stealth_mode = TLObject.read(b)
-        
+
         return UpdateStoriesStealthMode(stealth_mode=stealth_mode)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class UpdateStoriesStealthMode(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.stealth_mode.write())
-        
+
         return b.getvalue()

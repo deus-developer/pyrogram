@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +47,9 @@ class InputCollectibleUsername(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["username"]
+    __slots__: list[str] = ["username"]
 
-    ID = 0xe39460a9
+    ID = 0xE39460A9
     QUALNAME = "types.InputCollectibleUsername"
 
     def __init__(self, *, username: str) -> None:
@@ -56,9 +58,9 @@ class InputCollectibleUsername(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputCollectibleUsername":
         # No flags
-        
+
         username = String.read(b)
-        
+
         return InputCollectibleUsername(username=username)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class InputCollectibleUsername(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.username))
-        
+
         return b.getvalue()

@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetPassportConfig(TLObject):  # type: ignore
+class GetPassportConfig(TLFunction["raw.base.help.PassportConfig"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +46,9 @@ class GetPassportConfig(TLObject):  # type: ignore
         :obj:`help.PassportConfig <pyrogram.raw.base.help.PassportConfig>`
     """
 
-    __slots__: List[str] = ["hash"]
+    __slots__: list[str] = ["hash"]
 
-    ID = 0xc661ad08
+    ID = 0xC661AD08
     QUALNAME = "functions.help.GetPassportConfig"
 
     def __init__(self, *, hash: int) -> None:
@@ -56,9 +57,9 @@ class GetPassportConfig(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetPassportConfig":
         # No flags
-        
+
         hash = Int.read(b)
-        
+
         return GetPassportConfig(hash=hash)
 
     def write(self, *args) -> bytes:
@@ -66,7 +67,7 @@ class GetPassportConfig(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.hash))
-        
+
         return b.getvalue()

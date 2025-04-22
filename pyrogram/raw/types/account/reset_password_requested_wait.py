@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +55,9 @@ class ResetPasswordRequestedWait(TLObject):  # type: ignore
             account.ResetPassword
     """
 
-    __slots__: List[str] = ["until_date"]
+    __slots__: list[str] = ["until_date"]
 
-    ID = 0xe9effc7d
+    ID = 0xE9EFFC7D
     QUALNAME = "types.account.ResetPasswordRequestedWait"
 
     def __init__(self, *, until_date: int) -> None:
@@ -65,9 +66,9 @@ class ResetPasswordRequestedWait(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ResetPasswordRequestedWait":
         # No flags
-        
+
         until_date = Int.read(b)
-        
+
         return ResetPasswordRequestedWait(until_date=until_date)
 
     def write(self, *args) -> bytes:
@@ -75,7 +76,7 @@ class ResetPasswordRequestedWait(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.until_date))
-        
+
         return b.getvalue()

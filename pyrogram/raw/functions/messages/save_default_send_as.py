@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SaveDefaultSendAs(TLObject):  # type: ignore
+class SaveDefaultSendAs(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,28 @@ class SaveDefaultSendAs(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["peer", "send_as"]
+    __slots__: list[str] = ["peer", "send_as"]
 
-    ID = 0xccfddf96
+    ID = 0xCCFDDF96
     QUALNAME = "functions.messages.SaveDefaultSendAs"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", send_as: "raw.base.InputPeer") -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        send_as: "raw.base.InputPeer",
+    ) -> None:
         self.peer = peer  # InputPeer
         self.send_as = send_as  # InputPeer
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SaveDefaultSendAs":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         send_as = TLObject.read(b)
-        
+
         return SaveDefaultSendAs(peer=peer, send_as=send_as)
 
     def write(self, *args) -> bytes:
@@ -72,9 +79,9 @@ class SaveDefaultSendAs(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(self.send_as.write())
-        
+
         return b.getvalue()

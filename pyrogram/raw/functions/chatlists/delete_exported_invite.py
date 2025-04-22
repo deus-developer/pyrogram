@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class DeleteExportedInvite(TLObject):  # type: ignore
+class DeleteExportedInvite(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class DeleteExportedInvite(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["chatlist", "slug"]
+    __slots__: list[str] = ["chatlist", "slug"]
 
-    ID = 0x719c5c5e
+    ID = 0x719C5C5E
     QUALNAME = "functions.chatlists.DeleteExportedInvite"
 
     def __init__(self, *, chatlist: "raw.base.InputChatlist", slug: str) -> None:
@@ -60,11 +63,11 @@ class DeleteExportedInvite(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DeleteExportedInvite":
         # No flags
-        
+
         chatlist = TLObject.read(b)
-        
+
         slug = String.read(b)
-        
+
         return DeleteExportedInvite(chatlist=chatlist, slug=slug)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class DeleteExportedInvite(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.chatlist.write())
-        
+
         b.write(String(self.slug))
-        
+
         return b.getvalue()

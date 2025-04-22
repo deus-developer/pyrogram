@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -66,12 +68,20 @@ class EncryptedFile(TLObject):  # type: ignore
             messages.UploadEncryptedFile
     """
 
-    __slots__: List[str] = ["id", "access_hash", "size", "dc_id", "key_fingerprint"]
+    __slots__: list[str] = ["access_hash", "dc_id", "id", "key_fingerprint", "size"]
 
-    ID = 0xa8008cd8
+    ID = 0xA8008CD8
     QUALNAME = "types.EncryptedFile"
 
-    def __init__(self, *, id: int, access_hash: int, size: int, dc_id: int, key_fingerprint: int) -> None:
+    def __init__(
+        self,
+        *,
+        id: int,
+        access_hash: int,
+        size: int,
+        dc_id: int,
+        key_fingerprint: int,
+    ) -> None:
         self.id = id  # long
         self.access_hash = access_hash  # long
         self.size = size  # long
@@ -81,33 +91,39 @@ class EncryptedFile(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EncryptedFile":
         # No flags
-        
+
         id = Long.read(b)
-        
+
         access_hash = Long.read(b)
-        
+
         size = Long.read(b)
-        
+
         dc_id = Int.read(b)
-        
+
         key_fingerprint = Int.read(b)
-        
-        return EncryptedFile(id=id, access_hash=access_hash, size=size, dc_id=dc_id, key_fingerprint=key_fingerprint)
+
+        return EncryptedFile(
+            id=id,
+            access_hash=access_hash,
+            size=size,
+            dc_id=dc_id,
+            key_fingerprint=key_fingerprint,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.id))
-        
+
         b.write(Long(self.access_hash))
-        
+
         b.write(Long(self.size))
-        
+
         b.write(Int(self.dc_id))
-        
+
         b.write(Int(self.key_fingerprint))
-        
+
         return b.getvalue()

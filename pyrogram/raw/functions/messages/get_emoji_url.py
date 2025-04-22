@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetEmojiURL(TLObject):  # type: ignore
+class GetEmojiURL(TLFunction["raw.base.EmojiURL"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetEmojiURL(TLObject):  # type: ignore
         :obj:`EmojiURL <pyrogram.raw.base.EmojiURL>`
     """
 
-    __slots__: List[str] = ["lang_code"]
+    __slots__: list[str] = ["lang_code"]
 
-    ID = 0xd5b10c26
+    ID = 0xD5B10C26
     QUALNAME = "functions.messages.GetEmojiURL"
 
     def __init__(self, *, lang_code: str) -> None:
@@ -56,9 +58,9 @@ class GetEmojiURL(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetEmojiURL":
         # No flags
-        
+
         lang_code = String.read(b)
-        
+
         return GetEmojiURL(lang_code=lang_code)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class GetEmojiURL(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.lang_code))
-        
+
         return b.getvalue()

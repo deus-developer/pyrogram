@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,26 +55,31 @@ class RequestedPeerChat(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["chat_id", "title", "photo"]
+    __slots__: list[str] = ["chat_id", "photo", "title"]
 
-    ID = 0x7307544f
+    ID = 0x7307544F
     QUALNAME = "types.RequestedPeerChat"
 
-    def __init__(self, *, chat_id: int, title: Optional[str] = None, photo: "raw.base.Photo" = None) -> None:
+    def __init__(
+        self,
+        *,
+        chat_id: int,
+        title: str | None = None,
+        photo: "raw.base.Photo" = None,
+    ) -> None:
         self.chat_id = chat_id  # long
         self.title = title  # flags.0?string
         self.photo = photo  # flags.2?Photo
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "RequestedPeerChat":
-        
         flags = Int.read(b)
-        
+
         chat_id = Long.read(b)
-        
+
         title = String.read(b) if flags & (1 << 0) else None
         photo = TLObject.read(b) if flags & (1 << 2) else None
-        
+
         return RequestedPeerChat(chat_id=chat_id, title=title, photo=photo)
 
     def write(self, *args) -> bytes:
@@ -81,13 +90,13 @@ class RequestedPeerChat(TLObject):  # type: ignore
         flags |= (1 << 0) if self.title is not None else 0
         flags |= (1 << 2) if self.photo is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.chat_id))
-        
+
         if self.title is not None:
             b.write(String(self.title))
-        
+
         if self.photo is not None:
             b.write(self.photo.write())
-        
+
         return b.getvalue()

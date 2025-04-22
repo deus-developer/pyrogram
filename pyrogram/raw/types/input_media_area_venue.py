@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,12 +55,18 @@ class InputMediaAreaVenue(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["coordinates", "query_id", "result_id"]
+    __slots__: list[str] = ["coordinates", "query_id", "result_id"]
 
-    ID = 0xb282217f
+    ID = 0xB282217F
     QUALNAME = "types.InputMediaAreaVenue"
 
-    def __init__(self, *, coordinates: "raw.base.MediaAreaCoordinates", query_id: int, result_id: str) -> None:
+    def __init__(
+        self,
+        *,
+        coordinates: "raw.base.MediaAreaCoordinates",
+        query_id: int,
+        result_id: str,
+    ) -> None:
         self.coordinates = coordinates  # MediaAreaCoordinates
         self.query_id = query_id  # long
         self.result_id = result_id  # string
@@ -64,25 +74,29 @@ class InputMediaAreaVenue(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputMediaAreaVenue":
         # No flags
-        
+
         coordinates = TLObject.read(b)
-        
+
         query_id = Long.read(b)
-        
+
         result_id = String.read(b)
-        
-        return InputMediaAreaVenue(coordinates=coordinates, query_id=query_id, result_id=result_id)
+
+        return InputMediaAreaVenue(
+            coordinates=coordinates,
+            query_id=query_id,
+            result_id=result_id,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.coordinates.write())
-        
+
         b.write(Long(self.query_id))
-        
+
         b.write(String(self.result_id))
-        
+
         return b.getvalue()

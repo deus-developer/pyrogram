@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +46,9 @@ class UpdateEncryptedChatTyping(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["chat_id"]
+    __slots__: list[str] = ["chat_id"]
 
-    ID = 0x1710f156
+    ID = 0x1710F156
     QUALNAME = "types.UpdateEncryptedChatTyping"
 
     def __init__(self, *, chat_id: int) -> None:
@@ -56,9 +57,9 @@ class UpdateEncryptedChatTyping(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateEncryptedChatTyping":
         # No flags
-        
+
         chat_id = Int.read(b)
-        
+
         return UpdateEncryptedChatTyping(chat_id=chat_id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +67,7 @@ class UpdateEncryptedChatTyping(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.chat_id))
-        
+
         return b.getvalue()

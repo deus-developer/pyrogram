@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SendWebViewResultMessage(TLObject):  # type: ignore
+class SendWebViewResultMessage(TLFunction["raw.base.WebViewMessageSent"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +51,28 @@ class SendWebViewResultMessage(TLObject):  # type: ignore
         :obj:`WebViewMessageSent <pyrogram.raw.base.WebViewMessageSent>`
     """
 
-    __slots__: List[str] = ["bot_query_id", "result"]
+    __slots__: list[str] = ["bot_query_id", "result"]
 
-    ID = 0xa4314f5
+    ID = 0xA4314F5
     QUALNAME = "functions.messages.SendWebViewResultMessage"
 
-    def __init__(self, *, bot_query_id: str, result: "raw.base.InputBotInlineResult") -> None:
+    def __init__(
+        self,
+        *,
+        bot_query_id: str,
+        result: "raw.base.InputBotInlineResult",
+    ) -> None:
         self.bot_query_id = bot_query_id  # string
         self.result = result  # InputBotInlineResult
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SendWebViewResultMessage":
         # No flags
-        
+
         bot_query_id = String.read(b)
-        
+
         result = TLObject.read(b)
-        
+
         return SendWebViewResultMessage(bot_query_id=bot_query_id, result=result)
 
     def write(self, *args) -> bytes:
@@ -72,9 +80,9 @@ class SendWebViewResultMessage(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.bot_query_id))
-        
+
         b.write(self.result.write())
-        
+
         return b.getvalue()

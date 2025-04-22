@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,23 +61,28 @@ class SponsoredMessageReportResultChooseOption(TLObject):  # type: ignore
             channels.ReportSponsoredMessage
     """
 
-    __slots__: List[str] = ["title", "options"]
+    __slots__: list[str] = ["options", "title"]
 
-    ID = 0x846f9e42
+    ID = 0x846F9E42
     QUALNAME = "types.channels.SponsoredMessageReportResultChooseOption"
 
-    def __init__(self, *, title: str, options: List["raw.base.SponsoredMessageReportOption"]) -> None:
+    def __init__(
+        self,
+        *,
+        title: str,
+        options: list["raw.base.SponsoredMessageReportOption"],
+    ) -> None:
         self.title = title  # string
         self.options = options  # Vector<SponsoredMessageReportOption>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SponsoredMessageReportResultChooseOption":
         # No flags
-        
+
         title = String.read(b)
-        
+
         options = TLObject.read(b)
-        
+
         return SponsoredMessageReportResultChooseOption(title=title, options=options)
 
     def write(self, *args) -> bytes:
@@ -81,9 +90,9 @@ class SponsoredMessageReportResultChooseOption(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.title))
-        
+
         b.write(Vector(self.options))
-        
+
         return b.getvalue()

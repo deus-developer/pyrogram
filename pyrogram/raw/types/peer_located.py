@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,9 +53,9 @@ class PeerLocated(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "expires", "distance"]
+    __slots__: list[str] = ["distance", "expires", "peer"]
 
-    ID = 0xca461b5d
+    ID = 0xCA461B5D
     QUALNAME = "types.PeerLocated"
 
     def __init__(self, *, peer: "raw.base.Peer", expires: int, distance: int) -> None:
@@ -64,13 +66,13 @@ class PeerLocated(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PeerLocated":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         expires = Int.read(b)
-        
+
         distance = Int.read(b)
-        
+
         return PeerLocated(peer=peer, expires=expires, distance=distance)
 
     def write(self, *args) -> bytes:
@@ -78,11 +80,11 @@ class PeerLocated(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.expires))
-        
+
         b.write(Int(self.distance))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class AssignPlayMarketTransaction(TLObject):  # type: ignore
+class AssignPlayMarketTransaction(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,28 @@ class AssignPlayMarketTransaction(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["receipt", "purpose"]
+    __slots__: list[str] = ["purpose", "receipt"]
 
-    ID = 0xdffd50d3
+    ID = 0xDFFD50D3
     QUALNAME = "functions.payments.AssignPlayMarketTransaction"
 
-    def __init__(self, *, receipt: "raw.base.DataJSON", purpose: "raw.base.InputStorePaymentPurpose") -> None:
+    def __init__(
+        self,
+        *,
+        receipt: "raw.base.DataJSON",
+        purpose: "raw.base.InputStorePaymentPurpose",
+    ) -> None:
         self.receipt = receipt  # DataJSON
         self.purpose = purpose  # InputStorePaymentPurpose
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "AssignPlayMarketTransaction":
         # No flags
-        
+
         receipt = TLObject.read(b)
-        
+
         purpose = TLObject.read(b)
-        
+
         return AssignPlayMarketTransaction(receipt=receipt, purpose=purpose)
 
     def write(self, *args) -> bytes:
@@ -72,9 +79,9 @@ class AssignPlayMarketTransaction(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.receipt.write())
-        
+
         b.write(self.purpose.write())
-        
+
         return b.getvalue()

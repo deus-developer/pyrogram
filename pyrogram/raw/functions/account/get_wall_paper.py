@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetWallPaper(TLObject):  # type: ignore
+class GetWallPaper(TLFunction["raw.base.WallPaper"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetWallPaper(TLObject):  # type: ignore
         :obj:`WallPaper <pyrogram.raw.base.WallPaper>`
     """
 
-    __slots__: List[str] = ["wallpaper"]
+    __slots__: list[str] = ["wallpaper"]
 
-    ID = 0xfc8ddbea
+    ID = 0xFC8DDBEA
     QUALNAME = "functions.account.GetWallPaper"
 
     def __init__(self, *, wallpaper: "raw.base.InputWallPaper") -> None:
@@ -56,9 +58,9 @@ class GetWallPaper(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetWallPaper":
         # No flags
-        
+
         wallpaper = TLObject.read(b)
-        
+
         return GetWallPaper(wallpaper=wallpaper)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class GetWallPaper(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.wallpaper.write())
-        
+
         return b.getvalue()

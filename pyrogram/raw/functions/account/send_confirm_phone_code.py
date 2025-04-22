@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SendConfirmPhoneCode(TLObject):  # type: ignore
+class SendConfirmPhoneCode(TLFunction["raw.base.auth.SentCode"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class SendConfirmPhoneCode(TLObject):  # type: ignore
         :obj:`auth.SentCode <pyrogram.raw.base.auth.SentCode>`
     """
 
-    __slots__: List[str] = ["hash", "settings"]
+    __slots__: list[str] = ["hash", "settings"]
 
-    ID = 0x1b3faa88
+    ID = 0x1B3FAA88
     QUALNAME = "functions.account.SendConfirmPhoneCode"
 
     def __init__(self, *, hash: str, settings: "raw.base.CodeSettings") -> None:
@@ -60,11 +63,11 @@ class SendConfirmPhoneCode(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SendConfirmPhoneCode":
         # No flags
-        
+
         hash = String.read(b)
-        
+
         settings = TLObject.read(b)
-        
+
         return SendConfirmPhoneCode(hash=hash, settings=settings)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class SendConfirmPhoneCode(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.hash))
-        
+
         b.write(self.settings.write())
-        
+
         return b.getvalue()

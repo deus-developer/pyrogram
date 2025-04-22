@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetTyping(TLObject):  # type: ignore
+class SetTyping(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,26 +53,31 @@ class SetTyping(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["peer", "action", "top_msg_id"]
+    __slots__: list[str] = ["action", "peer", "top_msg_id"]
 
-    ID = 0x58943ee2
+    ID = 0x58943EE2
     QUALNAME = "functions.messages.SetTyping"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", action: "raw.base.SendMessageAction", top_msg_id: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        action: "raw.base.SendMessageAction",
+        top_msg_id: int | None = None,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.action = action  # SendMessageAction
         self.top_msg_id = top_msg_id  # flags.0?int
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetTyping":
-        
         flags = Int.read(b)
-        
+
         peer = TLObject.read(b)
-        
+
         top_msg_id = Int.read(b) if flags & (1 << 0) else None
         action = TLObject.read(b)
-        
+
         return SetTyping(peer=peer, action=action, top_msg_id=top_msg_id)
 
     def write(self, *args) -> bytes:
@@ -80,12 +87,12 @@ class SetTyping(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.top_msg_id is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         if self.top_msg_id is not None:
             b.write(Int(self.top_msg_id))
-        
+
         b.write(self.action.write())
-        
+
         return b.getvalue()

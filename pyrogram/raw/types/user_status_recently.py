@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,19 +46,18 @@ class UserStatusRecently(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["by_me"]
+    __slots__: list[str] = ["by_me"]
 
-    ID = 0x7b197dc8
+    ID = 0x7B197DC8
     QUALNAME = "types.UserStatusRecently"
 
-    def __init__(self, *, by_me: Optional[bool] = None) -> None:
+    def __init__(self, *, by_me: bool | None = None) -> None:
         self.by_me = by_me  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UserStatusRecently":
-        
         flags = Int.read(b)
-        
+
         by_me = True if flags & (1 << 0) else False
         return UserStatusRecently(by_me=by_me)
 
@@ -68,5 +68,5 @@ class UserStatusRecently(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.by_me else 0
         b.write(Int(flags))
-        
+
         return b.getvalue()

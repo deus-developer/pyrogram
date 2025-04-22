@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ImportAuthorization(TLObject):  # type: ignore
+class ImportAuthorization(TLFunction["raw.base.auth.Authorization"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class ImportAuthorization(TLObject):  # type: ignore
         :obj:`auth.Authorization <pyrogram.raw.base.auth.Authorization>`
     """
 
-    __slots__: List[str] = ["id", "bytes"]
+    __slots__: list[str] = ["bytes", "id"]
 
-    ID = 0xa57a7dad
+    ID = 0xA57A7DAD
     QUALNAME = "functions.auth.ImportAuthorization"
 
     def __init__(self, *, id: int, bytes: bytes) -> None:
@@ -60,11 +63,11 @@ class ImportAuthorization(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ImportAuthorization":
         # No flags
-        
+
         id = Long.read(b)
-        
+
         bytes = Bytes.read(b)
-        
+
         return ImportAuthorization(id=id, bytes=bytes)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class ImportAuthorization(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.id))
-        
+
         b.write(Bytes(self.bytes))
-        
+
         return b.getvalue()

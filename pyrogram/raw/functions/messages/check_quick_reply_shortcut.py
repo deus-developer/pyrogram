@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class CheckQuickReplyShortcut(TLObject):  # type: ignore
+class CheckQuickReplyShortcut(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class CheckQuickReplyShortcut(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["shortcut"]
+    __slots__: list[str] = ["shortcut"]
 
-    ID = 0xf1d0fbd3
+    ID = 0xF1D0FBD3
     QUALNAME = "functions.messages.CheckQuickReplyShortcut"
 
     def __init__(self, *, shortcut: str) -> None:
@@ -56,9 +58,9 @@ class CheckQuickReplyShortcut(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "CheckQuickReplyShortcut":
         # No flags
-        
+
         shortcut = String.read(b)
-        
+
         return CheckQuickReplyShortcut(shortcut=shortcut)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class CheckQuickReplyShortcut(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.shortcut))
-        
+
         return b.getvalue()

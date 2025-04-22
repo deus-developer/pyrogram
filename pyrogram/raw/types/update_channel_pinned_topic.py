@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,27 +53,36 @@ class UpdateChannelPinnedTopic(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["channel_id", "topic_id", "pinned"]
+    __slots__: list[str] = ["channel_id", "pinned", "topic_id"]
 
-    ID = 0x192efbe3
+    ID = 0x192EFBE3
     QUALNAME = "types.UpdateChannelPinnedTopic"
 
-    def __init__(self, *, channel_id: int, topic_id: int, pinned: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        channel_id: int,
+        topic_id: int,
+        pinned: bool | None = None,
+    ) -> None:
         self.channel_id = channel_id  # long
         self.topic_id = topic_id  # int
         self.pinned = pinned  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateChannelPinnedTopic":
-        
         flags = Int.read(b)
-        
+
         pinned = True if flags & (1 << 0) else False
         channel_id = Long.read(b)
-        
+
         topic_id = Int.read(b)
-        
-        return UpdateChannelPinnedTopic(channel_id=channel_id, topic_id=topic_id, pinned=pinned)
+
+        return UpdateChannelPinnedTopic(
+            channel_id=channel_id,
+            topic_id=topic_id,
+            pinned=pinned,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -80,9 +91,9 @@ class UpdateChannelPinnedTopic(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.pinned else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.channel_id))
-        
+
         b.write(Int(self.topic_id))
-        
+
         return b.getvalue()

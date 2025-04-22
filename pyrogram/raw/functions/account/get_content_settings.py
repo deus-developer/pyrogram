@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetContentSettings(TLObject):  # type: ignore
+class GetContentSettings(TLFunction["raw.base.account.ContentSettings"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -44,9 +45,9 @@ class GetContentSettings(TLObject):  # type: ignore
         :obj:`account.ContentSettings <pyrogram.raw.base.account.ContentSettings>`
     """
 
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
-    ID = 0x8b9b4dae
+    ID = 0x8B9B4DAE
     QUALNAME = "functions.account.GetContentSettings"
 
     def __init__(self) -> None:
@@ -55,7 +56,7 @@ class GetContentSettings(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetContentSettings":
         # No flags
-        
+
         return GetContentSettings()
 
     def write(self, *args) -> bytes:
@@ -63,5 +64,5 @@ class GetContentSettings(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         return b.getvalue()

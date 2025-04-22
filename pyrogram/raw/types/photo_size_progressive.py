@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +57,12 @@ class PhotoSizeProgressive(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["type", "w", "h", "sizes"]
+    __slots__: list[str] = ["h", "sizes", "type", "w"]
 
-    ID = 0xfa3efb95
+    ID = 0xFA3EFB95
     QUALNAME = "types.PhotoSizeProgressive"
 
-    def __init__(self, *, type: str, w: int, h: int, sizes: List[int]) -> None:
+    def __init__(self, *, type: str, w: int, h: int, sizes: list[int]) -> None:
         self.type = type  # string
         self.w = w  # int
         self.h = h  # int
@@ -68,15 +71,15 @@ class PhotoSizeProgressive(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PhotoSizeProgressive":
         # No flags
-        
+
         type = String.read(b)
-        
+
         w = Int.read(b)
-        
+
         h = Int.read(b)
-        
+
         sizes = TLObject.read(b, Int)
-        
+
         return PhotoSizeProgressive(type=type, w=w, h=h, sizes=sizes)
 
     def write(self, *args) -> bytes:
@@ -84,13 +87,13 @@ class PhotoSizeProgressive(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.type))
-        
+
         b.write(Int(self.w))
-        
+
         b.write(Int(self.h))
-        
+
         b.write(Vector(self.sizes, Int))
-        
+
         return b.getvalue()

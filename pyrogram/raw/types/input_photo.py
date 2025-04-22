@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,9 +54,9 @@ class InputPhoto(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "access_hash", "file_reference"]
+    __slots__: list[str] = ["access_hash", "file_reference", "id"]
 
-    ID = 0x3bb3b94a
+    ID = 0x3BB3B94A
     QUALNAME = "types.InputPhoto"
 
     def __init__(self, *, id: int, access_hash: int, file_reference: bytes) -> None:
@@ -64,13 +67,13 @@ class InputPhoto(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputPhoto":
         # No flags
-        
+
         id = Long.read(b)
-        
+
         access_hash = Long.read(b)
-        
+
         file_reference = Bytes.read(b)
-        
+
         return InputPhoto(id=id, access_hash=access_hash, file_reference=file_reference)
 
     def write(self, *args) -> bytes:
@@ -78,11 +81,11 @@ class InputPhoto(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.id))
-        
+
         b.write(Long(self.access_hash))
-        
+
         b.write(Bytes(self.file_reference))
-        
+
         return b.getvalue()

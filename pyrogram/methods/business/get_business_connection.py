@@ -23,7 +23,7 @@ from pyrogram import raw, types
 class GetBusinessConnection:
     async def get_business_connection(
         self: "pyrogram.Client",
-        connection_id: str
+        connection_id: str,
     ):
         """Get a business connection information.
 
@@ -44,8 +44,8 @@ class GetBusinessConnection:
         """
         r = await self.invoke(
             raw.functions.account.GetBotBusinessConnection(
-                connection_id=connection_id
-            )
+                connection_id=connection_id,
+            ),
         )
 
         return types.BusinessConnection.from_raw_tl(self, r.updates[0].connection)

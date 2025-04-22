@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,9 +60,9 @@ class Support(TLObject):  # type: ignore
             help.GetSupport
     """
 
-    __slots__: List[str] = ["phone_number", "user"]
+    __slots__: list[str] = ["phone_number", "user"]
 
-    ID = 0x17c6b5f6
+    ID = 0x17C6B5F6
     QUALNAME = "types.help.Support"
 
     def __init__(self, *, phone_number: str, user: "raw.base.User") -> None:
@@ -69,11 +72,11 @@ class Support(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "Support":
         # No flags
-        
+
         phone_number = String.read(b)
-        
+
         user = TLObject.read(b)
-        
+
         return Support(phone_number=phone_number, user=user)
 
     def write(self, *args) -> bytes:
@@ -81,9 +84,9 @@ class Support(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.phone_number))
-        
+
         b.write(self.user.write())
-        
+
         return b.getvalue()

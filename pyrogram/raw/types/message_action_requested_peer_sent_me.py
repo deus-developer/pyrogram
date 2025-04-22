@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,23 +51,28 @@ class MessageActionRequestedPeerSentMe(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["button_id", "peers"]
+    __slots__: list[str] = ["button_id", "peers"]
 
-    ID = 0x93b31848
+    ID = 0x93B31848
     QUALNAME = "types.MessageActionRequestedPeerSentMe"
 
-    def __init__(self, *, button_id: int, peers: List["raw.base.RequestedPeer"]) -> None:
+    def __init__(
+        self,
+        *,
+        button_id: int,
+        peers: list["raw.base.RequestedPeer"],
+    ) -> None:
         self.button_id = button_id  # int
         self.peers = peers  # Vector<RequestedPeer>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageActionRequestedPeerSentMe":
         # No flags
-        
+
         button_id = Int.read(b)
-        
+
         peers = TLObject.read(b)
-        
+
         return MessageActionRequestedPeerSentMe(button_id=button_id, peers=peers)
 
     def write(self, *args) -> bytes:
@@ -72,9 +80,9 @@ class MessageActionRequestedPeerSentMe(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.button_id))
-        
+
         b.write(Vector(self.peers))
-        
+
         return b.getvalue()

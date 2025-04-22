@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ExportAuthorization(TLObject):  # type: ignore
+class ExportAuthorization(TLFunction["raw.base.auth.ExportedAuthorization"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +46,9 @@ class ExportAuthorization(TLObject):  # type: ignore
         :obj:`auth.ExportedAuthorization <pyrogram.raw.base.auth.ExportedAuthorization>`
     """
 
-    __slots__: List[str] = ["dc_id"]
+    __slots__: list[str] = ["dc_id"]
 
-    ID = 0xe5bfffcd
+    ID = 0xE5BFFFCD
     QUALNAME = "functions.auth.ExportAuthorization"
 
     def __init__(self, *, dc_id: int) -> None:
@@ -56,9 +57,9 @@ class ExportAuthorization(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ExportAuthorization":
         # No flags
-        
+
         dc_id = Int.read(b)
-        
+
         return ExportAuthorization(dc_id=dc_id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +67,7 @@ class ExportAuthorization(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.dc_id))
-        
+
         return b.getvalue()

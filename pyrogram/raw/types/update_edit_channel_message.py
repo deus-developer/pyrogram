@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,12 +53,18 @@ class UpdateEditChannelMessage(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["message", "pts", "pts_count"]
+    __slots__: list[str] = ["message", "pts", "pts_count"]
 
-    ID = 0x1b3f4df7
+    ID = 0x1B3F4DF7
     QUALNAME = "types.UpdateEditChannelMessage"
 
-    def __init__(self, *, message: "raw.base.Message", pts: int, pts_count: int) -> None:
+    def __init__(
+        self,
+        *,
+        message: "raw.base.Message",
+        pts: int,
+        pts_count: int,
+    ) -> None:
         self.message = message  # Message
         self.pts = pts  # int
         self.pts_count = pts_count  # int
@@ -64,13 +72,13 @@ class UpdateEditChannelMessage(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateEditChannelMessage":
         # No flags
-        
+
         message = TLObject.read(b)
-        
+
         pts = Int.read(b)
-        
+
         pts_count = Int.read(b)
-        
+
         return UpdateEditChannelMessage(message=message, pts=pts, pts_count=pts_count)
 
     def write(self, *args) -> bytes:
@@ -78,11 +86,11 @@ class UpdateEditChannelMessage(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.message.write())
-        
+
         b.write(Int(self.pts))
-        
+
         b.write(Int(self.pts_count))
-        
+
         return b.getvalue()

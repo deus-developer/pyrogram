@@ -4,8 +4,6 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type Dialog = Union["raw.types.Dialog, raw.types.DialogFolder"]
+type Dialog = raw.types.Dialog | raw.types.DialogFolder

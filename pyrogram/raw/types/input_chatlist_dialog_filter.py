@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +46,9 @@ class InputChatlistDialogFilter(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["filter_id"]
+    __slots__: list[str] = ["filter_id"]
 
-    ID = 0xf3e0da33
+    ID = 0xF3E0DA33
     QUALNAME = "types.InputChatlistDialogFilter"
 
     def __init__(self, *, filter_id: int) -> None:
@@ -56,9 +57,9 @@ class InputChatlistDialogFilter(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputChatlistDialogFilter":
         # No flags
-        
+
         filter_id = Int.read(b)
-        
+
         return InputChatlistDialogFilter(filter_id=filter_id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +67,7 @@ class InputChatlistDialogFilter(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.filter_id))
-        
+
         return b.getvalue()

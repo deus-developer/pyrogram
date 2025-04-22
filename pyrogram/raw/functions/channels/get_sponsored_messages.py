@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetSponsoredMessages(TLObject):  # type: ignore
+class GetSponsoredMessages(TLFunction["raw.base.messages.SponsoredMessages"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetSponsoredMessages(TLObject):  # type: ignore
         :obj:`messages.SponsoredMessages <pyrogram.raw.base.messages.SponsoredMessages>`
     """
 
-    __slots__: List[str] = ["channel"]
+    __slots__: list[str] = ["channel"]
 
-    ID = 0xec210fbf
+    ID = 0xEC210FBF
     QUALNAME = "functions.channels.GetSponsoredMessages"
 
     def __init__(self, *, channel: "raw.base.InputChannel") -> None:
@@ -56,9 +58,9 @@ class GetSponsoredMessages(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetSponsoredMessages":
         # No flags
-        
+
         channel = TLObject.read(b)
-        
+
         return GetSponsoredMessages(channel=channel)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class GetSponsoredMessages(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.channel.write())
-        
+
         return b.getvalue()

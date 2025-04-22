@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ToggleConnectedBotPaused(TLObject):  # type: ignore
+class ToggleConnectedBotPaused(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class ToggleConnectedBotPaused(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["peer", "paused"]
+    __slots__: list[str] = ["paused", "peer"]
 
-    ID = 0x646e1097
+    ID = 0x646E1097
     QUALNAME = "functions.account.ToggleConnectedBotPaused"
 
     def __init__(self, *, peer: "raw.base.InputPeer", paused: bool) -> None:
@@ -60,11 +63,11 @@ class ToggleConnectedBotPaused(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ToggleConnectedBotPaused":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         paused = Bool.read(b)
-        
+
         return ToggleConnectedBotPaused(peer=peer, paused=paused)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class ToggleConnectedBotPaused(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Bool(self.paused))
-        
+
         return b.getvalue()

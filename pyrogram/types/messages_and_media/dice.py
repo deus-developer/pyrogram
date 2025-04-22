@@ -18,6 +18,7 @@
 
 import pyrogram
 from pyrogram import raw
+
 from ..object import Object
 
 
@@ -43,5 +44,5 @@ class Dice(Object):
         return Dice(
             emoji=dice.emoticon,
             value=dice.value,
-            client=client
+            client=client,
         )

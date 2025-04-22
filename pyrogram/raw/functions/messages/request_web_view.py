@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class RequestWebView(TLObject):  # type: ignore
+class RequestWebView(TLFunction["raw.base.WebViewResult"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -72,12 +75,36 @@ class RequestWebView(TLObject):  # type: ignore
         :obj:`WebViewResult <pyrogram.raw.base.WebViewResult>`
     """
 
-    __slots__: List[str] = ["peer", "bot", "platform", "from_bot_menu", "silent", "url", "start_param", "theme_params", "reply_to", "send_as"]
+    __slots__: list[str] = [
+        "bot",
+        "from_bot_menu",
+        "peer",
+        "platform",
+        "reply_to",
+        "send_as",
+        "silent",
+        "start_param",
+        "theme_params",
+        "url",
+    ]
 
-    ID = 0x269dc2c1
+    ID = 0x269DC2C1
     QUALNAME = "functions.messages.RequestWebView"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", bot: "raw.base.InputUser", platform: str, from_bot_menu: Optional[bool] = None, silent: Optional[bool] = None, url: Optional[str] = None, start_param: Optional[str] = None, theme_params: "raw.base.DataJSON" = None, reply_to: "raw.base.InputReplyTo" = None, send_as: "raw.base.InputPeer" = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        bot: "raw.base.InputUser",
+        platform: str,
+        from_bot_menu: bool | None = None,
+        silent: bool | None = None,
+        url: str | None = None,
+        start_param: str | None = None,
+        theme_params: "raw.base.DataJSON" = None,
+        reply_to: "raw.base.InputReplyTo" = None,
+        send_as: "raw.base.InputPeer" = None,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.bot = bot  # InputUser
         self.platform = platform  # string
@@ -91,26 +118,36 @@ class RequestWebView(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "RequestWebView":
-        
         flags = Int.read(b)
-        
+
         from_bot_menu = True if flags & (1 << 4) else False
         silent = True if flags & (1 << 5) else False
         peer = TLObject.read(b)
-        
+
         bot = TLObject.read(b)
-        
+
         url = String.read(b) if flags & (1 << 1) else None
         start_param = String.read(b) if flags & (1 << 3) else None
         theme_params = TLObject.read(b) if flags & (1 << 2) else None
-        
+
         platform = String.read(b)
-        
+
         reply_to = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         send_as = TLObject.read(b) if flags & (1 << 13) else None
-        
-        return RequestWebView(peer=peer, bot=bot, platform=platform, from_bot_menu=from_bot_menu, silent=silent, url=url, start_param=start_param, theme_params=theme_params, reply_to=reply_to, send_as=send_as)
+
+        return RequestWebView(
+            peer=peer,
+            bot=bot,
+            platform=platform,
+            from_bot_menu=from_bot_menu,
+            silent=silent,
+            url=url,
+            start_param=start_param,
+            theme_params=theme_params,
+            reply_to=reply_to,
+            send_as=send_as,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -125,26 +162,26 @@ class RequestWebView(TLObject):  # type: ignore
         flags |= (1 << 0) if self.reply_to is not None else 0
         flags |= (1 << 13) if self.send_as is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(self.bot.write())
-        
+
         if self.url is not None:
             b.write(String(self.url))
-        
+
         if self.start_param is not None:
             b.write(String(self.start_param))
-        
+
         if self.theme_params is not None:
             b.write(self.theme_params.write())
-        
+
         b.write(String(self.platform))
-        
+
         if self.reply_to is not None:
             b.write(self.reply_to.write())
-        
+
         if self.send_as is not None:
             b.write(self.send_as.write())
-        
+
         return b.getvalue()

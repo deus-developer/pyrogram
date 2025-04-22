@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class DeleteTopicHistory(TLObject):  # type: ignore
+class DeleteTopicHistory(TLFunction["raw.base.messages.AffectedHistory"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class DeleteTopicHistory(TLObject):  # type: ignore
         :obj:`messages.AffectedHistory <pyrogram.raw.base.messages.AffectedHistory>`
     """
 
-    __slots__: List[str] = ["channel", "top_msg_id"]
+    __slots__: list[str] = ["channel", "top_msg_id"]
 
-    ID = 0x34435f2d
+    ID = 0x34435F2D
     QUALNAME = "functions.channels.DeleteTopicHistory"
 
     def __init__(self, *, channel: "raw.base.InputChannel", top_msg_id: int) -> None:
@@ -60,11 +62,11 @@ class DeleteTopicHistory(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DeleteTopicHistory":
         # No flags
-        
+
         channel = TLObject.read(b)
-        
+
         top_msg_id = Int.read(b)
-        
+
         return DeleteTopicHistory(channel=channel, top_msg_id=top_msg_id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class DeleteTopicHistory(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.channel.write())
-        
+
         b.write(Int(self.top_msg_id))
-        
+
         return b.getvalue()

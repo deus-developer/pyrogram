@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,23 +60,27 @@ class DialogFilters(TLObject):  # type: ignore
             messages.GetDialogFilters
     """
 
-    __slots__: List[str] = ["filters", "tags_enabled"]
+    __slots__: list[str] = ["filters", "tags_enabled"]
 
-    ID = 0x2ad93719
+    ID = 0x2AD93719
     QUALNAME = "types.messages.DialogFilters"
 
-    def __init__(self, *, filters: List["raw.base.DialogFilter"], tags_enabled: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        filters: list["raw.base.DialogFilter"],
+        tags_enabled: bool | None = None,
+    ) -> None:
         self.filters = filters  # Vector<DialogFilter>
         self.tags_enabled = tags_enabled  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DialogFilters":
-        
         flags = Int.read(b)
-        
+
         tags_enabled = True if flags & (1 << 0) else False
         filters = TLObject.read(b)
-        
+
         return DialogFilters(filters=filters, tags_enabled=tags_enabled)
 
     def write(self, *args) -> bytes:
@@ -83,7 +90,7 @@ class DialogFilters(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.tags_enabled else 0
         b.write(Int(flags))
-        
+
         b.write(Vector(self.filters))
-        
+
         return b.getvalue()

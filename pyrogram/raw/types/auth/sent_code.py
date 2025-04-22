@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -68,12 +71,19 @@ class SentCode(TLObject):  # type: ignore
             account.SendVerifyPhoneCode
     """
 
-    __slots__: List[str] = ["type", "phone_code_hash", "next_type", "timeout"]
+    __slots__: list[str] = ["next_type", "phone_code_hash", "timeout", "type"]
 
-    ID = 0x5e002502
+    ID = 0x5E002502
     QUALNAME = "types.auth.SentCode"
 
-    def __init__(self, *, type: "raw.base.auth.SentCodeType", phone_code_hash: str, next_type: "raw.base.auth.CodeType" = None, timeout: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        type: "raw.base.auth.SentCodeType",
+        phone_code_hash: str,
+        next_type: "raw.base.auth.CodeType" = None,
+        timeout: int | None = None,
+    ) -> None:
         self.type = type  # auth.SentCodeType
         self.phone_code_hash = phone_code_hash  # string
         self.next_type = next_type  # flags.1?auth.CodeType
@@ -81,17 +91,21 @@ class SentCode(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SentCode":
-        
         flags = Int.read(b)
-        
+
         type = TLObject.read(b)
-        
+
         phone_code_hash = String.read(b)
-        
+
         next_type = TLObject.read(b) if flags & (1 << 1) else None
-        
+
         timeout = Int.read(b) if flags & (1 << 2) else None
-        return SentCode(type=type, phone_code_hash=phone_code_hash, next_type=next_type, timeout=timeout)
+        return SentCode(
+            type=type,
+            phone_code_hash=phone_code_hash,
+            next_type=next_type,
+            timeout=timeout,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -101,15 +115,15 @@ class SentCode(TLObject):  # type: ignore
         flags |= (1 << 1) if self.next_type is not None else 0
         flags |= (1 << 2) if self.timeout is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.type.write())
-        
+
         b.write(String(self.phone_code_hash))
-        
+
         if self.next_type is not None:
             b.write(self.next_type.write())
-        
+
         if self.timeout is not None:
             b.write(Int(self.timeout))
-        
+
         return b.getvalue()

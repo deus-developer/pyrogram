@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -67,12 +70,20 @@ class PeerDialogs(TLObject):  # type: ignore
             messages.GetPinnedDialogs
     """
 
-    __slots__: List[str] = ["dialogs", "messages", "chats", "users", "state"]
+    __slots__: list[str] = ["chats", "dialogs", "messages", "state", "users"]
 
-    ID = 0x3371c354
+    ID = 0x3371C354
     QUALNAME = "types.messages.PeerDialogs"
 
-    def __init__(self, *, dialogs: List["raw.base.Dialog"], messages: List["raw.base.Message"], chats: List["raw.base.Chat"], users: List["raw.base.User"], state: "raw.base.updates.State") -> None:
+    def __init__(
+        self,
+        *,
+        dialogs: list["raw.base.Dialog"],
+        messages: list["raw.base.Message"],
+        chats: list["raw.base.Chat"],
+        users: list["raw.base.User"],
+        state: "raw.base.updates.State",
+    ) -> None:
         self.dialogs = dialogs  # Vector<Dialog>
         self.messages = messages  # Vector<Message>
         self.chats = chats  # Vector<Chat>
@@ -82,33 +93,39 @@ class PeerDialogs(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PeerDialogs":
         # No flags
-        
+
         dialogs = TLObject.read(b)
-        
+
         messages = TLObject.read(b)
-        
+
         chats = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
+
         state = TLObject.read(b)
-        
-        return PeerDialogs(dialogs=dialogs, messages=messages, chats=chats, users=users, state=state)
+
+        return PeerDialogs(
+            dialogs=dialogs,
+            messages=messages,
+            chats=chats,
+            users=users,
+            state=state,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.dialogs))
-        
+
         b.write(Vector(self.messages))
-        
+
         b.write(Vector(self.chats))
-        
+
         b.write(Vector(self.users))
-        
+
         b.write(self.state.write())
-        
+
         return b.getvalue()

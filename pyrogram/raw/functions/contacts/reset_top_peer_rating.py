@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ResetTopPeerRating(TLObject):  # type: ignore
+class ResetTopPeerRating(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,28 @@ class ResetTopPeerRating(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["category", "peer"]
+    __slots__: list[str] = ["category", "peer"]
 
-    ID = 0x1ae373ac
+    ID = 0x1AE373AC
     QUALNAME = "functions.contacts.ResetTopPeerRating"
 
-    def __init__(self, *, category: "raw.base.TopPeerCategory", peer: "raw.base.InputPeer") -> None:
+    def __init__(
+        self,
+        *,
+        category: "raw.base.TopPeerCategory",
+        peer: "raw.base.InputPeer",
+    ) -> None:
         self.category = category  # TopPeerCategory
         self.peer = peer  # InputPeer
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ResetTopPeerRating":
         # No flags
-        
+
         category = TLObject.read(b)
-        
+
         peer = TLObject.read(b)
-        
+
         return ResetTopPeerRating(category=category, peer=peer)
 
     def write(self, *args) -> bytes:
@@ -72,9 +79,9 @@ class ResetTopPeerRating(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.category.write())
-        
+
         b.write(self.peer.write())
-        
+
         return b.getvalue()

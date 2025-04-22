@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -66,12 +70,32 @@ class BotApp(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "access_hash", "short_name", "title", "description", "photo", "hash", "document"]
+    __slots__: list[str] = [
+        "access_hash",
+        "description",
+        "document",
+        "hash",
+        "id",
+        "photo",
+        "short_name",
+        "title",
+    ]
 
-    ID = 0x95fcd1d6
+    ID = 0x95FCD1D6
     QUALNAME = "types.BotApp"
 
-    def __init__(self, *, id: int, access_hash: int, short_name: str, title: str, description: str, photo: "raw.base.Photo", hash: int, document: "raw.base.Document" = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: int,
+        access_hash: int,
+        short_name: str,
+        title: str,
+        description: str,
+        photo: "raw.base.Photo",
+        hash: int,
+        document: "raw.base.Document" = None,
+    ) -> None:
         self.id = id  # long
         self.access_hash = access_hash  # long
         self.short_name = short_name  # string
@@ -83,26 +107,34 @@ class BotApp(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "BotApp":
-        
         flags = Int.read(b)
-        
+
         id = Long.read(b)
-        
+
         access_hash = Long.read(b)
-        
+
         short_name = String.read(b)
-        
+
         title = String.read(b)
-        
+
         description = String.read(b)
-        
+
         photo = TLObject.read(b)
-        
+
         document = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         hash = Long.read(b)
-        
-        return BotApp(id=id, access_hash=access_hash, short_name=short_name, title=title, description=description, photo=photo, hash=hash, document=document)
+
+        return BotApp(
+            id=id,
+            access_hash=access_hash,
+            short_name=short_name,
+            title=title,
+            description=description,
+            photo=photo,
+            hash=hash,
+            document=document,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -111,22 +143,22 @@ class BotApp(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.document is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.id))
-        
+
         b.write(Long(self.access_hash))
-        
+
         b.write(String(self.short_name))
-        
+
         b.write(String(self.title))
-        
+
         b.write(String(self.description))
-        
+
         b.write(self.photo.write())
-        
+
         if self.document is not None:
             b.write(self.document.write())
-        
+
         b.write(Long(self.hash))
-        
+
         return b.getvalue()

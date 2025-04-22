@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetDefaultReaction(TLObject):  # type: ignore
+class SetDefaultReaction(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class SetDefaultReaction(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["reaction"]
+    __slots__: list[str] = ["reaction"]
 
-    ID = 0x4f47a016
+    ID = 0x4F47A016
     QUALNAME = "functions.messages.SetDefaultReaction"
 
     def __init__(self, *, reaction: "raw.base.Reaction") -> None:
@@ -56,9 +58,9 @@ class SetDefaultReaction(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetDefaultReaction":
         # No flags
-        
+
         reaction = TLObject.read(b)
-        
+
         return SetDefaultReaction(reaction=reaction)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class SetDefaultReaction(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.reaction.write())
-        
+
         return b.getvalue()

@@ -16,15 +16,14 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import List, Dict
 
 from pyrogram import raw, types
+
 from ..object import Object
 
 
 class VideoChatMembersInvited(Object):
     """A service message about new members invited to a voice chat.
-
 
     Parameters:
         users (List of :obj:`~pyrogram.types.User`):
@@ -32,8 +31,9 @@ class VideoChatMembersInvited(Object):
     """
 
     def __init__(
-        self, *,
-        users: List["types.User"]
+        self,
+        *,
+        users: list["types.User"],
     ):
         super().__init__()
 
@@ -44,6 +44,9 @@ class VideoChatMembersInvited(Object):
         client,
         action: "raw.types.MessageActionInviteToGroupCall",
     ) -> "VideoChatMembersInvited":
-        users = [types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=i)) for i in action.users]
+        users = [
+            types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=i))
+            for i in action.users
+        ]
 
         return VideoChatMembersInvited(users=users)

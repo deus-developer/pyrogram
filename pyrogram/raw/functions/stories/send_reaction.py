@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SendReaction(TLObject):  # type: ignore
+class SendReaction(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +56,19 @@ class SendReaction(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["peer", "story_id", "reaction", "add_to_recent"]
+    __slots__: list[str] = ["add_to_recent", "peer", "reaction", "story_id"]
 
-    ID = 0x7fd736b2
+    ID = 0x7FD736B2
     QUALNAME = "functions.stories.SendReaction"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", story_id: int, reaction: "raw.base.Reaction", add_to_recent: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        story_id: int,
+        reaction: "raw.base.Reaction",
+        add_to_recent: bool | None = None,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.story_id = story_id  # int
         self.reaction = reaction  # Reaction
@@ -67,17 +76,21 @@ class SendReaction(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SendReaction":
-        
         flags = Int.read(b)
-        
+
         add_to_recent = True if flags & (1 << 0) else False
         peer = TLObject.read(b)
-        
+
         story_id = Int.read(b)
-        
+
         reaction = TLObject.read(b)
-        
-        return SendReaction(peer=peer, story_id=story_id, reaction=reaction, add_to_recent=add_to_recent)
+
+        return SendReaction(
+            peer=peer,
+            story_id=story_id,
+            reaction=reaction,
+            add_to_recent=add_to_recent,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -86,11 +99,11 @@ class SendReaction(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.add_to_recent else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.story_id))
-        
+
         b.write(self.reaction.write())
-        
+
         return b.getvalue()

@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ResetPassword(TLObject):  # type: ignore
+class ResetPassword(TLFunction["raw.base.account.ResetPasswordResult"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -44,9 +45,9 @@ class ResetPassword(TLObject):  # type: ignore
         :obj:`account.ResetPasswordResult <pyrogram.raw.base.account.ResetPasswordResult>`
     """
 
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
-    ID = 0x9308ce1b
+    ID = 0x9308CE1B
     QUALNAME = "functions.account.ResetPassword"
 
     def __init__(self) -> None:
@@ -55,7 +56,7 @@ class ResetPassword(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ResetPassword":
         # No flags
-        
+
         return ResetPassword()
 
     def write(self, *args) -> bytes:
@@ -63,5 +64,5 @@ class ResetPassword(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         return b.getvalue()

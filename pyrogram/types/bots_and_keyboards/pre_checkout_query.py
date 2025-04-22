@@ -16,10 +16,11 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, Optional
+from typing import Optional
 
 import pyrogram
-from pyrogram import types, raw
+from pyrogram import raw, types
+
 from ..object import Object
 from ..update import Update
 
@@ -59,8 +60,8 @@ class PreCheckoutQuery(Object, Update):
         currency: str,
         total_amount: int,
         invoice_payload: str,
-        shipping_option_id: Optional[str] = None,
-        order_info: Optional["types.OrderInfo"] = None
+        shipping_option_id: str | None = None,
+        order_info: Optional["types.OrderInfo"] = None,
     ):
         super().__init__(client)
 
@@ -86,7 +87,10 @@ class PreCheckoutQuery(Object, Update):
 
         return PreCheckoutQuery(
             id=str(pre_checkout_query.query_id),
-            from_user=types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=pre_checkout_query.user_id)),
+            from_user=types.User.from_raw_tl(
+                client,
+                client.entity_cache.get_user(user_id=pre_checkout_query.user_id),
+            ),
             currency=pre_checkout_query.currency,
             total_amount=pre_checkout_query.total_amount,
             invoice_payload=invoice_payload,
@@ -101,10 +105,12 @@ class PreCheckoutQuery(Object, Update):
                     city=pre_checkout_query.info.shipping_address.city,
                     state=pre_checkout_query.info.shipping_address.state,
                     post_code=pre_checkout_query.info.shipping_address.post_code,
-                    country_code=pre_checkout_query.info.shipping_address.country_iso2
-                )
-            ) if pre_checkout_query.info else None,
-            client=client
+                    country_code=pre_checkout_query.info.shipping_address.country_iso2,
+                ),
+            )
+            if pre_checkout_query.info
+            else None,
+            client=client,
         )
 
     async def answer(self, ok: bool = None, error_message: str = None):
@@ -114,10 +120,7 @@ class PreCheckoutQuery(Object, Update):
 
         .. code-block:: python
 
-            await client.answer_pre_checkout_query(
-                pre_checkout_query.id,
-                ok=True
-            )
+            await client.answer_pre_checkout_query(pre_checkout_query.id, ok=True)
 
         Example:
             .. code-block:: python
@@ -137,5 +140,5 @@ class PreCheckoutQuery(Object, Update):
         return await self._client.answer_pre_checkout_query(
             pre_checkout_query_id=self.id,
             ok=ok,
-            error_message=error_message
+            error_message=error_message,
         )

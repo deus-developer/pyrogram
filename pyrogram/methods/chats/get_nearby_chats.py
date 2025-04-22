@@ -16,20 +16,17 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import List
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import raw, types, utils
 
 
 class GetNearbyChats:
     async def get_nearby_chats(
         self: "pyrogram.Client",
         latitude: float,
-        longitude: float
-    ) -> List["types.Chat"]:
+        longitude: float,
+    ) -> list["types.Chat"]:
         """Get nearby chats.
 
         .. include:: /_includes/usable-by/users.rst
@@ -50,20 +47,21 @@ class GetNearbyChats:
                 chats = await app.get_nearby_chats(latitude, longitude)
                 print(chats)
         """
-
         r = await self.invoke(
             raw.functions.contacts.GetLocated(
                 geo_point=raw.types.InputGeoPoint(
                     lat=latitude,
-                    long=longitude
-                )
-            )
+                    long=longitude,
+                ),
+            ),
         )
 
         if not r.updates:
             return []
 
-        chats = types.List([types.Chat.from_raw_tl_chat(self, chat) for chat in r.chats])
+        chats = types.List(
+            [types.Chat.from_raw_tl_chat(self, chat) for chat in r.chats],
+        )
         peers = r.updates[0].peers
 
         for peer in peers:

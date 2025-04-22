@@ -20,6 +20,7 @@ from typing import Optional
 
 import pyrogram
 from pyrogram import enums
+
 from .html import HTML
 
 
@@ -28,7 +29,7 @@ class Parser:
         self.client = client
         self.html = HTML(client)
 
-    async def parse(self, text: str, mode: Optional[enums.ParseMode] = None) -> dict:
+    async def parse(self, text: str, mode: enums.ParseMode | None = None) -> dict:
         text = str(text or "").strip()
 
         if mode is None:
@@ -55,5 +56,4 @@ class Parser:
     def unparse(text: str, entities: list, is_html: bool) -> str:
         if is_html:
             return HTML.unparse(text, entities)
-        else:
-            raise NotImplementedError
+        raise NotImplementedError

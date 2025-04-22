@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,25 +55,30 @@ class InputBusinessChatLink(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["message", "entities", "title"]
+    __slots__: list[str] = ["entities", "message", "title"]
 
-    ID = 0x11679fa7
+    ID = 0x11679FA7
     QUALNAME = "types.InputBusinessChatLink"
 
-    def __init__(self, *, message: str, entities: Optional[List["raw.base.MessageEntity"]] = None, title: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        message: str,
+        entities: list["raw.base.MessageEntity"] | None = None,
+        title: str | None = None,
+    ) -> None:
         self.message = message  # string
         self.entities = entities  # flags.0?Vector<MessageEntity>
         self.title = title  # flags.1?string
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputBusinessChatLink":
-        
         flags = Int.read(b)
-        
+
         message = String.read(b)
-        
+
         entities = TLObject.read(b) if flags & (1 << 0) else []
-        
+
         title = String.read(b) if flags & (1 << 1) else None
         return InputBusinessChatLink(message=message, entities=entities, title=title)
 
@@ -81,13 +90,13 @@ class InputBusinessChatLink(TLObject):  # type: ignore
         flags |= (1 << 0) if self.entities else 0
         flags |= (1 << 1) if self.title is not None else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.message))
-        
+
         if self.entities is not None:
             b.write(Vector(self.entities))
-        
+
         if self.title is not None:
             b.write(String(self.title))
-        
+
         return b.getvalue()

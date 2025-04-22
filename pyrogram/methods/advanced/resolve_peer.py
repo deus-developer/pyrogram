@@ -18,11 +18,9 @@
 
 import logging
 import re
-from typing import Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import utils
+from pyrogram import raw, utils
 from pyrogram.errors import PeerIdInvalid
 
 log = logging.getLogger(__name__)
@@ -31,8 +29,8 @@ log = logging.getLogger(__name__)
 class ResolvePeer:
     async def resolve_peer(
         self: "pyrogram.Client",
-        peer_id: Union[int, str]
-    ) -> Union[raw.base.InputPeer, raw.base.InputUser, raw.base.InputChannel]:
+        peer_id: int | str,
+    ) -> raw.base.InputPeer | raw.base.InputUser | raw.base.InputChannel:
         """Get the InputPeer of a known peer id.
         Useful whenever an InputPeer type is required.
 
@@ -75,8 +73,8 @@ class ResolvePeer:
                     except KeyError:
                         await self.invoke(
                             raw.functions.contacts.ResolveUsername(
-                                username=peer_id
-                            )
+                                username=peer_id,
+                            ),
                         )
 
                         return await self.storage.get_peer_by_username(peer_id)
@@ -95,17 +93,17 @@ class ResolvePeer:
                             id=[
                                 raw.types.InputUser(
                                     user_id=peer_id,
-                                    access_hash=0
-                                )
-                            ]
-                        )
-                    )
+                                    access_hash=0,
+                                ),
+                            ],
+                        ),
+                    ),
                 )
             elif peer_type == "chat":
                 await self.invoke(
                     raw.functions.messages.GetChats(
-                        id=[-peer_id]
-                    )
+                        id=[-peer_id],
+                    ),
                 )
             else:
                 await self.invoke(
@@ -113,10 +111,10 @@ class ResolvePeer:
                         id=[
                             raw.types.InputChannel(
                                 channel_id=utils.get_channel_id(peer_id),
-                                access_hash=0
-                            )
-                        ]
-                    )
+                                access_hash=0,
+                            ),
+                        ],
+                    ),
                 )
 
             try:

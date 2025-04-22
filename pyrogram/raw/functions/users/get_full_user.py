@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetFullUser(TLObject):  # type: ignore
+class GetFullUser(TLFunction["raw.base.users.UserFull"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetFullUser(TLObject):  # type: ignore
         :obj:`users.UserFull <pyrogram.raw.base.users.UserFull>`
     """
 
-    __slots__: List[str] = ["id"]
+    __slots__: list[str] = ["id"]
 
-    ID = 0xb60f5918
+    ID = 0xB60F5918
     QUALNAME = "functions.users.GetFullUser"
 
     def __init__(self, *, id: "raw.base.InputUser") -> None:
@@ -56,9 +58,9 @@ class GetFullUser(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetFullUser":
         # No flags
-        
+
         id = TLObject.read(b)
-        
+
         return GetFullUser(id=id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class GetFullUser(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.id.write())
-        
+
         return b.getvalue()

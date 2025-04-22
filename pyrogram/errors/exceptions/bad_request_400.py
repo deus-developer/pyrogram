@@ -21,6 +21,7 @@ from ..rpc_error import RPCError
 
 class BadRequest(RPCError):
     """Bad Request"""
+
     CODE = 400
     """``int``: RPC Error Code"""
     NAME = __doc__
@@ -28,6 +29,7 @@ class BadRequest(RPCError):
 
 class AboutTooLong(BadRequest):
     """The provided about/bio text is too long"""
+
     ID = "ABOUT_TOO_LONG"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -35,6 +37,7 @@ class AboutTooLong(BadRequest):
 
 class AccessTokenExpired(BadRequest):
     """The bot token has expired"""
+
     ID = "ACCESS_TOKEN_EXPIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -42,6 +45,7 @@ class AccessTokenExpired(BadRequest):
 
 class AccessTokenInvalid(BadRequest):
     """The bot access token is invalid"""
+
     ID = "ACCESS_TOKEN_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -49,6 +53,7 @@ class AccessTokenInvalid(BadRequest):
 
 class AddressInvalid(BadRequest):
     """The specified geopoint address is invalid."""
+
     ID = "ADDRESS_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -56,6 +61,7 @@ class AddressInvalid(BadRequest):
 
 class AdminsTooMuch(BadRequest):
     """The chat has too many administrators"""
+
     ID = "ADMINS_TOO_MUCH"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -63,6 +69,7 @@ class AdminsTooMuch(BadRequest):
 
 class AdminIdInvalid(BadRequest):
     """The specified admin ID is invalid"""
+
     ID = "ADMIN_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -70,6 +77,7 @@ class AdminIdInvalid(BadRequest):
 
 class AdminRankEmojiNotAllowed(BadRequest):
     """Emoji are not allowed in custom administrator titles"""
+
     ID = "ADMIN_RANK_EMOJI_NOT_ALLOWED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -77,6 +85,7 @@ class AdminRankEmojiNotAllowed(BadRequest):
 
 class AdminRankInvalid(BadRequest):
     """The custom administrator title is invalid or too long"""
+
     ID = "ADMIN_RANK_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -84,6 +93,7 @@ class AdminRankInvalid(BadRequest):
 
 class AdminRightsEmpty(BadRequest):
     """The chatAdminRights constructor passed in keyboardButtonRequestPeer.peer_type.user_admin_rights has no rights set (i.e. flags is 0)."""
+
     ID = "ADMIN_RIGHTS_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -91,6 +101,7 @@ class AdminRightsEmpty(BadRequest):
 
 class AdExpired(BadRequest):
     """The ad has expired (too old or not found)."""
+
     ID = "AD_EXPIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -98,6 +109,7 @@ class AdExpired(BadRequest):
 
 class AlbumPhotosTooMany(BadRequest):
     """Too many photos were included in the album"""
+
     ID = "ALBUM_PHOTOS_TOO_MANY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -105,6 +117,7 @@ class AlbumPhotosTooMany(BadRequest):
 
 class ApiIdInvalid(BadRequest):
     """The api_id/api_hash combination is invalid"""
+
     ID = "API_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -112,6 +125,7 @@ class ApiIdInvalid(BadRequest):
 
 class ApiIdPublishedFlood(BadRequest):
     """You are using an API key that is limited on the server side because it was published somewhere"""
+
     ID = "API_ID_PUBLISHED_FLOOD"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -119,6 +133,7 @@ class ApiIdPublishedFlood(BadRequest):
 
 class ArticleTitleEmpty(BadRequest):
     """The article title is empty"""
+
     ID = "ARTICLE_TITLE_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -126,6 +141,7 @@ class ArticleTitleEmpty(BadRequest):
 
 class AudioContentUrlEmpty(BadRequest):
     """The remote URL specified in the content field is empty"""
+
     ID = "AUDIO_CONTENT_URL_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -133,6 +149,7 @@ class AudioContentUrlEmpty(BadRequest):
 
 class AudioTitleEmpty(BadRequest):
     """The title attribute of the audio is empty"""
+
     ID = "AUDIO_TITLE_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -140,6 +157,7 @@ class AudioTitleEmpty(BadRequest):
 
 class AuthBytesInvalid(BadRequest):
     """The authorization bytes are invalid"""
+
     ID = "AUTH_BYTES_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -147,6 +165,7 @@ class AuthBytesInvalid(BadRequest):
 
 class AuthTokenAlreadyAccepted(BadRequest):
     """The authorization token was already used"""
+
     ID = "AUTH_TOKEN_ALREADY_ACCEPTED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -154,6 +173,7 @@ class AuthTokenAlreadyAccepted(BadRequest):
 
 class AuthTokenException(BadRequest):
     """An error occurred while importing the auth token"""
+
     ID = "AUTH_TOKEN_EXCEPTION"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -161,6 +181,7 @@ class AuthTokenException(BadRequest):
 
 class AuthTokenExpired(BadRequest):
     """The provided authorization token has expired and the updated QR-code must be re-scanned"""
+
     ID = "AUTH_TOKEN_EXPIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -168,6 +189,7 @@ class AuthTokenExpired(BadRequest):
 
 class AuthTokenInvalid(BadRequest):
     """An invalid authorization token was provided"""
+
     ID = "AUTH_TOKEN_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -175,6 +197,7 @@ class AuthTokenInvalid(BadRequest):
 
 class AuthTokenInvalid2(BadRequest):
     """An invalid authorization token was provided"""
+
     ID = "AUTH_TOKEN_INVALID2"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -182,6 +205,7 @@ class AuthTokenInvalid2(BadRequest):
 
 class AuthTokenInvalidx(BadRequest):
     """The specified auth token is invalid"""
+
     ID = "AUTH_TOKEN_INVALIDX"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -189,6 +213,7 @@ class AuthTokenInvalidx(BadRequest):
 
 class AutoarchiveNotAvailable(BadRequest):
     """This feature is not yet enabled for your account due to it not receiving too many private messages from strangers"""
+
     ID = "AUTOARCHIVE_NOT_AVAILABLE"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -196,6 +221,7 @@ class AutoarchiveNotAvailable(BadRequest):
 
 class BalanceTooLow(BadRequest):
     """Your stars balance too low"""
+
     ID = "BALANCE_TOO_LOW"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -203,6 +229,7 @@ class BalanceTooLow(BadRequest):
 
 class BankCardNumberInvalid(BadRequest):
     """The credit card number is invalid"""
+
     ID = "BANK_CARD_NUMBER_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -210,6 +237,7 @@ class BankCardNumberInvalid(BadRequest):
 
 class BannedRightsInvalid(BadRequest):
     """You provided a set of restrictions that is invalid"""
+
     ID = "BANNED_RIGHTS_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -217,6 +245,7 @@ class BannedRightsInvalid(BadRequest):
 
 class BasePortLocInvalid(BadRequest):
     """The base port location is invalid"""
+
     ID = "BASE_PORT_LOC_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -224,6 +253,7 @@ class BasePortLocInvalid(BadRequest):
 
 class BirthdayInvalid(BadRequest):
     """The age should be less than 150 year old in Telegram"""
+
     ID = "BIRTHDAY_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -231,6 +261,7 @@ class BirthdayInvalid(BadRequest):
 
 class BoostsEmpty(BadRequest):
     """Boosts empty"""
+
     ID = "BOOSTS_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -238,6 +269,7 @@ class BoostsEmpty(BadRequest):
 
 class BoostsRequired(BadRequest):
     """Boosts required"""
+
     ID = "BOOSTS_REQUIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -245,6 +277,7 @@ class BoostsRequired(BadRequest):
 
 class BoostNotModified(BadRequest):
     """You're already [boosting](https://core.telegram.org/api/boost) the specified channel."""
+
     ID = "BOOST_NOT_MODIFIED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -252,6 +285,7 @@ class BoostNotModified(BadRequest):
 
 class BoostPeerInvalid(BadRequest):
     """The specified `boost_peer` is invalid."""
+
     ID = "BOOST_PEER_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -259,6 +293,7 @@ class BoostPeerInvalid(BadRequest):
 
 class BotsTooMuch(BadRequest):
     """The chat has too many bots"""
+
     ID = "BOTS_TOO_MUCH"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -266,6 +301,7 @@ class BotsTooMuch(BadRequest):
 
 class BotAlreadyDisabled(BadRequest):
     """The connected business bot was already disabled for the specified peer."""
+
     ID = "BOT_ALREADY_DISABLED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -273,6 +309,7 @@ class BotAlreadyDisabled(BadRequest):
 
 class BotAppBotInvalid(BadRequest):
     """The bot_id passed in the inputBotAppShortName constructor is invalid."""
+
     ID = "BOT_APP_BOT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -280,6 +317,7 @@ class BotAppBotInvalid(BadRequest):
 
 class BotAppInvalid(BadRequest):
     """The specified bot app is invalid."""
+
     ID = "BOT_APP_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -287,6 +325,7 @@ class BotAppInvalid(BadRequest):
 
 class BotAppShortnameInvalid(BadRequest):
     """The specified bot app short name is invalid."""
+
     ID = "BOT_APP_SHORTNAME_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -294,6 +333,7 @@ class BotAppShortnameInvalid(BadRequest):
 
 class BotBusinessMissing(BadRequest):
     """The specified bot is not a business bot (the [user](https://core.telegram.org/constructor/user).`bot_business` flag is not set)."""
+
     ID = "BOT_BUSINESS_MISSING"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -301,6 +341,7 @@ class BotBusinessMissing(BadRequest):
 
 class BotChannelsNa(BadRequest):
     """Bots can't edit admin privileges"""
+
     ID = "BOT_CHANNELS_NA"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -308,6 +349,7 @@ class BotChannelsNa(BadRequest):
 
 class BotCommandDescriptionInvalid(BadRequest):
     """The command description was empty, too long or had invalid characters"""
+
     ID = "BOT_COMMAND_DESCRIPTION_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -315,6 +357,7 @@ class BotCommandDescriptionInvalid(BadRequest):
 
 class BotCommandInvalid(BadRequest):
     """The specified command is invalid"""
+
     ID = "BOT_COMMAND_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -322,6 +365,7 @@ class BotCommandInvalid(BadRequest):
 
 class BotDomainInvalid(BadRequest):
     """The domain used for the auth button does not match the one configured in @BotFather"""
+
     ID = "BOT_DOMAIN_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -329,6 +373,7 @@ class BotDomainInvalid(BadRequest):
 
 class BotGamesDisabled(BadRequest):
     """Bot games cannot be used in this type of chat"""
+
     ID = "BOT_GAMES_DISABLED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -336,6 +381,7 @@ class BotGamesDisabled(BadRequest):
 
 class BotGroupsBlocked(BadRequest):
     """This bot can't be added to groups"""
+
     ID = "BOT_GROUPS_BLOCKED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -343,6 +389,7 @@ class BotGroupsBlocked(BadRequest):
 
 class BotInlineDisabled(BadRequest):
     """The inline feature of the bot is disabled"""
+
     ID = "BOT_INLINE_DISABLED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -350,6 +397,7 @@ class BotInlineDisabled(BadRequest):
 
 class BotInvalid(BadRequest):
     """This is not a valid bot"""
+
     ID = "BOT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -357,6 +405,7 @@ class BotInvalid(BadRequest):
 
 class BotMethodInvalid(BadRequest):
     """The method can't be used by bots"""
+
     ID = "BOT_METHOD_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -364,6 +413,7 @@ class BotMethodInvalid(BadRequest):
 
 class BotMissing(BadRequest):
     """This method can only be run by a bot"""
+
     ID = "BOT_MISSING"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -371,6 +421,7 @@ class BotMissing(BadRequest):
 
 class BotNotConnectedYet(BadRequest):
     """No [business bot](https://core.telegram.org/api/business#connected-bots) is connected to the currently logged in user."""
+
     ID = "BOT_NOT_CONNECTED_YET"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -378,6 +429,7 @@ class BotNotConnectedYet(BadRequest):
 
 class BotOnesideNotAvail(BadRequest):
     """Bots can't pin messages for one side only in private chats"""
+
     ID = "BOT_ONESIDE_NOT_AVAIL"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -385,6 +437,7 @@ class BotOnesideNotAvail(BadRequest):
 
 class BotPaymentsDisabled(BadRequest):
     """This method can only be run by a bot"""
+
     ID = "BOT_PAYMENTS_DISABLED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -392,6 +445,7 @@ class BotPaymentsDisabled(BadRequest):
 
 class BotPollsDisabled(BadRequest):
     """Sending polls by bots has been disabled"""
+
     ID = "BOT_POLLS_DISABLED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -399,6 +453,7 @@ class BotPollsDisabled(BadRequest):
 
 class BotResponseTimeout(BadRequest):
     """The bot did not answer to the callback query in time"""
+
     ID = "BOT_RESPONSE_TIMEOUT"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -406,6 +461,7 @@ class BotResponseTimeout(BadRequest):
 
 class BotScoreNotModified(BadRequest):
     """The bot score was not modified"""
+
     ID = "BOT_SCORE_NOT_MODIFIED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -413,6 +469,7 @@ class BotScoreNotModified(BadRequest):
 
 class BotWebviewDisabled(BadRequest):
     """A webview cannot be opened in the specified conditions: emitted for example if `from_bot_menu` or `url` are set and `peer` is not the chat with the bot."""
+
     ID = "BOT_WEBVIEW_DISABLED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -420,6 +477,7 @@ class BotWebviewDisabled(BadRequest):
 
 class BroadcastCallsDisabled(BadRequest):
     """Broadcast calls disabled"""
+
     ID = "BROADCAST_CALLS_DISABLED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -427,6 +485,7 @@ class BroadcastCallsDisabled(BadRequest):
 
 class BroadcastIdInvalid(BadRequest):
     """The channel is invalid"""
+
     ID = "BROADCAST_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -434,6 +493,7 @@ class BroadcastIdInvalid(BadRequest):
 
 class BroadcastPublicVotersForbidden(BadRequest):
     """Polls with public voters cannot be sent in channels"""
+
     ID = "BROADCAST_PUBLIC_VOTERS_FORBIDDEN"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -441,6 +501,7 @@ class BroadcastPublicVotersForbidden(BadRequest):
 
 class BroadcastRequired(BadRequest):
     """The request can only be used with a channel"""
+
     ID = "BROADCAST_REQUIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -448,6 +509,7 @@ class BroadcastRequired(BadRequest):
 
 class BusinessPeerInvalid(BadRequest):
     """Messages can't be set to the specified peer through the current [business connection](https://core.telegram.org/api/business#connected-bots)."""
+
     ID = "BUSINESS_PEER_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -455,6 +517,7 @@ class BusinessPeerInvalid(BadRequest):
 
 class BusinessRecipientsEmpty(BadRequest):
     """You didn't set any flag in inputBusinessBotRecipients, thus the bot cannot work with *any* peer."""
+
     ID = "BUSINESS_RECIPIENTS_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -462,6 +525,7 @@ class BusinessRecipientsEmpty(BadRequest):
 
 class BusinessWorkHoursEmpty(BadRequest):
     """No work hours were specified."""
+
     ID = "BUSINESS_WORK_HOURS_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -469,6 +533,7 @@ class BusinessWorkHoursEmpty(BadRequest):
 
 class BusinessWorkHoursPeriodInvalid(BadRequest):
     """The specified work hours are invalid, see [here »](https://core.telegram.org/api/business#opening-hours) for the exact requirements."""
+
     ID = "BUSINESS_WORK_HOURS_PERIOD_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -476,6 +541,7 @@ class BusinessWorkHoursPeriodInvalid(BadRequest):
 
 class ButtonCopyTextInvalid(BadRequest):
     """The `copy_text` of one or more of the buttons you provided is invalid."""
+
     ID = "BUTTON_COPY_TEXT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -483,6 +549,7 @@ class ButtonCopyTextInvalid(BadRequest):
 
 class ButtonDataInvalid(BadRequest):
     """The button callback data is invalid or too large"""
+
     ID = "BUTTON_DATA_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -490,6 +557,7 @@ class ButtonDataInvalid(BadRequest):
 
 class ButtonIdInvalid(BadRequest):
     """The button_id parameter is invalid"""
+
     ID = "BUTTON_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -497,6 +565,7 @@ class ButtonIdInvalid(BadRequest):
 
 class ButtonPosInvalid(BadRequest):
     """The position of one of the keyboard buttons is invalid (i.e. a Game or Pay button not in the first position, and so on...)."""
+
     ID = "BUTTON_POS_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -504,6 +573,7 @@ class ButtonPosInvalid(BadRequest):
 
 class ButtonTextInvalid(BadRequest):
     """The specified button text is invalid"""
+
     ID = "BUTTON_TEXT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -511,6 +581,7 @@ class ButtonTextInvalid(BadRequest):
 
 class ButtonTypeInvalid(BadRequest):
     """The type of one of the buttons you provided is invalid"""
+
     ID = "BUTTON_TYPE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -518,6 +589,7 @@ class ButtonTypeInvalid(BadRequest):
 
 class ButtonUrlInvalid(BadRequest):
     """The button url is invalid"""
+
     ID = "BUTTON_URL_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -525,6 +597,7 @@ class ButtonUrlInvalid(BadRequest):
 
 class ButtonUserInvalid(BadRequest):
     """The user_id passed to inputKeyboardButtonUserProfile is invalid"""
+
     ID = "BUTTON_USER_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -532,6 +605,7 @@ class ButtonUserInvalid(BadRequest):
 
 class ButtonUserPrivacyRestricted(BadRequest):
     """The privacy settings of the user specified in a keyboard button do not allow creating such button"""
+
     ID = "BUTTON_USER_PRIVACY_RESTRICTED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -539,6 +613,7 @@ class ButtonUserPrivacyRestricted(BadRequest):
 
 class CallAlreadyAccepted(BadRequest):
     """The call is already accepted"""
+
     ID = "CALL_ALREADY_ACCEPTED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -546,6 +621,7 @@ class CallAlreadyAccepted(BadRequest):
 
 class CallAlreadyDeclined(BadRequest):
     """The call is already declined"""
+
     ID = "CALL_ALREADY_DECLINED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -553,6 +629,7 @@ class CallAlreadyDeclined(BadRequest):
 
 class CallOccupyFailed(BadRequest):
     """The call failed because the user is already making another call."""
+
     ID = "CALL_OCCUPY_FAILED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -560,6 +637,7 @@ class CallOccupyFailed(BadRequest):
 
 class CallPeerInvalid(BadRequest):
     """The provided call peer object is invalid"""
+
     ID = "CALL_PEER_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -567,6 +645,7 @@ class CallPeerInvalid(BadRequest):
 
 class CallProtocolFlagsInvalid(BadRequest):
     """Call protocol flags invalid"""
+
     ID = "CALL_PROTOCOL_FLAGS_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -574,6 +653,7 @@ class CallProtocolFlagsInvalid(BadRequest):
 
 class CdnMethodInvalid(BadRequest):
     """The method can't be used on CDN DCs"""
+
     ID = "CDN_METHOD_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -581,6 +661,7 @@ class CdnMethodInvalid(BadRequest):
 
 class ChannelsAdminLocatedTooMuch(BadRequest):
     """The user has reached the limit of public geogroups"""
+
     ID = "CHANNELS_ADMIN_LOCATED_TOO_MUCH"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -588,6 +669,7 @@ class ChannelsAdminLocatedTooMuch(BadRequest):
 
 class ChannelsAdminPublicTooMuch(BadRequest):
     """You are an administrator of too many public channels"""
+
     ID = "CHANNELS_ADMIN_PUBLIC_TOO_MUCH"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -595,6 +677,7 @@ class ChannelsAdminPublicTooMuch(BadRequest):
 
 class ChannelsTooMuch(BadRequest):
     """You have joined too many channels or supergroups, leave some and try again"""
+
     ID = "CHANNELS_TOO_MUCH"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -602,6 +685,7 @@ class ChannelsTooMuch(BadRequest):
 
 class ChannelAddInvalid(BadRequest):
     """Internal error."""
+
     ID = "CHANNEL_ADD_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -609,6 +693,7 @@ class ChannelAddInvalid(BadRequest):
 
 class ChannelBanned(BadRequest):
     """The channel is banned"""
+
     ID = "CHANNEL_BANNED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -616,6 +701,7 @@ class ChannelBanned(BadRequest):
 
 class ChannelForumMissing(BadRequest):
     """The channel forum is missing"""
+
     ID = "CHANNEL_FORUM_MISSING"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -623,6 +709,7 @@ class ChannelForumMissing(BadRequest):
 
 class ChannelIdInvalid(BadRequest):
     """The specified supergroup ID is invalid."""
+
     ID = "CHANNEL_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -630,6 +717,7 @@ class ChannelIdInvalid(BadRequest):
 
 class ChannelInvalid(BadRequest):
     """The channel parameter is invalid"""
+
     ID = "CHANNEL_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -637,6 +725,7 @@ class ChannelInvalid(BadRequest):
 
 class ChannelParicipantMissing(BadRequest):
     """The current user is not in the channel"""
+
     ID = "CHANNEL_PARICIPANT_MISSING"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -644,6 +733,7 @@ class ChannelParicipantMissing(BadRequest):
 
 class ChannelPrivate(BadRequest):
     """The channel/supergroup is not accessible"""
+
     ID = "CHANNEL_PRIVATE"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -651,6 +741,7 @@ class ChannelPrivate(BadRequest):
 
 class ChannelTooBig(BadRequest):
     """The channel too big"""
+
     ID = "CHANNEL_TOO_BIG"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -658,6 +749,7 @@ class ChannelTooBig(BadRequest):
 
 class ChannelTooLarge(BadRequest):
     """The channel is too large"""
+
     ID = "CHANNEL_TOO_LARGE"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -665,6 +757,7 @@ class ChannelTooLarge(BadRequest):
 
 class ChargeAlreadyRefunded(BadRequest):
     """The charge id was already used for a refund."""
+
     ID = "CHARGE_ALREADY_REFUNDED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -672,6 +765,7 @@ class ChargeAlreadyRefunded(BadRequest):
 
 class ChargeNotFound(BadRequest):
     """The charge id was not found."""
+
     ID = "CHARGE_NOT_FOUND"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -679,6 +773,7 @@ class ChargeNotFound(BadRequest):
 
 class ChatlinksTooMuch(BadRequest):
     """Too many [business chat links](https://core.telegram.org/api/business#business-chat-links) were created, please delete some older links."""
+
     ID = "CHATLINKS_TOO_MUCH"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -686,6 +781,7 @@ class ChatlinksTooMuch(BadRequest):
 
 class ChatlinkSlugEmpty(BadRequest):
     """The specified slug is empty."""
+
     ID = "CHATLINK_SLUG_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -693,6 +789,7 @@ class ChatlinkSlugEmpty(BadRequest):
 
 class ChatlinkSlugExpired(BadRequest):
     """The specified [business chat link](https://core.telegram.org/api/business#business-chat-links) has expired."""
+
     ID = "CHATLINK_SLUG_EXPIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -700,6 +797,7 @@ class ChatlinkSlugExpired(BadRequest):
 
 class ChatlistsTooMuch(BadRequest):
     """You have too much chatlists on your account"""
+
     ID = "CHATLISTS_TOO_MUCH"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -707,6 +805,7 @@ class ChatlistsTooMuch(BadRequest):
 
 class ChatlistExcludeInvalid(BadRequest):
     """The specified `exclude_peers` are invalid."""
+
     ID = "CHATLIST_EXCLUDE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -714,6 +813,7 @@ class ChatlistExcludeInvalid(BadRequest):
 
 class ChatAboutNotModified(BadRequest):
     """The chat about text was not modified because you tried to edit it using the same content"""
+
     ID = "CHAT_ABOUT_NOT_MODIFIED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -721,6 +821,7 @@ class ChatAboutNotModified(BadRequest):
 
 class ChatAboutTooLong(BadRequest):
     """The chat about text is too long"""
+
     ID = "CHAT_ABOUT_TOO_LONG"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -728,6 +829,7 @@ class ChatAboutTooLong(BadRequest):
 
 class ChatAdminRequired(BadRequest):
     """The method requires chat admin privileges"""
+
     ID = "CHAT_ADMIN_REQUIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -735,6 +837,7 @@ class ChatAdminRequired(BadRequest):
 
 class ChatDiscussionUnallowed(BadRequest):
     """The chat discussion is not allowed"""
+
     ID = "CHAT_DISCUSSION_UNALLOWED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -742,6 +845,7 @@ class ChatDiscussionUnallowed(BadRequest):
 
 class ChatForwardsRestricted(BadRequest):
     """The chat restricts forwarding content"""
+
     ID = "CHAT_FORWARDS_RESTRICTED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -749,6 +853,7 @@ class ChatForwardsRestricted(BadRequest):
 
 class ChatIdEmpty(BadRequest):
     """The provided chat id is empty"""
+
     ID = "CHAT_ID_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -756,6 +861,7 @@ class ChatIdEmpty(BadRequest):
 
 class ChatIdInvalid(BadRequest):
     """The chat id being used is invalid or not known yet. Make sure you see the chat before interacting with it"""
+
     ID = "CHAT_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -763,6 +869,7 @@ class ChatIdInvalid(BadRequest):
 
 class ChatInvalid(BadRequest):
     """The chat is invalid"""
+
     ID = "CHAT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -770,6 +877,7 @@ class ChatInvalid(BadRequest):
 
 class ChatInvitePermanent(BadRequest):
     """The chat invite link is primary"""
+
     ID = "CHAT_INVITE_PERMANENT"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -777,6 +885,7 @@ class ChatInvitePermanent(BadRequest):
 
 class ChatLinkExists(BadRequest):
     """The action failed because the supergroup is linked to a channel"""
+
     ID = "CHAT_LINK_EXISTS"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -784,6 +893,7 @@ class ChatLinkExists(BadRequest):
 
 class ChatNotModified(BadRequest):
     """The chat settings (title, permissions, photo, etc..) were not modified because you tried to edit them using the same content"""
+
     ID = "CHAT_NOT_MODIFIED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -791,6 +901,7 @@ class ChatNotModified(BadRequest):
 
 class ChatPublicRequired(BadRequest):
     """You can only enable join requests in public groups."""
+
     ID = "CHAT_PUBLIC_REQUIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -798,6 +909,7 @@ class ChatPublicRequired(BadRequest):
 
 class ChatRestricted(BadRequest):
     """The chat is restricted and cannot be used"""
+
     ID = "CHAT_RESTRICTED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -805,6 +917,7 @@ class ChatRestricted(BadRequest):
 
 class ChatRevokeDateUnsupported(BadRequest):
     """`min_date` and `max_date` are not available for using with non-user peers"""
+
     ID = "CHAT_REVOKE_DATE_UNSUPPORTED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -812,6 +925,7 @@ class ChatRevokeDateUnsupported(BadRequest):
 
 class ChatSendInlineForbidden(BadRequest):
     """You cannot use inline bots to send messages in this chat"""
+
     ID = "CHAT_SEND_INLINE_FORBIDDEN"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -819,6 +933,7 @@ class ChatSendInlineForbidden(BadRequest):
 
 class ChatTitleEmpty(BadRequest):
     """The chat title is empty"""
+
     ID = "CHAT_TITLE_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -826,6 +941,7 @@ class ChatTitleEmpty(BadRequest):
 
 class ChatTooBig(BadRequest):
     """The chat is too big for this action"""
+
     ID = "CHAT_TOO_BIG"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -833,6 +949,7 @@ class ChatTooBig(BadRequest):
 
 class CodeEmpty(BadRequest):
     """The provided code is empty"""
+
     ID = "CODE_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -840,6 +957,7 @@ class CodeEmpty(BadRequest):
 
 class CodeHashInvalid(BadRequest):
     """The provided code hash invalid"""
+
     ID = "CODE_HASH_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -847,6 +965,7 @@ class CodeHashInvalid(BadRequest):
 
 class CodeInvalid(BadRequest):
     """The provided code is invalid (i.e. from email)"""
+
     ID = "CODE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -854,6 +973,7 @@ class CodeInvalid(BadRequest):
 
 class CollectibleInvalid(BadRequest):
     """The specified collectible is invalid."""
+
     ID = "COLLECTIBLE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -861,6 +981,7 @@ class CollectibleInvalid(BadRequest):
 
 class CollectibleNotFound(BadRequest):
     """The specified collectible could not be found."""
+
     ID = "COLLECTIBLE_NOT_FOUND"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -868,6 +989,7 @@ class CollectibleNotFound(BadRequest):
 
 class ColorInvalid(BadRequest):
     """The provided color is invalid"""
+
     ID = "COLOR_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -875,6 +997,7 @@ class ColorInvalid(BadRequest):
 
 class ConnectionApiIdInvalid(BadRequest):
     """The provided API id is invalid"""
+
     ID = "CONNECTION_API_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -882,6 +1005,7 @@ class ConnectionApiIdInvalid(BadRequest):
 
 class ConnectionAppVersionEmpty(BadRequest):
     """App version is empty"""
+
     ID = "CONNECTION_APP_VERSION_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -889,6 +1013,7 @@ class ConnectionAppVersionEmpty(BadRequest):
 
 class ConnectionDeviceModelEmpty(BadRequest):
     """The device model is empty"""
+
     ID = "CONNECTION_DEVICE_MODEL_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -896,6 +1021,7 @@ class ConnectionDeviceModelEmpty(BadRequest):
 
 class ConnectionIdInvalid(BadRequest):
     """The specified connection ID is invalid."""
+
     ID = "CONNECTION_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -903,6 +1029,7 @@ class ConnectionIdInvalid(BadRequest):
 
 class ConnectionLangPackInvalid(BadRequest):
     """The specified language pack is not valid"""
+
     ID = "CONNECTION_LANG_PACK_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -910,6 +1037,7 @@ class ConnectionLangPackInvalid(BadRequest):
 
 class ConnectionLayerInvalid(BadRequest):
     """The connection layer is invalid. Missing InvokeWithLayer-InitConnection call"""
+
     ID = "CONNECTION_LAYER_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -917,6 +1045,7 @@ class ConnectionLayerInvalid(BadRequest):
 
 class ConnectionNotInited(BadRequest):
     """The connection was not initialized"""
+
     ID = "CONNECTION_NOT_INITED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -924,6 +1053,7 @@ class ConnectionNotInited(BadRequest):
 
 class ConnectionSystemEmpty(BadRequest):
     """The connection to the system is empty"""
+
     ID = "CONNECTION_SYSTEM_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -931,6 +1061,7 @@ class ConnectionSystemEmpty(BadRequest):
 
 class ConnectionSystemLangCodeEmpty(BadRequest):
     """The system language code is empty"""
+
     ID = "CONNECTION_SYSTEM_LANG_CODE_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -938,6 +1069,7 @@ class ConnectionSystemLangCodeEmpty(BadRequest):
 
 class ContactAddMissing(BadRequest):
     """Contact to add is missing"""
+
     ID = "CONTACT_ADD_MISSING"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -945,6 +1077,7 @@ class ContactAddMissing(BadRequest):
 
 class ContactIdInvalid(BadRequest):
     """The provided contact id is invalid"""
+
     ID = "CONTACT_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -952,6 +1085,7 @@ class ContactIdInvalid(BadRequest):
 
 class ContactMissing(BadRequest):
     """The specified user is not a contact."""
+
     ID = "CONTACT_MISSING"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -959,6 +1093,7 @@ class ContactMissing(BadRequest):
 
 class ContactNameEmpty(BadRequest):
     """The provided contact name is empty"""
+
     ID = "CONTACT_NAME_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -966,6 +1101,7 @@ class ContactNameEmpty(BadRequest):
 
 class ContactReqMissing(BadRequest):
     """Missing contact request"""
+
     ID = "CONTACT_REQ_MISSING"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -973,6 +1109,7 @@ class ContactReqMissing(BadRequest):
 
 class CreateCallFailed(BadRequest):
     """An error occurred while creating the call"""
+
     ID = "CREATE_CALL_FAILED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -980,6 +1117,7 @@ class CreateCallFailed(BadRequest):
 
 class CurrencyTotalAmountInvalid(BadRequest):
     """The total amount of all prices is invalid"""
+
     ID = "CURRENCY_TOTAL_AMOUNT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -987,6 +1125,7 @@ class CurrencyTotalAmountInvalid(BadRequest):
 
 class CustomReactionsTooMany(BadRequest):
     """Too many custom reactions were specified."""
+
     ID = "CUSTOM_REACTIONS_TOO_MANY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -994,6 +1133,7 @@ class CustomReactionsTooMany(BadRequest):
 
 class DataInvalid(BadRequest):
     """The encrypted data is invalid"""
+
     ID = "DATA_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1001,6 +1141,7 @@ class DataInvalid(BadRequest):
 
 class DataJsonInvalid(BadRequest):
     """The provided JSON data is invalid"""
+
     ID = "DATA_JSON_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1008,6 +1149,7 @@ class DataJsonInvalid(BadRequest):
 
 class DataTooLong(BadRequest):
     """Data too long"""
+
     ID = "DATA_TOO_LONG"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1015,6 +1157,7 @@ class DataTooLong(BadRequest):
 
 class DateEmpty(BadRequest):
     """The date argument is empty"""
+
     ID = "DATE_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1022,6 +1165,7 @@ class DateEmpty(BadRequest):
 
 class DcIdInvalid(BadRequest):
     """The dc_id parameter is invalid"""
+
     ID = "DC_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1029,6 +1173,7 @@ class DcIdInvalid(BadRequest):
 
 class DhGAInvalid(BadRequest):
     """The g_a parameter invalid"""
+
     ID = "DH_G_A_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1036,6 +1181,7 @@ class DhGAInvalid(BadRequest):
 
 class DocumentInvalid(BadRequest):
     """The document is invalid"""
+
     ID = "DOCUMENT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1043,6 +1189,7 @@ class DocumentInvalid(BadRequest):
 
 class EmailHashExpired(BadRequest):
     """The email hash expired and cannot be used to verify it"""
+
     ID = "EMAIL_HASH_EXPIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1050,6 +1197,7 @@ class EmailHashExpired(BadRequest):
 
 class EmailInvalid(BadRequest):
     """The email provided is invalid"""
+
     ID = "EMAIL_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1057,6 +1205,7 @@ class EmailInvalid(BadRequest):
 
 class EmailNotAllowed(BadRequest):
     """This email is not allowed"""
+
     ID = "EMAIL_NOT_ALLOWED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1064,6 +1213,7 @@ class EmailNotAllowed(BadRequest):
 
 class EmailNotSetup(BadRequest):
     """In order to change the login email with emailVerifyPurposeLoginChange, an existing login email must already be set using emailVerifyPurposeLoginSetup."""
+
     ID = "EMAIL_NOT_SETUP"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1071,6 +1221,7 @@ class EmailNotSetup(BadRequest):
 
 class EmailUnconfirmed(BadRequest):
     """Email unconfirmed"""
+
     ID = "EMAIL_UNCONFIRMED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1078,6 +1229,7 @@ class EmailUnconfirmed(BadRequest):
 
 class EmailUnconfirmed(BadRequest):
     """The provided email isn't confirmed, {value} is the length of the verification code that was just sent to the email"""
+
     ID = "EMAIL_UNCONFIRMED_X"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1085,6 +1237,7 @@ class EmailUnconfirmed(BadRequest):
 
 class EmailVerifyExpired(BadRequest):
     """The verification email has expired"""
+
     ID = "EMAIL_VERIFY_EXPIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1092,6 +1245,7 @@ class EmailVerifyExpired(BadRequest):
 
 class EmojiInvalid(BadRequest):
     """The specified theme emoji is valid"""
+
     ID = "EMOJI_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1099,6 +1253,7 @@ class EmojiInvalid(BadRequest):
 
 class EmojiMarkupInvalid(BadRequest):
     """The specified `video_emoji_markup` was invalid."""
+
     ID = "EMOJI_MARKUP_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1106,6 +1261,7 @@ class EmojiMarkupInvalid(BadRequest):
 
 class EmojiNotModified(BadRequest):
     """The theme wasn't changed"""
+
     ID = "EMOJI_NOT_MODIFIED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1113,6 +1269,7 @@ class EmojiNotModified(BadRequest):
 
 class EmoticonEmpty(BadRequest):
     """The emoticon parameter is empty"""
+
     ID = "EMOTICON_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1120,6 +1277,7 @@ class EmoticonEmpty(BadRequest):
 
 class EmoticonInvalid(BadRequest):
     """The emoticon parameter is invalid"""
+
     ID = "EMOTICON_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1127,6 +1285,7 @@ class EmoticonInvalid(BadRequest):
 
 class EmoticonStickerpackMissing(BadRequest):
     """The emoticon sticker pack you are trying to obtain is missing"""
+
     ID = "EMOTICON_STICKERPACK_MISSING"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1134,6 +1293,7 @@ class EmoticonStickerpackMissing(BadRequest):
 
 class EncryptedMessageInvalid(BadRequest):
     """The special binding message (bind_auth_key_inner) contains invalid data"""
+
     ID = "ENCRYPTED_MESSAGE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1141,6 +1301,7 @@ class EncryptedMessageInvalid(BadRequest):
 
 class EncryptionAlreadyAccepted(BadRequest):
     """The secret chat is already accepted"""
+
     ID = "ENCRYPTION_ALREADY_ACCEPTED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1148,6 +1309,7 @@ class EncryptionAlreadyAccepted(BadRequest):
 
 class EncryptionAlreadyDeclined(BadRequest):
     """The secret chat is already declined"""
+
     ID = "ENCRYPTION_ALREADY_DECLINED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1155,6 +1317,7 @@ class EncryptionAlreadyDeclined(BadRequest):
 
 class EncryptionDeclined(BadRequest):
     """The secret chat was declined"""
+
     ID = "ENCRYPTION_DECLINED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1162,6 +1325,7 @@ class EncryptionDeclined(BadRequest):
 
 class EncryptionIdInvalid(BadRequest):
     """The provided secret chat id is invalid"""
+
     ID = "ENCRYPTION_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1169,6 +1333,7 @@ class EncryptionIdInvalid(BadRequest):
 
 class EntitiesTooLong(BadRequest):
     """The entity provided contains data that is too long, or you passed too many entities to this message"""
+
     ID = "ENTITIES_TOO_LONG"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1176,6 +1341,7 @@ class EntitiesTooLong(BadRequest):
 
 class EntityBoundsInvalid(BadRequest):
     """The message entity bounds are invalid"""
+
     ID = "ENTITY_BOUNDS_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1183,6 +1349,7 @@ class EntityBoundsInvalid(BadRequest):
 
 class EntityMentionUserInvalid(BadRequest):
     """The mentioned entity is not an user"""
+
     ID = "ENTITY_MENTION_USER_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1190,6 +1357,7 @@ class EntityMentionUserInvalid(BadRequest):
 
 class ErrorTextEmpty(BadRequest):
     """The provided error message is empty"""
+
     ID = "ERROR_TEXT_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1197,6 +1365,7 @@ class ErrorTextEmpty(BadRequest):
 
 class ExpireDateInvalid(BadRequest):
     """The expiration date is invalid"""
+
     ID = "EXPIRE_DATE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1204,6 +1373,7 @@ class ExpireDateInvalid(BadRequest):
 
 class ExpireForbidden(BadRequest):
     """Expire forbidden"""
+
     ID = "EXPIRE_FORBIDDEN"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1211,6 +1381,7 @@ class ExpireForbidden(BadRequest):
 
 class ExportCardInvalid(BadRequest):
     """The provided card is invalid"""
+
     ID = "EXPORT_CARD_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1218,6 +1389,7 @@ class ExportCardInvalid(BadRequest):
 
 class ExtendedMediaAmountInvalid(BadRequest):
     """The maximum amount of `star_count` should be less than the `stars_paid_post_amount_max` [client configuration parameters](/api/config)."""
+
     ID = "EXTENDED_MEDIA_AMOUNT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1225,6 +1397,7 @@ class ExtendedMediaAmountInvalid(BadRequest):
 
 class ExtendedMediaPeerInvalid(BadRequest):
     """The specified chat type is invalid."""
+
     ID = "EXTENDED_MEDIA_PEER_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1232,6 +1405,7 @@ class ExtendedMediaPeerInvalid(BadRequest):
 
 class ExtendedMediaTypeInvalid(BadRequest):
     """The specified extended media type is unsupported."""
+
     ID = "EXTENDED_MEDIA_TYPE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1239,6 +1413,7 @@ class ExtendedMediaTypeInvalid(BadRequest):
 
 class ExternalUrlInvalid(BadRequest):
     """The external media URL is invalid"""
+
     ID = "EXTERNAL_URL_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1246,6 +1421,7 @@ class ExternalUrlInvalid(BadRequest):
 
 class FieldNameEmpty(BadRequest):
     """The field with the name FIELD_NAME is missing"""
+
     ID = "FIELD_NAME_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1253,6 +1429,7 @@ class FieldNameEmpty(BadRequest):
 
 class FieldNameInvalid(BadRequest):
     """The field with the name FIELD_NAME is invalid"""
+
     ID = "FIELD_NAME_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1260,6 +1437,7 @@ class FieldNameInvalid(BadRequest):
 
 class FileContentTypeInvalid(BadRequest):
     """File content-type is invalid"""
+
     ID = "FILE_CONTENT_TYPE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1267,6 +1445,7 @@ class FileContentTypeInvalid(BadRequest):
 
 class FileEmtpy(BadRequest):
     """An empty file was provided"""
+
     ID = "FILE_EMTPY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1274,6 +1453,7 @@ class FileEmtpy(BadRequest):
 
 class FileIdInvalid(BadRequest):
     """The file id is invalid"""
+
     ID = "FILE_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1281,6 +1461,7 @@ class FileIdInvalid(BadRequest):
 
 class FileMigrate(BadRequest):
     """The file is in Data Center No. {value}"""
+
     ID = "FILE_MIGRATE_X"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1288,6 +1469,7 @@ class FileMigrate(BadRequest):
 
 class FilePartsInvalid(BadRequest):
     """Invalid number of parts."""
+
     ID = "FILE_PARTS_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1295,6 +1477,7 @@ class FilePartsInvalid(BadRequest):
 
 class FilePart0Missing(BadRequest):
     """File part 0 missing"""
+
     ID = "FILE_PART_0_MISSING"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1302,6 +1485,7 @@ class FilePart0Missing(BadRequest):
 
 class FilePartEmpty(BadRequest):
     """The file part sent is empty"""
+
     ID = "FILE_PART_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1309,6 +1493,7 @@ class FilePartEmpty(BadRequest):
 
 class FilePartInvalid(BadRequest):
     """The file part number is invalid."""
+
     ID = "FILE_PART_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1316,6 +1501,7 @@ class FilePartInvalid(BadRequest):
 
 class FilePartLengthInvalid(BadRequest):
     """The length of a file part is invalid"""
+
     ID = "FILE_PART_LENGTH_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1323,6 +1509,7 @@ class FilePartLengthInvalid(BadRequest):
 
 class FilePartSizeChanged(BadRequest):
     """The part size is different from the size of one of the previous parts in the same file"""
+
     ID = "FILE_PART_SIZE_CHANGED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1330,6 +1517,7 @@ class FilePartSizeChanged(BadRequest):
 
 class FilePartSizeInvalid(BadRequest):
     """The file part size is invalid"""
+
     ID = "FILE_PART_SIZE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1337,6 +1525,7 @@ class FilePartSizeInvalid(BadRequest):
 
 class FilePartTooBig(BadRequest):
     """The size limit for the content of the file part has been exceeded"""
+
     ID = "FILE_PART_TOO_BIG"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1344,6 +1533,7 @@ class FilePartTooBig(BadRequest):
 
 class FilePartMissing(BadRequest):
     """Part {value} of the file is missing from storage"""
+
     ID = "FILE_PART_X_MISSING"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1351,6 +1541,7 @@ class FilePartMissing(BadRequest):
 
 class FileReferenceEmpty(BadRequest):
     """The file id contains an empty file reference, you must obtain a valid one by fetching the message from the origin context"""
+
     ID = "FILE_REFERENCE_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1358,6 +1549,7 @@ class FileReferenceEmpty(BadRequest):
 
 class FileReferenceExpired(BadRequest):
     """The file id contains an expired file reference, you must obtain a valid one by fetching the message from the origin context"""
+
     ID = "FILE_REFERENCE_EXPIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1365,6 +1557,7 @@ class FileReferenceExpired(BadRequest):
 
 class FileReferenceInvalid(BadRequest):
     """The file id contains an invalid file reference, you must obtain a valid one by fetching the message from the origin context"""
+
     ID = "FILE_REFERENCE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1372,6 +1565,7 @@ class FileReferenceInvalid(BadRequest):
 
 class FileReferenceExpired(BadRequest):
     """The file reference of the media file at index {value} in the passed media array expired, it [must be refreshed](https://core.telegram.org/api/file_reference)."""
+
     ID = "FILE_REFERENCE_X_EXPIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1379,6 +1573,7 @@ class FileReferenceExpired(BadRequest):
 
 class FileReferenceInvalid(BadRequest):
     """The file reference of the media file at index {value} in the passed media array is invalid."""
+
     ID = "FILE_REFERENCE_X_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1386,6 +1581,7 @@ class FileReferenceInvalid(BadRequest):
 
 class FileTitleEmpty(BadRequest):
     """An empty file title was specified"""
+
     ID = "FILE_TITLE_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1393,6 +1589,7 @@ class FileTitleEmpty(BadRequest):
 
 class FileTokenInvalid(BadRequest):
     """The specified file token is invalid."""
+
     ID = "FILE_TOKEN_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1400,6 +1597,7 @@ class FileTokenInvalid(BadRequest):
 
 class FilterIdInvalid(BadRequest):
     """The specified filter ID is invalid"""
+
     ID = "FILTER_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1407,6 +1605,7 @@ class FilterIdInvalid(BadRequest):
 
 class FilterIncludeEmpty(BadRequest):
     """The filter include is empty"""
+
     ID = "FILTER_INCLUDE_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1414,6 +1613,7 @@ class FilterIncludeEmpty(BadRequest):
 
 class FilterNotSupported(BadRequest):
     """The specified filter cannot be used in this context"""
+
     ID = "FILTER_NOT_SUPPORTED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1421,6 +1621,7 @@ class FilterNotSupported(BadRequest):
 
 class FilterTitleEmpty(BadRequest):
     """The title field of the filter is empty"""
+
     ID = "FILTER_TITLE_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1428,6 +1629,7 @@ class FilterTitleEmpty(BadRequest):
 
 class FirstnameInvalid(BadRequest):
     """The first name is invalid"""
+
     ID = "FIRSTNAME_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1435,6 +1637,7 @@ class FirstnameInvalid(BadRequest):
 
 class FloodskipNotAllowed(BadRequest):
     """You can't execute the specified action because in order to enable this feature [the following conditions](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once) must be satisfied."""
+
     ID = "FLOODSKIP_NOT_ALLOWED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1442,6 +1645,7 @@ class FloodskipNotAllowed(BadRequest):
 
 class FolderIdEmpty(BadRequest):
     """The folder you tried to delete was already empty"""
+
     ID = "FOLDER_ID_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1449,6 +1653,7 @@ class FolderIdEmpty(BadRequest):
 
 class FolderIdInvalid(BadRequest):
     """The folder id is invalid"""
+
     ID = "FOLDER_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1456,6 +1661,7 @@ class FolderIdInvalid(BadRequest):
 
 class FormExpired(BadRequest):
     """The form was generated more than 10 minutes ago and has expired, please re-generate it using [payments.getPaymentForm](https://core.telegram.org/method/payments.getPaymentForm) and pass the new `form_id`."""
+
     ID = "FORM_EXPIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1463,6 +1669,7 @@ class FormExpired(BadRequest):
 
 class FormIdExpired(BadRequest):
     """The specified id has expired."""
+
     ID = "FORM_ID_EXPIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1470,6 +1677,7 @@ class FormIdExpired(BadRequest):
 
 class ForumEnabled(BadRequest):
     """You can't execute the specified action because the group is a [forum](https://core.telegram.org/api/forum), disable forum functionality to continue."""
+
     ID = "FORUM_ENABLED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1477,6 +1685,7 @@ class ForumEnabled(BadRequest):
 
 class FreshChangeAdminsForbidden(BadRequest):
     """You can't change administrator settings in this chat because your session was logged-in recently"""
+
     ID = "FRESH_CHANGE_ADMINS_FORBIDDEN"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1484,6 +1693,7 @@ class FreshChangeAdminsForbidden(BadRequest):
 
 class FromMessageBotDisabled(BadRequest):
     """Bots can't use fromMessage min constructors"""
+
     ID = "FROM_MESSAGE_BOT_DISABLED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1491,6 +1701,7 @@ class FromMessageBotDisabled(BadRequest):
 
 class FromPeerInvalid(BadRequest):
     """The from peer value is invalid"""
+
     ID = "FROM_PEER_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1498,6 +1709,7 @@ class FromPeerInvalid(BadRequest):
 
 class GameBotInvalid(BadRequest):
     """You cannot send that game with the current bot"""
+
     ID = "GAME_BOT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1505,6 +1717,7 @@ class GameBotInvalid(BadRequest):
 
 class GeneralModifyIconForbidden(BadRequest):
     """You can't modify the icon of the "General" topic."""
+
     ID = "GENERAL_MODIFY_ICON_FORBIDDEN"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1512,6 +1725,7 @@ class GeneralModifyIconForbidden(BadRequest):
 
 class GeoPointInvalid(BadRequest):
     """Invalid geo point provided"""
+
     ID = "GEO_POINT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1519,6 +1733,7 @@ class GeoPointInvalid(BadRequest):
 
 class GiftSlugExpired(BadRequest):
     """The gift slug is expired"""
+
     ID = "GIFT_SLUG_EXPIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1526,6 +1741,7 @@ class GiftSlugExpired(BadRequest):
 
 class GiftSlugInvalid(BadRequest):
     """The specified slug is invalid."""
+
     ID = "GIFT_SLUG_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1533,6 +1749,7 @@ class GiftSlugInvalid(BadRequest):
 
 class GifContentTypeInvalid(BadRequest):
     """GIF content-type invalid"""
+
     ID = "GIF_CONTENT_TYPE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1540,6 +1757,7 @@ class GifContentTypeInvalid(BadRequest):
 
 class GifIdInvalid(BadRequest):
     """The provided gif/animation id is invalid"""
+
     ID = "GIF_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1547,6 +1765,7 @@ class GifIdInvalid(BadRequest):
 
 class GraphExpiredReload(BadRequest):
     """This graph has expired, please obtain a new graph token"""
+
     ID = "GRAPH_EXPIRED_RELOAD"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1554,6 +1773,7 @@ class GraphExpiredReload(BadRequest):
 
 class GraphInvalidReload(BadRequest):
     """Invalid graph token provided, please reload the stats and provide the updated token"""
+
     ID = "GRAPH_INVALID_RELOAD"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1561,6 +1781,7 @@ class GraphInvalidReload(BadRequest):
 
 class GraphOutdatedReload(BadRequest):
     """The graph data is outdated"""
+
     ID = "GRAPH_OUTDATED_RELOAD"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1568,6 +1789,7 @@ class GraphOutdatedReload(BadRequest):
 
 class GroupcallAlreadyDiscarded(BadRequest):
     """The group call was already discarded"""
+
     ID = "GROUPCALL_ALREADY_DISCARDED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1575,6 +1797,7 @@ class GroupcallAlreadyDiscarded(BadRequest):
 
 class GroupcallForbidden(BadRequest):
     """The group call has already ended."""
+
     ID = "GROUPCALL_FORBIDDEN"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1582,6 +1805,7 @@ class GroupcallForbidden(BadRequest):
 
 class GroupcallInvalid(BadRequest):
     """The specified group call is invalid"""
+
     ID = "GROUPCALL_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1589,6 +1813,7 @@ class GroupcallInvalid(BadRequest):
 
 class GroupcallJoinMissing(BadRequest):
     """You haven't joined this group call"""
+
     ID = "GROUPCALL_JOIN_MISSING"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1596,6 +1821,7 @@ class GroupcallJoinMissing(BadRequest):
 
 class GroupcallNotModified(BadRequest):
     """Group call settings weren't modified"""
+
     ID = "GROUPCALL_NOT_MODIFIED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1603,6 +1829,7 @@ class GroupcallNotModified(BadRequest):
 
 class GroupcallSsrcDuplicateMuch(BadRequest):
     """Too many group call synchronization source duplicates"""
+
     ID = "GROUPCALL_SSRC_DUPLICATE_MUCH"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1610,6 +1837,7 @@ class GroupcallSsrcDuplicateMuch(BadRequest):
 
 class GroupedMediaInvalid(BadRequest):
     """The album contains invalid media"""
+
     ID = "GROUPED_MEDIA_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1617,6 +1845,7 @@ class GroupedMediaInvalid(BadRequest):
 
 class GroupCallInvalid(BadRequest):
     """The group call is invalid"""
+
     ID = "GROUP_CALL_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1624,6 +1853,7 @@ class GroupCallInvalid(BadRequest):
 
 class HashtagInvalid(BadRequest):
     """The specified hashtag is invalid."""
+
     ID = "HASHTAG_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1631,6 +1861,7 @@ class HashtagInvalid(BadRequest):
 
 class HashInvalid(BadRequest):
     """The provided hash is invalid"""
+
     ID = "HASH_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1638,6 +1869,7 @@ class HashInvalid(BadRequest):
 
 class HideRequesterMissing(BadRequest):
     """The join request was missing or was already handled"""
+
     ID = "HIDE_REQUESTER_MISSING"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1645,6 +1877,7 @@ class HideRequesterMissing(BadRequest):
 
 class ImageProcessFailed(BadRequest):
     """The server failed to process your image"""
+
     ID = "IMAGE_PROCESS_FAILED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1652,6 +1885,7 @@ class ImageProcessFailed(BadRequest):
 
 class ImportFileInvalid(BadRequest):
     """The imported file is invalid"""
+
     ID = "IMPORT_FILE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1659,6 +1893,7 @@ class ImportFileInvalid(BadRequest):
 
 class ImportFormatDateInvalid(BadRequest):
     """The date specified in the import file is invalid."""
+
     ID = "IMPORT_FORMAT_DATE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1666,6 +1901,7 @@ class ImportFormatDateInvalid(BadRequest):
 
 class ImportFormatUnrecognized(BadRequest):
     """The imported format is unrecognized"""
+
     ID = "IMPORT_FORMAT_UNRECOGNIZED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1673,6 +1909,7 @@ class ImportFormatUnrecognized(BadRequest):
 
 class ImportIdInvalid(BadRequest):
     """The import id is invalid"""
+
     ID = "IMPORT_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1680,6 +1917,7 @@ class ImportIdInvalid(BadRequest):
 
 class ImportTokenInvalid(BadRequest):
     """The specified token is invalid."""
+
     ID = "IMPORT_TOKEN_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1687,6 +1925,7 @@ class ImportTokenInvalid(BadRequest):
 
 class InlineResultExpired(BadRequest):
     """The inline bot query expired"""
+
     ID = "INLINE_RESULT_EXPIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1694,6 +1933,7 @@ class InlineResultExpired(BadRequest):
 
 class InputChatlistInvalid(BadRequest):
     """The specified folder is invalid."""
+
     ID = "INPUT_CHATLIST_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1701,6 +1941,7 @@ class InputChatlistInvalid(BadRequest):
 
 class InputConstructorInvalid(BadRequest):
     """The provided constructor is invalid"""
+
     ID = "INPUT_CONSTRUCTOR_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1708,6 +1949,7 @@ class InputConstructorInvalid(BadRequest):
 
 class InputFetchError(BadRequest):
     """An error occurred while deserializing TL parameters"""
+
     ID = "INPUT_FETCH_ERROR"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1715,6 +1957,7 @@ class InputFetchError(BadRequest):
 
 class InputFetchFail(BadRequest):
     """Failed deserializing TL payload"""
+
     ID = "INPUT_FETCH_FAIL"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1722,6 +1965,7 @@ class InputFetchFail(BadRequest):
 
 class InputFileInvalid(BadRequest):
     """The specified [InputFile](https://core.telegram.org/type/InputFile) is invalid."""
+
     ID = "INPUT_FILE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1729,6 +1973,7 @@ class InputFileInvalid(BadRequest):
 
 class InputFilterInvalid(BadRequest):
     """The filter is invalid for this query"""
+
     ID = "INPUT_FILTER_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1736,6 +1981,7 @@ class InputFilterInvalid(BadRequest):
 
 class InputLayerInvalid(BadRequest):
     """The provided layer is invalid"""
+
     ID = "INPUT_LAYER_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1743,6 +1989,7 @@ class InputLayerInvalid(BadRequest):
 
 class InputMethodInvalid(BadRequest):
     """The method invoked is invalid in the current schema"""
+
     ID = "INPUT_METHOD_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1750,6 +1997,7 @@ class InputMethodInvalid(BadRequest):
 
 class InputRequestTooLong(BadRequest):
     """The input request is too long"""
+
     ID = "INPUT_REQUEST_TOO_LONG"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1757,6 +2005,7 @@ class InputRequestTooLong(BadRequest):
 
 class InputTextEmpty(BadRequest):
     """The specified text is empty"""
+
     ID = "INPUT_TEXT_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1764,6 +2013,7 @@ class InputTextEmpty(BadRequest):
 
 class InputTextTooLong(BadRequest):
     """The specified text is too long."""
+
     ID = "INPUT_TEXT_TOO_LONG"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1771,6 +2021,7 @@ class InputTextTooLong(BadRequest):
 
 class InputUserDeactivated(BadRequest):
     """The target user has been deleted/deactivated"""
+
     ID = "INPUT_USER_DEACTIVATED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1778,6 +2029,7 @@ class InputUserDeactivated(BadRequest):
 
 class InvitesTooMuch(BadRequest):
     """The maximum number of per-folder invites specified by the `chatlist_invites_limit_default`/`chatlist_invites_limit_premium` [client configuration parameters &raquo;](/api/config#chatlist-invites-limit-default) was reached."""
+
     ID = "INVITES_TOO_MUCH"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1785,6 +2037,7 @@ class InvitesTooMuch(BadRequest):
 
 class InviteForbiddenWithJoinas(BadRequest):
     """If the user has anonymously joined a group call as a channel, they can't invite other users to the group call because that would cause deanonymization, because the invite would be sent using the original user ID, not the anonymized channel ID"""
+
     ID = "INVITE_FORBIDDEN_WITH_JOINAS"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1792,6 +2045,7 @@ class InviteForbiddenWithJoinas(BadRequest):
 
 class InviteHashEmpty(BadRequest):
     """The invite hash is empty"""
+
     ID = "INVITE_HASH_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1799,6 +2053,7 @@ class InviteHashEmpty(BadRequest):
 
 class InviteHashExpired(BadRequest):
     """The chat invite link is no longer valid"""
+
     ID = "INVITE_HASH_EXPIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1806,6 +2061,7 @@ class InviteHashExpired(BadRequest):
 
 class InviteHashInvalid(BadRequest):
     """The invite link hash is invalid"""
+
     ID = "INVITE_HASH_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1813,6 +2069,7 @@ class InviteHashInvalid(BadRequest):
 
 class InviteRequestSent(BadRequest):
     """The request to join this chat or channel has been successfully sent"""
+
     ID = "INVITE_REQUEST_SENT"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1820,6 +2077,7 @@ class InviteRequestSent(BadRequest):
 
 class InviteRevokedMissing(BadRequest):
     """The action required a chat invite link to be revoked first"""
+
     ID = "INVITE_REVOKED_MISSING"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1827,6 +2085,7 @@ class InviteRevokedMissing(BadRequest):
 
 class InviteSlugEmpty(BadRequest):
     """The invite slug is empty"""
+
     ID = "INVITE_SLUG_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1834,6 +2093,7 @@ class InviteSlugEmpty(BadRequest):
 
 class InviteSlugExpired(BadRequest):
     """The invite slug is expired"""
+
     ID = "INVITE_SLUG_EXPIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1841,6 +2101,7 @@ class InviteSlugExpired(BadRequest):
 
 class InvoicePayloadInvalid(BadRequest):
     """The specified invoice payload is invalid"""
+
     ID = "INVOICE_PAYLOAD_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1848,6 +2109,7 @@ class InvoicePayloadInvalid(BadRequest):
 
 class JoinAsPeerInvalid(BadRequest):
     """The specified peer cannot be used to join a group call"""
+
     ID = "JOIN_AS_PEER_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1855,6 +2117,7 @@ class JoinAsPeerInvalid(BadRequest):
 
 class LanguageInvalid(BadRequest):
     """The specified lang_code is invalid."""
+
     ID = "LANGUAGE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1862,6 +2125,7 @@ class LanguageInvalid(BadRequest):
 
 class LangCodeInvalid(BadRequest):
     """The specified language code is invalid"""
+
     ID = "LANG_CODE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1869,6 +2133,7 @@ class LangCodeInvalid(BadRequest):
 
 class LangCodeNotSupported(BadRequest):
     """The specified language code is not supported"""
+
     ID = "LANG_CODE_NOT_SUPPORTED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1876,6 +2141,7 @@ class LangCodeNotSupported(BadRequest):
 
 class LangPackInvalid(BadRequest):
     """The provided language pack is invalid"""
+
     ID = "LANG_PACK_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1883,6 +2149,7 @@ class LangPackInvalid(BadRequest):
 
 class LastnameInvalid(BadRequest):
     """The last name is invalid"""
+
     ID = "LASTNAME_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1890,6 +2157,7 @@ class LastnameInvalid(BadRequest):
 
 class LimitInvalid(BadRequest):
     """The limit parameter is invalid"""
+
     ID = "LIMIT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1897,6 +2165,7 @@ class LimitInvalid(BadRequest):
 
 class LinkNotModified(BadRequest):
     """The chat link was not modified because you tried to link to the same target"""
+
     ID = "LINK_NOT_MODIFIED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1904,6 +2173,7 @@ class LinkNotModified(BadRequest):
 
 class LocationInvalid(BadRequest):
     """The file location is invalid"""
+
     ID = "LOCATION_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1911,6 +2181,7 @@ class LocationInvalid(BadRequest):
 
 class MaxDateInvalid(BadRequest):
     """The specified maximum date is invalid"""
+
     ID = "MAX_DATE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1918,6 +2189,7 @@ class MaxDateInvalid(BadRequest):
 
 class MaxIdInvalid(BadRequest):
     """The max_id parameter is invalid"""
+
     ID = "MAX_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1925,6 +2197,7 @@ class MaxIdInvalid(BadRequest):
 
 class MaxQtsInvalid(BadRequest):
     """The provided QTS is invalid"""
+
     ID = "MAX_QTS_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1932,6 +2205,7 @@ class MaxQtsInvalid(BadRequest):
 
 class Md5ChecksumInvalid(BadRequest):
     """The file's checksum did not match the md5_checksum parameter"""
+
     ID = "MD5_CHECKSUM_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1939,6 +2213,7 @@ class Md5ChecksumInvalid(BadRequest):
 
 class MediaAlreadyPaid(BadRequest):
     """The specified paid media is already paid."""
+
     ID = "MEDIA_ALREADY_PAID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1946,6 +2221,7 @@ class MediaAlreadyPaid(BadRequest):
 
 class MediaCaptionTooLong(BadRequest):
     """The media caption is too long"""
+
     ID = "MEDIA_CAPTION_TOO_LONG"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1953,6 +2229,7 @@ class MediaCaptionTooLong(BadRequest):
 
 class MediaEmpty(BadRequest):
     """The media you tried to send is invalid"""
+
     ID = "MEDIA_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1960,6 +2237,7 @@ class MediaEmpty(BadRequest):
 
 class MediaFileInvalid(BadRequest):
     """The provided media file is invalid"""
+
     ID = "MEDIA_FILE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1967,6 +2245,7 @@ class MediaFileInvalid(BadRequest):
 
 class MediaGroupedInvalid(BadRequest):
     """You tried to send media of different types in an album"""
+
     ID = "MEDIA_GROUPED_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1974,6 +2253,7 @@ class MediaGroupedInvalid(BadRequest):
 
 class MediaInvalid(BadRequest):
     """The media is invalid"""
+
     ID = "MEDIA_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1981,6 +2261,7 @@ class MediaInvalid(BadRequest):
 
 class MediaNewInvalid(BadRequest):
     """The new media to edit the message with is invalid"""
+
     ID = "MEDIA_NEW_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1988,6 +2269,7 @@ class MediaNewInvalid(BadRequest):
 
 class MediaPrevInvalid(BadRequest):
     """The previous media cannot be edited with anything else"""
+
     ID = "MEDIA_PREV_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -1995,6 +2277,7 @@ class MediaPrevInvalid(BadRequest):
 
 class MediaTtlInvalid(BadRequest):
     """The media ttl is invalid"""
+
     ID = "MEDIA_TTL_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2002,6 +2285,7 @@ class MediaTtlInvalid(BadRequest):
 
 class MediaTypeInvalid(BadRequest):
     """The specified media type cannot be used in stories."""
+
     ID = "MEDIA_TYPE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2009,6 +2293,7 @@ class MediaTypeInvalid(BadRequest):
 
 class MediaVideoStoryMissing(BadRequest):
     """The media does not have a photo or a video"""
+
     ID = "MEDIA_VIDEO_STORY_MISSING"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2016,6 +2301,7 @@ class MediaVideoStoryMissing(BadRequest):
 
 class MegagroupGeoRequired(BadRequest):
     """This method can only be invoked on a geogroup."""
+
     ID = "MEGAGROUP_GEO_REQUIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2023,6 +2309,7 @@ class MegagroupGeoRequired(BadRequest):
 
 class MegagroupIdInvalid(BadRequest):
     """The supergroup is invalid"""
+
     ID = "MEGAGROUP_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2030,6 +2317,7 @@ class MegagroupIdInvalid(BadRequest):
 
 class MegagroupPrehistoryHidden(BadRequest):
     """The action failed because the supergroup has the pre-history hidden"""
+
     ID = "MEGAGROUP_PREHISTORY_HIDDEN"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2037,6 +2325,7 @@ class MegagroupPrehistoryHidden(BadRequest):
 
 class MegagroupRequired(BadRequest):
     """The request can only be used with a supergroup"""
+
     ID = "MEGAGROUP_REQUIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2044,6 +2333,7 @@ class MegagroupRequired(BadRequest):
 
 class MessageEditTimeExpired(BadRequest):
     """You can no longer edit this message because too much time has passed"""
+
     ID = "MESSAGE_EDIT_TIME_EXPIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2051,6 +2341,7 @@ class MessageEditTimeExpired(BadRequest):
 
 class MessageEmpty(BadRequest):
     """The message sent is empty or contains invalid characters"""
+
     ID = "MESSAGE_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2058,6 +2349,7 @@ class MessageEmpty(BadRequest):
 
 class MessageIdsEmpty(BadRequest):
     """The requested message doesn't exist or you provided no message id"""
+
     ID = "MESSAGE_IDS_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2065,6 +2357,7 @@ class MessageIdsEmpty(BadRequest):
 
 class MessageIdInvalid(BadRequest):
     """The message id is invalid"""
+
     ID = "MESSAGE_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2072,6 +2365,7 @@ class MessageIdInvalid(BadRequest):
 
 class MessageNotModified(BadRequest):
     """The message was not modified because you tried to edit it using the same content"""
+
     ID = "MESSAGE_NOT_MODIFIED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2079,6 +2373,7 @@ class MessageNotModified(BadRequest):
 
 class MessageNotReadYet(BadRequest):
     """The specified message wasn't read yet."""
+
     ID = "MESSAGE_NOT_READ_YET"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2086,6 +2381,7 @@ class MessageNotReadYet(BadRequest):
 
 class MessagePollClosed(BadRequest):
     """You can't interact with a closed poll"""
+
     ID = "MESSAGE_POLL_CLOSED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2093,6 +2389,7 @@ class MessagePollClosed(BadRequest):
 
 class MessageTooLong(BadRequest):
     """The message text is too long"""
+
     ID = "MESSAGE_TOO_LONG"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2100,6 +2397,7 @@ class MessageTooLong(BadRequest):
 
 class MessageTooOld(BadRequest):
     """The message is too old, the requested information is not available."""
+
     ID = "MESSAGE_TOO_OLD"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2107,6 +2405,7 @@ class MessageTooOld(BadRequest):
 
 class MethodInvalid(BadRequest):
     """The API method is invalid and cannot be used"""
+
     ID = "METHOD_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2114,6 +2413,7 @@ class MethodInvalid(BadRequest):
 
 class MinDateInvalid(BadRequest):
     """The specified minimum date is invalid"""
+
     ID = "MIN_DATE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2121,6 +2421,7 @@ class MinDateInvalid(BadRequest):
 
 class MsgIdInvalid(BadRequest):
     """The message ID used in the peer was invalid"""
+
     ID = "MSG_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2128,6 +2429,7 @@ class MsgIdInvalid(BadRequest):
 
 class MsgTooOld(BadRequest):
     """chat_read_mark_expire_period have passed since the message was sent, read receipts were deleted"""
+
     ID = "MSG_TOO_OLD"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2135,6 +2437,7 @@ class MsgTooOld(BadRequest):
 
 class MsgVoiceMissing(BadRequest):
     """The message does not contain a voice message"""
+
     ID = "MSG_VOICE_MISSING"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2142,6 +2445,7 @@ class MsgVoiceMissing(BadRequest):
 
 class MsgWaitFailed(BadRequest):
     """A waiting call returned an error"""
+
     ID = "MSG_WAIT_FAILED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2149,6 +2453,7 @@ class MsgWaitFailed(BadRequest):
 
 class MultiMediaTooLong(BadRequest):
     """The album/media group contains too many items"""
+
     ID = "MULTI_MEDIA_TOO_LONG"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2156,6 +2461,7 @@ class MultiMediaTooLong(BadRequest):
 
 class NewSaltInvalid(BadRequest):
     """The new salt is invalid"""
+
     ID = "NEW_SALT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2163,6 +2469,7 @@ class NewSaltInvalid(BadRequest):
 
 class NewSettingsEmpty(BadRequest):
     """No password is set on the current account, and no new password was specified in `new_settings`"""
+
     ID = "NEW_SETTINGS_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2170,6 +2477,7 @@ class NewSettingsEmpty(BadRequest):
 
 class NewSettingsInvalid(BadRequest):
     """The new settings are invalid"""
+
     ID = "NEW_SETTINGS_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2177,6 +2485,7 @@ class NewSettingsInvalid(BadRequest):
 
 class NextOffsetInvalid(BadRequest):
     """The next offset value is invalid"""
+
     ID = "NEXT_OFFSET_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2184,6 +2493,7 @@ class NextOffsetInvalid(BadRequest):
 
 class NogeneralHideForbidden(BadRequest):
     """The hidden parameter is only valid for the General topic message_thread_id=1"""
+
     ID = "NOGENERAL_HIDE_FORBIDDEN"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2191,6 +2501,7 @@ class NogeneralHideForbidden(BadRequest):
 
 class NotEligible(BadRequest):
     """The current user is not eligible to join the Peer-to-Peer Login Program."""
+
     ID = "NOT_ELIGIBLE"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2198,6 +2509,7 @@ class NotEligible(BadRequest):
 
 class NotJoined(BadRequest):
     """The current user hasn't joined the Peer-to-Peer Login Program."""
+
     ID = "NOT_JOINED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2205,6 +2517,7 @@ class NotJoined(BadRequest):
 
 class OffsetInvalid(BadRequest):
     """The offset parameter is invalid"""
+
     ID = "OFFSET_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2212,6 +2525,7 @@ class OffsetInvalid(BadRequest):
 
 class OffsetPeerIdInvalid(BadRequest):
     """The provided offset peer is invalid"""
+
     ID = "OFFSET_PEER_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2219,6 +2533,7 @@ class OffsetPeerIdInvalid(BadRequest):
 
 class OptionsTooMuch(BadRequest):
     """The poll options are too many"""
+
     ID = "OPTIONS_TOO_MUCH"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2226,6 +2541,7 @@ class OptionsTooMuch(BadRequest):
 
 class OptionInvalid(BadRequest):
     """The option specified is invalid and does not exist in the target poll"""
+
     ID = "OPTION_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2233,6 +2549,7 @@ class OptionInvalid(BadRequest):
 
 class OrderInvalid(BadRequest):
     """The specified username order is invalid."""
+
     ID = "ORDER_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2240,6 +2557,7 @@ class OrderInvalid(BadRequest):
 
 class PackShortNameInvalid(BadRequest):
     """Invalid sticker pack name. It must begin with a letter, can't contain consecutive underscores and must end in '_by_<bot username>'."""
+
     ID = "PACK_SHORT_NAME_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2247,6 +2565,7 @@ class PackShortNameInvalid(BadRequest):
 
 class PackShortNameOccupied(BadRequest):
     """A sticker pack with this name already exists"""
+
     ID = "PACK_SHORT_NAME_OCCUPIED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2254,6 +2573,7 @@ class PackShortNameOccupied(BadRequest):
 
 class PackTitleInvalid(BadRequest):
     """The sticker pack title is invalid"""
+
     ID = "PACK_TITLE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2261,6 +2581,7 @@ class PackTitleInvalid(BadRequest):
 
 class ParticipantsTooFew(BadRequest):
     """The chat doesn't have enough participants"""
+
     ID = "PARTICIPANTS_TOO_FEW"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2268,6 +2589,7 @@ class ParticipantsTooFew(BadRequest):
 
 class ParticipantIdInvalid(BadRequest):
     """The specified participant ID is invalid"""
+
     ID = "PARTICIPANT_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2275,6 +2597,7 @@ class ParticipantIdInvalid(BadRequest):
 
 class ParticipantJoinMissing(BadRequest):
     """Trying to enable a presentation, when the user hasn't joined the Video Chat with phone.joinGroupCall"""
+
     ID = "PARTICIPANT_JOIN_MISSING"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2282,6 +2605,7 @@ class ParticipantJoinMissing(BadRequest):
 
 class ParticipantVersionOutdated(BadRequest):
     """The other participant is using an outdated Telegram app version"""
+
     ID = "PARTICIPANT_VERSION_OUTDATED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2289,6 +2613,7 @@ class ParticipantVersionOutdated(BadRequest):
 
 class PasswordEmpty(BadRequest):
     """The password provided is empty"""
+
     ID = "PASSWORD_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2296,6 +2621,7 @@ class PasswordEmpty(BadRequest):
 
 class PasswordHashInvalid(BadRequest):
     """The two-step verification password is invalid"""
+
     ID = "PASSWORD_HASH_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2303,6 +2629,7 @@ class PasswordHashInvalid(BadRequest):
 
 class PasswordMissing(BadRequest):
     """The account is missing the two-step verification password"""
+
     ID = "PASSWORD_MISSING"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2310,6 +2637,7 @@ class PasswordMissing(BadRequest):
 
 class PasswordRecoveryExpired(BadRequest):
     """The recovery code has expired."""
+
     ID = "PASSWORD_RECOVERY_EXPIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2317,6 +2645,7 @@ class PasswordRecoveryExpired(BadRequest):
 
 class PasswordRecoveryNa(BadRequest):
     """The password recovery e-mail is not available"""
+
     ID = "PASSWORD_RECOVERY_NA"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2324,6 +2653,7 @@ class PasswordRecoveryNa(BadRequest):
 
 class PasswordRequired(BadRequest):
     """The two-step verification password is required for this method"""
+
     ID = "PASSWORD_REQUIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2331,6 +2661,7 @@ class PasswordRequired(BadRequest):
 
 class PasswordTooFresh(BadRequest):
     """The two-step verification password was added recently and you are required to wait {value} seconds"""
+
     ID = "PASSWORD_TOO_FRESH_X"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2338,6 +2669,7 @@ class PasswordTooFresh(BadRequest):
 
 class PaymentProviderInvalid(BadRequest):
     """The payment provider was not recognised or its token was invalid"""
+
     ID = "PAYMENT_PROVIDER_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2345,6 +2677,7 @@ class PaymentProviderInvalid(BadRequest):
 
 class PaymentRequired(BadRequest):
     """The payment is required"""
+
     ID = "PAYMENT_REQUIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2352,6 +2685,7 @@ class PaymentRequired(BadRequest):
 
 class PeersListEmpty(BadRequest):
     """The specified list of peers is empty."""
+
     ID = "PEERS_LIST_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2359,6 +2693,7 @@ class PeersListEmpty(BadRequest):
 
 class PeerFlood(BadRequest):
     """The method can't be used because your account is currently limited"""
+
     ID = "PEER_FLOOD"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2366,6 +2701,7 @@ class PeerFlood(BadRequest):
 
 class PeerHistoryEmpty(BadRequest):
     """Peer history empty"""
+
     ID = "PEER_HISTORY_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2373,6 +2709,7 @@ class PeerHistoryEmpty(BadRequest):
 
 class PeerIdInvalid(BadRequest):
     """The peer id being used is invalid or not known yet. Make sure you meet the peer before interacting with it"""
+
     ID = "PEER_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2380,6 +2717,7 @@ class PeerIdInvalid(BadRequest):
 
 class PeerIdNotSupported(BadRequest):
     """The provided peer id is not supported"""
+
     ID = "PEER_ID_NOT_SUPPORTED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2387,6 +2725,7 @@ class PeerIdNotSupported(BadRequest):
 
 class PersistentTimestampEmpty(BadRequest):
     """The pts argument is empty"""
+
     ID = "PERSISTENT_TIMESTAMP_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2394,6 +2733,7 @@ class PersistentTimestampEmpty(BadRequest):
 
 class PersistentTimestampInvalid(BadRequest):
     """The persistent timestamp is invalid"""
+
     ID = "PERSISTENT_TIMESTAMP_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2401,6 +2741,7 @@ class PersistentTimestampInvalid(BadRequest):
 
 class PhoneCodeEmpty(BadRequest):
     """The phone code is missing"""
+
     ID = "PHONE_CODE_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2408,6 +2749,7 @@ class PhoneCodeEmpty(BadRequest):
 
 class PhoneCodeExpired(BadRequest):
     """The confirmation code has expired"""
+
     ID = "PHONE_CODE_EXPIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2415,6 +2757,7 @@ class PhoneCodeExpired(BadRequest):
 
 class PhoneCodeHashEmpty(BadRequest):
     """The phone code hash is missing"""
+
     ID = "PHONE_CODE_HASH_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2422,6 +2765,7 @@ class PhoneCodeHashEmpty(BadRequest):
 
 class PhoneCodeInvalid(BadRequest):
     """The confirmation code is invalid"""
+
     ID = "PHONE_CODE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2429,6 +2773,7 @@ class PhoneCodeInvalid(BadRequest):
 
 class PhoneHashExpired(BadRequest):
     """An invalid or expired phone_code_hash was provided"""
+
     ID = "PHONE_HASH_EXPIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2436,6 +2781,7 @@ class PhoneHashExpired(BadRequest):
 
 class PhoneNotOccupied(BadRequest):
     """No user is associated to the specified phone number"""
+
     ID = "PHONE_NOT_OCCUPIED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2443,6 +2789,7 @@ class PhoneNotOccupied(BadRequest):
 
 class PhoneNumberAppSignupForbidden(BadRequest):
     """You can't sign up using this app"""
+
     ID = "PHONE_NUMBER_APP_SIGNUP_FORBIDDEN"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2450,6 +2797,7 @@ class PhoneNumberAppSignupForbidden(BadRequest):
 
 class PhoneNumberBanned(BadRequest):
     """The phone number is banned from Telegram and cannot be used"""
+
     ID = "PHONE_NUMBER_BANNED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2457,6 +2805,7 @@ class PhoneNumberBanned(BadRequest):
 
 class PhoneNumberFlood(BadRequest):
     """This number has tried to login too many times"""
+
     ID = "PHONE_NUMBER_FLOOD"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2464,6 +2813,7 @@ class PhoneNumberFlood(BadRequest):
 
 class PhoneNumberInvalid(BadRequest):
     """The phone number is invalid"""
+
     ID = "PHONE_NUMBER_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2471,6 +2821,7 @@ class PhoneNumberInvalid(BadRequest):
 
 class PhoneNumberOccupied(BadRequest):
     """The phone number is already in use"""
+
     ID = "PHONE_NUMBER_OCCUPIED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2478,6 +2829,7 @@ class PhoneNumberOccupied(BadRequest):
 
 class PhoneNumberUnoccupied(BadRequest):
     """The phone number is not yet being used"""
+
     ID = "PHONE_NUMBER_UNOCCUPIED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2485,6 +2837,7 @@ class PhoneNumberUnoccupied(BadRequest):
 
 class PhonePasswordProtected(BadRequest):
     """The phone is password protected"""
+
     ID = "PHONE_PASSWORD_PROTECTED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2492,6 +2845,7 @@ class PhonePasswordProtected(BadRequest):
 
 class PhotoContentTypeInvalid(BadRequest):
     """The photo content type is invalid"""
+
     ID = "PHOTO_CONTENT_TYPE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2499,6 +2853,7 @@ class PhotoContentTypeInvalid(BadRequest):
 
 class PhotoContentUrlEmpty(BadRequest):
     """The photo content URL is empty"""
+
     ID = "PHOTO_CONTENT_URL_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2506,6 +2861,7 @@ class PhotoContentUrlEmpty(BadRequest):
 
 class PhotoCropFileMissing(BadRequest):
     """Photo crop file missing"""
+
     ID = "PHOTO_CROP_FILE_MISSING"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2513,6 +2869,7 @@ class PhotoCropFileMissing(BadRequest):
 
 class PhotoCropSizeSmall(BadRequest):
     """The photo is too small"""
+
     ID = "PHOTO_CROP_SIZE_SMALL"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2520,6 +2877,7 @@ class PhotoCropSizeSmall(BadRequest):
 
 class PhotoExtInvalid(BadRequest):
     """The photo extension is invalid"""
+
     ID = "PHOTO_EXT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2527,6 +2885,7 @@ class PhotoExtInvalid(BadRequest):
 
 class PhotoFileMissing(BadRequest):
     """Profile photo file missing"""
+
     ID = "PHOTO_FILE_MISSING"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2534,6 +2893,7 @@ class PhotoFileMissing(BadRequest):
 
 class PhotoIdInvalid(BadRequest):
     """The photo id is invalid"""
+
     ID = "PHOTO_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2541,6 +2901,7 @@ class PhotoIdInvalid(BadRequest):
 
 class PhotoInvalid(BadRequest):
     """The photo is invalid"""
+
     ID = "PHOTO_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2548,6 +2909,7 @@ class PhotoInvalid(BadRequest):
 
 class PhotoInvalidDimensions(BadRequest):
     """The photo dimensions are invalid"""
+
     ID = "PHOTO_INVALID_DIMENSIONS"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2555,6 +2917,7 @@ class PhotoInvalidDimensions(BadRequest):
 
 class PhotoSaveFileInvalid(BadRequest):
     """The photo you tried to send cannot be saved by Telegram"""
+
     ID = "PHOTO_SAVE_FILE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2562,6 +2925,7 @@ class PhotoSaveFileInvalid(BadRequest):
 
 class PhotoThumbUrlEmpty(BadRequest):
     """The photo thumb URL is empty"""
+
     ID = "PHOTO_THUMB_URL_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2569,6 +2933,7 @@ class PhotoThumbUrlEmpty(BadRequest):
 
 class PhotoThumbUrlInvalid(BadRequest):
     """The photo thumb URL is invalid"""
+
     ID = "PHOTO_THUMB_URL_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2576,6 +2941,7 @@ class PhotoThumbUrlInvalid(BadRequest):
 
 class PinnedDialogsTooMuch(BadRequest):
     """Too many pinned dialogs"""
+
     ID = "PINNED_DIALOGS_TOO_MUCH"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2583,6 +2949,7 @@ class PinnedDialogsTooMuch(BadRequest):
 
 class PinnedTopicNotModified(BadRequest):
     """The pinned topic was not modified."""
+
     ID = "PINNED_TOPIC_NOT_MODIFIED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2590,6 +2957,7 @@ class PinnedTopicNotModified(BadRequest):
 
 class PinRestricted(BadRequest):
     """You can't pin messages in private chats with other people"""
+
     ID = "PIN_RESTRICTED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2597,6 +2965,7 @@ class PinRestricted(BadRequest):
 
 class PlatformInvalid(BadRequest):
     """The provided platform is invalid. Allowed values are "android", "ios", "wp", "bb", "desktop", "web", "ubp", "other"."""
+
     ID = "PLATFORM_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2604,6 +2973,7 @@ class PlatformInvalid(BadRequest):
 
 class PollAnswersInvalid(BadRequest):
     """The poll answers are invalid"""
+
     ID = "POLL_ANSWERS_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2611,6 +2981,7 @@ class PollAnswersInvalid(BadRequest):
 
 class PollAnswerInvalid(BadRequest):
     """One of the poll answers is not acceptable"""
+
     ID = "POLL_ANSWER_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2618,6 +2989,7 @@ class PollAnswerInvalid(BadRequest):
 
 class PollOptionDuplicate(BadRequest):
     """A duplicate option was sent in the same poll"""
+
     ID = "POLL_OPTION_DUPLICATE"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2625,6 +2997,7 @@ class PollOptionDuplicate(BadRequest):
 
 class PollOptionInvalid(BadRequest):
     """A poll option used invalid data (the data may be too long)"""
+
     ID = "POLL_OPTION_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2632,6 +3005,7 @@ class PollOptionInvalid(BadRequest):
 
 class PollQuestionInvalid(BadRequest):
     """The poll question is invalid"""
+
     ID = "POLL_QUESTION_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2639,6 +3013,7 @@ class PollQuestionInvalid(BadRequest):
 
 class PollUnsupported(BadRequest):
     """This layer does not support polls in the invoked method"""
+
     ID = "POLL_UNSUPPORTED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2646,6 +3021,7 @@ class PollUnsupported(BadRequest):
 
 class PollVoteRequired(BadRequest):
     """Cast a vote in the poll before calling this method"""
+
     ID = "POLL_VOTE_REQUIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2653,6 +3029,7 @@ class PollVoteRequired(BadRequest):
 
 class PremiumAccountRequired(BadRequest):
     """The method requires a premium user account"""
+
     ID = "PREMIUM_ACCOUNT_REQUIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2660,6 +3037,7 @@ class PremiumAccountRequired(BadRequest):
 
 class PremiumGiftcodeWasRefunded(BadRequest):
     """This gift code can't be redeemed because the giveaway organizer requested a refund"""
+
     ID = "PREMIUM_GIFTCODE_WAS_REFUNDED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2667,6 +3045,7 @@ class PremiumGiftcodeWasRefunded(BadRequest):
 
 class PrivacyKeyInvalid(BadRequest):
     """The privacy key is invalid"""
+
     ID = "PRIVACY_KEY_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2674,6 +3053,7 @@ class PrivacyKeyInvalid(BadRequest):
 
 class PrivacyTooLong(BadRequest):
     """Your privacy exception list has exceeded the maximum capacity"""
+
     ID = "PRIVACY_TOO_LONG"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2681,6 +3061,7 @@ class PrivacyTooLong(BadRequest):
 
 class PrivacyValueInvalid(BadRequest):
     """The privacy value is invalid"""
+
     ID = "PRIVACY_VALUE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2688,6 +3069,7 @@ class PrivacyValueInvalid(BadRequest):
 
 class PublicBroadcastExpected(BadRequest):
     """A public channel was expected, but something else was provided"""
+
     ID = "PUBLIC_BROADCAST_EXPECTED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2695,6 +3077,7 @@ class PublicBroadcastExpected(BadRequest):
 
 class PublicKeyRequired(BadRequest):
     """A public key is required"""
+
     ID = "PUBLIC_KEY_REQUIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2702,6 +3085,7 @@ class PublicKeyRequired(BadRequest):
 
 class QueryIdEmpty(BadRequest):
     """The query ID is empty"""
+
     ID = "QUERY_ID_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2709,6 +3093,7 @@ class QueryIdEmpty(BadRequest):
 
 class QueryIdInvalid(BadRequest):
     """The callback query id is invalid"""
+
     ID = "QUERY_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2716,6 +3101,7 @@ class QueryIdInvalid(BadRequest):
 
 class QueryTooShort(BadRequest):
     """The query is too short"""
+
     ID = "QUERY_TOO_SHORT"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2723,6 +3109,7 @@ class QueryTooShort(BadRequest):
 
 class QuickRepliesTooMuch(BadRequest):
     """A maximum of [appConfig.`quick_replies_limit`](https://core.telegram.org/api/config#quick-replies-limit) shortcuts may be created, the limit was reached."""
+
     ID = "QUICK_REPLIES_TOO_MUCH"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2730,6 +3117,7 @@ class QuickRepliesTooMuch(BadRequest):
 
 class QuizAnswerMissing(BadRequest):
     """You can forward a quiz while hiding the original author only after choosing an option in the quiz"""
+
     ID = "QUIZ_ANSWER_MISSING"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2737,6 +3125,7 @@ class QuizAnswerMissing(BadRequest):
 
 class QuizCorrectAnswersEmpty(BadRequest):
     """The correct answers of the quiz are empty"""
+
     ID = "QUIZ_CORRECT_ANSWERS_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2744,6 +3133,7 @@ class QuizCorrectAnswersEmpty(BadRequest):
 
 class QuizCorrectAnswersTooMuch(BadRequest):
     """The quiz contains too many correct answers"""
+
     ID = "QUIZ_CORRECT_ANSWERS_TOO_MUCH"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2751,6 +3141,7 @@ class QuizCorrectAnswersTooMuch(BadRequest):
 
 class QuizCorrectAnswerInvalid(BadRequest):
     """The correct answers of the quiz are invalid"""
+
     ID = "QUIZ_CORRECT_ANSWER_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2758,6 +3149,7 @@ class QuizCorrectAnswerInvalid(BadRequest):
 
 class QuizMultipleInvalid(BadRequest):
     """A quiz can't have multiple answers"""
+
     ID = "QUIZ_MULTIPLE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2765,6 +3157,7 @@ class QuizMultipleInvalid(BadRequest):
 
 class QuoteTextInvalid(BadRequest):
     """The quote text is invalid"""
+
     ID = "QUOTE_TEXT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2772,6 +3165,7 @@ class QuoteTextInvalid(BadRequest):
 
 class RaiseHandForbidden(BadRequest):
     """You cannot raise your hand."""
+
     ID = "RAISE_HAND_FORBIDDEN"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2779,6 +3173,7 @@ class RaiseHandForbidden(BadRequest):
 
 class RandomIdEmpty(BadRequest):
     """The random ID is empty"""
+
     ID = "RANDOM_ID_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2786,6 +3181,7 @@ class RandomIdEmpty(BadRequest):
 
 class RandomIdInvalid(BadRequest):
     """The provided random ID is invalid"""
+
     ID = "RANDOM_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2793,6 +3189,7 @@ class RandomIdInvalid(BadRequest):
 
 class RandomLengthInvalid(BadRequest):
     """The random length is invalid"""
+
     ID = "RANDOM_LENGTH_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2800,6 +3197,7 @@ class RandomLengthInvalid(BadRequest):
 
 class RangesInvalid(BadRequest):
     """Invalid range provided"""
+
     ID = "RANGES_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2807,6 +3205,7 @@ class RangesInvalid(BadRequest):
 
 class ReactionsCountInvalid(BadRequest):
     """The count of the reactions should be less than `stars_paid_reaction_amount_max` stars, you can't react with more number of stars, see [the docs for more info](https://core.telegram.org/api/config#client-configuration)."""
+
     ID = "REACTIONS_COUNT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2814,6 +3213,7 @@ class ReactionsCountInvalid(BadRequest):
 
 class ReactionsTooMany(BadRequest):
     """Non-premium users, can set up only one reaction per message"""
+
     ID = "REACTIONS_TOO_MANY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2821,6 +3221,7 @@ class ReactionsTooMany(BadRequest):
 
 class ReactionEmpty(BadRequest):
     """The reaction provided is empty"""
+
     ID = "REACTION_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2828,6 +3229,7 @@ class ReactionEmpty(BadRequest):
 
 class ReactionInvalid(BadRequest):
     """Invalid reaction provided (only valid emoji are allowed)"""
+
     ID = "REACTION_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2835,6 +3237,7 @@ class ReactionInvalid(BadRequest):
 
 class ReceiptEmpty(BadRequest):
     """The specified receipt is empty."""
+
     ID = "RECEIPT_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2842,6 +3245,7 @@ class ReceiptEmpty(BadRequest):
 
 class ReflectorNotAvailable(BadRequest):
     """The call reflector is not available"""
+
     ID = "REFLECTOR_NOT_AVAILABLE"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2849,6 +3253,7 @@ class ReflectorNotAvailable(BadRequest):
 
 class ReplyMarkupBuyEmpty(BadRequest):
     """Reply markup for buy button empty"""
+
     ID = "REPLY_MARKUP_BUY_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2856,6 +3261,7 @@ class ReplyMarkupBuyEmpty(BadRequest):
 
 class ReplyMarkupGameEmpty(BadRequest):
     """The provided reply markup for the game is empty"""
+
     ID = "REPLY_MARKUP_GAME_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2863,6 +3269,7 @@ class ReplyMarkupGameEmpty(BadRequest):
 
 class ReplyMarkupInvalid(BadRequest):
     """The provided reply markup is invalid"""
+
     ID = "REPLY_MARKUP_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2870,6 +3277,7 @@ class ReplyMarkupInvalid(BadRequest):
 
 class ReplyMarkupTooLong(BadRequest):
     """The reply markup is too long"""
+
     ID = "REPLY_MARKUP_TOO_LONG"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2877,6 +3285,7 @@ class ReplyMarkupTooLong(BadRequest):
 
 class ReplyMessagesTooMuch(BadRequest):
     """Each shortcut can contain a maximum of [appConfig.`quick_reply_messages_limit`](https://core.telegram.org/api/config#quick-reply-messages-limit) messages, the limit was reached."""
+
     ID = "REPLY_MESSAGES_TOO_MUCH"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2884,6 +3293,7 @@ class ReplyMessagesTooMuch(BadRequest):
 
 class ReplyMessageIdInvalid(BadRequest):
     """The reply message id is invalid"""
+
     ID = "REPLY_MESSAGE_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2891,6 +3301,7 @@ class ReplyMessageIdInvalid(BadRequest):
 
 class ReplyToInvalid(BadRequest):
     """The specified `reply_to` field is invalid."""
+
     ID = "REPLY_TO_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2898,6 +3309,7 @@ class ReplyToInvalid(BadRequest):
 
 class ReplyToUserInvalid(BadRequest):
     """The replied-to user is invalid."""
+
     ID = "REPLY_TO_USER_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2905,6 +3317,7 @@ class ReplyToUserInvalid(BadRequest):
 
 class RequestTokenInvalid(BadRequest):
     """The master DC did not accept the `request_token` from the CDN DC. Continue downloading the file from the master DC using upload.getFile."""
+
     ID = "REQUEST_TOKEN_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2912,6 +3325,7 @@ class RequestTokenInvalid(BadRequest):
 
 class ResetRequestMissing(BadRequest):
     """No password reset is in progress"""
+
     ID = "RESET_REQUEST_MISSING"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2919,6 +3333,7 @@ class ResetRequestMissing(BadRequest):
 
 class ResultsTooMuch(BadRequest):
     """The result contains too many items"""
+
     ID = "RESULTS_TOO_MUCH"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2926,6 +3341,7 @@ class ResultsTooMuch(BadRequest):
 
 class ResultIdDuplicate(BadRequest):
     """The result contains items with duplicated identifiers"""
+
     ID = "RESULT_ID_DUPLICATE"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2933,6 +3349,7 @@ class ResultIdDuplicate(BadRequest):
 
 class ResultIdEmpty(BadRequest):
     """Result ID empty"""
+
     ID = "RESULT_ID_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2940,6 +3357,7 @@ class ResultIdEmpty(BadRequest):
 
 class ResultIdInvalid(BadRequest):
     """The given result cannot be used to send the selection to the bot"""
+
     ID = "RESULT_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2947,6 +3365,7 @@ class ResultIdInvalid(BadRequest):
 
 class ResultTypeInvalid(BadRequest):
     """The result type is invalid"""
+
     ID = "RESULT_TYPE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2954,6 +3373,7 @@ class ResultTypeInvalid(BadRequest):
 
 class RevoteNotAllowed(BadRequest):
     """You cannot change your vote"""
+
     ID = "REVOTE_NOT_ALLOWED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2961,6 +3381,7 @@ class RevoteNotAllowed(BadRequest):
 
 class RightsNotModified(BadRequest):
     """The new admin rights are equal to the old rights, no change was made"""
+
     ID = "RIGHTS_NOT_MODIFIED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2968,6 +3389,7 @@ class RightsNotModified(BadRequest):
 
 class RingtoneInvalid(BadRequest):
     """The specified ringtone is invalid."""
+
     ID = "RINGTONE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2975,6 +3397,7 @@ class RingtoneInvalid(BadRequest):
 
 class RingtoneMimeInvalid(BadRequest):
     """The MIME type for the ringtone is invalid."""
+
     ID = "RINGTONE_MIME_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2982,6 +3405,7 @@ class RingtoneMimeInvalid(BadRequest):
 
 class RsaDecryptFailed(BadRequest):
     """Internal RSA decryption failed"""
+
     ID = "RSA_DECRYPT_FAILED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2989,6 +3413,7 @@ class RsaDecryptFailed(BadRequest):
 
 class SavedDialogsUnsupported(BadRequest):
     """You cannot use this method"""
+
     ID = "SAVED_DIALOGS_UNSUPPORTED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -2996,6 +3421,7 @@ class SavedDialogsUnsupported(BadRequest):
 
 class ScheduleBotNotAllowed(BadRequest):
     """Bots are not allowed to schedule messages"""
+
     ID = "SCHEDULE_BOT_NOT_ALLOWED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3003,6 +3429,7 @@ class ScheduleBotNotAllowed(BadRequest):
 
 class ScheduleDateInvalid(BadRequest):
     """Invalid schedule date provided"""
+
     ID = "SCHEDULE_DATE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3010,6 +3437,7 @@ class ScheduleDateInvalid(BadRequest):
 
 class ScheduleDateTooLate(BadRequest):
     """The date you tried to schedule is too far in the future (more than one year)"""
+
     ID = "SCHEDULE_DATE_TOO_LATE"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3017,6 +3445,7 @@ class ScheduleDateTooLate(BadRequest):
 
 class ScheduleStatusPrivate(BadRequest):
     """You cannot schedule a message until the person comes online if their privacy does not show this information"""
+
     ID = "SCHEDULE_STATUS_PRIVATE"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3024,6 +3453,7 @@ class ScheduleStatusPrivate(BadRequest):
 
 class ScheduleTooMuch(BadRequest):
     """You tried to schedule too many messages in this chat"""
+
     ID = "SCHEDULE_TOO_MUCH"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3031,6 +3461,7 @@ class ScheduleTooMuch(BadRequest):
 
 class ScoreInvalid(BadRequest):
     """The specified game score is invalid"""
+
     ID = "SCORE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3038,6 +3469,7 @@ class ScoreInvalid(BadRequest):
 
 class SearchQueryEmpty(BadRequest):
     """The search query is empty"""
+
     ID = "SEARCH_QUERY_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3045,6 +3477,7 @@ class SearchQueryEmpty(BadRequest):
 
 class SearchWithLinkNotSupported(BadRequest):
     """You cannot provide a search query and an invite link at the same time"""
+
     ID = "SEARCH_WITH_LINK_NOT_SUPPORTED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3052,6 +3485,7 @@ class SearchWithLinkNotSupported(BadRequest):
 
 class SecondsInvalid(BadRequest):
     """The seconds interval is invalid"""
+
     ID = "SECONDS_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3059,6 +3493,7 @@ class SecondsInvalid(BadRequest):
 
 class SecureSecretRequired(BadRequest):
     """A secure secret is required."""
+
     ID = "SECURE_SECRET_REQUIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3066,6 +3501,7 @@ class SecureSecretRequired(BadRequest):
 
 class SendAsPeerInvalid(BadRequest):
     """You can't send messages as the specified peer"""
+
     ID = "SEND_AS_PEER_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3073,6 +3509,7 @@ class SendAsPeerInvalid(BadRequest):
 
 class SendMessageMediaInvalid(BadRequest):
     """The message media is invalid"""
+
     ID = "SEND_MESSAGE_MEDIA_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3080,6 +3517,7 @@ class SendMessageMediaInvalid(BadRequest):
 
 class SendMessageTypeInvalid(BadRequest):
     """The message type is invalid"""
+
     ID = "SEND_MESSAGE_TYPE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3087,6 +3525,7 @@ class SendMessageTypeInvalid(BadRequest):
 
 class SessionTooFresh(BadRequest):
     """You can't do this action because the current session was logged-in recently"""
+
     ID = "SESSION_TOO_FRESH_X"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3094,6 +3533,7 @@ class SessionTooFresh(BadRequest):
 
 class SettingsInvalid(BadRequest):
     """Invalid settings were provided"""
+
     ID = "SETTINGS_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3101,6 +3541,7 @@ class SettingsInvalid(BadRequest):
 
 class Sha256HashInvalid(BadRequest):
     """The provided SHA256 hash is invalid"""
+
     ID = "SHA256_HASH_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3108,6 +3549,7 @@ class Sha256HashInvalid(BadRequest):
 
 class ShortcutInvalid(BadRequest):
     """The specified shortcut is invalid."""
+
     ID = "SHORTCUT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3115,6 +3557,7 @@ class ShortcutInvalid(BadRequest):
 
 class ShortnameOccupyFailed(BadRequest):
     """An error occurred when trying to register the short-name used for the sticker pack. Try a different name"""
+
     ID = "SHORTNAME_OCCUPY_FAILED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3122,6 +3565,7 @@ class ShortnameOccupyFailed(BadRequest):
 
 class ShortNameInvalid(BadRequest):
     """The specified short name is invalid"""
+
     ID = "SHORT_NAME_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3129,6 +3573,7 @@ class ShortNameInvalid(BadRequest):
 
 class ShortNameOccupied(BadRequest):
     """The specified short name is already in use"""
+
     ID = "SHORT_NAME_OCCUPIED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3136,6 +3581,7 @@ class ShortNameOccupied(BadRequest):
 
 class SlotsEmpty(BadRequest):
     """The specified slot list is empty."""
+
     ID = "SLOTS_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3143,6 +3589,7 @@ class SlotsEmpty(BadRequest):
 
 class SlowmodeMultiMsgsDisabled(BadRequest):
     """Slowmode is enabled, you cannot forward multiple messages to this group"""
+
     ID = "SLOWMODE_MULTI_MSGS_DISABLED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3150,6 +3597,7 @@ class SlowmodeMultiMsgsDisabled(BadRequest):
 
 class SlugInvalid(BadRequest):
     """The specified invoice slug is invalid."""
+
     ID = "SLUG_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3157,6 +3605,7 @@ class SlugInvalid(BadRequest):
 
 class SmsjobIdInvalid(BadRequest):
     """The specified job ID is invalid."""
+
     ID = "SMSJOB_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3164,6 +3613,7 @@ class SmsjobIdInvalid(BadRequest):
 
 class SmsCodeCreateFailed(BadRequest):
     """An error occurred while creating the SMS code"""
+
     ID = "SMS_CODE_CREATE_FAILED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3171,6 +3621,7 @@ class SmsCodeCreateFailed(BadRequest):
 
 class SrpIdInvalid(BadRequest):
     """Invalid SRP ID provided"""
+
     ID = "SRP_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3178,6 +3629,7 @@ class SrpIdInvalid(BadRequest):
 
 class SrpPasswordChanged(BadRequest):
     """The password has changed"""
+
     ID = "SRP_PASSWORD_CHANGED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3185,6 +3637,7 @@ class SrpPasswordChanged(BadRequest):
 
 class StargiftAlreadyConverted(BadRequest):
     """The provided star gift already converted to stars"""
+
     ID = "STARGIFT_ALREADY_CONVERTED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3192,6 +3645,7 @@ class StargiftAlreadyConverted(BadRequest):
 
 class StargiftAlreadyUpgraded(BadRequest):
     """This star gift was already upgraded before"""
+
     ID = "STARGIFT_ALREADY_UPGRADED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3199,6 +3653,7 @@ class StargiftAlreadyUpgraded(BadRequest):
 
 class StargiftInvalid(BadRequest):
     """The specified gift is invalid"""
+
     ID = "STARGIFT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3206,6 +3661,7 @@ class StargiftInvalid(BadRequest):
 
 class StargiftNotFound(BadRequest):
     """The specified star gift was not found"""
+
     ID = "STARGIFT_NOT_FOUND"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3213,6 +3669,7 @@ class StargiftNotFound(BadRequest):
 
 class StargiftSlugInvalid(BadRequest):
     """The provided star gift slug is invalid (must match the format CollectionName-123)"""
+
     ID = "STARGIFT_SLUG_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3220,6 +3677,7 @@ class StargiftSlugInvalid(BadRequest):
 
 class StargiftUpgradeUnavailable(BadRequest):
     """Gift is not available for upgrade yet."""
+
     ID = "STARGIFT_UPGRADE_UNAVAILABLE"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3227,6 +3685,7 @@ class StargiftUpgradeUnavailable(BadRequest):
 
 class StargiftUsageLimited(BadRequest):
     """The star gift usage is limited"""
+
     ID = "STARGIFT_USAGE_LIMITED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3234,6 +3693,7 @@ class StargiftUsageLimited(BadRequest):
 
 class StartParamEmpty(BadRequest):
     """The start parameter is empty"""
+
     ID = "START_PARAM_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3241,6 +3701,7 @@ class StartParamEmpty(BadRequest):
 
 class StartParamInvalid(BadRequest):
     """The start parameter is invalid"""
+
     ID = "START_PARAM_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3248,6 +3709,7 @@ class StartParamInvalid(BadRequest):
 
 class StartParamTooLong(BadRequest):
     """The start parameter is too long"""
+
     ID = "START_PARAM_TOO_LONG"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3255,6 +3717,7 @@ class StartParamTooLong(BadRequest):
 
 class StickerpackStickersTooMuch(BadRequest):
     """There are too many stickers in this stickerpack, you can't add any more"""
+
     ID = "STICKERPACK_STICKERS_TOO_MUCH"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3262,6 +3725,7 @@ class StickerpackStickersTooMuch(BadRequest):
 
 class StickersetInvalid(BadRequest):
     """The requested sticker set is invalid"""
+
     ID = "STICKERSET_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3269,6 +3733,7 @@ class StickersetInvalid(BadRequest):
 
 class StickersetNotModified(BadRequest):
     """The sticker set is not modified"""
+
     ID = "STICKERSET_NOT_MODIFIED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3276,6 +3741,7 @@ class StickersetNotModified(BadRequest):
 
 class StickersEmpty(BadRequest):
     """The sticker provided is empty"""
+
     ID = "STICKERS_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3283,6 +3749,7 @@ class StickersEmpty(BadRequest):
 
 class StickersTooMuch(BadRequest):
     """Too many stickers in the set"""
+
     ID = "STICKERS_TOO_MUCH"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3290,6 +3757,7 @@ class StickersTooMuch(BadRequest):
 
 class StickerDocumentInvalid(BadRequest):
     """The sticker document is invalid"""
+
     ID = "STICKER_DOCUMENT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3297,6 +3765,7 @@ class StickerDocumentInvalid(BadRequest):
 
 class StickerEmojiInvalid(BadRequest):
     """The sticker emoji is invalid"""
+
     ID = "STICKER_EMOJI_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3304,6 +3773,7 @@ class StickerEmojiInvalid(BadRequest):
 
 class StickerFileInvalid(BadRequest):
     """The sticker file is invalid"""
+
     ID = "STICKER_FILE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3311,6 +3781,7 @@ class StickerFileInvalid(BadRequest):
 
 class StickerGifDimensions(BadRequest):
     """The specified video sticker has invalid dimensions"""
+
     ID = "STICKER_GIF_DIMENSIONS"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3318,6 +3789,7 @@ class StickerGifDimensions(BadRequest):
 
 class StickerIdInvalid(BadRequest):
     """The provided sticker id is invalid"""
+
     ID = "STICKER_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3325,6 +3797,7 @@ class StickerIdInvalid(BadRequest):
 
 class StickerInvalid(BadRequest):
     """The provided sticker is invalid"""
+
     ID = "STICKER_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3332,6 +3805,7 @@ class StickerInvalid(BadRequest):
 
 class StickerMimeInvalid(BadRequest):
     """Make sure to pass a valid image file for the right InputFile parameter"""
+
     ID = "STICKER_MIME_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3339,6 +3813,7 @@ class StickerMimeInvalid(BadRequest):
 
 class StickerPngDimensions(BadRequest):
     """The sticker png dimensions are invalid"""
+
     ID = "STICKER_PNG_DIMENSIONS"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3346,6 +3821,7 @@ class StickerPngDimensions(BadRequest):
 
 class StickerPngNopng(BadRequest):
     """Stickers must be png files but the provided image was not a png"""
+
     ID = "STICKER_PNG_NOPNG"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3353,6 +3829,7 @@ class StickerPngNopng(BadRequest):
 
 class StickerTgsNodoc(BadRequest):
     """You must send the animated sticker as a document"""
+
     ID = "STICKER_TGS_NODOC"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3360,6 +3837,7 @@ class StickerTgsNodoc(BadRequest):
 
 class StickerTgsNotgs(BadRequest):
     """A tgs sticker file was expected, but something else was provided"""
+
     ID = "STICKER_TGS_NOTGS"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3367,6 +3845,7 @@ class StickerTgsNotgs(BadRequest):
 
 class StickerThumbPngNopng(BadRequest):
     """A png sticker thumbnail file was expected, but something else was provided"""
+
     ID = "STICKER_THUMB_PNG_NOPNG"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3374,6 +3853,7 @@ class StickerThumbPngNopng(BadRequest):
 
 class StickerThumbTgsNotgs(BadRequest):
     """Incorrect stickerset TGS thumb file provided."""
+
     ID = "STICKER_THUMB_TGS_NOTGS"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3381,6 +3861,7 @@ class StickerThumbTgsNotgs(BadRequest):
 
 class StickerVideoBig(BadRequest):
     """The specified video sticker is too big"""
+
     ID = "STICKER_VIDEO_BIG"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3388,6 +3869,7 @@ class StickerVideoBig(BadRequest):
 
 class StickerVideoNodoc(BadRequest):
     """You must send the video sticker as a document"""
+
     ID = "STICKER_VIDEO_NODOC"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3395,6 +3877,7 @@ class StickerVideoNodoc(BadRequest):
 
 class StickerVideoNowebm(BadRequest):
     """A webm video file was expected, but something else was provided"""
+
     ID = "STICKER_VIDEO_NOWEBM"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3402,6 +3885,7 @@ class StickerVideoNowebm(BadRequest):
 
 class StorageKeyRequired(BadRequest):
     """A cloud storage key is required."""
+
     ID = "STORAGE_KEY_REQUIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3409,6 +3893,7 @@ class StorageKeyRequired(BadRequest):
 
 class StoriesNeverCreated(BadRequest):
     """You have never created any stories"""
+
     ID = "STORIES_NEVER_CREATED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3416,6 +3901,7 @@ class StoriesNeverCreated(BadRequest):
 
 class StoriesTooMuch(BadRequest):
     """Too many stories in the current account"""
+
     ID = "STORIES_TOO_MUCH"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3423,6 +3909,7 @@ class StoriesTooMuch(BadRequest):
 
 class StoryIdEmpty(BadRequest):
     """You specified no story IDs."""
+
     ID = "STORY_ID_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3430,6 +3917,7 @@ class StoryIdEmpty(BadRequest):
 
 class StoryIdInvalid(BadRequest):
     """The specified story ID is invalid."""
+
     ID = "STORY_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3437,6 +3925,7 @@ class StoryIdInvalid(BadRequest):
 
 class StoryNotModified(BadRequest):
     """The new story information you passed is equal to the previous story information, thus it wasn't modified."""
+
     ID = "STORY_NOT_MODIFIED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3444,6 +3933,7 @@ class StoryNotModified(BadRequest):
 
 class StoryPeriodInvalid(BadRequest):
     """The story period is invalid"""
+
     ID = "STORY_PERIOD_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3451,6 +3941,7 @@ class StoryPeriodInvalid(BadRequest):
 
 class StorySendFloodMonthly(BadRequest):
     """You've hit the monthly story limit as specified by the [`stories_sent_monthly_limit_*` client configuration parameters](https://core.telegram.org/api/config#stories-sent-monthly-limit-default): wait for the specified number of seconds before posting a new story."""
+
     ID = "STORY_SEND_FLOOD_MONTHLY_X"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3458,6 +3949,7 @@ class StorySendFloodMonthly(BadRequest):
 
 class StorySendFloodWeekly(BadRequest):
     """You've hit the weekly story limit as specified by the [`stories_sent_weekly_limit_*` client configuration parameters](https://core.telegram.org/api/config#stories-sent-weekly-limit-default): wait for the specified number of seconds before posting a new story."""
+
     ID = "STORY_SEND_FLOOD_WEEKLY_X"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3465,6 +3957,7 @@ class StorySendFloodWeekly(BadRequest):
 
 class SwitchPmTextEmpty(BadRequest):
     """The switch_pm.text field was empty"""
+
     ID = "SWITCH_PM_TEXT_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3472,6 +3965,7 @@ class SwitchPmTextEmpty(BadRequest):
 
 class SwitchWebviewUrlInvalid(BadRequest):
     """The URL specified in switch_webview.url is invalid!"""
+
     ID = "SWITCH_WEBVIEW_URL_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3479,6 +3973,7 @@ class SwitchWebviewUrlInvalid(BadRequest):
 
 class TakeoutInvalid(BadRequest):
     """The takeout id is invalid"""
+
     ID = "TAKEOUT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3486,6 +3981,7 @@ class TakeoutInvalid(BadRequest):
 
 class TakeoutRequired(BadRequest):
     """The method must be invoked inside a takeout session"""
+
     ID = "TAKEOUT_REQUIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3493,6 +3989,7 @@ class TakeoutRequired(BadRequest):
 
 class TaskAlreadyExists(BadRequest):
     """An email reset was already requested."""
+
     ID = "TASK_ALREADY_EXISTS"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3500,6 +3997,7 @@ class TaskAlreadyExists(BadRequest):
 
 class TempAuthKeyAlreadyBound(BadRequest):
     """The passed temporary key is already bound to another perm_auth_key_id"""
+
     ID = "TEMP_AUTH_KEY_ALREADY_BOUND"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3507,6 +4005,7 @@ class TempAuthKeyAlreadyBound(BadRequest):
 
 class TempAuthKeyEmpty(BadRequest):
     """The temporary auth key provided is empty"""
+
     ID = "TEMP_AUTH_KEY_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3514,6 +4013,7 @@ class TempAuthKeyEmpty(BadRequest):
 
 class ThemeFileInvalid(BadRequest):
     """Invalid theme file provided"""
+
     ID = "THEME_FILE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3521,6 +4021,7 @@ class ThemeFileInvalid(BadRequest):
 
 class ThemeFormatInvalid(BadRequest):
     """Invalid theme format provided"""
+
     ID = "THEME_FORMAT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3528,6 +4029,7 @@ class ThemeFormatInvalid(BadRequest):
 
 class ThemeInvalid(BadRequest):
     """Invalid theme provided"""
+
     ID = "THEME_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3535,6 +4037,7 @@ class ThemeInvalid(BadRequest):
 
 class ThemeMimeInvalid(BadRequest):
     """You cannot create this theme because the mime-type is invalid"""
+
     ID = "THEME_MIME_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3542,6 +4045,7 @@ class ThemeMimeInvalid(BadRequest):
 
 class ThemeTitleInvalid(BadRequest):
     """The specified theme title is invalid"""
+
     ID = "THEME_TITLE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3549,6 +4053,7 @@ class ThemeTitleInvalid(BadRequest):
 
 class TimezoneInvalid(BadRequest):
     """The specified timezone does not exist."""
+
     ID = "TIMEZONE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3556,6 +4061,7 @@ class TimezoneInvalid(BadRequest):
 
 class TitleInvalid(BadRequest):
     """The specified stickerpack title is invalid"""
+
     ID = "TITLE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3563,6 +4069,7 @@ class TitleInvalid(BadRequest):
 
 class TmpPasswordDisabled(BadRequest):
     """The temporary password is disabled"""
+
     ID = "TMP_PASSWORD_DISABLED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3570,6 +4077,7 @@ class TmpPasswordDisabled(BadRequest):
 
 class TmpPasswordInvalid(BadRequest):
     """The temporary password is invalid"""
+
     ID = "TMP_PASSWORD_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3577,6 +4085,7 @@ class TmpPasswordInvalid(BadRequest):
 
 class TokenEmpty(BadRequest):
     """The specified token is empty."""
+
     ID = "TOKEN_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3584,6 +4093,7 @@ class TokenEmpty(BadRequest):
 
 class TokenInvalid(BadRequest):
     """The provided token is invalid"""
+
     ID = "TOKEN_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3591,6 +4101,7 @@ class TokenInvalid(BadRequest):
 
 class TokenSecretInvalid(BadRequest):
     """The specified token secret is invalid"""
+
     ID = "TOKEN_SECRET_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3598,6 +4109,7 @@ class TokenSecretInvalid(BadRequest):
 
 class TokenTypeInvalid(BadRequest):
     """The specified token type is invalid."""
+
     ID = "TOKEN_TYPE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3605,6 +4117,7 @@ class TokenTypeInvalid(BadRequest):
 
 class TopicsEmpty(BadRequest):
     """You specified no topic IDs."""
+
     ID = "TOPICS_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3612,6 +4125,7 @@ class TopicsEmpty(BadRequest):
 
 class TopicClosed(BadRequest):
     """The topic was closed"""
+
     ID = "TOPIC_CLOSED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3619,6 +4133,7 @@ class TopicClosed(BadRequest):
 
 class TopicCloseSeparately(BadRequest):
     """The `close` flag cannot be provided together with any of the other flags."""
+
     ID = "TOPIC_CLOSE_SEPARATELY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3626,6 +4141,7 @@ class TopicCloseSeparately(BadRequest):
 
 class TopicDeleted(BadRequest):
     """The topic was deleted"""
+
     ID = "TOPIC_DELETED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3633,6 +4149,7 @@ class TopicDeleted(BadRequest):
 
 class TopicHideSeparately(BadRequest):
     """The `hide` flag cannot be provided together with any of the other flags."""
+
     ID = "TOPIC_HIDE_SEPARATELY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3640,6 +4157,7 @@ class TopicHideSeparately(BadRequest):
 
 class TopicIdInvalid(BadRequest):
     """The provided topic ID is invalid"""
+
     ID = "TOPIC_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3647,6 +4165,7 @@ class TopicIdInvalid(BadRequest):
 
 class TopicNotModified(BadRequest):
     """The topic was not modified"""
+
     ID = "TOPIC_NOT_MODIFIED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3654,6 +4173,7 @@ class TopicNotModified(BadRequest):
 
 class TopicTitleEmpty(BadRequest):
     """The specified topic title is empty."""
+
     ID = "TOPIC_TITLE_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3661,6 +4181,7 @@ class TopicTitleEmpty(BadRequest):
 
 class ToLangInvalid(BadRequest):
     """The specified destination language is invalid"""
+
     ID = "TO_LANG_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3668,6 +4189,7 @@ class ToLangInvalid(BadRequest):
 
 class TranscriptionFailed(BadRequest):
     """Telegram is having internal problems. Please try again later to transcribe the audio."""
+
     ID = "TRANSCRIPTION_FAILED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3675,6 +4197,7 @@ class TranscriptionFailed(BadRequest):
 
 class TranslateReqQuotaExceeded(BadRequest):
     """Translation is currently unavailable due to a temporary server-side lack of resources."""
+
     ID = "TRANSLATE_REQ_QUOTA_EXCEEDED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3682,6 +4205,7 @@ class TranslateReqQuotaExceeded(BadRequest):
 
 class TtlDaysInvalid(BadRequest):
     """The provided TTL days is invalid"""
+
     ID = "TTL_DAYS_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3689,6 +4213,7 @@ class TtlDaysInvalid(BadRequest):
 
 class TtlMediaInvalid(BadRequest):
     """The media does not support self-destruction"""
+
     ID = "TTL_MEDIA_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3696,6 +4221,7 @@ class TtlMediaInvalid(BadRequest):
 
 class TtlPeriodInvalid(BadRequest):
     """The provided TTL period is invalid"""
+
     ID = "TTL_PERIOD_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3703,6 +4229,7 @@ class TtlPeriodInvalid(BadRequest):
 
 class TypesEmpty(BadRequest):
     """The types parameter is empty"""
+
     ID = "TYPES_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3710,6 +4237,7 @@ class TypesEmpty(BadRequest):
 
 class TypeConstructorInvalid(BadRequest):
     """The type constructor is invalid"""
+
     ID = "TYPE_CONSTRUCTOR_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3717,6 +4245,7 @@ class TypeConstructorInvalid(BadRequest):
 
 class UnknownError(BadRequest):
     """Unknown error"""
+
     ID = "UNKNOWN_ERROR"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3724,6 +4253,7 @@ class UnknownError(BadRequest):
 
 class UntilDateInvalid(BadRequest):
     """That date parameter is invalid"""
+
     ID = "UNTIL_DATE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3731,6 +4261,7 @@ class UntilDateInvalid(BadRequest):
 
 class UrlInvalid(BadRequest):
     """The URL provided is invalid"""
+
     ID = "URL_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3738,6 +4269,7 @@ class UrlInvalid(BadRequest):
 
 class UsageLimitInvalid(BadRequest):
     """The usage limit is invalid"""
+
     ID = "USAGE_LIMIT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3745,6 +4277,7 @@ class UsageLimitInvalid(BadRequest):
 
 class UsernamesActiveTooMuch(BadRequest):
     """The maximum number of active usernames was reached."""
+
     ID = "USERNAMES_ACTIVE_TOO_MUCH"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3752,6 +4285,7 @@ class UsernamesActiveTooMuch(BadRequest):
 
 class UsernameInvalid(BadRequest):
     """The username is invalid"""
+
     ID = "USERNAME_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3759,6 +4293,7 @@ class UsernameInvalid(BadRequest):
 
 class UsernameNotModified(BadRequest):
     """The username was not modified because you tried to edit it using the same one"""
+
     ID = "USERNAME_NOT_MODIFIED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3766,6 +4301,7 @@ class UsernameNotModified(BadRequest):
 
 class UsernameNotOccupied(BadRequest):
     """The username is not occupied by anyone"""
+
     ID = "USERNAME_NOT_OCCUPIED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3773,6 +4309,7 @@ class UsernameNotOccupied(BadRequest):
 
 class UsernameOccupied(BadRequest):
     """The username is already in use by someone else"""
+
     ID = "USERNAME_OCCUPIED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3780,6 +4317,7 @@ class UsernameOccupied(BadRequest):
 
 class UsernamePurchaseAvailable(BadRequest):
     """The username is available for purchase on fragment.com"""
+
     ID = "USERNAME_PURCHASE_AVAILABLE"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3787,6 +4325,7 @@ class UsernamePurchaseAvailable(BadRequest):
 
 class UserpicUploadRequired(BadRequest):
     """You are required to upload a profile picture for this action"""
+
     ID = "USERPIC_UPLOAD_REQUIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3794,6 +4333,7 @@ class UserpicUploadRequired(BadRequest):
 
 class UsersTooFew(BadRequest):
     """Not enough users (to create a chat, for example)"""
+
     ID = "USERS_TOO_FEW"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3801,6 +4341,7 @@ class UsersTooFew(BadRequest):
 
 class UsersTooMuch(BadRequest):
     """The maximum number of users has been exceeded (to create a chat, for example)"""
+
     ID = "USERS_TOO_MUCH"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3808,6 +4349,7 @@ class UsersTooMuch(BadRequest):
 
 class UserAdminInvalid(BadRequest):
     """The action requires admin privileges. Probably you tried to edit admin privileges on someone you don't have rights to"""
+
     ID = "USER_ADMIN_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3815,6 +4357,7 @@ class UserAdminInvalid(BadRequest):
 
 class UserAlreadyInvited(BadRequest):
     """You have already invited this user"""
+
     ID = "USER_ALREADY_INVITED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3822,6 +4365,7 @@ class UserAlreadyInvited(BadRequest):
 
 class UserAlreadyParticipant(BadRequest):
     """The user is already a participant of this chat"""
+
     ID = "USER_ALREADY_PARTICIPANT"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3829,6 +4373,7 @@ class UserAlreadyParticipant(BadRequest):
 
 class UserBannedInChannel(BadRequest):
     """You are limited from sending messages in supergroups/channels, check @SpamBot for details"""
+
     ID = "USER_BANNED_IN_CHANNEL"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3836,6 +4381,7 @@ class UserBannedInChannel(BadRequest):
 
 class UserBlocked(BadRequest):
     """The user is blocked"""
+
     ID = "USER_BLOCKED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3843,6 +4389,7 @@ class UserBlocked(BadRequest):
 
 class UserBot(BadRequest):
     """Bots in channels can only be administrators, not members."""
+
     ID = "USER_BOT"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3850,6 +4397,7 @@ class UserBot(BadRequest):
 
 class UserBotInvalid(BadRequest):
     """This method can only be used by a bot"""
+
     ID = "USER_BOT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3857,6 +4405,7 @@ class UserBotInvalid(BadRequest):
 
 class UserBotRequired(BadRequest):
     """The method can be used by bots only"""
+
     ID = "USER_BOT_REQUIRED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3864,6 +4413,7 @@ class UserBotRequired(BadRequest):
 
 class UserChannelsTooMuch(BadRequest):
     """The user is already in too many channels or supergroups"""
+
     ID = "USER_CHANNELS_TOO_MUCH"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3871,6 +4421,7 @@ class UserChannelsTooMuch(BadRequest):
 
 class UserCreator(BadRequest):
     """You can't leave this channel because you're its creator"""
+
     ID = "USER_CREATOR"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3878,6 +4429,7 @@ class UserCreator(BadRequest):
 
 class UserIdInvalid(BadRequest):
     """The user id being used is invalid or not known yet. Make sure you meet the user before interacting with it"""
+
     ID = "USER_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3885,6 +4437,7 @@ class UserIdInvalid(BadRequest):
 
 class UserInvalid(BadRequest):
     """The provided user is invalid"""
+
     ID = "USER_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3892,6 +4445,7 @@ class UserInvalid(BadRequest):
 
 class UserIsBlocked(BadRequest):
     """The user blocked you"""
+
     ID = "USER_IS_BLOCKED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3899,6 +4453,7 @@ class UserIsBlocked(BadRequest):
 
 class UserIsBot(BadRequest):
     """A bot cannot send messages to other bots or to itself"""
+
     ID = "USER_IS_BOT"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3906,6 +4461,7 @@ class UserIsBot(BadRequest):
 
 class UserKicked(BadRequest):
     """This user was kicked from this chat"""
+
     ID = "USER_KICKED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3913,6 +4469,7 @@ class UserKicked(BadRequest):
 
 class UserNotMutualContact(BadRequest):
     """The user is not a mutual contact"""
+
     ID = "USER_NOT_MUTUAL_CONTACT"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3920,6 +4477,7 @@ class UserNotMutualContact(BadRequest):
 
 class UserNotParticipant(BadRequest):
     """The user is not a member of this chat"""
+
     ID = "USER_NOT_PARTICIPANT"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3927,6 +4485,7 @@ class UserNotParticipant(BadRequest):
 
 class UserPublicMissing(BadRequest):
     """The accounts username is missing"""
+
     ID = "USER_PUBLIC_MISSING"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3934,6 +4493,7 @@ class UserPublicMissing(BadRequest):
 
 class UserVolumeInvalid(BadRequest):
     """The specified user volume is invalid"""
+
     ID = "USER_VOLUME_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3941,6 +4501,7 @@ class UserVolumeInvalid(BadRequest):
 
 class VenueIdInvalid(BadRequest):
     """The specified venue ID is invalid."""
+
     ID = "VENUE_ID_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3948,6 +4509,7 @@ class VenueIdInvalid(BadRequest):
 
 class VideoContentTypeInvalid(BadRequest):
     """The video content type is invalid (i.e.: not streamable)"""
+
     ID = "VIDEO_CONTENT_TYPE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3955,6 +4517,7 @@ class VideoContentTypeInvalid(BadRequest):
 
 class VideoFileInvalid(BadRequest):
     """The video file is invalid"""
+
     ID = "VIDEO_FILE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3962,6 +4525,7 @@ class VideoFileInvalid(BadRequest):
 
 class VideoPauseForbidden(BadRequest):
     """You cannot pause the video stream."""
+
     ID = "VIDEO_PAUSE_FORBIDDEN"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3969,6 +4533,7 @@ class VideoPauseForbidden(BadRequest):
 
 class VideoStopForbidden(BadRequest):
     """You cannot stop the video stream."""
+
     ID = "VIDEO_STOP_FORBIDDEN"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3976,6 +4541,7 @@ class VideoStopForbidden(BadRequest):
 
 class VideoTitleEmpty(BadRequest):
     """The specified video title is empty"""
+
     ID = "VIDEO_TITLE_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3983,6 +4549,7 @@ class VideoTitleEmpty(BadRequest):
 
 class VoiceMessagesForbidden(BadRequest):
     """Voice messages are restricted"""
+
     ID = "VOICE_MESSAGES_FORBIDDEN"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3990,6 +4557,7 @@ class VoiceMessagesForbidden(BadRequest):
 
 class VolumeLocNotFound(BadRequest):
     """The volume location can't be found"""
+
     ID = "VOLUME_LOC_NOT_FOUND"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -3997,6 +4565,7 @@ class VolumeLocNotFound(BadRequest):
 
 class WallpaperFileInvalid(BadRequest):
     """The provided file cannot be used as a wallpaper"""
+
     ID = "WALLPAPER_FILE_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -4004,6 +4573,7 @@ class WallpaperFileInvalid(BadRequest):
 
 class WallpaperInvalid(BadRequest):
     """The input wallpaper was not valid"""
+
     ID = "WALLPAPER_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -4011,6 +4581,7 @@ class WallpaperInvalid(BadRequest):
 
 class WallpaperMimeInvalid(BadRequest):
     """The wallpaper mime type is invalid"""
+
     ID = "WALLPAPER_MIME_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -4018,6 +4589,7 @@ class WallpaperMimeInvalid(BadRequest):
 
 class WallpaperNotFound(BadRequest):
     """The specified wallpaper could not be found."""
+
     ID = "WALLPAPER_NOT_FOUND"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -4025,6 +4597,7 @@ class WallpaperNotFound(BadRequest):
 
 class WcConvertUrlInvalid(BadRequest):
     """WC convert URL invalid"""
+
     ID = "WC_CONVERT_URL_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -4032,6 +4605,7 @@ class WcConvertUrlInvalid(BadRequest):
 
 class WebdocumentInvalid(BadRequest):
     """The web document is invalid"""
+
     ID = "WEBDOCUMENT_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -4039,6 +4613,7 @@ class WebdocumentInvalid(BadRequest):
 
 class WebdocumentMimeInvalid(BadRequest):
     """The web document mime type is invalid"""
+
     ID = "WEBDOCUMENT_MIME_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -4046,6 +4621,7 @@ class WebdocumentMimeInvalid(BadRequest):
 
 class WebdocumentSizeTooBig(BadRequest):
     """The web document is too big"""
+
     ID = "WEBDOCUMENT_SIZE_TOO_BIG"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -4053,6 +4629,7 @@ class WebdocumentSizeTooBig(BadRequest):
 
 class WebdocumentUrlEmpty(BadRequest):
     """The web document URL is empty"""
+
     ID = "WEBDOCUMENT_URL_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -4060,6 +4637,7 @@ class WebdocumentUrlEmpty(BadRequest):
 
 class WebdocumentUrlInvalid(BadRequest):
     """The web document URL is invalid"""
+
     ID = "WEBDOCUMENT_URL_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -4067,6 +4645,7 @@ class WebdocumentUrlInvalid(BadRequest):
 
 class WebpageCurlFailed(BadRequest):
     """Telegram server could not fetch the provided URL"""
+
     ID = "WEBPAGE_CURL_FAILED"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -4074,6 +4653,7 @@ class WebpageCurlFailed(BadRequest):
 
 class WebpageMediaEmpty(BadRequest):
     """The URL doesn't contain any valid media"""
+
     ID = "WEBPAGE_MEDIA_EMPTY"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -4081,6 +4661,7 @@ class WebpageMediaEmpty(BadRequest):
 
 class WebpageNotFound(BadRequest):
     """Webpage not found"""
+
     ID = "WEBPAGE_NOT_FOUND"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -4088,6 +4669,7 @@ class WebpageNotFound(BadRequest):
 
 class WebpageUrlInvalid(BadRequest):
     """Webpage url invalid"""
+
     ID = "WEBPAGE_URL_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -4095,6 +4677,7 @@ class WebpageUrlInvalid(BadRequest):
 
 class WebpushAuthInvalid(BadRequest):
     """The specified web push authentication secret is invalid"""
+
     ID = "WEBPUSH_AUTH_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -4102,6 +4685,7 @@ class WebpushAuthInvalid(BadRequest):
 
 class WebpushKeyInvalid(BadRequest):
     """The specified web push elliptic curve Diffie-Hellman public key is invalid"""
+
     ID = "WEBPUSH_KEY_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -4109,6 +4693,7 @@ class WebpushKeyInvalid(BadRequest):
 
 class WebpushTokenInvalid(BadRequest):
     """The specified web push token is invalid"""
+
     ID = "WEBPUSH_TOKEN_INVALID"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
@@ -4116,8 +4701,7 @@ class WebpushTokenInvalid(BadRequest):
 
 class YouBlockedUser(BadRequest):
     """You blocked this user"""
+
     ID = "YOU_BLOCKED_USER"
     """``str``: RPC Error ID"""
     MESSAGE = __doc__
-
-

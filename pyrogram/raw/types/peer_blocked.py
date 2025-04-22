@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class PeerBlocked(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer_id", "date"]
+    __slots__: list[str] = ["date", "peer_id"]
 
-    ID = 0xe8fd8014
+    ID = 0xE8FD8014
     QUALNAME = "types.PeerBlocked"
 
     def __init__(self, *, peer_id: "raw.base.Peer", date: int) -> None:
@@ -60,11 +62,11 @@ class PeerBlocked(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PeerBlocked":
         # No flags
-        
+
         peer_id = TLObject.read(b)
-        
+
         date = Int.read(b)
-        
+
         return PeerBlocked(peer_id=peer_id, date=date)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class PeerBlocked(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer_id.write())
-        
+
         b.write(Int(self.date))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +47,9 @@ class SentCodeTypeFlashCall(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["pattern"]
+    __slots__: list[str] = ["pattern"]
 
-    ID = 0xab03c6d9
+    ID = 0xAB03C6D9
     QUALNAME = "types.auth.SentCodeTypeFlashCall"
 
     def __init__(self, *, pattern: str) -> None:
@@ -56,9 +58,9 @@ class SentCodeTypeFlashCall(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SentCodeTypeFlashCall":
         # No flags
-        
+
         pattern = String.read(b)
-        
+
         return SentCodeTypeFlashCall(pattern=pattern)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class SentCodeTypeFlashCall(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.pattern))
-        
+
         return b.getvalue()

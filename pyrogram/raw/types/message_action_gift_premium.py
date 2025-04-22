@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,12 +60,26 @@ class MessageActionGiftPremium(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["currency", "amount", "months", "crypto_currency", "crypto_amount"]
+    __slots__: list[str] = [
+        "amount",
+        "crypto_amount",
+        "crypto_currency",
+        "currency",
+        "months",
+    ]
 
-    ID = 0xc83d6aec
+    ID = 0xC83D6AEC
     QUALNAME = "types.MessageActionGiftPremium"
 
-    def __init__(self, *, currency: str, amount: int, months: int, crypto_currency: Optional[str] = None, crypto_amount: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        currency: str,
+        amount: int,
+        months: int,
+        crypto_currency: str | None = None,
+        crypto_amount: int | None = None,
+    ) -> None:
         self.currency = currency  # string
         self.amount = amount  # long
         self.months = months  # int
@@ -71,18 +88,23 @@ class MessageActionGiftPremium(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageActionGiftPremium":
-        
         flags = Int.read(b)
-        
+
         currency = String.read(b)
-        
+
         amount = Long.read(b)
-        
+
         months = Int.read(b)
-        
+
         crypto_currency = String.read(b) if flags & (1 << 0) else None
         crypto_amount = Long.read(b) if flags & (1 << 0) else None
-        return MessageActionGiftPremium(currency=currency, amount=amount, months=months, crypto_currency=crypto_currency, crypto_amount=crypto_amount)
+        return MessageActionGiftPremium(
+            currency=currency,
+            amount=amount,
+            months=months,
+            crypto_currency=crypto_currency,
+            crypto_amount=crypto_amount,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -92,17 +114,17 @@ class MessageActionGiftPremium(TLObject):  # type: ignore
         flags |= (1 << 0) if self.crypto_currency is not None else 0
         flags |= (1 << 0) if self.crypto_amount is not None else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.currency))
-        
+
         b.write(Long(self.amount))
-        
+
         b.write(Int(self.months))
-        
+
         if self.crypto_currency is not None:
             b.write(String(self.crypto_currency))
-        
+
         if self.crypto_amount is not None:
             b.write(Long(self.crypto_amount))
-        
+
         return b.getvalue()

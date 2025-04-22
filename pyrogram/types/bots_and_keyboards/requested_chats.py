@@ -16,11 +16,10 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import List, Union
+from typing import Union
 
 import pyrogram
-from pyrogram import enums
-from pyrogram import raw, utils, types
+from pyrogram import enums, raw, types, utils
 
 from ..object import Object
 
@@ -37,10 +36,11 @@ class RequestedChats(Object):
     """
 
     def __init__(
-        self, *,
+        self,
+        *,
         client: "pyrogram.Client" = None,
         button_id: int,
-        chats: List["types.Chat"],
+        chats: list["types.Chat"],
     ):
         super().__init__(client)
 
@@ -52,8 +52,8 @@ class RequestedChats(Object):
         client,
         action: Union[
             "raw.types.MessageActionRequestedPeer",
-            "raw.types.MessageActionRequestedPeerSentMe"
-        ]
+            "raw.types.MessageActionRequestedPeerSentMe",
+        ],
     ) -> "RequestedChats":
         _requested_chats = []
 
@@ -75,13 +75,18 @@ class RequestedChats(Object):
                     first_name=getattr(requested_peer, "first_name", None),
                     last_name=getattr(requested_peer, "last_name", None),
                     username=getattr(requested_peer, "username", None),
-                    photo=types.ChatPhoto.from_raw_tl(client, getattr(requested_peer, "photo", None), peer_id, 0),
-                    client=client
-                )
+                    photo=types.ChatPhoto.from_raw_tl(
+                        client,
+                        getattr(requested_peer, "photo", None),
+                        peer_id,
+                        0,
+                    ),
+                    client=client,
+                ),
             )
 
         return RequestedChats(
             button_id=action.button_id,
             chats=types.List(_requested_chats),
-            client=client
+            client=client,
         )

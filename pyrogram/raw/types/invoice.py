@@ -17,11 +17,16 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -84,12 +89,44 @@ class Invoice(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["currency", "prices", "test", "name_requested", "phone_requested", "email_requested", "shipping_address_requested", "flexible", "phone_to_provider", "email_to_provider", "recurring", "max_tip_amount", "suggested_tip_amounts", "terms_url"]
+    __slots__: list[str] = [
+        "currency",
+        "email_requested",
+        "email_to_provider",
+        "flexible",
+        "max_tip_amount",
+        "name_requested",
+        "phone_requested",
+        "phone_to_provider",
+        "prices",
+        "recurring",
+        "shipping_address_requested",
+        "suggested_tip_amounts",
+        "terms_url",
+        "test",
+    ]
 
-    ID = 0x5db95a15
+    ID = 0x5DB95A15
     QUALNAME = "types.Invoice"
 
-    def __init__(self, *, currency: str, prices: List["raw.base.LabeledPrice"], test: Optional[bool] = None, name_requested: Optional[bool] = None, phone_requested: Optional[bool] = None, email_requested: Optional[bool] = None, shipping_address_requested: Optional[bool] = None, flexible: Optional[bool] = None, phone_to_provider: Optional[bool] = None, email_to_provider: Optional[bool] = None, recurring: Optional[bool] = None, max_tip_amount: Optional[int] = None, suggested_tip_amounts: Optional[List[int]] = None, terms_url: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        currency: str,
+        prices: list["raw.base.LabeledPrice"],
+        test: bool | None = None,
+        name_requested: bool | None = None,
+        phone_requested: bool | None = None,
+        email_requested: bool | None = None,
+        shipping_address_requested: bool | None = None,
+        flexible: bool | None = None,
+        phone_to_provider: bool | None = None,
+        email_to_provider: bool | None = None,
+        recurring: bool | None = None,
+        max_tip_amount: int | None = None,
+        suggested_tip_amounts: list[int] | None = None,
+        terms_url: str | None = None,
+    ) -> None:
         self.currency = currency  # string
         self.prices = prices  # Vector<LabeledPrice>
         self.test = test  # flags.0?true
@@ -107,9 +144,8 @@ class Invoice(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "Invoice":
-        
         flags = Int.read(b)
-        
+
         test = True if flags & (1 << 0) else False
         name_requested = True if flags & (1 << 1) else False
         phone_requested = True if flags & (1 << 2) else False
@@ -120,14 +156,29 @@ class Invoice(TLObject):  # type: ignore
         email_to_provider = True if flags & (1 << 7) else False
         recurring = True if flags & (1 << 9) else False
         currency = String.read(b)
-        
+
         prices = TLObject.read(b)
-        
+
         max_tip_amount = Long.read(b) if flags & (1 << 8) else None
         suggested_tip_amounts = TLObject.read(b, Long) if flags & (1 << 8) else []
-        
+
         terms_url = String.read(b) if flags & (1 << 10) else None
-        return Invoice(currency=currency, prices=prices, test=test, name_requested=name_requested, phone_requested=phone_requested, email_requested=email_requested, shipping_address_requested=shipping_address_requested, flexible=flexible, phone_to_provider=phone_to_provider, email_to_provider=email_to_provider, recurring=recurring, max_tip_amount=max_tip_amount, suggested_tip_amounts=suggested_tip_amounts, terms_url=terms_url)
+        return Invoice(
+            currency=currency,
+            prices=prices,
+            test=test,
+            name_requested=name_requested,
+            phone_requested=phone_requested,
+            email_requested=email_requested,
+            shipping_address_requested=shipping_address_requested,
+            flexible=flexible,
+            phone_to_provider=phone_to_provider,
+            email_to_provider=email_to_provider,
+            recurring=recurring,
+            max_tip_amount=max_tip_amount,
+            suggested_tip_amounts=suggested_tip_amounts,
+            terms_url=terms_url,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -147,18 +198,18 @@ class Invoice(TLObject):  # type: ignore
         flags |= (1 << 8) if self.suggested_tip_amounts else 0
         flags |= (1 << 10) if self.terms_url is not None else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.currency))
-        
+
         b.write(Vector(self.prices))
-        
+
         if self.max_tip_amount is not None:
             b.write(Long(self.max_tip_amount))
-        
+
         if self.suggested_tip_amounts is not None:
             b.write(Vector(self.suggested_tip_amounts, Long))
-        
+
         if self.terms_url is not None:
             b.write(String(self.terms_url))
-        
+
         return b.getvalue()

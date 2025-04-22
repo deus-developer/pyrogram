@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -72,12 +74,30 @@ class GiveawayInfoResults(TLObject):  # type: ignore
             payments.GetGiveawayInfo
     """
 
-    __slots__: List[str] = ["start_date", "finish_date", "winners_count", "activated_count", "winner", "refunded", "gift_code_slug"]
+    __slots__: list[str] = [
+        "activated_count",
+        "finish_date",
+        "gift_code_slug",
+        "refunded",
+        "start_date",
+        "winner",
+        "winners_count",
+    ]
 
-    ID = 0xcd5570
+    ID = 0xCD5570
     QUALNAME = "types.payments.GiveawayInfoResults"
 
-    def __init__(self, *, start_date: int, finish_date: int, winners_count: int, activated_count: int, winner: Optional[bool] = None, refunded: Optional[bool] = None, gift_code_slug: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        start_date: int,
+        finish_date: int,
+        winners_count: int,
+        activated_count: int,
+        winner: bool | None = None,
+        refunded: bool | None = None,
+        gift_code_slug: str | None = None,
+    ) -> None:
         self.start_date = start_date  # int
         self.finish_date = finish_date  # int
         self.winners_count = winners_count  # int
@@ -88,21 +108,28 @@ class GiveawayInfoResults(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GiveawayInfoResults":
-        
         flags = Int.read(b)
-        
+
         winner = True if flags & (1 << 0) else False
         refunded = True if flags & (1 << 1) else False
         start_date = Int.read(b)
-        
+
         gift_code_slug = String.read(b) if flags & (1 << 0) else None
         finish_date = Int.read(b)
-        
+
         winners_count = Int.read(b)
-        
+
         activated_count = Int.read(b)
-        
-        return GiveawayInfoResults(start_date=start_date, finish_date=finish_date, winners_count=winners_count, activated_count=activated_count, winner=winner, refunded=refunded, gift_code_slug=gift_code_slug)
+
+        return GiveawayInfoResults(
+            start_date=start_date,
+            finish_date=finish_date,
+            winners_count=winners_count,
+            activated_count=activated_count,
+            winner=winner,
+            refunded=refunded,
+            gift_code_slug=gift_code_slug,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -113,16 +140,16 @@ class GiveawayInfoResults(TLObject):  # type: ignore
         flags |= (1 << 1) if self.refunded else 0
         flags |= (1 << 0) if self.gift_code_slug is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.start_date))
-        
+
         if self.gift_code_slug is not None:
             b.write(String(self.gift_code_slug))
-        
+
         b.write(Int(self.finish_date))
-        
+
         b.write(Int(self.winners_count))
-        
+
         b.write(Int(self.activated_count))
-        
+
         return b.getvalue()

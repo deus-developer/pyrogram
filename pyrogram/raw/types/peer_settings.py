@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -90,12 +93,48 @@ class PeerSettings(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["report_spam", "add_contact", "block_contact", "share_contact", "need_contacts_exception", "report_geo", "autoarchived", "invite_members", "request_chat_broadcast", "business_bot_paused", "business_bot_can_reply", "geo_distance", "request_chat_title", "request_chat_date", "business_bot_id", "business_bot_manage_url"]
+    __slots__: list[str] = [
+        "add_contact",
+        "autoarchived",
+        "block_contact",
+        "business_bot_can_reply",
+        "business_bot_id",
+        "business_bot_manage_url",
+        "business_bot_paused",
+        "geo_distance",
+        "invite_members",
+        "need_contacts_exception",
+        "report_geo",
+        "report_spam",
+        "request_chat_broadcast",
+        "request_chat_date",
+        "request_chat_title",
+        "share_contact",
+    ]
 
-    ID = 0xacd66c5e
+    ID = 0xACD66C5E
     QUALNAME = "types.PeerSettings"
 
-    def __init__(self, *, report_spam: Optional[bool] = None, add_contact: Optional[bool] = None, block_contact: Optional[bool] = None, share_contact: Optional[bool] = None, need_contacts_exception: Optional[bool] = None, report_geo: Optional[bool] = None, autoarchived: Optional[bool] = None, invite_members: Optional[bool] = None, request_chat_broadcast: Optional[bool] = None, business_bot_paused: Optional[bool] = None, business_bot_can_reply: Optional[bool] = None, geo_distance: Optional[int] = None, request_chat_title: Optional[str] = None, request_chat_date: Optional[int] = None, business_bot_id: Optional[int] = None, business_bot_manage_url: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        report_spam: bool | None = None,
+        add_contact: bool | None = None,
+        block_contact: bool | None = None,
+        share_contact: bool | None = None,
+        need_contacts_exception: bool | None = None,
+        report_geo: bool | None = None,
+        autoarchived: bool | None = None,
+        invite_members: bool | None = None,
+        request_chat_broadcast: bool | None = None,
+        business_bot_paused: bool | None = None,
+        business_bot_can_reply: bool | None = None,
+        geo_distance: int | None = None,
+        request_chat_title: str | None = None,
+        request_chat_date: int | None = None,
+        business_bot_id: int | None = None,
+        business_bot_manage_url: str | None = None,
+    ) -> None:
         self.report_spam = report_spam  # flags.0?true
         self.add_contact = add_contact  # flags.1?true
         self.block_contact = block_contact  # flags.2?true
@@ -115,9 +154,8 @@ class PeerSettings(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PeerSettings":
-        
         flags = Int.read(b)
-        
+
         report_spam = True if flags & (1 << 0) else False
         add_contact = True if flags & (1 << 1) else False
         block_contact = True if flags & (1 << 2) else False
@@ -134,7 +172,24 @@ class PeerSettings(TLObject):  # type: ignore
         request_chat_date = Int.read(b) if flags & (1 << 9) else None
         business_bot_id = Long.read(b) if flags & (1 << 13) else None
         business_bot_manage_url = String.read(b) if flags & (1 << 13) else None
-        return PeerSettings(report_spam=report_spam, add_contact=add_contact, block_contact=block_contact, share_contact=share_contact, need_contacts_exception=need_contacts_exception, report_geo=report_geo, autoarchived=autoarchived, invite_members=invite_members, request_chat_broadcast=request_chat_broadcast, business_bot_paused=business_bot_paused, business_bot_can_reply=business_bot_can_reply, geo_distance=geo_distance, request_chat_title=request_chat_title, request_chat_date=request_chat_date, business_bot_id=business_bot_id, business_bot_manage_url=business_bot_manage_url)
+        return PeerSettings(
+            report_spam=report_spam,
+            add_contact=add_contact,
+            block_contact=block_contact,
+            share_contact=share_contact,
+            need_contacts_exception=need_contacts_exception,
+            report_geo=report_geo,
+            autoarchived=autoarchived,
+            invite_members=invite_members,
+            request_chat_broadcast=request_chat_broadcast,
+            business_bot_paused=business_bot_paused,
+            business_bot_can_reply=business_bot_can_reply,
+            geo_distance=geo_distance,
+            request_chat_title=request_chat_title,
+            request_chat_date=request_chat_date,
+            business_bot_id=business_bot_id,
+            business_bot_manage_url=business_bot_manage_url,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -158,20 +213,20 @@ class PeerSettings(TLObject):  # type: ignore
         flags |= (1 << 13) if self.business_bot_id is not None else 0
         flags |= (1 << 13) if self.business_bot_manage_url is not None else 0
         b.write(Int(flags))
-        
+
         if self.geo_distance is not None:
             b.write(Int(self.geo_distance))
-        
+
         if self.request_chat_title is not None:
             b.write(String(self.request_chat_title))
-        
+
         if self.request_chat_date is not None:
             b.write(Int(self.request_chat_date))
-        
+
         if self.business_bot_id is not None:
             b.write(Long(self.business_bot_id))
-        
+
         if self.business_bot_manage_url is not None:
             b.write(String(self.business_bot_manage_url))
-        
+
         return b.getvalue()

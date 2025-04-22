@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -25,8 +24,8 @@ from pyrogram import raw
 class DeleteChatAdminInviteLinks:
     async def delete_chat_admin_invite_links(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        admin_id: Union[int, str],
+        chat_id: int | str,
+        admin_id: int | str,
     ) -> bool:
         """Delete all revoked invite links of an administrator.
 
@@ -45,10 +44,9 @@ class DeleteChatAdminInviteLinks:
         Returns:
             ``bool``: On success ``True`` is returned.
         """
-
         return await self.invoke(
             raw.functions.messages.DeleteRevokedExportedChatInvites(
                 peer=await self.resolve_peer(chat_id),
                 admin_id=await self.resolve_peer(admin_id),
-            )
+            ),
         )

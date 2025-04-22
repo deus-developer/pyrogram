@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetLeaveChatlistSuggestions(TLObject):  # type: ignore
+class GetLeaveChatlistSuggestions(TLFunction[list["raw.base.Peer"]]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetLeaveChatlistSuggestions(TLObject):  # type: ignore
         List of :obj:`Peer <pyrogram.raw.base.Peer>`
     """
 
-    __slots__: List[str] = ["chatlist"]
+    __slots__: list[str] = ["chatlist"]
 
-    ID = 0xfdbcd714
+    ID = 0xFDBCD714
     QUALNAME = "functions.chatlists.GetLeaveChatlistSuggestions"
 
     def __init__(self, *, chatlist: "raw.base.InputChatlist") -> None:
@@ -56,9 +58,9 @@ class GetLeaveChatlistSuggestions(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetLeaveChatlistSuggestions":
         # No flags
-        
+
         chatlist = TLObject.read(b)
-        
+
         return GetLeaveChatlistSuggestions(chatlist=chatlist)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class GetLeaveChatlistSuggestions(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.chatlist.write())
-        
+
         return b.getvalue()

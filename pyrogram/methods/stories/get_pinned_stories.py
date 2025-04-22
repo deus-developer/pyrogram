@@ -16,18 +16,16 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import AsyncGenerator, Union
+from collections.abc import AsyncGenerator
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import raw, types
 
 
 class GetPinnedStories:
     async def get_pinned_stories(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         offset_id: int = 0,
         limit: int = 0,
     ) -> AsyncGenerator["types.Story", None]:
@@ -68,8 +66,8 @@ class GetPinnedStories:
                 raw.functions.stories.GetPinnedStories(
                     peer=peer,
                     offset_id=offset_id,
-                    limit=limit
-                )
+                    limit=limit,
+                ),
             )
 
             if not r.stories:
@@ -82,7 +80,7 @@ class GetPinnedStories:
                 yield await types.Story.from_raw_tl(
                     self,
                     story,
-                    peer
+                    peer,
                 )
 
                 current += 1

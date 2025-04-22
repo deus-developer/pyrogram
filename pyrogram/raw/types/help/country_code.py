@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,28 +54,37 @@ class CountryCode(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["country_code", "prefixes", "patterns"]
+    __slots__: list[str] = ["country_code", "patterns", "prefixes"]
 
-    ID = 0x4203c5ef
+    ID = 0x4203C5EF
     QUALNAME = "types.help.CountryCode"
 
-    def __init__(self, *, country_code: str, prefixes: Optional[List[str]] = None, patterns: Optional[List[str]] = None) -> None:
+    def __init__(
+        self,
+        *,
+        country_code: str,
+        prefixes: list[str] | None = None,
+        patterns: list[str] | None = None,
+    ) -> None:
         self.country_code = country_code  # string
         self.prefixes = prefixes  # flags.0?Vector<string>
         self.patterns = patterns  # flags.1?Vector<string>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "CountryCode":
-        
         flags = Int.read(b)
-        
+
         country_code = String.read(b)
-        
+
         prefixes = TLObject.read(b, String) if flags & (1 << 0) else []
-        
+
         patterns = TLObject.read(b, String) if flags & (1 << 1) else []
-        
-        return CountryCode(country_code=country_code, prefixes=prefixes, patterns=patterns)
+
+        return CountryCode(
+            country_code=country_code,
+            prefixes=prefixes,
+            patterns=patterns,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -82,13 +94,13 @@ class CountryCode(TLObject):  # type: ignore
         flags |= (1 << 0) if self.prefixes else 0
         flags |= (1 << 1) if self.patterns else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.country_code))
-        
+
         if self.prefixes is not None:
             b.write(Vector(self.prefixes, String))
-        
+
         if self.patterns is not None:
             b.write(Vector(self.patterns, String))
-        
+
         return b.getvalue()

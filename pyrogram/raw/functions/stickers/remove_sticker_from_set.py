@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class RemoveStickerFromSet(TLObject):  # type: ignore
+class RemoveStickerFromSet(TLFunction["raw.base.messages.StickerSet"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class RemoveStickerFromSet(TLObject):  # type: ignore
         :obj:`messages.StickerSet <pyrogram.raw.base.messages.StickerSet>`
     """
 
-    __slots__: List[str] = ["sticker"]
+    __slots__: list[str] = ["sticker"]
 
-    ID = 0xf7760f51
+    ID = 0xF7760F51
     QUALNAME = "functions.stickers.RemoveStickerFromSet"
 
     def __init__(self, *, sticker: "raw.base.InputDocument") -> None:
@@ -56,9 +58,9 @@ class RemoveStickerFromSet(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "RemoveStickerFromSet":
         # No flags
-        
+
         sticker = TLObject.read(b)
-        
+
         return RemoveStickerFromSet(sticker=sticker)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class RemoveStickerFromSet(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.sticker.write())
-        
+
         return b.getvalue()

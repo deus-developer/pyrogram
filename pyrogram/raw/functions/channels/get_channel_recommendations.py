@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetChannelRecommendations(TLObject):  # type: ignore
+class GetChannelRecommendations(TLFunction["raw.base.messages.Chats"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetChannelRecommendations(TLObject):  # type: ignore
         :obj:`messages.Chats <pyrogram.raw.base.messages.Chats>`
     """
 
-    __slots__: List[str] = ["channel"]
+    __slots__: list[str] = ["channel"]
 
-    ID = 0x25a71742
+    ID = 0x25A71742
     QUALNAME = "functions.channels.GetChannelRecommendations"
 
     def __init__(self, *, channel: "raw.base.InputChannel" = None) -> None:
@@ -55,11 +57,10 @@ class GetChannelRecommendations(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetChannelRecommendations":
-        
         flags = Int.read(b)
-        
+
         channel = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         return GetChannelRecommendations(channel=channel)
 
     def write(self, *args) -> bytes:
@@ -69,8 +70,8 @@ class GetChannelRecommendations(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.channel is not None else 0
         b.write(Int(flags))
-        
+
         if self.channel is not None:
             b.write(self.channel.write())
-        
+
         return b.getvalue()

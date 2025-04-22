@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class InvokeWebViewCustomMethod(TLObject):  # type: ignore
+class InvokeWebViewCustomMethod(TLFunction["raw.base.DataJSON"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +54,18 @@ class InvokeWebViewCustomMethod(TLObject):  # type: ignore
         :obj:`DataJSON <pyrogram.raw.base.DataJSON>`
     """
 
-    __slots__: List[str] = ["bot", "custom_method", "params"]
+    __slots__: list[str] = ["bot", "custom_method", "params"]
 
-    ID = 0x87fc5e7
+    ID = 0x87FC5E7
     QUALNAME = "functions.bots.InvokeWebViewCustomMethod"
 
-    def __init__(self, *, bot: "raw.base.InputUser", custom_method: str, params: "raw.base.DataJSON") -> None:
+    def __init__(
+        self,
+        *,
+        bot: "raw.base.InputUser",
+        custom_method: str,
+        params: "raw.base.DataJSON",
+    ) -> None:
         self.bot = bot  # InputUser
         self.custom_method = custom_method  # string
         self.params = params  # DataJSON
@@ -64,25 +73,29 @@ class InvokeWebViewCustomMethod(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InvokeWebViewCustomMethod":
         # No flags
-        
+
         bot = TLObject.read(b)
-        
+
         custom_method = String.read(b)
-        
+
         params = TLObject.read(b)
-        
-        return InvokeWebViewCustomMethod(bot=bot, custom_method=custom_method, params=params)
+
+        return InvokeWebViewCustomMethod(
+            bot=bot,
+            custom_method=custom_method,
+            params=params,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.bot.write())
-        
+
         b.write(String(self.custom_method))
-        
+
         b.write(self.params.write())
-        
+
         return b.getvalue()

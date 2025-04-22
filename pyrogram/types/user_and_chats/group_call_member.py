@@ -17,10 +17,10 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Dict
 
 import pyrogram
 from pyrogram import raw, types, utils
+
 from ..object import Object
 
 
@@ -92,7 +92,7 @@ class GroupCallMember(Object):
         is_video_joined: bool = None,
         is_hand_raised: bool = None,
         is_video_enabled: bool = None,
-        is_screen_sharing_enabled: bool = None
+        is_screen_sharing_enabled: bool = None,
     ):
         super().__init__(client)
 
@@ -121,7 +121,7 @@ class GroupCallMember(Object):
 
         parsed_chat = types.Chat.from_raw_tl_chat(
             client,
-            client.entity_cache.get_peer(peer=peer)
+            client.entity_cache.get_peer(peer=peer),
         )
 
         parsed_chat.bio = getattr(member, "about", None)
@@ -142,5 +142,5 @@ class GroupCallMember(Object):
             is_hand_raised=bool(getattr(member, "raise_hand_rating", None)),
             is_video_enabled=bool(getattr(member, "video", None)),
             is_screen_sharing_enabled=bool(getattr(member, "presentation", None)),
-            client=client
+            client=client,
         )

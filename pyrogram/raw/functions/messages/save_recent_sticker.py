@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SaveRecentSticker(TLObject):  # type: ignore
+class SaveRecentSticker(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,26 +54,31 @@ class SaveRecentSticker(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["id", "unsave", "attached"]
+    __slots__: list[str] = ["attached", "id", "unsave"]
 
-    ID = 0x392718f8
+    ID = 0x392718F8
     QUALNAME = "functions.messages.SaveRecentSticker"
 
-    def __init__(self, *, id: "raw.base.InputDocument", unsave: bool, attached: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: "raw.base.InputDocument",
+        unsave: bool,
+        attached: bool | None = None,
+    ) -> None:
         self.id = id  # InputDocument
         self.unsave = unsave  # Bool
         self.attached = attached  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SaveRecentSticker":
-        
         flags = Int.read(b)
-        
+
         attached = True if flags & (1 << 0) else False
         id = TLObject.read(b)
-        
+
         unsave = Bool.read(b)
-        
+
         return SaveRecentSticker(id=id, unsave=unsave, attached=attached)
 
     def write(self, *args) -> bytes:
@@ -80,9 +88,9 @@ class SaveRecentSticker(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.attached else 0
         b.write(Int(flags))
-        
+
         b.write(self.id.write())
-        
+
         b.write(Bool(self.unsave))
-        
+
         return b.getvalue()

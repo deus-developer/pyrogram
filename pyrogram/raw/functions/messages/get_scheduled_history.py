@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetScheduledHistory(TLObject):  # type: ignore
+class GetScheduledHistory(TLFunction["raw.base.messages.Messages"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class GetScheduledHistory(TLObject):  # type: ignore
         :obj:`messages.Messages <pyrogram.raw.base.messages.Messages>`
     """
 
-    __slots__: List[str] = ["peer", "hash"]
+    __slots__: list[str] = ["hash", "peer"]
 
-    ID = 0xf516760b
+    ID = 0xF516760B
     QUALNAME = "functions.messages.GetScheduledHistory"
 
     def __init__(self, *, peer: "raw.base.InputPeer", hash: int) -> None:
@@ -60,11 +63,11 @@ class GetScheduledHistory(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetScheduledHistory":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         hash = Long.read(b)
-        
+
         return GetScheduledHistory(peer=peer, hash=hash)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class GetScheduledHistory(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Long(self.hash))
-        
+
         return b.getvalue()

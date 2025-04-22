@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class DeleteBusinessChatLink(TLObject):  # type: ignore
+class DeleteBusinessChatLink(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,7 +47,7 @@ class DeleteBusinessChatLink(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["slug"]
+    __slots__: list[str] = ["slug"]
 
     ID = 0x60073674
     QUALNAME = "functions.account.DeleteBusinessChatLink"
@@ -56,9 +58,9 @@ class DeleteBusinessChatLink(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DeleteBusinessChatLink":
         # No flags
-        
+
         slug = String.read(b)
-        
+
         return DeleteBusinessChatLink(slug=slug)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class DeleteBusinessChatLink(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.slug))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetOldFeaturedStickers(TLObject):  # type: ignore
+class GetOldFeaturedStickers(TLFunction["raw.base.messages.FeaturedStickers"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,9 +53,9 @@ class GetOldFeaturedStickers(TLObject):  # type: ignore
         :obj:`messages.FeaturedStickers <pyrogram.raw.base.messages.FeaturedStickers>`
     """
 
-    __slots__: List[str] = ["offset", "limit", "hash"]
+    __slots__: list[str] = ["hash", "limit", "offset"]
 
-    ID = 0x7ed094a1
+    ID = 0x7ED094A1
     QUALNAME = "functions.messages.GetOldFeaturedStickers"
 
     def __init__(self, *, offset: int, limit: int, hash: int) -> None:
@@ -64,13 +66,13 @@ class GetOldFeaturedStickers(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetOldFeaturedStickers":
         # No flags
-        
+
         offset = Int.read(b)
-        
+
         limit = Int.read(b)
-        
+
         hash = Long.read(b)
-        
+
         return GetOldFeaturedStickers(offset=offset, limit=limit, hash=hash)
 
     def write(self, *args) -> bytes:
@@ -78,11 +80,11 @@ class GetOldFeaturedStickers(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.offset))
-        
+
         b.write(Int(self.limit))
-        
+
         b.write(Long(self.hash))
-        
+
         return b.getvalue()

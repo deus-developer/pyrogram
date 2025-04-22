@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetRecentMeUrls(TLObject):  # type: ignore
+class GetRecentMeUrls(TLFunction["raw.base.help.RecentMeUrls"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetRecentMeUrls(TLObject):  # type: ignore
         :obj:`help.RecentMeUrls <pyrogram.raw.base.help.RecentMeUrls>`
     """
 
-    __slots__: List[str] = ["referer"]
+    __slots__: list[str] = ["referer"]
 
-    ID = 0x3dc0f114
+    ID = 0x3DC0F114
     QUALNAME = "functions.help.GetRecentMeUrls"
 
     def __init__(self, *, referer: str) -> None:
@@ -56,9 +58,9 @@ class GetRecentMeUrls(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetRecentMeUrls":
         # No flags
-        
+
         referer = String.read(b)
-        
+
         return GetRecentMeUrls(referer=referer)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class GetRecentMeUrls(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.referer))
-        
+
         return b.getvalue()

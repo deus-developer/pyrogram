@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -99,12 +103,54 @@ class ForumTopic(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "date", "title", "icon_color", "top_message", "read_inbox_max_id", "read_outbox_max_id", "unread_count", "unread_mentions_count", "unread_reactions_count", "from_id", "notify_settings", "my", "closed", "pinned", "short", "hidden", "icon_emoji_id", "draft"]
+    __slots__: list[str] = [
+        "closed",
+        "date",
+        "draft",
+        "from_id",
+        "hidden",
+        "icon_color",
+        "icon_emoji_id",
+        "id",
+        "my",
+        "notify_settings",
+        "pinned",
+        "read_inbox_max_id",
+        "read_outbox_max_id",
+        "short",
+        "title",
+        "top_message",
+        "unread_count",
+        "unread_mentions_count",
+        "unread_reactions_count",
+    ]
 
-    ID = 0x71701da9
+    ID = 0x71701DA9
     QUALNAME = "types.ForumTopic"
 
-    def __init__(self, *, id: int, date: int, title: str, icon_color: int, top_message: int, read_inbox_max_id: int, read_outbox_max_id: int, unread_count: int, unread_mentions_count: int, unread_reactions_count: int, from_id: "raw.base.Peer", notify_settings: "raw.base.PeerNotifySettings", my: Optional[bool] = None, closed: Optional[bool] = None, pinned: Optional[bool] = None, short: Optional[bool] = None, hidden: Optional[bool] = None, icon_emoji_id: Optional[int] = None, draft: "raw.base.DraftMessage" = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: int,
+        date: int,
+        title: str,
+        icon_color: int,
+        top_message: int,
+        read_inbox_max_id: int,
+        read_outbox_max_id: int,
+        unread_count: int,
+        unread_mentions_count: int,
+        unread_reactions_count: int,
+        from_id: "raw.base.Peer",
+        notify_settings: "raw.base.PeerNotifySettings",
+        my: bool | None = None,
+        closed: bool | None = None,
+        pinned: bool | None = None,
+        short: bool | None = None,
+        hidden: bool | None = None,
+        icon_emoji_id: int | None = None,
+        draft: "raw.base.DraftMessage" = None,
+    ) -> None:
         self.id = id  # int
         self.date = date  # int
         self.title = title  # string
@@ -127,42 +173,61 @@ class ForumTopic(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ForumTopic":
-        
         flags = Int.read(b)
-        
+
         my = True if flags & (1 << 1) else False
         closed = True if flags & (1 << 2) else False
         pinned = True if flags & (1 << 3) else False
         short = True if flags & (1 << 5) else False
         hidden = True if flags & (1 << 6) else False
         id = Int.read(b)
-        
+
         date = Int.read(b)
-        
+
         title = String.read(b)
-        
+
         icon_color = Int.read(b)
-        
+
         icon_emoji_id = Long.read(b) if flags & (1 << 0) else None
         top_message = Int.read(b)
-        
+
         read_inbox_max_id = Int.read(b)
-        
+
         read_outbox_max_id = Int.read(b)
-        
+
         unread_count = Int.read(b)
-        
+
         unread_mentions_count = Int.read(b)
-        
+
         unread_reactions_count = Int.read(b)
-        
+
         from_id = TLObject.read(b)
-        
+
         notify_settings = TLObject.read(b)
-        
+
         draft = TLObject.read(b) if flags & (1 << 4) else None
-        
-        return ForumTopic(id=id, date=date, title=title, icon_color=icon_color, top_message=top_message, read_inbox_max_id=read_inbox_max_id, read_outbox_max_id=read_outbox_max_id, unread_count=unread_count, unread_mentions_count=unread_mentions_count, unread_reactions_count=unread_reactions_count, from_id=from_id, notify_settings=notify_settings, my=my, closed=closed, pinned=pinned, short=short, hidden=hidden, icon_emoji_id=icon_emoji_id, draft=draft)
+
+        return ForumTopic(
+            id=id,
+            date=date,
+            title=title,
+            icon_color=icon_color,
+            top_message=top_message,
+            read_inbox_max_id=read_inbox_max_id,
+            read_outbox_max_id=read_outbox_max_id,
+            unread_count=unread_count,
+            unread_mentions_count=unread_mentions_count,
+            unread_reactions_count=unread_reactions_count,
+            from_id=from_id,
+            notify_settings=notify_settings,
+            my=my,
+            closed=closed,
+            pinned=pinned,
+            short=short,
+            hidden=hidden,
+            icon_emoji_id=icon_emoji_id,
+            draft=draft,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -177,35 +242,35 @@ class ForumTopic(TLObject):  # type: ignore
         flags |= (1 << 0) if self.icon_emoji_id is not None else 0
         flags |= (1 << 4) if self.draft is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.id))
-        
+
         b.write(Int(self.date))
-        
+
         b.write(String(self.title))
-        
+
         b.write(Int(self.icon_color))
-        
+
         if self.icon_emoji_id is not None:
             b.write(Long(self.icon_emoji_id))
-        
+
         b.write(Int(self.top_message))
-        
+
         b.write(Int(self.read_inbox_max_id))
-        
+
         b.write(Int(self.read_outbox_max_id))
-        
+
         b.write(Int(self.unread_count))
-        
+
         b.write(Int(self.unread_mentions_count))
-        
+
         b.write(Int(self.unread_reactions_count))
-        
+
         b.write(self.from_id.write())
-        
+
         b.write(self.notify_settings.write())
-        
+
         if self.draft is not None:
             b.write(self.draft.write())
-        
+
         return b.getvalue()

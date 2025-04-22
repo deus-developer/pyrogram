@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -44,9 +45,9 @@ class PrivacyKeyStatusTimestamp(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
-    ID = 0xbc2eab30
+    ID = 0xBC2EAB30
     QUALNAME = "types.PrivacyKeyStatusTimestamp"
 
     def __init__(self) -> None:
@@ -55,7 +56,7 @@ class PrivacyKeyStatusTimestamp(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PrivacyKeyStatusTimestamp":
         # No flags
-        
+
         return PrivacyKeyStatusTimestamp()
 
     def write(self, *args) -> bytes:
@@ -63,5 +64,5 @@ class PrivacyKeyStatusTimestamp(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         return b.getvalue()

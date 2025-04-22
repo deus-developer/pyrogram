@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetChatAvailableReactions(TLObject):  # type: ignore
+class SetChatAvailableReactions(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,27 +53,36 @@ class SetChatAvailableReactions(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["peer", "available_reactions", "reactions_limit"]
+    __slots__: list[str] = ["available_reactions", "peer", "reactions_limit"]
 
-    ID = 0x5a150bd4
+    ID = 0x5A150BD4
     QUALNAME = "functions.messages.SetChatAvailableReactions"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", available_reactions: "raw.base.ChatReactions", reactions_limit: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        available_reactions: "raw.base.ChatReactions",
+        reactions_limit: int | None = None,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.available_reactions = available_reactions  # ChatReactions
         self.reactions_limit = reactions_limit  # flags.0?int
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetChatAvailableReactions":
-        
         flags = Int.read(b)
-        
+
         peer = TLObject.read(b)
-        
+
         available_reactions = TLObject.read(b)
-        
+
         reactions_limit = Int.read(b) if flags & (1 << 0) else None
-        return SetChatAvailableReactions(peer=peer, available_reactions=available_reactions, reactions_limit=reactions_limit)
+        return SetChatAvailableReactions(
+            peer=peer,
+            available_reactions=available_reactions,
+            reactions_limit=reactions_limit,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -80,12 +91,12 @@ class SetChatAvailableReactions(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.reactions_limit is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(self.available_reactions.write())
-        
+
         if self.reactions_limit is not None:
             b.write(Int(self.reactions_limit))
-        
+
         return b.getvalue()

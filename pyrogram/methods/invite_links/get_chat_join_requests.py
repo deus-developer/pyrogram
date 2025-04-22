@@ -16,19 +16,18 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, Optional, AsyncGenerator
+from collections.abc import AsyncGenerator
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class GetChatJoinRequests:
     async def get_chat_join_requests(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         limit: int = 0,
-        query: str = ""
+        query: str = "",
     ) -> AsyncGenerator["types.ChatJoiner", None]:
         """Get the pending join requests of a chat.
 
@@ -67,8 +66,8 @@ class GetChatJoinRequests:
                     offset_date=offset_date,
                     offset_user=offset_user,
                     requested=True,
-                    q=query
-                )
+                    q=query,
+                ),
             )
 
             if not r.importers:

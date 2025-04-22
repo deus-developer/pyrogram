@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetChatWallPaper(TLObject):  # type: ignore
+class SetChatWallPaper(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -60,12 +62,21 @@ class SetChatWallPaper(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["peer", "for_both", "revert", "wallpaper", "settings", "id"]
+    __slots__: list[str] = ["for_both", "id", "peer", "revert", "settings", "wallpaper"]
 
-    ID = 0x8ffacae1
+    ID = 0x8FFACAE1
     QUALNAME = "functions.messages.SetChatWallPaper"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", for_both: Optional[bool] = None, revert: Optional[bool] = None, wallpaper: "raw.base.InputWallPaper" = None, settings: "raw.base.WallPaperSettings" = None, id: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        for_both: bool | None = None,
+        revert: bool | None = None,
+        wallpaper: "raw.base.InputWallPaper" = None,
+        settings: "raw.base.WallPaperSettings" = None,
+        id: int | None = None,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.for_both = for_both  # flags.3?true
         self.revert = revert  # flags.4?true
@@ -75,19 +86,25 @@ class SetChatWallPaper(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetChatWallPaper":
-        
         flags = Int.read(b)
-        
+
         for_both = True if flags & (1 << 3) else False
         revert = True if flags & (1 << 4) else False
         peer = TLObject.read(b)
-        
+
         wallpaper = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         settings = TLObject.read(b) if flags & (1 << 2) else None
-        
+
         id = Int.read(b) if flags & (1 << 1) else None
-        return SetChatWallPaper(peer=peer, for_both=for_both, revert=revert, wallpaper=wallpaper, settings=settings, id=id)
+        return SetChatWallPaper(
+            peer=peer,
+            for_both=for_both,
+            revert=revert,
+            wallpaper=wallpaper,
+            settings=settings,
+            id=id,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -100,16 +117,16 @@ class SetChatWallPaper(TLObject):  # type: ignore
         flags |= (1 << 2) if self.settings is not None else 0
         flags |= (1 << 1) if self.id is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         if self.wallpaper is not None:
             b.write(self.wallpaper.write())
-        
+
         if self.settings is not None:
             b.write(self.settings.write())
-        
+
         if self.id is not None:
             b.write(Int(self.id))
-        
+
         return b.getvalue()

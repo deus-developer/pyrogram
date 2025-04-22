@@ -23,7 +23,7 @@ from pyrogram import raw
 class UpdateStatus:
     async def update_status(
         self: "pyrogram.Client",
-        offline: bool = False
+        offline: bool = False,
     ) -> bool:
         """Update your profile status.
 
@@ -47,8 +47,8 @@ class UpdateStatus:
         """
         r = await self.invoke(
             raw.functions.account.UpdateStatus(
-                offline=offline
-            )
+                offline=offline,
+            ),
         )
 
         return bool(r)

@@ -17,11 +17,16 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -162,12 +167,96 @@ class Channel(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "title", "photo", "date", "creator", "left", "broadcast", "verified", "megagroup", "restricted", "signatures", "min", "scam", "has_link", "has_geo", "slowmode_enabled", "call_active", "call_not_empty", "fake", "gigagroup", "noforwards", "join_to_send", "join_request", "forum", "stories_hidden", "stories_hidden_min", "stories_unavailable", "access_hash", "username", "restriction_reason", "admin_rights", "banned_rights", "default_banned_rights", "participants_count", "usernames", "stories_max_id", "color", "profile_color", "emoji_status", "level"]
+    __slots__: list[str] = [
+        "access_hash",
+        "admin_rights",
+        "banned_rights",
+        "broadcast",
+        "call_active",
+        "call_not_empty",
+        "color",
+        "creator",
+        "date",
+        "default_banned_rights",
+        "emoji_status",
+        "fake",
+        "forum",
+        "gigagroup",
+        "has_geo",
+        "has_link",
+        "id",
+        "join_request",
+        "join_to_send",
+        "left",
+        "level",
+        "megagroup",
+        "min",
+        "noforwards",
+        "participants_count",
+        "photo",
+        "profile_color",
+        "restricted",
+        "restriction_reason",
+        "scam",
+        "signatures",
+        "slowmode_enabled",
+        "stories_hidden",
+        "stories_hidden_min",
+        "stories_max_id",
+        "stories_unavailable",
+        "title",
+        "username",
+        "usernames",
+        "verified",
+    ]
 
-    ID = 0xaadfc8f
+    ID = 0xAADFC8F
     QUALNAME = "types.Channel"
 
-    def __init__(self, *, id: int, title: str, photo: "raw.base.ChatPhoto", date: int, creator: Optional[bool] = None, left: Optional[bool] = None, broadcast: Optional[bool] = None, verified: Optional[bool] = None, megagroup: Optional[bool] = None, restricted: Optional[bool] = None, signatures: Optional[bool] = None, min: Optional[bool] = None, scam: Optional[bool] = None, has_link: Optional[bool] = None, has_geo: Optional[bool] = None, slowmode_enabled: Optional[bool] = None, call_active: Optional[bool] = None, call_not_empty: Optional[bool] = None, fake: Optional[bool] = None, gigagroup: Optional[bool] = None, noforwards: Optional[bool] = None, join_to_send: Optional[bool] = None, join_request: Optional[bool] = None, forum: Optional[bool] = None, stories_hidden: Optional[bool] = None, stories_hidden_min: Optional[bool] = None, stories_unavailable: Optional[bool] = None, access_hash: Optional[int] = None, username: Optional[str] = None, restriction_reason: Optional[List["raw.base.RestrictionReason"]] = None, admin_rights: "raw.base.ChatAdminRights" = None, banned_rights: "raw.base.ChatBannedRights" = None, default_banned_rights: "raw.base.ChatBannedRights" = None, participants_count: Optional[int] = None, usernames: Optional[List["raw.base.Username"]] = None, stories_max_id: Optional[int] = None, color: "raw.base.PeerColor" = None, profile_color: "raw.base.PeerColor" = None, emoji_status: "raw.base.EmojiStatus" = None, level: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: int,
+        title: str,
+        photo: "raw.base.ChatPhoto",
+        date: int,
+        creator: bool | None = None,
+        left: bool | None = None,
+        broadcast: bool | None = None,
+        verified: bool | None = None,
+        megagroup: bool | None = None,
+        restricted: bool | None = None,
+        signatures: bool | None = None,
+        min: bool | None = None,
+        scam: bool | None = None,
+        has_link: bool | None = None,
+        has_geo: bool | None = None,
+        slowmode_enabled: bool | None = None,
+        call_active: bool | None = None,
+        call_not_empty: bool | None = None,
+        fake: bool | None = None,
+        gigagroup: bool | None = None,
+        noforwards: bool | None = None,
+        join_to_send: bool | None = None,
+        join_request: bool | None = None,
+        forum: bool | None = None,
+        stories_hidden: bool | None = None,
+        stories_hidden_min: bool | None = None,
+        stories_unavailable: bool | None = None,
+        access_hash: int | None = None,
+        username: str | None = None,
+        restriction_reason: list["raw.base.RestrictionReason"] | None = None,
+        admin_rights: "raw.base.ChatAdminRights" = None,
+        banned_rights: "raw.base.ChatBannedRights" = None,
+        default_banned_rights: "raw.base.ChatBannedRights" = None,
+        participants_count: int | None = None,
+        usernames: list["raw.base.Username"] | None = None,
+        stories_max_id: int | None = None,
+        color: "raw.base.PeerColor" = None,
+        profile_color: "raw.base.PeerColor" = None,
+        emoji_status: "raw.base.EmojiStatus" = None,
+        level: int | None = None,
+    ) -> None:
         self.id = id  # long
         self.title = title  # string
         self.photo = photo  # ChatPhoto
@@ -197,7 +286,9 @@ class Channel(TLObject):  # type: ignore
         self.stories_unavailable = stories_unavailable  # flags2.3?true
         self.access_hash = access_hash  # flags.13?long
         self.username = username  # flags.6?string
-        self.restriction_reason = restriction_reason  # flags.9?Vector<RestrictionReason>
+        self.restriction_reason = (
+            restriction_reason  # flags.9?Vector<RestrictionReason>
+        )
         self.admin_rights = admin_rights  # flags.14?ChatAdminRights
         self.banned_rights = banned_rights  # flags.15?ChatBannedRights
         self.default_banned_rights = default_banned_rights  # flags.18?ChatBannedRights
@@ -211,9 +302,8 @@ class Channel(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "Channel":
-        
         flags = Int.read(b)
-        
+
         creator = True if flags & (1 << 0) else False
         left = True if flags & (1 << 2) else False
         broadcast = True if flags & (1 << 5) else False
@@ -235,40 +325,81 @@ class Channel(TLObject):  # type: ignore
         join_request = True if flags & (1 << 29) else False
         forum = True if flags & (1 << 30) else False
         flags2 = Int.read(b)
-        
+
         stories_hidden = True if flags2 & (1 << 1) else False
         stories_hidden_min = True if flags2 & (1 << 2) else False
         stories_unavailable = True if flags2 & (1 << 3) else False
         id = Long.read(b)
-        
+
         access_hash = Long.read(b) if flags & (1 << 13) else None
         title = String.read(b)
-        
+
         username = String.read(b) if flags & (1 << 6) else None
         photo = TLObject.read(b)
-        
+
         date = Int.read(b)
-        
+
         restriction_reason = TLObject.read(b) if flags & (1 << 9) else []
-        
+
         admin_rights = TLObject.read(b) if flags & (1 << 14) else None
-        
+
         banned_rights = TLObject.read(b) if flags & (1 << 15) else None
-        
+
         default_banned_rights = TLObject.read(b) if flags & (1 << 18) else None
-        
+
         participants_count = Int.read(b) if flags & (1 << 17) else None
         usernames = TLObject.read(b) if flags2 & (1 << 0) else []
-        
+
         stories_max_id = Int.read(b) if flags2 & (1 << 4) else None
         color = TLObject.read(b) if flags2 & (1 << 7) else None
-        
+
         profile_color = TLObject.read(b) if flags2 & (1 << 8) else None
-        
+
         emoji_status = TLObject.read(b) if flags2 & (1 << 9) else None
-        
+
         level = Int.read(b) if flags2 & (1 << 10) else None
-        return Channel(id=id, title=title, photo=photo, date=date, creator=creator, left=left, broadcast=broadcast, verified=verified, megagroup=megagroup, restricted=restricted, signatures=signatures, min=min, scam=scam, has_link=has_link, has_geo=has_geo, slowmode_enabled=slowmode_enabled, call_active=call_active, call_not_empty=call_not_empty, fake=fake, gigagroup=gigagroup, noforwards=noforwards, join_to_send=join_to_send, join_request=join_request, forum=forum, stories_hidden=stories_hidden, stories_hidden_min=stories_hidden_min, stories_unavailable=stories_unavailable, access_hash=access_hash, username=username, restriction_reason=restriction_reason, admin_rights=admin_rights, banned_rights=banned_rights, default_banned_rights=default_banned_rights, participants_count=participants_count, usernames=usernames, stories_max_id=stories_max_id, color=color, profile_color=profile_color, emoji_status=emoji_status, level=level)
+        return Channel(
+            id=id,
+            title=title,
+            photo=photo,
+            date=date,
+            creator=creator,
+            left=left,
+            broadcast=broadcast,
+            verified=verified,
+            megagroup=megagroup,
+            restricted=restricted,
+            signatures=signatures,
+            min=min,
+            scam=scam,
+            has_link=has_link,
+            has_geo=has_geo,
+            slowmode_enabled=slowmode_enabled,
+            call_active=call_active,
+            call_not_empty=call_not_empty,
+            fake=fake,
+            gigagroup=gigagroup,
+            noforwards=noforwards,
+            join_to_send=join_to_send,
+            join_request=join_request,
+            forum=forum,
+            stories_hidden=stories_hidden,
+            stories_hidden_min=stories_hidden_min,
+            stories_unavailable=stories_unavailable,
+            access_hash=access_hash,
+            username=username,
+            restriction_reason=restriction_reason,
+            admin_rights=admin_rights,
+            banned_rights=banned_rights,
+            default_banned_rights=default_banned_rights,
+            participants_count=participants_count,
+            usernames=usernames,
+            stories_max_id=stories_max_id,
+            color=color,
+            profile_color=profile_color,
+            emoji_status=emoji_status,
+            level=level,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -314,52 +445,52 @@ class Channel(TLObject):  # type: ignore
         flags2 |= (1 << 9) if self.emoji_status is not None else 0
         flags2 |= (1 << 10) if self.level is not None else 0
         b.write(Int(flags2))
-        
+
         b.write(Long(self.id))
-        
+
         if self.access_hash is not None:
             b.write(Long(self.access_hash))
-        
+
         b.write(String(self.title))
-        
+
         if self.username is not None:
             b.write(String(self.username))
-        
+
         b.write(self.photo.write())
-        
+
         b.write(Int(self.date))
-        
+
         if self.restriction_reason is not None:
             b.write(Vector(self.restriction_reason))
-        
+
         if self.admin_rights is not None:
             b.write(self.admin_rights.write())
-        
+
         if self.banned_rights is not None:
             b.write(self.banned_rights.write())
-        
+
         if self.default_banned_rights is not None:
             b.write(self.default_banned_rights.write())
-        
+
         if self.participants_count is not None:
             b.write(Int(self.participants_count))
-        
+
         if self.usernames is not None:
             b.write(Vector(self.usernames))
-        
+
         if self.stories_max_id is not None:
             b.write(Int(self.stories_max_id))
-        
+
         if self.color is not None:
             b.write(self.color.write())
-        
+
         if self.profile_color is not None:
             b.write(self.profile_color.write())
-        
+
         if self.emoji_status is not None:
             b.write(self.emoji_status.write())
-        
+
         if self.level is not None:
             b.write(Int(self.level))
-        
+
         return b.getvalue()

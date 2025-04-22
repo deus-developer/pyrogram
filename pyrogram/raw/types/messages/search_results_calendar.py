@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -78,12 +81,34 @@ class SearchResultsCalendar(TLObject):  # type: ignore
             messages.GetSearchResultsCalendar
     """
 
-    __slots__: List[str] = ["count", "min_date", "min_msg_id", "periods", "messages", "chats", "users", "inexact", "offset_id_offset"]
+    __slots__: list[str] = [
+        "chats",
+        "count",
+        "inexact",
+        "messages",
+        "min_date",
+        "min_msg_id",
+        "offset_id_offset",
+        "periods",
+        "users",
+    ]
 
-    ID = 0x147ee23c
+    ID = 0x147EE23C
     QUALNAME = "types.messages.SearchResultsCalendar"
 
-    def __init__(self, *, count: int, min_date: int, min_msg_id: int, periods: List["raw.base.SearchResultsCalendarPeriod"], messages: List["raw.base.Message"], chats: List["raw.base.Chat"], users: List["raw.base.User"], inexact: Optional[bool] = None, offset_id_offset: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        count: int,
+        min_date: int,
+        min_msg_id: int,
+        periods: list["raw.base.SearchResultsCalendarPeriod"],
+        messages: list["raw.base.Message"],
+        chats: list["raw.base.Chat"],
+        users: list["raw.base.User"],
+        inexact: bool | None = None,
+        offset_id_offset: int | None = None,
+    ) -> None:
         self.count = count  # int
         self.min_date = min_date  # int
         self.min_msg_id = min_msg_id  # int
@@ -96,26 +121,35 @@ class SearchResultsCalendar(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SearchResultsCalendar":
-        
         flags = Int.read(b)
-        
+
         inexact = True if flags & (1 << 0) else False
         count = Int.read(b)
-        
+
         min_date = Int.read(b)
-        
+
         min_msg_id = Int.read(b)
-        
+
         offset_id_offset = Int.read(b) if flags & (1 << 1) else None
         periods = TLObject.read(b)
-        
+
         messages = TLObject.read(b)
-        
+
         chats = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
-        return SearchResultsCalendar(count=count, min_date=min_date, min_msg_id=min_msg_id, periods=periods, messages=messages, chats=chats, users=users, inexact=inexact, offset_id_offset=offset_id_offset)
+
+        return SearchResultsCalendar(
+            count=count,
+            min_date=min_date,
+            min_msg_id=min_msg_id,
+            periods=periods,
+            messages=messages,
+            chats=chats,
+            users=users,
+            inexact=inexact,
+            offset_id_offset=offset_id_offset,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -125,22 +159,22 @@ class SearchResultsCalendar(TLObject):  # type: ignore
         flags |= (1 << 0) if self.inexact else 0
         flags |= (1 << 1) if self.offset_id_offset is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.count))
-        
+
         b.write(Int(self.min_date))
-        
+
         b.write(Int(self.min_msg_id))
-        
+
         if self.offset_id_offset is not None:
             b.write(Int(self.offset_id_offset))
-        
+
         b.write(Vector(self.periods))
-        
+
         b.write(Vector(self.messages))
-        
+
         b.write(Vector(self.chats))
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

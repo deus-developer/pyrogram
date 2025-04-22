@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -63,9 +65,9 @@ class DhConfig(TLObject):  # type: ignore
             messages.GetDhConfig
     """
 
-    __slots__: List[str] = ["g", "p", "version", "random"]
+    __slots__: list[str] = ["g", "p", "random", "version"]
 
-    ID = 0x2c221edd
+    ID = 0x2C221EDD
     QUALNAME = "types.messages.DhConfig"
 
     def __init__(self, *, g: int, p: bytes, version: int, random: bytes) -> None:
@@ -77,15 +79,15 @@ class DhConfig(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DhConfig":
         # No flags
-        
+
         g = Int.read(b)
-        
+
         p = Bytes.read(b)
-        
+
         version = Int.read(b)
-        
+
         random = Bytes.read(b)
-        
+
         return DhConfig(g=g, p=p, version=version, random=random)
 
     def write(self, *args) -> bytes:
@@ -93,13 +95,13 @@ class DhConfig(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.g))
-        
+
         b.write(Bytes(self.p))
-        
+
         b.write(Int(self.version))
-        
+
         b.write(Bytes(self.random))
-        
+
         return b.getvalue()

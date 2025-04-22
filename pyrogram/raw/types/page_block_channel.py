@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +47,9 @@ class PageBlockChannel(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["channel"]
+    __slots__: list[str] = ["channel"]
 
-    ID = 0xef1751b5
+    ID = 0xEF1751B5
     QUALNAME = "types.PageBlockChannel"
 
     def __init__(self, *, channel: "raw.base.Chat") -> None:
@@ -56,9 +58,9 @@ class PageBlockChannel(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PageBlockChannel":
         # No flags
-        
+
         channel = TLObject.read(b)
-        
+
         return PageBlockChannel(channel=channel)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class PageBlockChannel(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.channel.write())
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +47,9 @@ class ChannelAdminLogEventActionToggleNoForwards(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["new_value"]
+    __slots__: list[str] = ["new_value"]
 
-    ID = 0xcb2ac766
+    ID = 0xCB2AC766
     QUALNAME = "types.ChannelAdminLogEventActionToggleNoForwards"
 
     def __init__(self, *, new_value: bool) -> None:
@@ -56,9 +58,9 @@ class ChannelAdminLogEventActionToggleNoForwards(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChannelAdminLogEventActionToggleNoForwards":
         # No flags
-        
+
         new_value = Bool.read(b)
-        
+
         return ChannelAdminLogEventActionToggleNoForwards(new_value=new_value)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class ChannelAdminLogEventActionToggleNoForwards(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Bool(self.new_value))
-        
+
         return b.getvalue()

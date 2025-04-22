@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -102,12 +105,50 @@ class MegagroupStats(TLObject):  # type: ignore
             stats.GetMegagroupStats
     """
 
-    __slots__: List[str] = ["period", "members", "messages", "viewers", "posters", "growth_graph", "members_graph", "new_members_by_source_graph", "languages_graph", "messages_graph", "actions_graph", "top_hours_graph", "weekdays_graph", "top_posters", "top_admins", "top_inviters", "users"]
+    __slots__: list[str] = [
+        "actions_graph",
+        "growth_graph",
+        "languages_graph",
+        "members",
+        "members_graph",
+        "messages",
+        "messages_graph",
+        "new_members_by_source_graph",
+        "period",
+        "posters",
+        "top_admins",
+        "top_hours_graph",
+        "top_inviters",
+        "top_posters",
+        "users",
+        "viewers",
+        "weekdays_graph",
+    ]
 
-    ID = 0xef7ff916
+    ID = 0xEF7FF916
     QUALNAME = "types.stats.MegagroupStats"
 
-    def __init__(self, *, period: "raw.base.StatsDateRangeDays", members: "raw.base.StatsAbsValueAndPrev", messages: "raw.base.StatsAbsValueAndPrev", viewers: "raw.base.StatsAbsValueAndPrev", posters: "raw.base.StatsAbsValueAndPrev", growth_graph: "raw.base.StatsGraph", members_graph: "raw.base.StatsGraph", new_members_by_source_graph: "raw.base.StatsGraph", languages_graph: "raw.base.StatsGraph", messages_graph: "raw.base.StatsGraph", actions_graph: "raw.base.StatsGraph", top_hours_graph: "raw.base.StatsGraph", weekdays_graph: "raw.base.StatsGraph", top_posters: List["raw.base.StatsGroupTopPoster"], top_admins: List["raw.base.StatsGroupTopAdmin"], top_inviters: List["raw.base.StatsGroupTopInviter"], users: List["raw.base.User"]) -> None:
+    def __init__(
+        self,
+        *,
+        period: "raw.base.StatsDateRangeDays",
+        members: "raw.base.StatsAbsValueAndPrev",
+        messages: "raw.base.StatsAbsValueAndPrev",
+        viewers: "raw.base.StatsAbsValueAndPrev",
+        posters: "raw.base.StatsAbsValueAndPrev",
+        growth_graph: "raw.base.StatsGraph",
+        members_graph: "raw.base.StatsGraph",
+        new_members_by_source_graph: "raw.base.StatsGraph",
+        languages_graph: "raw.base.StatsGraph",
+        messages_graph: "raw.base.StatsGraph",
+        actions_graph: "raw.base.StatsGraph",
+        top_hours_graph: "raw.base.StatsGraph",
+        weekdays_graph: "raw.base.StatsGraph",
+        top_posters: list["raw.base.StatsGroupTopPoster"],
+        top_admins: list["raw.base.StatsGroupTopAdmin"],
+        top_inviters: list["raw.base.StatsGroupTopInviter"],
+        users: list["raw.base.User"],
+    ) -> None:
         self.period = period  # StatsDateRangeDays
         self.members = members  # StatsAbsValueAndPrev
         self.messages = messages  # StatsAbsValueAndPrev
@@ -129,81 +170,99 @@ class MegagroupStats(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MegagroupStats":
         # No flags
-        
+
         period = TLObject.read(b)
-        
+
         members = TLObject.read(b)
-        
+
         messages = TLObject.read(b)
-        
+
         viewers = TLObject.read(b)
-        
+
         posters = TLObject.read(b)
-        
+
         growth_graph = TLObject.read(b)
-        
+
         members_graph = TLObject.read(b)
-        
+
         new_members_by_source_graph = TLObject.read(b)
-        
+
         languages_graph = TLObject.read(b)
-        
+
         messages_graph = TLObject.read(b)
-        
+
         actions_graph = TLObject.read(b)
-        
+
         top_hours_graph = TLObject.read(b)
-        
+
         weekdays_graph = TLObject.read(b)
-        
+
         top_posters = TLObject.read(b)
-        
+
         top_admins = TLObject.read(b)
-        
+
         top_inviters = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
-        return MegagroupStats(period=period, members=members, messages=messages, viewers=viewers, posters=posters, growth_graph=growth_graph, members_graph=members_graph, new_members_by_source_graph=new_members_by_source_graph, languages_graph=languages_graph, messages_graph=messages_graph, actions_graph=actions_graph, top_hours_graph=top_hours_graph, weekdays_graph=weekdays_graph, top_posters=top_posters, top_admins=top_admins, top_inviters=top_inviters, users=users)
+
+        return MegagroupStats(
+            period=period,
+            members=members,
+            messages=messages,
+            viewers=viewers,
+            posters=posters,
+            growth_graph=growth_graph,
+            members_graph=members_graph,
+            new_members_by_source_graph=new_members_by_source_graph,
+            languages_graph=languages_graph,
+            messages_graph=messages_graph,
+            actions_graph=actions_graph,
+            top_hours_graph=top_hours_graph,
+            weekdays_graph=weekdays_graph,
+            top_posters=top_posters,
+            top_admins=top_admins,
+            top_inviters=top_inviters,
+            users=users,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.period.write())
-        
+
         b.write(self.members.write())
-        
+
         b.write(self.messages.write())
-        
+
         b.write(self.viewers.write())
-        
+
         b.write(self.posters.write())
-        
+
         b.write(self.growth_graph.write())
-        
+
         b.write(self.members_graph.write())
-        
+
         b.write(self.new_members_by_source_graph.write())
-        
+
         b.write(self.languages_graph.write())
-        
+
         b.write(self.messages_graph.write())
-        
+
         b.write(self.actions_graph.write())
-        
+
         b.write(self.top_hours_graph.write())
-        
+
         b.write(self.weekdays_graph.write())
-        
+
         b.write(Vector(self.top_posters))
-        
+
         b.write(Vector(self.top_admins))
-        
+
         b.write(Vector(self.top_inviters))
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

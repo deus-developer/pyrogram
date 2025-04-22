@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class DeleteHistory(TLObject):  # type: ignore
+class DeleteHistory(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,26 +53,31 @@ class DeleteHistory(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["channel", "max_id", "for_everyone"]
+    __slots__: list[str] = ["channel", "for_everyone", "max_id"]
 
-    ID = 0x9baa9647
+    ID = 0x9BAA9647
     QUALNAME = "functions.channels.DeleteHistory"
 
-    def __init__(self, *, channel: "raw.base.InputChannel", max_id: int, for_everyone: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        channel: "raw.base.InputChannel",
+        max_id: int,
+        for_everyone: bool | None = None,
+    ) -> None:
         self.channel = channel  # InputChannel
         self.max_id = max_id  # int
         self.for_everyone = for_everyone  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DeleteHistory":
-        
         flags = Int.read(b)
-        
+
         for_everyone = True if flags & (1 << 0) else False
         channel = TLObject.read(b)
-        
+
         max_id = Int.read(b)
-        
+
         return DeleteHistory(channel=channel, max_id=max_id, for_everyone=for_everyone)
 
     def write(self, *args) -> bytes:
@@ -80,9 +87,9 @@ class DeleteHistory(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.for_everyone else 0
         b.write(Int(flags))
-        
+
         b.write(self.channel.write())
-        
+
         b.write(Int(self.max_id))
-        
+
         return b.getvalue()

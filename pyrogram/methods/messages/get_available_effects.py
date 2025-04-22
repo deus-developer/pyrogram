@@ -17,19 +17,17 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from typing import List
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 log = logging.getLogger(__name__)
 
 
 class GetAvailableEffects:
     async def get_available_effects(
-        self: "pyrogram.Client"
-    ) -> List["types.AvailableEffect"]:
+        self: "pyrogram.Client",
+    ) -> list["types.AvailableEffect"]:
         """Get all available effects.
 
         .. include:: /_includes/usable-by/users.rst
@@ -45,15 +43,19 @@ class GetAvailableEffects:
         """
         r = await self.invoke(
             raw.functions.messages.GetAvailableEffects(
-                hash=0
-            )
+                hash=0,
+            ),
         )
 
         documents = {d.id: d for d in r.documents}
 
         return types.List(
             [
-                await types.AvailableEffect.from_raw_tl(self, effect, documents.get(effect.effect_sticker_id, None))
+                await types.AvailableEffect.from_raw_tl(
+                    self,
+                    effect,
+                    documents.get(effect.effect_sticker_id, None),
+                )
                 for effect in r.effects
-            ]
+            ],
         )

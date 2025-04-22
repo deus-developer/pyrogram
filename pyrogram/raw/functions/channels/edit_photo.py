@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class EditPhoto(TLObject):  # type: ignore
+class EditPhoto(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,28 @@ class EditPhoto(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["channel", "photo"]
+    __slots__: list[str] = ["channel", "photo"]
 
-    ID = 0xf12e57c9
+    ID = 0xF12E57C9
     QUALNAME = "functions.channels.EditPhoto"
 
-    def __init__(self, *, channel: "raw.base.InputChannel", photo: "raw.base.InputChatPhoto") -> None:
+    def __init__(
+        self,
+        *,
+        channel: "raw.base.InputChannel",
+        photo: "raw.base.InputChatPhoto",
+    ) -> None:
         self.channel = channel  # InputChannel
         self.photo = photo  # InputChatPhoto
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EditPhoto":
         # No flags
-        
+
         channel = TLObject.read(b)
-        
+
         photo = TLObject.read(b)
-        
+
         return EditPhoto(channel=channel, photo=photo)
 
     def write(self, *args) -> bytes:
@@ -72,9 +79,9 @@ class EditPhoto(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.channel.write())
-        
+
         b.write(self.photo.write())
-        
+
         return b.getvalue()

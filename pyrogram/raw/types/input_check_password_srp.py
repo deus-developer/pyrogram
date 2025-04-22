@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,9 +54,9 @@ class InputCheckPasswordSRP(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["srp_id", "A", "M1"]
+    __slots__: list[str] = ["A", "M1", "srp_id"]
 
-    ID = 0xd27ff082
+    ID = 0xD27FF082
     QUALNAME = "types.InputCheckPasswordSRP"
 
     def __init__(self, *, srp_id: int, A: bytes, M1: bytes) -> None:
@@ -64,13 +67,13 @@ class InputCheckPasswordSRP(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputCheckPasswordSRP":
         # No flags
-        
+
         srp_id = Long.read(b)
-        
+
         A = Bytes.read(b)
-        
+
         M1 = Bytes.read(b)
-        
+
         return InputCheckPasswordSRP(srp_id=srp_id, A=A, M1=M1)
 
     def write(self, *args) -> bytes:
@@ -78,11 +81,11 @@ class InputCheckPasswordSRP(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.srp_id))
-        
+
         b.write(Bytes(self.A))
-        
+
         b.write(Bytes(self.M1))
-        
+
         return b.getvalue()

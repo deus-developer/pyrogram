@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -72,12 +75,30 @@ class DiscussionMessage(TLObject):  # type: ignore
             messages.GetDiscussionMessage
     """
 
-    __slots__: List[str] = ["messages", "unread_count", "chats", "users", "max_id", "read_inbox_max_id", "read_outbox_max_id"]
+    __slots__: list[str] = [
+        "chats",
+        "max_id",
+        "messages",
+        "read_inbox_max_id",
+        "read_outbox_max_id",
+        "unread_count",
+        "users",
+    ]
 
-    ID = 0xa6341782
+    ID = 0xA6341782
     QUALNAME = "types.messages.DiscussionMessage"
 
-    def __init__(self, *, messages: List["raw.base.Message"], unread_count: int, chats: List["raw.base.Chat"], users: List["raw.base.User"], max_id: Optional[int] = None, read_inbox_max_id: Optional[int] = None, read_outbox_max_id: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        messages: list["raw.base.Message"],
+        unread_count: int,
+        chats: list["raw.base.Chat"],
+        users: list["raw.base.User"],
+        max_id: int | None = None,
+        read_inbox_max_id: int | None = None,
+        read_outbox_max_id: int | None = None,
+    ) -> None:
         self.messages = messages  # Vector<Message>
         self.unread_count = unread_count  # int
         self.chats = chats  # Vector<Chat>
@@ -88,21 +109,28 @@ class DiscussionMessage(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DiscussionMessage":
-        
         flags = Int.read(b)
-        
+
         messages = TLObject.read(b)
-        
+
         max_id = Int.read(b) if flags & (1 << 0) else None
         read_inbox_max_id = Int.read(b) if flags & (1 << 1) else None
         read_outbox_max_id = Int.read(b) if flags & (1 << 2) else None
         unread_count = Int.read(b)
-        
+
         chats = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
-        return DiscussionMessage(messages=messages, unread_count=unread_count, chats=chats, users=users, max_id=max_id, read_inbox_max_id=read_inbox_max_id, read_outbox_max_id=read_outbox_max_id)
+
+        return DiscussionMessage(
+            messages=messages,
+            unread_count=unread_count,
+            chats=chats,
+            users=users,
+            max_id=max_id,
+            read_inbox_max_id=read_inbox_max_id,
+            read_outbox_max_id=read_outbox_max_id,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -113,22 +141,22 @@ class DiscussionMessage(TLObject):  # type: ignore
         flags |= (1 << 1) if self.read_inbox_max_id is not None else 0
         flags |= (1 << 2) if self.read_outbox_max_id is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Vector(self.messages))
-        
+
         if self.max_id is not None:
             b.write(Int(self.max_id))
-        
+
         if self.read_inbox_max_id is not None:
             b.write(Int(self.read_inbox_max_id))
-        
+
         if self.read_outbox_max_id is not None:
             b.write(Int(self.read_outbox_max_id))
-        
+
         b.write(Int(self.unread_count))
-        
+
         b.write(Vector(self.chats))
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

@@ -17,9 +17,10 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Optional, Union, List
+from typing import Optional, Union
 
-from pyrogram import types, enums, raw, utils
+from pyrogram import enums, raw, types, utils
+
 from ..object import Object
 
 
@@ -63,11 +64,10 @@ class BusinessMessage(Object):
         is_away: bool = None,
         no_activity_days: int = None,
         offline_only: bool = None,
-        recipients: List["types.User"] = None,
+        recipients: list["types.User"] = None,
         schedule: "enums.BusinessSchedule" = None,
         start_date: datetime = None,
         end_date: datetime = None,
-
     ):
         self.shortcut_id = shortcut_id
         self.is_greeting = is_greeting
@@ -82,7 +82,10 @@ class BusinessMessage(Object):
     @staticmethod
     def from_raw_tl(
         client,
-        message: Union["raw.types.BusinessGreetingMessage", "raw.types.BusinessAwayMessage"] = None,
+        message: Union[
+            "raw.types.BusinessGreetingMessage",
+            "raw.types.BusinessAwayMessage",
+        ] = None,
     ) -> Optional["BusinessMessage"]:
         if not message:
             return None
@@ -90,11 +93,20 @@ class BusinessMessage(Object):
         schedule = None
 
         if isinstance(message, raw.types.BusinessAwayMessage):
-            if isinstance(message.schedule, raw.types.BusinessAwayMessageScheduleAlways):
+            if isinstance(
+                message.schedule,
+                raw.types.BusinessAwayMessageScheduleAlways,
+            ):
                 schedule = enums.BusinessSchedule.ALWAYS
-            elif isinstance(message.schedule, raw.types.BusinessAwayMessageScheduleOutsideWorkHours):
+            elif isinstance(
+                message.schedule,
+                raw.types.BusinessAwayMessageScheduleOutsideWorkHours,
+            ):
                 schedule = enums.BusinessSchedule.OUTSIDE_WORK_HOURS
-            elif isinstance(message.schedule, raw.types.BusinessAwayMessageScheduleCustom):
+            elif isinstance(
+                message.schedule,
+                raw.types.BusinessAwayMessageScheduleCustom,
+            ):
                 schedule = enums.BusinessSchedule.CUSTOM
 
         return BusinessMessage(
@@ -105,6 +117,10 @@ class BusinessMessage(Object):
             offline_only=getattr(message, "offline_only", None),
             recipients=types.BusinessRecipients.from_raw_tl(client, message.recipients),
             schedule=schedule,
-            start_date=utils.timestamp_to_datetime(message.schedule.start_date) if schedule == enums.BusinessSchedule.CUSTOM else None,
-            end_date=utils.timestamp_to_datetime(message.schedule.end_date) if schedule == enums.BusinessSchedule.CUSTOM else None
+            start_date=utils.timestamp_to_datetime(message.schedule.start_date)
+            if schedule == enums.BusinessSchedule.CUSTOM
+            else None,
+            end_date=utils.timestamp_to_datetime(message.schedule.end_date)
+            if schedule == enums.BusinessSchedule.CUSTOM
+            else None,
         )

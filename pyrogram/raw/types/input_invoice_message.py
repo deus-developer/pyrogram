@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class InputInvoiceMessage(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "msg_id"]
+    __slots__: list[str] = ["msg_id", "peer"]
 
-    ID = 0xc5b56859
+    ID = 0xC5B56859
     QUALNAME = "types.InputInvoiceMessage"
 
     def __init__(self, *, peer: "raw.base.InputPeer", msg_id: int) -> None:
@@ -60,11 +62,11 @@ class InputInvoiceMessage(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputInvoiceMessage":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         msg_id = Int.read(b)
-        
+
         return InputInvoiceMessage(peer=peer, msg_id=msg_id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class InputInvoiceMessage(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.msg_id))
-        
+
         return b.getvalue()

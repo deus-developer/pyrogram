@@ -16,8 +16,8 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from random import randint
 from math import gcd
+from random import randint
 
 CURRENT_DH_PRIME = int(
     "C71CAEB9C6B1C9048E6C522F70F13F73980D40238E3E21C14934D037563D930F"
@@ -28,8 +28,9 @@ CURRENT_DH_PRIME = int(
     "FD17ED950D5965B4B9DD46582DB1178D169C6BC465B0D6FF9CA3928FEF5B9AE4"
     "E418FC15E83EBEA0F87FA9FF5EED70050DED2849F47BF959D956850CE929851F"
     "0D8115F635B105EE2E4E15D04B2454BF6F4FADF034B10403119CD8E3B92FCC5B",
-    16
+    16,
 )
+
 
 def decompose(pq: int) -> int:
     # https://comeoncodeon.wordpress.com/2010/09/18/pollard-rho-brent-integer-factorization/

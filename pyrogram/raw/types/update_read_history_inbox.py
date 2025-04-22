@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,12 +62,28 @@ class UpdateReadHistoryInbox(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "max_id", "still_unread_count", "pts", "pts_count", "folder_id"]
+    __slots__: list[str] = [
+        "folder_id",
+        "max_id",
+        "peer",
+        "pts",
+        "pts_count",
+        "still_unread_count",
+    ]
 
-    ID = 0x9c974fdf
+    ID = 0x9C974FDF
     QUALNAME = "types.UpdateReadHistoryInbox"
 
-    def __init__(self, *, peer: "raw.base.Peer", max_id: int, still_unread_count: int, pts: int, pts_count: int, folder_id: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.Peer",
+        max_id: int,
+        still_unread_count: int,
+        pts: int,
+        pts_count: int,
+        folder_id: int | None = None,
+    ) -> None:
         self.peer = peer  # Peer
         self.max_id = max_id  # int
         self.still_unread_count = still_unread_count  # int
@@ -75,21 +93,27 @@ class UpdateReadHistoryInbox(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateReadHistoryInbox":
-        
         flags = Int.read(b)
-        
+
         folder_id = Int.read(b) if flags & (1 << 0) else None
         peer = TLObject.read(b)
-        
+
         max_id = Int.read(b)
-        
+
         still_unread_count = Int.read(b)
-        
+
         pts = Int.read(b)
-        
+
         pts_count = Int.read(b)
-        
-        return UpdateReadHistoryInbox(peer=peer, max_id=max_id, still_unread_count=still_unread_count, pts=pts, pts_count=pts_count, folder_id=folder_id)
+
+        return UpdateReadHistoryInbox(
+            peer=peer,
+            max_id=max_id,
+            still_unread_count=still_unread_count,
+            pts=pts,
+            pts_count=pts_count,
+            folder_id=folder_id,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -98,18 +122,18 @@ class UpdateReadHistoryInbox(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.folder_id is not None else 0
         b.write(Int(flags))
-        
+
         if self.folder_id is not None:
             b.write(Int(self.folder_id))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.max_id))
-        
+
         b.write(Int(self.still_unread_count))
-        
+
         b.write(Int(self.pts))
-        
+
         b.write(Int(self.pts_count))
-        
+
         return b.getvalue()

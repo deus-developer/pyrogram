@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetWebPagePreview(TLObject):  # type: ignore
+class GetWebPagePreview(TLFunction["raw.base.MessageMedia"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,24 +52,28 @@ class GetWebPagePreview(TLObject):  # type: ignore
         :obj:`MessageMedia <pyrogram.raw.base.MessageMedia>`
     """
 
-    __slots__: List[str] = ["message", "entities"]
+    __slots__: list[str] = ["entities", "message"]
 
-    ID = 0x8b68b0cc
+    ID = 0x8B68B0CC
     QUALNAME = "functions.messages.GetWebPagePreview"
 
-    def __init__(self, *, message: str, entities: Optional[List["raw.base.MessageEntity"]] = None) -> None:
+    def __init__(
+        self,
+        *,
+        message: str,
+        entities: list["raw.base.MessageEntity"] | None = None,
+    ) -> None:
         self.message = message  # string
         self.entities = entities  # flags.3?Vector<MessageEntity>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetWebPagePreview":
-        
         flags = Int.read(b)
-        
+
         message = String.read(b)
-        
+
         entities = TLObject.read(b) if flags & (1 << 3) else []
-        
+
         return GetWebPagePreview(message=message, entities=entities)
 
     def write(self, *args) -> bytes:
@@ -75,10 +83,10 @@ class GetWebPagePreview(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 3) if self.entities else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.message))
-        
+
         if self.entities is not None:
             b.write(Vector(self.entities))
-        
+
         return b.getvalue()

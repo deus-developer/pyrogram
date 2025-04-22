@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetStatuses(TLObject):  # type: ignore
+class GetStatuses(TLFunction[list["raw.base.ContactStatus"]]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -44,9 +46,9 @@ class GetStatuses(TLObject):  # type: ignore
         List of :obj:`ContactStatus <pyrogram.raw.base.ContactStatus>`
     """
 
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
-    ID = 0xc4a353ee
+    ID = 0xC4A353EE
     QUALNAME = "functions.contacts.GetStatuses"
 
     def __init__(self) -> None:
@@ -55,7 +57,7 @@ class GetStatuses(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetStatuses":
         # No flags
-        
+
         return GetStatuses()
 
     def write(self, *args) -> bytes:
@@ -63,5 +65,5 @@ class GetStatuses(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         return b.getvalue()

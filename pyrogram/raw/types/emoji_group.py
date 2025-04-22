@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,12 +55,12 @@ class EmojiGroup(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["title", "icon_emoji_id", "emoticons"]
+    __slots__: list[str] = ["emoticons", "icon_emoji_id", "title"]
 
-    ID = 0x7a9abda9
+    ID = 0x7A9ABDA9
     QUALNAME = "types.EmojiGroup"
 
-    def __init__(self, *, title: str, icon_emoji_id: int, emoticons: List[str]) -> None:
+    def __init__(self, *, title: str, icon_emoji_id: int, emoticons: list[str]) -> None:
         self.title = title  # string
         self.icon_emoji_id = icon_emoji_id  # long
         self.emoticons = emoticons  # Vector<string>
@@ -64,13 +68,13 @@ class EmojiGroup(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EmojiGroup":
         # No flags
-        
+
         title = String.read(b)
-        
+
         icon_emoji_id = Long.read(b)
-        
+
         emoticons = TLObject.read(b, String)
-        
+
         return EmojiGroup(title=title, icon_emoji_id=icon_emoji_id, emoticons=emoticons)
 
     def write(self, *args) -> bytes:
@@ -78,11 +82,11 @@ class EmojiGroup(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.title))
-        
+
         b.write(Long(self.icon_emoji_id))
-        
+
         b.write(Vector(self.emoticons, String))
-        
+
         return b.getvalue()

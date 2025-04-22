@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetPremiumGiftCodeOptions(TLObject):  # type: ignore
+class GetPremiumGiftCodeOptions(TLFunction[list["raw.base.PremiumGiftCodeOption"]]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetPremiumGiftCodeOptions(TLObject):  # type: ignore
         List of :obj:`PremiumGiftCodeOption <pyrogram.raw.base.PremiumGiftCodeOption>`
     """
 
-    __slots__: List[str] = ["boost_peer"]
+    __slots__: list[str] = ["boost_peer"]
 
-    ID = 0x2757ba54
+    ID = 0x2757BA54
     QUALNAME = "functions.payments.GetPremiumGiftCodeOptions"
 
     def __init__(self, *, boost_peer: "raw.base.InputPeer" = None) -> None:
@@ -55,11 +57,10 @@ class GetPremiumGiftCodeOptions(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetPremiumGiftCodeOptions":
-        
         flags = Int.read(b)
-        
+
         boost_peer = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         return GetPremiumGiftCodeOptions(boost_peer=boost_peer)
 
     def write(self, *args) -> bytes:
@@ -69,8 +70,8 @@ class GetPremiumGiftCodeOptions(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.boost_peer is not None else 0
         b.write(Int(flags))
-        
+
         if self.boost_peer is not None:
             b.write(self.boost_peer.write())
-        
+
         return b.getvalue()

@@ -36,7 +36,7 @@ class LabeledPrice(Object):
     def __init__(
         self,
         label: str,
-        amount: int
+        amount: int,
     ):
         super().__init__()
 
@@ -48,11 +48,11 @@ class LabeledPrice(Object):
         if isinstance(labeled_price, raw.types.LabeledPrice):
             return LabeledPrice(
                 label=labeled_price.label,
-                amount=labeled_price.amount
+                amount=labeled_price.amount,
             )
 
     def write(self):
         return raw.types.LabeledPrice(
             label=self.label,
-            amount=self.amount
+            amount=self.amount,
         )

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class DeleteQuickReplyMessages(TLObject):  # type: ignore
+class DeleteQuickReplyMessages(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,23 @@ class DeleteQuickReplyMessages(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["shortcut_id", "id"]
+    __slots__: list[str] = ["id", "shortcut_id"]
 
-    ID = 0xe105e910
+    ID = 0xE105E910
     QUALNAME = "functions.messages.DeleteQuickReplyMessages"
 
-    def __init__(self, *, shortcut_id: int, id: List[int]) -> None:
+    def __init__(self, *, shortcut_id: int, id: list[int]) -> None:
         self.shortcut_id = shortcut_id  # int
         self.id = id  # Vector<int>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DeleteQuickReplyMessages":
         # No flags
-        
+
         shortcut_id = Int.read(b)
-        
+
         id = TLObject.read(b, Int)
-        
+
         return DeleteQuickReplyMessages(shortcut_id=shortcut_id, id=id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class DeleteQuickReplyMessages(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.shortcut_id))
-        
+
         b.write(Vector(self.id, Int))
-        
+
         return b.getvalue()

@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -68,12 +72,20 @@ class FeaturedStickers(TLObject):  # type: ignore
             messages.GetFeaturedEmojiStickers
     """
 
-    __slots__: List[str] = ["hash", "count", "sets", "unread", "premium"]
+    __slots__: list[str] = ["count", "hash", "premium", "sets", "unread"]
 
-    ID = 0xbe382906
+    ID = 0xBE382906
     QUALNAME = "types.messages.FeaturedStickers"
 
-    def __init__(self, *, hash: int, count: int, sets: List["raw.base.StickerSetCovered"], unread: List[int], premium: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        hash: int,
+        count: int,
+        sets: list["raw.base.StickerSetCovered"],
+        unread: list[int],
+        premium: bool | None = None,
+    ) -> None:
         self.hash = hash  # long
         self.count = count  # int
         self.sets = sets  # Vector<StickerSetCovered>
@@ -82,19 +94,24 @@ class FeaturedStickers(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "FeaturedStickers":
-        
         flags = Int.read(b)
-        
+
         premium = True if flags & (1 << 0) else False
         hash = Long.read(b)
-        
+
         count = Int.read(b)
-        
+
         sets = TLObject.read(b)
-        
+
         unread = TLObject.read(b, Long)
-        
-        return FeaturedStickers(hash=hash, count=count, sets=sets, unread=unread, premium=premium)
+
+        return FeaturedStickers(
+            hash=hash,
+            count=count,
+            sets=sets,
+            unread=unread,
+            premium=premium,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -103,13 +120,13 @@ class FeaturedStickers(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.premium else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.hash))
-        
+
         b.write(Int(self.count))
-        
+
         b.write(Vector(self.sets))
-        
+
         b.write(Vector(self.unread, Long))
-        
+
         return b.getvalue()

@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +55,9 @@ class PromoDataEmpty(TLObject):  # type: ignore
             help.GetPromoData
     """
 
-    __slots__: List[str] = ["expires"]
+    __slots__: list[str] = ["expires"]
 
-    ID = 0x98f6ac75
+    ID = 0x98F6AC75
     QUALNAME = "types.help.PromoDataEmpty"
 
     def __init__(self, *, expires: int) -> None:
@@ -65,9 +66,9 @@ class PromoDataEmpty(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PromoDataEmpty":
         # No flags
-        
+
         expires = Int.read(b)
-        
+
         return PromoDataEmpty(expires=expires)
 
     def write(self, *args) -> bytes:
@@ -75,7 +76,7 @@ class PromoDataEmpty(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.expires))
-        
+
         return b.getvalue()

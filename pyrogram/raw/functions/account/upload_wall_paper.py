@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class UploadWallPaper(TLObject):  # type: ignore
+class UploadWallPaper(TLFunction["raw.base.WallPaper"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +57,19 @@ class UploadWallPaper(TLObject):  # type: ignore
         :obj:`WallPaper <pyrogram.raw.base.WallPaper>`
     """
 
-    __slots__: List[str] = ["file", "mime_type", "settings", "for_chat"]
+    __slots__: list[str] = ["file", "for_chat", "mime_type", "settings"]
 
-    ID = 0xe39a8f03
+    ID = 0xE39A8F03
     QUALNAME = "functions.account.UploadWallPaper"
 
-    def __init__(self, *, file: "raw.base.InputFile", mime_type: str, settings: "raw.base.WallPaperSettings", for_chat: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        file: "raw.base.InputFile",
+        mime_type: str,
+        settings: "raw.base.WallPaperSettings",
+        for_chat: bool | None = None,
+    ) -> None:
         self.file = file  # InputFile
         self.mime_type = mime_type  # string
         self.settings = settings  # WallPaperSettings
@@ -67,17 +77,21 @@ class UploadWallPaper(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UploadWallPaper":
-        
         flags = Int.read(b)
-        
+
         for_chat = True if flags & (1 << 0) else False
         file = TLObject.read(b)
-        
+
         mime_type = String.read(b)
-        
+
         settings = TLObject.read(b)
-        
-        return UploadWallPaper(file=file, mime_type=mime_type, settings=settings, for_chat=for_chat)
+
+        return UploadWallPaper(
+            file=file,
+            mime_type=mime_type,
+            settings=settings,
+            for_chat=for_chat,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -86,11 +100,11 @@ class UploadWallPaper(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.for_chat else 0
         b.write(Int(flags))
-        
+
         b.write(self.file.write())
-        
+
         b.write(String(self.mime_type))
-        
+
         b.write(self.settings.write())
-        
+
         return b.getvalue()

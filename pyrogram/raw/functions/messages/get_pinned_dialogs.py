@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetPinnedDialogs(TLObject):  # type: ignore
+class GetPinnedDialogs(TLFunction["raw.base.messages.PeerDialogs"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +46,9 @@ class GetPinnedDialogs(TLObject):  # type: ignore
         :obj:`messages.PeerDialogs <pyrogram.raw.base.messages.PeerDialogs>`
     """
 
-    __slots__: List[str] = ["folder_id"]
+    __slots__: list[str] = ["folder_id"]
 
-    ID = 0xd6b94df2
+    ID = 0xD6B94DF2
     QUALNAME = "functions.messages.GetPinnedDialogs"
 
     def __init__(self, *, folder_id: int) -> None:
@@ -56,9 +57,9 @@ class GetPinnedDialogs(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetPinnedDialogs":
         # No flags
-        
+
         folder_id = Int.read(b)
-        
+
         return GetPinnedDialogs(folder_id=folder_id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +67,7 @@ class GetPinnedDialogs(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.folder_id))
-        
+
         return b.getvalue()

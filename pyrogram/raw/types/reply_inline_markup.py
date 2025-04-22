@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,20 +48,20 @@ class ReplyInlineMarkup(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["rows"]
+    __slots__: list[str] = ["rows"]
 
-    ID = 0x48a30254
+    ID = 0x48A30254
     QUALNAME = "types.ReplyInlineMarkup"
 
-    def __init__(self, *, rows: List["raw.base.KeyboardButtonRow"]) -> None:
+    def __init__(self, *, rows: list["raw.base.KeyboardButtonRow"]) -> None:
         self.rows = rows  # Vector<KeyboardButtonRow>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ReplyInlineMarkup":
         # No flags
-        
+
         rows = TLObject.read(b)
-        
+
         return ReplyInlineMarkup(rows=rows)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class ReplyInlineMarkup(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.rows))
-        
+
         return b.getvalue()

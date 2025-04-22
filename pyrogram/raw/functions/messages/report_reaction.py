@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ReportReaction(TLObject):  # type: ignore
+class ReportReaction(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +53,18 @@ class ReportReaction(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["peer", "id", "reaction_peer"]
+    __slots__: list[str] = ["id", "peer", "reaction_peer"]
 
-    ID = 0x3f64c076
+    ID = 0x3F64C076
     QUALNAME = "functions.messages.ReportReaction"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", id: int, reaction_peer: "raw.base.InputPeer") -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        id: int,
+        reaction_peer: "raw.base.InputPeer",
+    ) -> None:
         self.peer = peer  # InputPeer
         self.id = id  # int
         self.reaction_peer = reaction_peer  # InputPeer
@@ -64,13 +72,13 @@ class ReportReaction(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ReportReaction":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         id = Int.read(b)
-        
+
         reaction_peer = TLObject.read(b)
-        
+
         return ReportReaction(peer=peer, id=id, reaction_peer=reaction_peer)
 
     def write(self, *args) -> bytes:
@@ -78,11 +86,11 @@ class ReportReaction(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.id))
-        
+
         b.write(self.reaction_peer.write())
-        
+
         return b.getvalue()

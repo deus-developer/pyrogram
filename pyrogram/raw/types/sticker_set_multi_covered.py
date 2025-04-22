@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,23 +60,28 @@ class StickerSetMultiCovered(TLObject):  # type: ignore
             messages.GetAttachedStickers
     """
 
-    __slots__: List[str] = ["set", "covers"]
+    __slots__: list[str] = ["covers", "set"]
 
-    ID = 0x3407e51b
+    ID = 0x3407E51B
     QUALNAME = "types.StickerSetMultiCovered"
 
-    def __init__(self, *, set: "raw.base.StickerSet", covers: List["raw.base.Document"]) -> None:
+    def __init__(
+        self,
+        *,
+        set: "raw.base.StickerSet",
+        covers: list["raw.base.Document"],
+    ) -> None:
         self.set = set  # StickerSet
         self.covers = covers  # Vector<Document>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "StickerSetMultiCovered":
         # No flags
-        
+
         set = TLObject.read(b)
-        
+
         covers = TLObject.read(b)
-        
+
         return StickerSetMultiCovered(set=set, covers=covers)
 
     def write(self, *args) -> bytes:
@@ -81,9 +89,9 @@ class StickerSetMultiCovered(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.set.write())
-        
+
         b.write(Vector(self.covers))
-        
+
         return b.getvalue()

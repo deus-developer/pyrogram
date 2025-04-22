@@ -17,14 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import List, Union, Optional
+from typing import Union
 
 import pyrogram
+from pyrogram import enums, raw, types, utils
 from pyrogram.types.messages_and_media.message import Str
-from pyrogram import raw, enums, utils
-from pyrogram import types
+
 from ..object import Object
 from ..update import Update
+
 
 class Poll(Object, Update):
     """A Poll.
@@ -85,19 +86,19 @@ class Poll(Object, Update):
         client: "pyrogram.Client" = None,
         id: str,
         question: str,
-        options: List["types.PollOption"],
+        options: list["types.PollOption"],
         total_voter_count: int,
         is_closed: bool,
         is_anonymous: bool = None,
         type: "enums.PollType" = None,
         allows_multiple_answers: bool = None,
-        chosen_option_id: Optional[int] = None,
-        correct_option_id: Optional[int] = None,
-        question_entities: Optional[List["types.MessageEntity"]] = None,
-        explanation: Optional[str] = None,
-        explanation_entities: Optional[List["types.MessageEntity"]] = None,
-        open_period: Optional[int] = None,
-        close_date: Optional[datetime] = None
+        chosen_option_id: int | None = None,
+        correct_option_id: int | None = None,
+        question_entities: list["types.MessageEntity"] | None = None,
+        explanation: str | None = None,
+        explanation_entities: list["types.MessageEntity"] | None = None,
+        open_period: int | None = None,
+        close_date: datetime | None = None,
     ):
         super().__init__(client)
 
@@ -118,10 +119,13 @@ class Poll(Object, Update):
         self.close_date = close_date
 
     @staticmethod
-    def from_raw_tl(client, media_poll: Union["raw.types.MessageMediaPoll", "raw.types.UpdateMessagePoll"]) -> "Poll":
+    def from_raw_tl(
+        client,
+        media_poll: Union["raw.types.MessageMediaPoll", "raw.types.UpdateMessagePoll"],
+    ) -> "Poll":
         poll: raw.types.Poll = media_poll.poll
         poll_results: raw.types.PollResults = media_poll.results
-        results: List[raw.types.PollAnswerVoters] = poll_results.results
+        results: list[raw.types.PollAnswerVoters] = poll_results.results
 
         chosen_option_id = None
         correct_option_id = None
@@ -149,14 +153,14 @@ class Poll(Object, Update):
                                 [
                                     types.MessageEntity.from_raw_tl(client, entity, {})
                                     for entity in (answer.text.entities or [])
-                                ]
-                            )
-                        )
+                                ],
+                            ),
+                        ),
                     ),
                     voter_count=voter_count,
                     data=answer.option,
-                    client=client
-                )
+                    client=client,
+                ),
             )
 
         return Poll(
@@ -168,9 +172,9 @@ class Poll(Object, Update):
                         [
                             types.MessageEntity.from_raw_tl(client, entity, {})
                             for entity in (poll.question.entities or [])
-                        ]
-                    )
-                )
+                        ],
+                    ),
+                ),
             ),
             options=options,
             total_voter_count=media_poll.results.total_voters,
@@ -183,15 +187,19 @@ class Poll(Object, Update):
             question_entities=[
                 types.MessageEntity.from_raw_tl(client, i, {})
                 for i in poll.question.entities
-            ] if poll.question.entities else None,
+            ]
+            if poll.question.entities
+            else None,
             explanation=poll_results.solution,
             explanation_entities=[
                 types.MessageEntity.from_raw_tl(client, i, {})
                 for i in poll_results.solution_entities
-            ] if poll_results.solution_entities else None,
+            ]
+            if poll_results.solution_entities
+            else None,
             open_period=poll.close_period,
             close_date=utils.timestamp_to_datetime(poll.close_date),
-            client=client
+            client=client,
         )
 
     @staticmethod
@@ -216,8 +224,8 @@ class Poll(Object, Update):
                     text="",
                     voter_count=result.voters,
                     data=result.option,
-                    client=client
-                )
+                    client=client,
+                ),
             )
 
         return Poll(
@@ -228,5 +236,5 @@ class Poll(Object, Update):
             is_closed=False,
             chosen_option_id=chosen_option_id,
             correct_option_id=correct_option_id,
-            client=client
+            client=client,
         )

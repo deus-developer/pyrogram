@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetDeepLinkInfo(TLObject):  # type: ignore
+class GetDeepLinkInfo(TLFunction["raw.base.help.DeepLinkInfo"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetDeepLinkInfo(TLObject):  # type: ignore
         :obj:`help.DeepLinkInfo <pyrogram.raw.base.help.DeepLinkInfo>`
     """
 
-    __slots__: List[str] = ["path"]
+    __slots__: list[str] = ["path"]
 
-    ID = 0x3fedc75f
+    ID = 0x3FEDC75F
     QUALNAME = "functions.help.GetDeepLinkInfo"
 
     def __init__(self, *, path: str) -> None:
@@ -56,9 +58,9 @@ class GetDeepLinkInfo(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetDeepLinkInfo":
         # No flags
-        
+
         path = String.read(b)
-        
+
         return GetDeepLinkInfo(path=path)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class GetDeepLinkInfo(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.path))
-        
+
         return b.getvalue()

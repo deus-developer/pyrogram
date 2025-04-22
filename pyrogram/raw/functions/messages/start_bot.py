@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class StartBot(TLObject):  # type: ignore
+class StartBot(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +58,19 @@ class StartBot(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["bot", "peer", "random_id", "start_param"]
+    __slots__: list[str] = ["bot", "peer", "random_id", "start_param"]
 
-    ID = 0xe6df7378
+    ID = 0xE6DF7378
     QUALNAME = "functions.messages.StartBot"
 
-    def __init__(self, *, bot: "raw.base.InputUser", peer: "raw.base.InputPeer", random_id: int, start_param: str) -> None:
+    def __init__(
+        self,
+        *,
+        bot: "raw.base.InputUser",
+        peer: "raw.base.InputPeer",
+        random_id: int,
+        start_param: str,
+    ) -> None:
         self.bot = bot  # InputUser
         self.peer = peer  # InputPeer
         self.random_id = random_id  # long
@@ -68,29 +79,34 @@ class StartBot(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "StartBot":
         # No flags
-        
+
         bot = TLObject.read(b)
-        
+
         peer = TLObject.read(b)
-        
+
         random_id = Long.read(b)
-        
+
         start_param = String.read(b)
-        
-        return StartBot(bot=bot, peer=peer, random_id=random_id, start_param=start_param)
+
+        return StartBot(
+            bot=bot,
+            peer=peer,
+            random_id=random_id,
+            start_param=start_param,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.bot.write())
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Long(self.random_id))
-        
+
         b.write(String(self.start_param))
-        
+
         return b.getvalue()

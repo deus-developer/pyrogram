@@ -17,29 +17,28 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Union, List, Optional
+from typing import Optional, Union
 
 import pyrogram
-from pyrogram import raw, enums, types
-from pyrogram import utils
+from pyrogram import enums, raw, types, utils
 
 
 class SendCachedMedia:
     async def send_cached_media(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         file_id: str,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         disable_notification: bool = None,
         message_thread_id: int = None,
         reply_to_message_id: int = None,
-        reply_to_chat_id: Union[int, str] = None,
+        reply_to_chat_id: int | str = None,
         reply_to_story_id: int = None,
         quote_text: str = None,
         quote_offset: int = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
         has_spoiler: bool = None,
@@ -49,8 +48,8 @@ class SendCachedMedia:
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply"
-        ] = None
+            "types.ForceReply",
+        ] = None,
     ) -> Optional["types.Message"]:
         """Send any media stored on the Telegram servers using a file_id.
 
@@ -131,19 +130,31 @@ class SendCachedMedia:
 
                 await app.send_cached_media("me", file_id)
         """
-        quote_text, quote_entities = (await utils.parse_text_entities(self, quote_text, parse_mode, quote_entities)).values()
+        quote_text, quote_entities = (
+            await utils.parse_text_entities(
+                self,
+                quote_text,
+                parse_mode,
+                quote_entities,
+            )
+        ).values()
 
         peer = await self.resolve_peer(chat_id)
         r = await self.invoke(
             raw.functions.messages.SendMedia(
                 peer=peer,
-                media=utils.get_input_media_from_file_id(file_id, has_spoiler=has_spoiler),
+                media=utils.get_input_media_from_file_id(
+                    file_id,
+                    has_spoiler=has_spoiler,
+                ),
                 silent=disable_notification or None,
                 invert_media=show_above_text,
                 reply_to=utils.get_reply_to(
                     reply_to_message_id=reply_to_message_id,
                     message_thread_id=message_thread_id,
-                    reply_to_peer=await self.resolve_peer(reply_to_chat_id) if reply_to_chat_id else None,
+                    reply_to_peer=await self.resolve_peer(reply_to_chat_id)
+                    if reply_to_chat_id
+                    else None,
                     reply_to_story_id=reply_to_story_id,
                     quote_text=quote_text,
                     quote_entities=quote_entities,
@@ -153,19 +164,30 @@ class SendCachedMedia:
                 schedule_date=utils.datetime_to_timestamp(schedule_date),
                 noforwards=protect_content,
                 reply_markup=await reply_markup.write(self) if reply_markup else None,
-                **await utils.parse_text_entities(self, caption, parse_mode, caption_entities)
+                **await utils.parse_text_entities(
+                    self,
+                    caption,
+                    parse_mode,
+                    caption_entities,
+                ),
             ),
-            business_connection_id=business_connection_id
+            business_connection_id=business_connection_id,
         )
 
         for i in r.updates:
-            if isinstance(i, (raw.types.UpdateNewMessage,
-                              raw.types.UpdateNewChannelMessage,
-                              raw.types.UpdateNewScheduledMessage,
-                              raw.types.UpdateBotNewBusinessMessage)):
+            if isinstance(
+                i,
+                (
+                    raw.types.UpdateNewMessage,
+                    raw.types.UpdateNewChannelMessage,
+                    raw.types.UpdateNewScheduledMessage,
+                    raw.types.UpdateBotNewBusinessMessage,
+                ),
+            ):
                 return await types.Message.from_raw_tl(
-                    self, i.message,
+                    self,
+                    i.message,
                     is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
                     business_connection_id=getattr(i, "connection_id", None),
-                    reply_to_message=getattr(i, "reply_to_message", None)
+                    reply_to_message=getattr(i, "reply_to_message", None),
                 )

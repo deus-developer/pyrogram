@@ -1,12 +1,9 @@
-from itertools import filterfalse
+from collections.abc import Iterable
 from typing import (
     assert_never,
-    Iterable,
-
 )
 
 from pyrogram import raw
-
 
 type UserT = raw.types.User | raw.types.UserEmpty
 type ChatT = raw.types.Chat | raw.types.ChatEmpty | raw.types.ChatForbidden
@@ -16,29 +13,38 @@ type PeerT = raw.base.Peer | raw.base.InputPeer | raw.base.ChatFull
 
 MAX_CHANNEL_ID = -1000000000000
 
+
 def get_channel_id(peer_id: int) -> int:
     return MAX_CHANNEL_ID - peer_id
 
 
 def get_entity_index(entity: EntityT) -> int:
-    if isinstance(entity, (
-        raw.types.User,
-        raw.types.UserEmpty
-    )):
+    if isinstance(
+        entity,
+        (
+            raw.types.User,
+            raw.types.UserEmpty,
+        ),
+    ):
         return entity.id
-    elif isinstance(entity, (
-        raw.types.Chat,
-        raw.types.ChatEmpty,
-        raw.types.ChatForbidden
-    )):
+    if isinstance(
+        entity,
+        (
+            raw.types.Chat,
+            raw.types.ChatEmpty,
+            raw.types.ChatForbidden,
+        ),
+    ):
         return -entity.id
-    elif isinstance(entity, (
-        raw.types.Channel,
-        raw.types.ChannelForbidden
-    )):
+    if isinstance(
+        entity,
+        (
+            raw.types.Channel,
+            raw.types.ChannelForbidden,
+        ),
+    ):
         return get_channel_id(entity.id)
-    else:
-        assert_never(entity)
+    assert_never(entity)
 
 
 class EntityCache:
@@ -52,7 +58,7 @@ class EntityCache:
 
         self._entity_by_index: dict[int, EntityT] = {}
         self._timestamp_by_index: dict[int, float] = {}
-        
+
         self._next_garbage_collection = 0.0
         self._timestamp = 0.0
 
@@ -68,12 +74,15 @@ class EntityCache:
         if self._timestamp < self._next_garbage_collection:
             return
 
-        self._next_garbage_collection = self._timestamp + self._garbage_collection_interval
+        self._next_garbage_collection = (
+            self._timestamp + self._garbage_collection_interval
+        )
 
         dead_line = self._timestamp - self._time_to_live
 
         drop: list[int] = [
-            index for index, value in self._timestamp_by_index.items()
+            index
+            for index, value in self._timestamp_by_index.items()
             if value <= dead_line
         ]
 
@@ -98,18 +107,24 @@ class EntityCache:
     def add(self, *, entity: EntityT | None) -> None:
         if entity is None:
             return
-        elif isinstance(entity, (
-            raw.types.User,
-            raw.types.Channel,
-            raw.types.ChannelForbidden,
-            raw.types.Chat,
-            raw.types.ChatForbidden,
-        )):
+        if isinstance(
+            entity,
+            (
+                raw.types.User,
+                raw.types.Channel,
+                raw.types.ChannelForbidden,
+                raw.types.Chat,
+                raw.types.ChatForbidden,
+            ),
+        ):
             self.set(entity=entity)
-        elif isinstance(entity, (
-            raw.types.UserEmpty,
-            raw.types.ChatEmpty
-        )):
+        elif isinstance(
+            entity,
+            (
+                raw.types.UserEmpty,
+                raw.types.ChatEmpty,
+            ),
+        ):
             self.setdefault(entity=entity)
         else:
             assert_never(entity)
@@ -136,41 +151,48 @@ class EntityCache:
     def get_peer(self, *, peer: PeerT) -> EntityT | None:
         if isinstance(peer, raw.types.InputPeerEmpty):
             return None
-        elif isinstance(peer, raw.types.InputPeerSelf):
+        if isinstance(peer, raw.types.InputPeerSelf):
             return self.get_user(user_id=self._self_user_id)
-        if isinstance(peer, (
-            raw.types.PeerUser,
-            raw.types.InputPeerUser,
-            raw.types.InputPeerUserFromMessage
-        )):
+        if isinstance(
+            peer,
+            (
+                raw.types.PeerUser,
+                raw.types.InputPeerUser,
+                raw.types.InputPeerUserFromMessage,
+            ),
+        ):
             return self.get_user(user_id=peer.user_id)
-        elif isinstance(peer, (
-            raw.types.PeerChat,
-            raw.types.InputPeerChat,
-        )):
+        if isinstance(
+            peer,
+            (
+                raw.types.PeerChat,
+                raw.types.InputPeerChat,
+            ),
+        ):
             return self.get_chat(chat_id=peer.chat_id)
-        elif isinstance(peer, (
-            raw.types.PeerChannel,
-            raw.types.InputPeerChannel,
-            raw.types.InputPeerChannelFromMessage,
-        )):
+        if isinstance(
+            peer,
+            (
+                raw.types.PeerChannel,
+                raw.types.InputPeerChannel,
+                raw.types.InputPeerChannelFromMessage,
+            ),
+        ):
             return self.get_channel(channel_id=peer.channel_id)
-        elif isinstance(peer, raw.types.ChannelFull):
+        if isinstance(peer, raw.types.ChannelFull):
             return self.get_channel(channel_id=peer.id)
-        elif isinstance(peer, raw.types.ChatFull):
+        if isinstance(peer, raw.types.ChatFull):
             return self.get_chat(chat_id=peer.id)
-        else:
-            assert_never(peer)
+        assert_never(peer)
 
     def get_signed_chat(self, *, signed_chat_id: int) -> EntityT | None:
         if signed_chat_id >= 0:
             return self.get_user(user_id=signed_chat_id)
-        elif signed_chat_id < MAX_CHANNEL_ID:
+        if signed_chat_id < MAX_CHANNEL_ID:
             return self.get_channel(channel_id=get_channel_id(signed_chat_id))
-        elif signed_chat_id < 0:
+        if signed_chat_id < 0:
             return self.get_chat(chat_id=-signed_chat_id)
-        else:
-            return None
+        return None
 
     def get(
         self,
@@ -183,13 +205,12 @@ class EntityCache:
     ) -> UserT | ChatT | ChannelT | None:
         if user_id:
             return self.get_user(user_id=user_id)
-        elif chat_id:
+        if chat_id:
             return self.get_chat(chat_id=chat_id)
-        elif channel_id:
+        if channel_id:
             return self.get_channel(channel_id=channel_id)
-        elif signed_chat_id:
+        if signed_chat_id:
             return self.get_signed_chat(signed_chat_id=signed_chat_id)
-        elif peer:
+        if peer:
             return self.get_peer(peer=peer)
-        else:
-            raise ValueError("No arguments provided")
+        raise ValueError("No arguments provided")

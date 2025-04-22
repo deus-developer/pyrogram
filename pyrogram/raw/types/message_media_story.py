@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -65,12 +67,19 @@ class MessageMediaStory(TLObject):  # type: ignore
             messages.UploadImportedMedia
     """
 
-    __slots__: List[str] = ["peer", "id", "via_mention", "story"]
+    __slots__: list[str] = ["id", "peer", "story", "via_mention"]
 
-    ID = 0x68cb6283
+    ID = 0x68CB6283
     QUALNAME = "types.MessageMediaStory"
 
-    def __init__(self, *, peer: "raw.base.Peer", id: int, via_mention: Optional[bool] = None, story: "raw.base.StoryItem" = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.Peer",
+        id: int,
+        via_mention: bool | None = None,
+        story: "raw.base.StoryItem" = None,
+    ) -> None:
         self.peer = peer  # Peer
         self.id = id  # int
         self.via_mention = via_mention  # flags.1?true
@@ -78,16 +87,15 @@ class MessageMediaStory(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageMediaStory":
-        
         flags = Int.read(b)
-        
+
         via_mention = True if flags & (1 << 1) else False
         peer = TLObject.read(b)
-        
+
         id = Int.read(b)
-        
+
         story = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         return MessageMediaStory(peer=peer, id=id, via_mention=via_mention, story=story)
 
     def write(self, *args) -> bytes:
@@ -98,12 +106,12 @@ class MessageMediaStory(TLObject):  # type: ignore
         flags |= (1 << 1) if self.via_mention else 0
         flags |= (1 << 0) if self.story is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.id))
-        
+
         if self.story is not None:
             b.write(self.story.write())
-        
+
         return b.getvalue()

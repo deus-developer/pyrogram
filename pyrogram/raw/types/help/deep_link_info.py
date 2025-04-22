@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,26 +64,31 @@ class DeepLinkInfo(TLObject):  # type: ignore
             help.GetDeepLinkInfo
     """
 
-    __slots__: List[str] = ["message", "update_app", "entities"]
+    __slots__: list[str] = ["entities", "message", "update_app"]
 
-    ID = 0x6a4ee832
+    ID = 0x6A4EE832
     QUALNAME = "types.help.DeepLinkInfo"
 
-    def __init__(self, *, message: str, update_app: Optional[bool] = None, entities: Optional[List["raw.base.MessageEntity"]] = None) -> None:
+    def __init__(
+        self,
+        *,
+        message: str,
+        update_app: bool | None = None,
+        entities: list["raw.base.MessageEntity"] | None = None,
+    ) -> None:
         self.message = message  # string
         self.update_app = update_app  # flags.0?true
         self.entities = entities  # flags.1?Vector<MessageEntity>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DeepLinkInfo":
-        
         flags = Int.read(b)
-        
+
         update_app = True if flags & (1 << 0) else False
         message = String.read(b)
-        
+
         entities = TLObject.read(b) if flags & (1 << 1) else []
-        
+
         return DeepLinkInfo(message=message, update_app=update_app, entities=entities)
 
     def write(self, *args) -> bytes:
@@ -90,10 +99,10 @@ class DeepLinkInfo(TLObject):  # type: ignore
         flags |= (1 << 0) if self.update_app else 0
         flags |= (1 << 1) if self.entities else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.message))
-        
+
         if self.entities is not None:
             b.write(Vector(self.entities))
-        
+
         return b.getvalue()

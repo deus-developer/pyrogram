@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,23 +60,28 @@ class AttachMenuBotsBot(TLObject):  # type: ignore
             messages.GetAttachMenuBot
     """
 
-    __slots__: List[str] = ["bot", "users"]
+    __slots__: list[str] = ["bot", "users"]
 
-    ID = 0x93bf667f
+    ID = 0x93BF667F
     QUALNAME = "types.AttachMenuBotsBot"
 
-    def __init__(self, *, bot: "raw.base.AttachMenuBot", users: List["raw.base.User"]) -> None:
+    def __init__(
+        self,
+        *,
+        bot: "raw.base.AttachMenuBot",
+        users: list["raw.base.User"],
+    ) -> None:
         self.bot = bot  # AttachMenuBot
         self.users = users  # Vector<User>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "AttachMenuBotsBot":
         # No flags
-        
+
         bot = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
+
         return AttachMenuBotsBot(bot=bot, users=users)
 
     def write(self, *args) -> bytes:
@@ -81,9 +89,9 @@ class AttachMenuBotsBot(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.bot.write())
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

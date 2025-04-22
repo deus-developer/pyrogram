@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetBroadcastRevenueStats(TLObject):  # type: ignore
+class GetBroadcastRevenueStats(TLFunction["raw.base.stats.BroadcastRevenueStats"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,27 @@ class GetBroadcastRevenueStats(TLObject):  # type: ignore
         :obj:`stats.BroadcastRevenueStats <pyrogram.raw.base.stats.BroadcastRevenueStats>`
     """
 
-    __slots__: List[str] = ["channel", "dark"]
+    __slots__: list[str] = ["channel", "dark"]
 
-    ID = 0x75dfb671
+    ID = 0x75DFB671
     QUALNAME = "functions.stats.GetBroadcastRevenueStats"
 
-    def __init__(self, *, channel: "raw.base.InputChannel", dark: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        channel: "raw.base.InputChannel",
+        dark: bool | None = None,
+    ) -> None:
         self.channel = channel  # InputChannel
         self.dark = dark  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetBroadcastRevenueStats":
-        
         flags = Int.read(b)
-        
+
         dark = True if flags & (1 << 0) else False
         channel = TLObject.read(b)
-        
+
         return GetBroadcastRevenueStats(channel=channel, dark=dark)
 
     def write(self, *args) -> bytes:
@@ -74,7 +80,7 @@ class GetBroadcastRevenueStats(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.dark else 0
         b.write(Int(flags))
-        
+
         b.write(self.channel.write())
-        
+
         return b.getvalue()

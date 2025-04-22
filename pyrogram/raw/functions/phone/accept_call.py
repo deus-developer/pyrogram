@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class AcceptCall(TLObject):  # type: ignore
+class AcceptCall(TLFunction["raw.base.phone.PhoneCall"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +54,18 @@ class AcceptCall(TLObject):  # type: ignore
         :obj:`phone.PhoneCall <pyrogram.raw.base.phone.PhoneCall>`
     """
 
-    __slots__: List[str] = ["peer", "g_b", "protocol"]
+    __slots__: list[str] = ["g_b", "peer", "protocol"]
 
-    ID = 0x3bd2b4a0
+    ID = 0x3BD2B4A0
     QUALNAME = "functions.phone.AcceptCall"
 
-    def __init__(self, *, peer: "raw.base.InputPhoneCall", g_b: bytes, protocol: "raw.base.PhoneCallProtocol") -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPhoneCall",
+        g_b: bytes,
+        protocol: "raw.base.PhoneCallProtocol",
+    ) -> None:
         self.peer = peer  # InputPhoneCall
         self.g_b = g_b  # bytes
         self.protocol = protocol  # PhoneCallProtocol
@@ -64,13 +73,13 @@ class AcceptCall(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "AcceptCall":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         g_b = Bytes.read(b)
-        
+
         protocol = TLObject.read(b)
-        
+
         return AcceptCall(peer=peer, g_b=g_b, protocol=protocol)
 
     def write(self, *args) -> bytes:
@@ -78,11 +87,11 @@ class AcceptCall(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Bytes(self.g_b))
-        
+
         b.write(self.protocol.write())
-        
+
         return b.getvalue()

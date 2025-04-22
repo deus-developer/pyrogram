@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetChats(TLObject):  # type: ignore
+class GetChats(TLFunction["raw.base.messages.Chats"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,20 +48,20 @@ class GetChats(TLObject):  # type: ignore
         :obj:`messages.Chats <pyrogram.raw.base.messages.Chats>`
     """
 
-    __slots__: List[str] = ["id"]
+    __slots__: list[str] = ["id"]
 
-    ID = 0x49e9528f
+    ID = 0x49E9528F
     QUALNAME = "functions.messages.GetChats"
 
-    def __init__(self, *, id: List[int]) -> None:
+    def __init__(self, *, id: list[int]) -> None:
         self.id = id  # Vector<long>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetChats":
         # No flags
-        
+
         id = TLObject.read(b, Long)
-        
+
         return GetChats(id=id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class GetChats(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.id, Long))
-        
+
         return b.getvalue()

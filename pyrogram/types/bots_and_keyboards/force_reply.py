@@ -44,7 +44,7 @@ class ForceReply(Object):
     def __init__(
         self,
         selective: bool = None,
-        placeholder: str = None
+        placeholder: str = None,
     ):
         super().__init__()
 
@@ -55,12 +55,12 @@ class ForceReply(Object):
     def read(b):
         return ForceReply(
             selective=b.selective,
-            placeholder=b.placeholder
+            placeholder=b.placeholder,
         )
 
     async def write(self, _: "pyrogram.Client"):
         return raw.types.ReplyKeyboardForceReply(
             single_use=True,
             selective=self.selective or None,
-            placeholder=self.placeholder or None
+            placeholder=self.placeholder or None,
         )

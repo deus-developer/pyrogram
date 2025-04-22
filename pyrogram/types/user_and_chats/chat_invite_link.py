@@ -17,12 +17,11 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Dict
 from typing import Optional
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
+from pyrogram import raw, types, utils
+
 from ..object import Object
 
 
@@ -70,7 +69,8 @@ class ChatInviteLink(Object):
     """
 
     def __init__(
-        self, *,
+        self,
+        *,
         invite_link: str,
         date: datetime,
         is_primary: bool = None,
@@ -82,7 +82,7 @@ class ChatInviteLink(Object):
         expire_date: datetime = None,
         member_limit: int = None,
         member_count: int = None,
-        pending_join_request_count: int = None
+        pending_join_request_count: int = None,
     ):
         super().__init__()
 
@@ -107,7 +107,10 @@ class ChatInviteLink(Object):
         if not isinstance(invite, raw.types.ChatInviteExported):
             return None
 
-        creator = types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=invite.admin_id))
+        creator = types.User.from_raw_tl(
+            client,
+            client.entity_cache.get_user(user_id=invite.admin_id),
+        )
 
         return ChatInviteLink(
             invite_link=invite.link,
@@ -121,5 +124,5 @@ class ChatInviteLink(Object):
             expire_date=utils.timestamp_to_datetime(invite.expire_date),
             member_limit=invite.usage_limit,
             member_count=invite.usage,
-            pending_join_request_count=invite.requested
+            pending_join_request_count=invite.requested,
         )

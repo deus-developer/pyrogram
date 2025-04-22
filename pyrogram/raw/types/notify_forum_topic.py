@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class NotifyForumTopic(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "top_msg_id"]
+    __slots__: list[str] = ["peer", "top_msg_id"]
 
-    ID = 0x226e6308
+    ID = 0x226E6308
     QUALNAME = "types.NotifyForumTopic"
 
     def __init__(self, *, peer: "raw.base.Peer", top_msg_id: int) -> None:
@@ -60,11 +62,11 @@ class NotifyForumTopic(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "NotifyForumTopic":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         top_msg_id = Int.read(b)
-        
+
         return NotifyForumTopic(peer=peer, top_msg_id=top_msg_id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class NotifyForumTopic(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.top_msg_id))
-        
+
         return b.getvalue()

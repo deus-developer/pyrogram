@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class InvokeWithApnsSecret(TLObject):  # type: ignore
+class InvokeWithApnsSecret(TLFunction["raw.base.X"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,9 +53,9 @@ class InvokeWithApnsSecret(TLObject):  # type: ignore
         Any object from :obj:`~pyrogram.raw.types`
     """
 
-    __slots__: List[str] = ["nonce", "secret", "query"]
+    __slots__: list[str] = ["nonce", "query", "secret"]
 
-    ID = 0x0dae54f8
+    ID = 0x0DAE54F8
     QUALNAME = "functions.InvokeWithApnsSecret"
 
     def __init__(self, *, nonce: str, secret: str, query: TLObject) -> None:
@@ -64,13 +66,13 @@ class InvokeWithApnsSecret(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InvokeWithApnsSecret":
         # No flags
-        
+
         nonce = String.read(b)
-        
+
         secret = String.read(b)
-        
+
         query = TLObject.read(b)
-        
+
         return InvokeWithApnsSecret(nonce=nonce, secret=secret, query=query)
 
     def write(self, *args) -> bytes:
@@ -78,11 +80,11 @@ class InvokeWithApnsSecret(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.nonce))
-        
+
         b.write(String(self.secret))
-        
+
         b.write(self.query.write())
-        
+
         return b.getvalue()

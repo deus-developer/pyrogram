@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetGiveawayInfo(TLObject):  # type: ignore
+class GetGiveawayInfo(TLFunction["raw.base.payments.GiveawayInfo"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class GetGiveawayInfo(TLObject):  # type: ignore
         :obj:`payments.GiveawayInfo <pyrogram.raw.base.payments.GiveawayInfo>`
     """
 
-    __slots__: List[str] = ["peer", "msg_id"]
+    __slots__: list[str] = ["msg_id", "peer"]
 
-    ID = 0xf4239425
+    ID = 0xF4239425
     QUALNAME = "functions.payments.GetGiveawayInfo"
 
     def __init__(self, *, peer: "raw.base.InputPeer", msg_id: int) -> None:
@@ -60,11 +62,11 @@ class GetGiveawayInfo(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetGiveawayInfo":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         msg_id = Int.read(b)
-        
+
         return GetGiveawayInfo(peer=peer, msg_id=msg_id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class GetGiveawayInfo(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.msg_id))
-        
+
         return b.getvalue()

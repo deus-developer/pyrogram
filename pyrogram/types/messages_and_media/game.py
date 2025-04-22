@@ -17,8 +17,8 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
+
 from ..object import Object
 
 
@@ -56,7 +56,7 @@ class Game(Object):
         short_name: str,
         description: str,
         photo: "types.Photo",
-        animation: "types.Animation" = None
+        animation: "types.Animation" = None,
     ):
         super().__init__(client)
 
@@ -69,7 +69,7 @@ class Game(Object):
 
     @staticmethod
     def from_raw_tl(client, message: "raw.types.Message") -> "Game":
-        game: "raw.types.Game" = message.media.game
+        game: raw.types.Game = message.media.game
         animation = None
 
         if game.document:
@@ -77,15 +77,18 @@ class Game(Object):
 
             file_name = getattr(
                 attributes.get(
-                    raw.types.DocumentAttributeFilename, None
-                ), "file_name", None
+                    raw.types.DocumentAttributeFilename,
+                    None,
+                ),
+                "file_name",
+                None,
             )
 
             animation = types.Animation.from_raw_tl(
                 client,
                 game.document,
                 attributes.get(raw.types.DocumentAttributeVideo, None),
-                file_name
+                file_name,
             )
 
         return Game(
@@ -95,5 +98,5 @@ class Game(Object):
             description=game.description,
             photo=types.Photo.from_raw_tl(client, game.photo),
             animation=animation,
-            client=client
+            client=client,
         )

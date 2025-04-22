@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ReceivedQueue(TLObject):  # type: ignore
+class ReceivedQueue(TLFunction[list[int]]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +46,9 @@ class ReceivedQueue(TLObject):  # type: ignore
         List of ``int`` ``64-bit``
     """
 
-    __slots__: List[str] = ["max_qts"]
+    __slots__: list[str] = ["max_qts"]
 
-    ID = 0x55a5bb66
+    ID = 0x55A5BB66
     QUALNAME = "functions.messages.ReceivedQueue"
 
     def __init__(self, *, max_qts: int) -> None:
@@ -56,9 +57,9 @@ class ReceivedQueue(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ReceivedQueue":
         # No flags
-        
+
         max_qts = Int.read(b)
-        
+
         return ReceivedQueue(max_qts=max_qts)
 
     def write(self, *args) -> bytes:
@@ -66,7 +67,7 @@ class ReceivedQueue(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.max_qts))
-        
+
         return b.getvalue()

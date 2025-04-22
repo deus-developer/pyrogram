@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ToggleTopPeers(TLObject):  # type: ignore
+class ToggleTopPeers(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class ToggleTopPeers(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["enabled"]
+    __slots__: list[str] = ["enabled"]
 
-    ID = 0x8514bdda
+    ID = 0x8514BDDA
     QUALNAME = "functions.contacts.ToggleTopPeers"
 
     def __init__(self, *, enabled: bool) -> None:
@@ -56,9 +58,9 @@ class ToggleTopPeers(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ToggleTopPeers":
         # No flags
-        
+
         enabled = Bool.read(b)
-        
+
         return ToggleTopPeers(enabled=enabled)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class ToggleTopPeers(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Bool(self.enabled))
-        
+
         return b.getvalue()

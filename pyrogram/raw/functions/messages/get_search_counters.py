@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetSearchCounters(TLObject):  # type: ignore
+class GetSearchCounters(TLFunction[list["raw.base.messages.SearchCounter"]]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +57,19 @@ class GetSearchCounters(TLObject):  # type: ignore
         List of :obj:`messages.SearchCounter <pyrogram.raw.base.messages.SearchCounter>`
     """
 
-    __slots__: List[str] = ["peer", "filters", "saved_peer_id", "top_msg_id"]
+    __slots__: list[str] = ["filters", "peer", "saved_peer_id", "top_msg_id"]
 
-    ID = 0x1bbcf300
+    ID = 0x1BBCF300
     QUALNAME = "functions.messages.GetSearchCounters"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", filters: List["raw.base.MessagesFilter"], saved_peer_id: "raw.base.InputPeer" = None, top_msg_id: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        filters: list["raw.base.MessagesFilter"],
+        saved_peer_id: "raw.base.InputPeer" = None,
+        top_msg_id: int | None = None,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.filters = filters  # Vector<MessagesFilter>
         self.saved_peer_id = saved_peer_id  # flags.2?InputPeer
@@ -67,17 +77,21 @@ class GetSearchCounters(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetSearchCounters":
-        
         flags = Int.read(b)
-        
+
         peer = TLObject.read(b)
-        
+
         saved_peer_id = TLObject.read(b) if flags & (1 << 2) else None
-        
+
         top_msg_id = Int.read(b) if flags & (1 << 0) else None
         filters = TLObject.read(b)
-        
-        return GetSearchCounters(peer=peer, filters=filters, saved_peer_id=saved_peer_id, top_msg_id=top_msg_id)
+
+        return GetSearchCounters(
+            peer=peer,
+            filters=filters,
+            saved_peer_id=saved_peer_id,
+            top_msg_id=top_msg_id,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -87,15 +101,15 @@ class GetSearchCounters(TLObject):  # type: ignore
         flags |= (1 << 2) if self.saved_peer_id is not None else 0
         flags |= (1 << 0) if self.top_msg_id is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         if self.saved_peer_id is not None:
             b.write(self.saved_peer_id.write())
-        
+
         if self.top_msg_id is not None:
             b.write(Int(self.top_msg_id))
-        
+
         b.write(Vector(self.filters))
-        
+
         return b.getvalue()

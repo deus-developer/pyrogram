@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +47,9 @@ class InputPaymentCredentialsApplePay(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["payment_data"]
+    __slots__: list[str] = ["payment_data"]
 
-    ID = 0xaa1c39f
+    ID = 0xAA1C39F
     QUALNAME = "types.InputPaymentCredentialsApplePay"
 
     def __init__(self, *, payment_data: "raw.base.DataJSON") -> None:
@@ -56,9 +58,9 @@ class InputPaymentCredentialsApplePay(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputPaymentCredentialsApplePay":
         # No flags
-        
+
         payment_data = TLObject.read(b)
-        
+
         return InputPaymentCredentialsApplePay(payment_data=payment_data)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class InputPaymentCredentialsApplePay(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.payment_data.write())
-        
+
         return b.getvalue()

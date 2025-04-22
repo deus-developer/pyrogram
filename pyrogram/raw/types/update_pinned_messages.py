@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,12 +60,20 @@ class UpdatePinnedMessages(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "messages", "pts", "pts_count", "pinned"]
+    __slots__: list[str] = ["messages", "peer", "pinned", "pts", "pts_count"]
 
-    ID = 0xed85eab5
+    ID = 0xED85EAB5
     QUALNAME = "types.UpdatePinnedMessages"
 
-    def __init__(self, *, peer: "raw.base.Peer", messages: List[int], pts: int, pts_count: int, pinned: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.Peer",
+        messages: list[int],
+        pts: int,
+        pts_count: int,
+        pinned: bool | None = None,
+    ) -> None:
         self.peer = peer  # Peer
         self.messages = messages  # Vector<int>
         self.pts = pts  # int
@@ -71,19 +82,24 @@ class UpdatePinnedMessages(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdatePinnedMessages":
-        
         flags = Int.read(b)
-        
+
         pinned = True if flags & (1 << 0) else False
         peer = TLObject.read(b)
-        
+
         messages = TLObject.read(b, Int)
-        
+
         pts = Int.read(b)
-        
+
         pts_count = Int.read(b)
-        
-        return UpdatePinnedMessages(peer=peer, messages=messages, pts=pts, pts_count=pts_count, pinned=pinned)
+
+        return UpdatePinnedMessages(
+            peer=peer,
+            messages=messages,
+            pts=pts,
+            pts_count=pts_count,
+            pinned=pinned,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -92,13 +108,13 @@ class UpdatePinnedMessages(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.pinned else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Vector(self.messages, Int))
-        
+
         b.write(Int(self.pts))
-        
+
         b.write(Int(self.pts_count))
-        
+
         return b.getvalue()

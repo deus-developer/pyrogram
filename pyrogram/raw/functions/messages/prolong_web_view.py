@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ProlongWebView(TLObject):  # type: ignore
+class ProlongWebView(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -60,12 +63,21 @@ class ProlongWebView(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["peer", "bot", "query_id", "silent", "reply_to", "send_as"]
+    __slots__: list[str] = ["bot", "peer", "query_id", "reply_to", "send_as", "silent"]
 
-    ID = 0xb0d81a83
+    ID = 0xB0D81A83
     QUALNAME = "functions.messages.ProlongWebView"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", bot: "raw.base.InputUser", query_id: int, silent: Optional[bool] = None, reply_to: "raw.base.InputReplyTo" = None, send_as: "raw.base.InputPeer" = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        bot: "raw.base.InputUser",
+        query_id: int,
+        silent: bool | None = None,
+        reply_to: "raw.base.InputReplyTo" = None,
+        send_as: "raw.base.InputPeer" = None,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.bot = bot  # InputUser
         self.query_id = query_id  # long
@@ -75,21 +87,27 @@ class ProlongWebView(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ProlongWebView":
-        
         flags = Int.read(b)
-        
+
         silent = True if flags & (1 << 5) else False
         peer = TLObject.read(b)
-        
+
         bot = TLObject.read(b)
-        
+
         query_id = Long.read(b)
-        
+
         reply_to = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         send_as = TLObject.read(b) if flags & (1 << 13) else None
-        
-        return ProlongWebView(peer=peer, bot=bot, query_id=query_id, silent=silent, reply_to=reply_to, send_as=send_as)
+
+        return ProlongWebView(
+            peer=peer,
+            bot=bot,
+            query_id=query_id,
+            silent=silent,
+            reply_to=reply_to,
+            send_as=send_as,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -100,17 +118,17 @@ class ProlongWebView(TLObject):  # type: ignore
         flags |= (1 << 0) if self.reply_to is not None else 0
         flags |= (1 << 13) if self.send_as is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(self.bot.write())
-        
+
         b.write(Long(self.query_id))
-        
+
         if self.reply_to is not None:
             b.write(self.reply_to.write())
-        
+
         if self.send_as is not None:
             b.write(self.send_as.write())
-        
+
         return b.getvalue()

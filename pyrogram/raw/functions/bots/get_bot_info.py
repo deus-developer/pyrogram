@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetBotInfo(TLObject):  # type: ignore
+class GetBotInfo(TLFunction["raw.base.bots.BotInfo"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class GetBotInfo(TLObject):  # type: ignore
         :obj:`bots.BotInfo <pyrogram.raw.base.bots.BotInfo>`
     """
 
-    __slots__: List[str] = ["lang_code", "bot"]
+    __slots__: list[str] = ["bot", "lang_code"]
 
-    ID = 0xdcd914fd
+    ID = 0xDCD914FD
     QUALNAME = "functions.bots.GetBotInfo"
 
     def __init__(self, *, lang_code: str, bot: "raw.base.InputUser" = None) -> None:
@@ -59,13 +62,12 @@ class GetBotInfo(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetBotInfo":
-        
         flags = Int.read(b)
-        
+
         bot = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         lang_code = String.read(b)
-        
+
         return GetBotInfo(lang_code=lang_code, bot=bot)
 
     def write(self, *args) -> bytes:
@@ -75,10 +77,10 @@ class GetBotInfo(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.bot is not None else 0
         b.write(Int(flags))
-        
+
         if self.bot is not None:
             b.write(self.bot.write())
-        
+
         b.write(String(self.lang_code))
-        
+
         return b.getvalue()

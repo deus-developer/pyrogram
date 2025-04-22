@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -63,12 +66,19 @@ class SponsoredMessages(TLObject):  # type: ignore
             channels.GetSponsoredMessages
     """
 
-    __slots__: List[str] = ["messages", "chats", "users", "posts_between"]
+    __slots__: list[str] = ["chats", "messages", "posts_between", "users"]
 
-    ID = 0xc9ee1d87
+    ID = 0xC9EE1D87
     QUALNAME = "types.messages.SponsoredMessages"
 
-    def __init__(self, *, messages: List["raw.base.SponsoredMessage"], chats: List["raw.base.Chat"], users: List["raw.base.User"], posts_between: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        messages: list["raw.base.SponsoredMessage"],
+        chats: list["raw.base.Chat"],
+        users: list["raw.base.User"],
+        posts_between: int | None = None,
+    ) -> None:
         self.messages = messages  # Vector<SponsoredMessage>
         self.chats = chats  # Vector<Chat>
         self.users = users  # Vector<User>
@@ -76,17 +86,21 @@ class SponsoredMessages(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SponsoredMessages":
-        
         flags = Int.read(b)
-        
+
         posts_between = Int.read(b) if flags & (1 << 0) else None
         messages = TLObject.read(b)
-        
+
         chats = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
-        return SponsoredMessages(messages=messages, chats=chats, users=users, posts_between=posts_between)
+
+        return SponsoredMessages(
+            messages=messages,
+            chats=chats,
+            users=users,
+            posts_between=posts_between,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -95,14 +109,14 @@ class SponsoredMessages(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.posts_between is not None else 0
         b.write(Int(flags))
-        
+
         if self.posts_between is not None:
             b.write(Int(self.posts_between))
-        
+
         b.write(Vector(self.messages))
-        
+
         b.write(Vector(self.chats))
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

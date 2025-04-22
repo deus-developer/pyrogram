@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -53,9 +54,9 @@ class CountriesListNotModified(TLObject):  # type: ignore
             help.GetCountriesList
     """
 
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
-    ID = 0x93cc1f32
+    ID = 0x93CC1F32
     QUALNAME = "types.help.CountriesListNotModified"
 
     def __init__(self) -> None:
@@ -64,7 +65,7 @@ class CountriesListNotModified(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "CountriesListNotModified":
         # No flags
-        
+
         return CountriesListNotModified()
 
     def write(self, *args) -> bytes:
@@ -72,5 +73,5 @@ class CountriesListNotModified(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         return b.getvalue()

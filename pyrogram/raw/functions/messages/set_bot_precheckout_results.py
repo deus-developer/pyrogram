@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetBotPrecheckoutResults(TLObject):  # type: ignore
+class SetBotPrecheckoutResults(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,24 +54,29 @@ class SetBotPrecheckoutResults(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["query_id", "success", "error"]
+    __slots__: list[str] = ["error", "query_id", "success"]
 
-    ID = 0x9c2dd95
+    ID = 0x9C2DD95
     QUALNAME = "functions.messages.SetBotPrecheckoutResults"
 
-    def __init__(self, *, query_id: int, success: Optional[bool] = None, error: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        query_id: int,
+        success: bool | None = None,
+        error: str | None = None,
+    ) -> None:
         self.query_id = query_id  # long
         self.success = success  # flags.1?true
         self.error = error  # flags.0?string
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetBotPrecheckoutResults":
-        
         flags = Int.read(b)
-        
+
         success = True if flags & (1 << 1) else False
         query_id = Long.read(b)
-        
+
         error = String.read(b) if flags & (1 << 0) else None
         return SetBotPrecheckoutResults(query_id=query_id, success=success, error=error)
 
@@ -80,10 +88,10 @@ class SetBotPrecheckoutResults(TLObject):  # type: ignore
         flags |= (1 << 1) if self.success else 0
         flags |= (1 << 0) if self.error is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.query_id))
-        
+
         if self.error is not None:
             b.write(String(self.error))
-        
+
         return b.getvalue()

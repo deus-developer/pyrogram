@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,23 +50,28 @@ class UpdateBroadcastRevenueTransactions(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "balances"]
+    __slots__: list[str] = ["balances", "peer"]
 
-    ID = 0xdfd961f5
+    ID = 0xDFD961F5
     QUALNAME = "types.UpdateBroadcastRevenueTransactions"
 
-    def __init__(self, *, peer: "raw.base.Peer", balances: "raw.base.BroadcastRevenueBalances") -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.Peer",
+        balances: "raw.base.BroadcastRevenueBalances",
+    ) -> None:
         self.peer = peer  # Peer
         self.balances = balances  # BroadcastRevenueBalances
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateBroadcastRevenueTransactions":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         balances = TLObject.read(b)
-        
+
         return UpdateBroadcastRevenueTransactions(peer=peer, balances=balances)
 
     def write(self, *args) -> bytes:
@@ -72,9 +79,9 @@ class UpdateBroadcastRevenueTransactions(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(self.balances.write())
-        
+
         return b.getvalue()

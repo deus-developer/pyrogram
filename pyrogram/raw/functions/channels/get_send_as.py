@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetSendAs(TLObject):  # type: ignore
+class GetSendAs(TLFunction["raw.base.channels.SendAsPeers"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetSendAs(TLObject):  # type: ignore
         :obj:`channels.SendAsPeers <pyrogram.raw.base.channels.SendAsPeers>`
     """
 
-    __slots__: List[str] = ["peer"]
+    __slots__: list[str] = ["peer"]
 
-    ID = 0xdc770ee
+    ID = 0xDC770EE
     QUALNAME = "functions.channels.GetSendAs"
 
     def __init__(self, *, peer: "raw.base.InputPeer") -> None:
@@ -56,9 +58,9 @@ class GetSendAs(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetSendAs":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         return GetSendAs(peer=peer)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class GetSendAs(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         return b.getvalue()

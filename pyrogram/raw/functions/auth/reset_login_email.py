@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ResetLoginEmail(TLObject):  # type: ignore
+class ResetLoginEmail(TLFunction["raw.base.auth.SentCode"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class ResetLoginEmail(TLObject):  # type: ignore
         :obj:`auth.SentCode <pyrogram.raw.base.auth.SentCode>`
     """
 
-    __slots__: List[str] = ["phone_number", "phone_code_hash"]
+    __slots__: list[str] = ["phone_code_hash", "phone_number"]
 
-    ID = 0x7e960193
+    ID = 0x7E960193
     QUALNAME = "functions.auth.ResetLoginEmail"
 
     def __init__(self, *, phone_number: str, phone_code_hash: str) -> None:
@@ -60,21 +62,24 @@ class ResetLoginEmail(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ResetLoginEmail":
         # No flags
-        
+
         phone_number = String.read(b)
-        
+
         phone_code_hash = String.read(b)
-        
-        return ResetLoginEmail(phone_number=phone_number, phone_code_hash=phone_code_hash)
+
+        return ResetLoginEmail(
+            phone_number=phone_number,
+            phone_code_hash=phone_code_hash,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.phone_number))
-        
+
         b.write(String(self.phone_code_hash))
-        
+
         return b.getvalue()

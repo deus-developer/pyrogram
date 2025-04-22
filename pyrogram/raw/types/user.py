@@ -17,11 +17,16 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -178,12 +183,98 @@ class User(TLObject):  # type: ignore
             contacts.ImportContactToken
     """
 
-    __slots__: List[str] = ["id", "is_self", "contact", "mutual_contact", "deleted", "bot", "bot_chat_history", "bot_nochats", "verified", "restricted", "min", "bot_inline_geo", "support", "scam", "apply_min_photo", "fake", "bot_attach_menu", "premium", "attach_menu_enabled", "bot_can_edit", "close_friend", "stories_hidden", "stories_unavailable", "contact_require_premium", "bot_business", "access_hash", "first_name", "last_name", "username", "phone", "photo", "status", "bot_info_version", "restriction_reason", "bot_inline_placeholder", "lang_code", "emoji_status", "usernames", "stories_max_id", "color", "profile_color"]
+    __slots__: list[str] = [
+        "access_hash",
+        "apply_min_photo",
+        "attach_menu_enabled",
+        "bot",
+        "bot_attach_menu",
+        "bot_business",
+        "bot_can_edit",
+        "bot_chat_history",
+        "bot_info_version",
+        "bot_inline_geo",
+        "bot_inline_placeholder",
+        "bot_nochats",
+        "close_friend",
+        "color",
+        "contact",
+        "contact_require_premium",
+        "deleted",
+        "emoji_status",
+        "fake",
+        "first_name",
+        "id",
+        "is_self",
+        "lang_code",
+        "last_name",
+        "min",
+        "mutual_contact",
+        "phone",
+        "photo",
+        "premium",
+        "profile_color",
+        "restricted",
+        "restriction_reason",
+        "scam",
+        "status",
+        "stories_hidden",
+        "stories_max_id",
+        "stories_unavailable",
+        "support",
+        "username",
+        "usernames",
+        "verified",
+    ]
 
-    ID = 0x215c4438
+    ID = 0x215C4438
     QUALNAME = "types.User"
 
-    def __init__(self, *, id: int, is_self: Optional[bool] = None, contact: Optional[bool] = None, mutual_contact: Optional[bool] = None, deleted: Optional[bool] = None, bot: Optional[bool] = None, bot_chat_history: Optional[bool] = None, bot_nochats: Optional[bool] = None, verified: Optional[bool] = None, restricted: Optional[bool] = None, min: Optional[bool] = None, bot_inline_geo: Optional[bool] = None, support: Optional[bool] = None, scam: Optional[bool] = None, apply_min_photo: Optional[bool] = None, fake: Optional[bool] = None, bot_attach_menu: Optional[bool] = None, premium: Optional[bool] = None, attach_menu_enabled: Optional[bool] = None, bot_can_edit: Optional[bool] = None, close_friend: Optional[bool] = None, stories_hidden: Optional[bool] = None, stories_unavailable: Optional[bool] = None, contact_require_premium: Optional[bool] = None, bot_business: Optional[bool] = None, access_hash: Optional[int] = None, first_name: Optional[str] = None, last_name: Optional[str] = None, username: Optional[str] = None, phone: Optional[str] = None, photo: "raw.base.UserProfilePhoto" = None, status: "raw.base.UserStatus" = None, bot_info_version: Optional[int] = None, restriction_reason: Optional[List["raw.base.RestrictionReason"]] = None, bot_inline_placeholder: Optional[str] = None, lang_code: Optional[str] = None, emoji_status: "raw.base.EmojiStatus" = None, usernames: Optional[List["raw.base.Username"]] = None, stories_max_id: Optional[int] = None, color: "raw.base.PeerColor" = None, profile_color: "raw.base.PeerColor" = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: int,
+        is_self: bool | None = None,
+        contact: bool | None = None,
+        mutual_contact: bool | None = None,
+        deleted: bool | None = None,
+        bot: bool | None = None,
+        bot_chat_history: bool | None = None,
+        bot_nochats: bool | None = None,
+        verified: bool | None = None,
+        restricted: bool | None = None,
+        min: bool | None = None,
+        bot_inline_geo: bool | None = None,
+        support: bool | None = None,
+        scam: bool | None = None,
+        apply_min_photo: bool | None = None,
+        fake: bool | None = None,
+        bot_attach_menu: bool | None = None,
+        premium: bool | None = None,
+        attach_menu_enabled: bool | None = None,
+        bot_can_edit: bool | None = None,
+        close_friend: bool | None = None,
+        stories_hidden: bool | None = None,
+        stories_unavailable: bool | None = None,
+        contact_require_premium: bool | None = None,
+        bot_business: bool | None = None,
+        access_hash: int | None = None,
+        first_name: str | None = None,
+        last_name: str | None = None,
+        username: str | None = None,
+        phone: str | None = None,
+        photo: "raw.base.UserProfilePhoto" = None,
+        status: "raw.base.UserStatus" = None,
+        bot_info_version: int | None = None,
+        restriction_reason: list["raw.base.RestrictionReason"] | None = None,
+        bot_inline_placeholder: str | None = None,
+        lang_code: str | None = None,
+        emoji_status: "raw.base.EmojiStatus" = None,
+        usernames: list["raw.base.Username"] | None = None,
+        stories_max_id: int | None = None,
+        color: "raw.base.PeerColor" = None,
+        profile_color: "raw.base.PeerColor" = None,
+    ) -> None:
         self.id = id  # long
         self.is_self = is_self  # flags.10?true
         self.contact = contact  # flags.11?true
@@ -217,7 +308,9 @@ class User(TLObject):  # type: ignore
         self.photo = photo  # flags.5?UserProfilePhoto
         self.status = status  # flags.6?UserStatus
         self.bot_info_version = bot_info_version  # flags.14?int
-        self.restriction_reason = restriction_reason  # flags.18?Vector<RestrictionReason>
+        self.restriction_reason = (
+            restriction_reason  # flags.18?Vector<RestrictionReason>
+        )
         self.bot_inline_placeholder = bot_inline_placeholder  # flags.19?string
         self.lang_code = lang_code  # flags.22?string
         self.emoji_status = emoji_status  # flags.30?EmojiStatus
@@ -228,9 +321,8 @@ class User(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "User":
-        
         flags = Int.read(b)
-        
+
         is_self = True if flags & (1 << 10) else False
         contact = True if flags & (1 << 11) else False
         mutual_contact = True if flags & (1 << 12) else False
@@ -250,7 +342,7 @@ class User(TLObject):  # type: ignore
         premium = True if flags & (1 << 28) else False
         attach_menu_enabled = True if flags & (1 << 29) else False
         flags2 = Int.read(b)
-        
+
         bot_can_edit = True if flags2 & (1 << 1) else False
         close_friend = True if flags2 & (1 << 2) else False
         stories_hidden = True if flags2 & (1 << 3) else False
@@ -258,31 +350,73 @@ class User(TLObject):  # type: ignore
         contact_require_premium = True if flags2 & (1 << 10) else False
         bot_business = True if flags2 & (1 << 11) else False
         id = Long.read(b)
-        
+
         access_hash = Long.read(b) if flags & (1 << 0) else None
         first_name = String.read(b) if flags & (1 << 1) else None
         last_name = String.read(b) if flags & (1 << 2) else None
         username = String.read(b) if flags & (1 << 3) else None
         phone = String.read(b) if flags & (1 << 4) else None
         photo = TLObject.read(b) if flags & (1 << 5) else None
-        
+
         status = TLObject.read(b) if flags & (1 << 6) else None
-        
+
         bot_info_version = Int.read(b) if flags & (1 << 14) else None
         restriction_reason = TLObject.read(b) if flags & (1 << 18) else []
-        
+
         bot_inline_placeholder = String.read(b) if flags & (1 << 19) else None
         lang_code = String.read(b) if flags & (1 << 22) else None
         emoji_status = TLObject.read(b) if flags & (1 << 30) else None
-        
+
         usernames = TLObject.read(b) if flags2 & (1 << 0) else []
-        
+
         stories_max_id = Int.read(b) if flags2 & (1 << 5) else None
         color = TLObject.read(b) if flags2 & (1 << 8) else None
-        
+
         profile_color = TLObject.read(b) if flags2 & (1 << 9) else None
-        
-        return User(id=id, is_self=is_self, contact=contact, mutual_contact=mutual_contact, deleted=deleted, bot=bot, bot_chat_history=bot_chat_history, bot_nochats=bot_nochats, verified=verified, restricted=restricted, min=min, bot_inline_geo=bot_inline_geo, support=support, scam=scam, apply_min_photo=apply_min_photo, fake=fake, bot_attach_menu=bot_attach_menu, premium=premium, attach_menu_enabled=attach_menu_enabled, bot_can_edit=bot_can_edit, close_friend=close_friend, stories_hidden=stories_hidden, stories_unavailable=stories_unavailable, contact_require_premium=contact_require_premium, bot_business=bot_business, access_hash=access_hash, first_name=first_name, last_name=last_name, username=username, phone=phone, photo=photo, status=status, bot_info_version=bot_info_version, restriction_reason=restriction_reason, bot_inline_placeholder=bot_inline_placeholder, lang_code=lang_code, emoji_status=emoji_status, usernames=usernames, stories_max_id=stories_max_id, color=color, profile_color=profile_color)
+
+        return User(
+            id=id,
+            is_self=is_self,
+            contact=contact,
+            mutual_contact=mutual_contact,
+            deleted=deleted,
+            bot=bot,
+            bot_chat_history=bot_chat_history,
+            bot_nochats=bot_nochats,
+            verified=verified,
+            restricted=restricted,
+            min=min,
+            bot_inline_geo=bot_inline_geo,
+            support=support,
+            scam=scam,
+            apply_min_photo=apply_min_photo,
+            fake=fake,
+            bot_attach_menu=bot_attach_menu,
+            premium=premium,
+            attach_menu_enabled=attach_menu_enabled,
+            bot_can_edit=bot_can_edit,
+            close_friend=close_friend,
+            stories_hidden=stories_hidden,
+            stories_unavailable=stories_unavailable,
+            contact_require_premium=contact_require_premium,
+            bot_business=bot_business,
+            access_hash=access_hash,
+            first_name=first_name,
+            last_name=last_name,
+            username=username,
+            phone=phone,
+            photo=photo,
+            status=status,
+            bot_info_version=bot_info_version,
+            restriction_reason=restriction_reason,
+            bot_inline_placeholder=bot_inline_placeholder,
+            lang_code=lang_code,
+            emoji_status=emoji_status,
+            usernames=usernames,
+            stories_max_id=stories_max_id,
+            color=color,
+            profile_color=profile_color,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -332,55 +466,55 @@ class User(TLObject):  # type: ignore
         flags2 |= (1 << 8) if self.color is not None else 0
         flags2 |= (1 << 9) if self.profile_color is not None else 0
         b.write(Int(flags2))
-        
+
         b.write(Long(self.id))
-        
+
         if self.access_hash is not None:
             b.write(Long(self.access_hash))
-        
+
         if self.first_name is not None:
             b.write(String(self.first_name))
-        
+
         if self.last_name is not None:
             b.write(String(self.last_name))
-        
+
         if self.username is not None:
             b.write(String(self.username))
-        
+
         if self.phone is not None:
             b.write(String(self.phone))
-        
+
         if self.photo is not None:
             b.write(self.photo.write())
-        
+
         if self.status is not None:
             b.write(self.status.write())
-        
+
         if self.bot_info_version is not None:
             b.write(Int(self.bot_info_version))
-        
+
         if self.restriction_reason is not None:
             b.write(Vector(self.restriction_reason))
-        
+
         if self.bot_inline_placeholder is not None:
             b.write(String(self.bot_inline_placeholder))
-        
+
         if self.lang_code is not None:
             b.write(String(self.lang_code))
-        
+
         if self.emoji_status is not None:
             b.write(self.emoji_status.write())
-        
+
         if self.usernames is not None:
             b.write(Vector(self.usernames))
-        
+
         if self.stories_max_id is not None:
             b.write(Int(self.stories_max_id))
-        
+
         if self.color is not None:
             b.write(self.color.write())
-        
+
         if self.profile_color is not None:
             b.write(self.profile_color.write())
-        
+
         return b.getvalue()

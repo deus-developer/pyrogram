@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ImportBotAuthorization(TLObject):  # type: ignore
+class ImportBotAuthorization(TLFunction["raw.base.auth.Authorization"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +56,19 @@ class ImportBotAuthorization(TLObject):  # type: ignore
         :obj:`auth.Authorization <pyrogram.raw.base.auth.Authorization>`
     """
 
-    __slots__: List[str] = ["flags", "api_id", "api_hash", "bot_auth_token"]
+    __slots__: list[str] = ["api_hash", "api_id", "bot_auth_token", "flags"]
 
-    ID = 0x67a3ff2c
+    ID = 0x67A3FF2C
     QUALNAME = "functions.auth.ImportBotAuthorization"
 
-    def __init__(self, *, flags: int, api_id: int, api_hash: str, bot_auth_token: str) -> None:
+    def __init__(
+        self,
+        *,
+        flags: int,
+        api_id: int,
+        api_hash: str,
+        bot_auth_token: str,
+    ) -> None:
         self.flags = flags  # int
         self.api_id = api_id  # int
         self.api_hash = api_hash  # string
@@ -68,29 +77,34 @@ class ImportBotAuthorization(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ImportBotAuthorization":
         # No flags
-        
+
         flags = Int.read(b)
-        
+
         api_id = Int.read(b)
-        
+
         api_hash = String.read(b)
-        
+
         bot_auth_token = String.read(b)
-        
-        return ImportBotAuthorization(flags=flags, api_id=api_id, api_hash=api_hash, bot_auth_token=bot_auth_token)
+
+        return ImportBotAuthorization(
+            flags=flags,
+            api_id=api_id,
+            api_hash=api_hash,
+            bot_auth_token=bot_auth_token,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.flags))
-        
+
         b.write(Int(self.api_id))
-        
+
         b.write(String(self.api_hash))
-        
+
         b.write(String(self.bot_auth_token))
-        
+
         return b.getvalue()

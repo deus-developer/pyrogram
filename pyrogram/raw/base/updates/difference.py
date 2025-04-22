@@ -4,8 +4,11 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type Difference = Union["raw.types.updates.Difference, raw.types.updates.DifferenceEmpty, raw.types.updates.DifferenceSlice, raw.types.updates.DifferenceTooLong"]
+type Difference = (
+    raw.types.updates.Difference
+    | raw.types.updates.DifferenceEmpty
+    | raw.types.updates.DifferenceSlice
+    | raw.types.updates.DifferenceTooLong
+)

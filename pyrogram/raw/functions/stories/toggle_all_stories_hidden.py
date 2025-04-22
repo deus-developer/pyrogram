@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ToggleAllStoriesHidden(TLObject):  # type: ignore
+class ToggleAllStoriesHidden(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class ToggleAllStoriesHidden(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["hidden"]
+    __slots__: list[str] = ["hidden"]
 
-    ID = 0x7c2557c4
+    ID = 0x7C2557C4
     QUALNAME = "functions.stories.ToggleAllStoriesHidden"
 
     def __init__(self, *, hidden: bool) -> None:
@@ -56,9 +58,9 @@ class ToggleAllStoriesHidden(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ToggleAllStoriesHidden":
         # No flags
-        
+
         hidden = Bool.read(b)
-        
+
         return ToggleAllStoriesHidden(hidden=hidden)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class ToggleAllStoriesHidden(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Bool(self.hidden))
-        
+
         return b.getvalue()

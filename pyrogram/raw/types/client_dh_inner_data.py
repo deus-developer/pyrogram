@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Int128,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +58,19 @@ class ClientDHInnerData(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["nonce", "server_nonce", "retry_id", "g_b"]
+    __slots__: list[str] = ["g_b", "nonce", "retry_id", "server_nonce"]
 
-    ID = 0x6643b654
+    ID = 0x6643B654
     QUALNAME = "types.ClientDHInnerData"
 
-    def __init__(self, *, nonce: int, server_nonce: int, retry_id: int, g_b: bytes) -> None:
+    def __init__(
+        self,
+        *,
+        nonce: int,
+        server_nonce: int,
+        retry_id: int,
+        g_b: bytes,
+    ) -> None:
         self.nonce = nonce  # int128
         self.server_nonce = server_nonce  # int128
         self.retry_id = retry_id  # long
@@ -68,29 +79,34 @@ class ClientDHInnerData(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ClientDHInnerData":
         # No flags
-        
+
         nonce = Int128.read(b)
-        
+
         server_nonce = Int128.read(b)
-        
+
         retry_id = Long.read(b)
-        
+
         g_b = Bytes.read(b)
-        
-        return ClientDHInnerData(nonce=nonce, server_nonce=server_nonce, retry_id=retry_id, g_b=g_b)
+
+        return ClientDHInnerData(
+            nonce=nonce,
+            server_nonce=server_nonce,
+            retry_id=retry_id,
+            g_b=g_b,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int128(self.nonce))
-        
+
         b.write(Int128(self.server_nonce))
-        
+
         b.write(Long(self.retry_id))
-        
+
         b.write(Bytes(self.g_b))
-        
+
         return b.getvalue()

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetPrivacy(TLObject):  # type: ignore
+class SetPrivacy(TLFunction["raw.base.account.PrivacyRules"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +51,28 @@ class SetPrivacy(TLObject):  # type: ignore
         :obj:`account.PrivacyRules <pyrogram.raw.base.account.PrivacyRules>`
     """
 
-    __slots__: List[str] = ["key", "rules"]
+    __slots__: list[str] = ["key", "rules"]
 
-    ID = 0xc9f81ce8
+    ID = 0xC9F81CE8
     QUALNAME = "functions.account.SetPrivacy"
 
-    def __init__(self, *, key: "raw.base.InputPrivacyKey", rules: List["raw.base.InputPrivacyRule"]) -> None:
+    def __init__(
+        self,
+        *,
+        key: "raw.base.InputPrivacyKey",
+        rules: list["raw.base.InputPrivacyRule"],
+    ) -> None:
         self.key = key  # InputPrivacyKey
         self.rules = rules  # Vector<InputPrivacyRule>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetPrivacy":
         # No flags
-        
+
         key = TLObject.read(b)
-        
+
         rules = TLObject.read(b)
-        
+
         return SetPrivacy(key=key, rules=rules)
 
     def write(self, *args) -> bytes:
@@ -72,9 +80,9 @@ class SetPrivacy(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.key.write())
-        
+
         b.write(Vector(self.rules))
-        
+
         return b.getvalue()

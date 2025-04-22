@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,9 +55,9 @@ class TextUrl(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["text", "url", "webpage_id"]
+    __slots__: list[str] = ["text", "url", "webpage_id"]
 
-    ID = 0x3c2884c1
+    ID = 0x3C2884C1
     QUALNAME = "types.TextUrl"
 
     def __init__(self, *, text: "raw.base.RichText", url: str, webpage_id: int) -> None:
@@ -64,13 +68,13 @@ class TextUrl(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "TextUrl":
         # No flags
-        
+
         text = TLObject.read(b)
-        
+
         url = String.read(b)
-        
+
         webpage_id = Long.read(b)
-        
+
         return TextUrl(text=text, url=url, webpage_id=webpage_id)
 
     def write(self, *args) -> bytes:
@@ -78,11 +82,11 @@ class TextUrl(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.text.write())
-        
+
         b.write(String(self.url))
-        
+
         b.write(Long(self.webpage_id))
-        
+
         return b.getvalue()

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +51,9 @@ class UpdateChannelViewForumAsMessages(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["channel_id", "enabled"]
+    __slots__: list[str] = ["channel_id", "enabled"]
 
-    ID = 0x7b68920
+    ID = 0x7B68920
     QUALNAME = "types.UpdateChannelViewForumAsMessages"
 
     def __init__(self, *, channel_id: int, enabled: bool) -> None:
@@ -60,11 +63,11 @@ class UpdateChannelViewForumAsMessages(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateChannelViewForumAsMessages":
         # No flags
-        
+
         channel_id = Long.read(b)
-        
+
         enabled = Bool.read(b)
-        
+
         return UpdateChannelViewForumAsMessages(channel_id=channel_id, enabled=enabled)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class UpdateChannelViewForumAsMessages(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.channel_id))
-        
+
         b.write(Bool(self.enabled))
-        
+
         return b.getvalue()

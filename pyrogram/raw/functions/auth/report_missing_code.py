@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ReportMissingCode(TLObject):  # type: ignore
+class ReportMissingCode(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,9 +53,9 @@ class ReportMissingCode(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["phone_number", "phone_code_hash", "mnc"]
+    __slots__: list[str] = ["mnc", "phone_code_hash", "phone_number"]
 
-    ID = 0xcb9deff6
+    ID = 0xCB9DEFF6
     QUALNAME = "functions.auth.ReportMissingCode"
 
     def __init__(self, *, phone_number: str, phone_code_hash: str, mnc: str) -> None:
@@ -64,25 +66,29 @@ class ReportMissingCode(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ReportMissingCode":
         # No flags
-        
+
         phone_number = String.read(b)
-        
+
         phone_code_hash = String.read(b)
-        
+
         mnc = String.read(b)
-        
-        return ReportMissingCode(phone_number=phone_number, phone_code_hash=phone_code_hash, mnc=mnc)
+
+        return ReportMissingCode(
+            phone_number=phone_number,
+            phone_code_hash=phone_code_hash,
+            mnc=mnc,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.phone_number))
-        
+
         b.write(String(self.phone_code_hash))
-        
+
         b.write(String(self.mnc))
-        
+
         return b.getvalue()

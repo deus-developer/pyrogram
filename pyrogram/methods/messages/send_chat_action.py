@@ -16,18 +16,17 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
-from pyrogram import raw, enums
+from pyrogram import enums, raw
 
 
 class SendChatAction:
     async def send_chat_action(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         action: "enums.ChatAction",
-        business_connection_id: str = None
+        business_connection_id: str = None,
     ) -> bool:
         """Tell the other party that something is happening on your side.
 
@@ -68,7 +67,6 @@ class SendChatAction:
                 # Cancel any current chat action
                 await app.send_chat_action(chat_id, enums.ChatAction.CANCEL)
         """
-
         action_name = action.name.lower()
 
         if "upload" in action_name or "history" in action_name:
@@ -79,7 +77,7 @@ class SendChatAction:
         return await self.invoke(
             raw.functions.messages.SetTyping(
                 peer=await self.resolve_peer(chat_id),
-                action=action
+                action=action,
             ),
-            business_connection_id=business_connection_id
+            business_connection_id=business_connection_id,
         )

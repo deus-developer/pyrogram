@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,20 +50,24 @@ class PeerColor(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["color", "background_emoji_id"]
+    __slots__: list[str] = ["background_emoji_id", "color"]
 
-    ID = 0xb54b5acf
+    ID = 0xB54B5ACF
     QUALNAME = "types.PeerColor"
 
-    def __init__(self, *, color: Optional[int] = None, background_emoji_id: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        color: int | None = None,
+        background_emoji_id: int | None = None,
+    ) -> None:
         self.color = color  # flags.0?int
         self.background_emoji_id = background_emoji_id  # flags.1?long
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PeerColor":
-        
         flags = Int.read(b)
-        
+
         color = Int.read(b) if flags & (1 << 0) else None
         background_emoji_id = Long.read(b) if flags & (1 << 1) else None
         return PeerColor(color=color, background_emoji_id=background_emoji_id)
@@ -74,11 +80,11 @@ class PeerColor(TLObject):  # type: ignore
         flags |= (1 << 0) if self.color is not None else 0
         flags |= (1 << 1) if self.background_emoji_id is not None else 0
         b.write(Int(flags))
-        
+
         if self.color is not None:
             b.write(Int(self.color))
-        
+
         if self.background_emoji_id is not None:
             b.write(Long(self.background_emoji_id))
-        
+
         return b.getvalue()

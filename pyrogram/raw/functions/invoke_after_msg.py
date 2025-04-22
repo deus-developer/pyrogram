@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class InvokeAfterMsg(TLObject):  # type: ignore
+class InvokeAfterMsg(TLFunction["raw.base.X"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class InvokeAfterMsg(TLObject):  # type: ignore
         Any object from :obj:`~pyrogram.raw.types`
     """
 
-    __slots__: List[str] = ["msg_id", "query"]
+    __slots__: list[str] = ["msg_id", "query"]
 
-    ID = 0xcb9f372d
+    ID = 0xCB9F372D
     QUALNAME = "functions.InvokeAfterMsg"
 
     def __init__(self, *, msg_id: int, query: TLObject) -> None:
@@ -60,11 +62,11 @@ class InvokeAfterMsg(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InvokeAfterMsg":
         # No flags
-        
+
         msg_id = Long.read(b)
-        
+
         query = TLObject.read(b)
-        
+
         return InvokeAfterMsg(msg_id=msg_id, query=query)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class InvokeAfterMsg(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.msg_id))
-        
+
         b.write(self.query.write())
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetEmojiKeywordsDifference(TLObject):  # type: ignore
+class GetEmojiKeywordsDifference(TLFunction["raw.base.EmojiKeywordsDifference"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class GetEmojiKeywordsDifference(TLObject):  # type: ignore
         :obj:`EmojiKeywordsDifference <pyrogram.raw.base.EmojiKeywordsDifference>`
     """
 
-    __slots__: List[str] = ["lang_code", "from_version"]
+    __slots__: list[str] = ["from_version", "lang_code"]
 
-    ID = 0x1508b6af
+    ID = 0x1508B6AF
     QUALNAME = "functions.messages.GetEmojiKeywordsDifference"
 
     def __init__(self, *, lang_code: str, from_version: int) -> None:
@@ -60,21 +62,24 @@ class GetEmojiKeywordsDifference(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetEmojiKeywordsDifference":
         # No flags
-        
+
         lang_code = String.read(b)
-        
+
         from_version = Int.read(b)
-        
-        return GetEmojiKeywordsDifference(lang_code=lang_code, from_version=from_version)
+
+        return GetEmojiKeywordsDifference(
+            lang_code=lang_code,
+            from_version=from_version,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.lang_code))
-        
+
         b.write(Int(self.from_version))
-        
+
         return b.getvalue()

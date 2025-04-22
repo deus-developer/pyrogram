@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetTmpPassword(TLObject):  # type: ignore
+class GetTmpPassword(TLFunction["raw.base.account.TmpPassword"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,28 @@ class GetTmpPassword(TLObject):  # type: ignore
         :obj:`account.TmpPassword <pyrogram.raw.base.account.TmpPassword>`
     """
 
-    __slots__: List[str] = ["password", "period"]
+    __slots__: list[str] = ["password", "period"]
 
-    ID = 0x449e0b51
+    ID = 0x449E0B51
     QUALNAME = "functions.account.GetTmpPassword"
 
-    def __init__(self, *, password: "raw.base.InputCheckPasswordSRP", period: int) -> None:
+    def __init__(
+        self,
+        *,
+        password: "raw.base.InputCheckPasswordSRP",
+        period: int,
+    ) -> None:
         self.password = password  # InputCheckPasswordSRP
         self.period = period  # int
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetTmpPassword":
         # No flags
-        
+
         password = TLObject.read(b)
-        
+
         period = Int.read(b)
-        
+
         return GetTmpPassword(password=password, period=period)
 
     def write(self, *args) -> bytes:
@@ -72,9 +79,9 @@ class GetTmpPassword(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.password.write())
-        
+
         b.write(Int(self.period))
-        
+
         return b.getvalue()

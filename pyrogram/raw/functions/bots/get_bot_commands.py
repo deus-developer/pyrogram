@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetBotCommands(TLObject):  # type: ignore
+class GetBotCommands(TLFunction[list["raw.base.BotCommand"]]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class GetBotCommands(TLObject):  # type: ignore
         List of :obj:`BotCommand <pyrogram.raw.base.BotCommand>`
     """
 
-    __slots__: List[str] = ["scope", "lang_code"]
+    __slots__: list[str] = ["lang_code", "scope"]
 
-    ID = 0xe34c0dd6
+    ID = 0xE34C0DD6
     QUALNAME = "functions.bots.GetBotCommands"
 
     def __init__(self, *, scope: "raw.base.BotCommandScope", lang_code: str) -> None:
@@ -60,11 +63,11 @@ class GetBotCommands(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetBotCommands":
         # No flags
-        
+
         scope = TLObject.read(b)
-        
+
         lang_code = String.read(b)
-        
+
         return GetBotCommands(scope=scope, lang_code=lang_code)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class GetBotCommands(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.scope.write())
-        
+
         b.write(String(self.lang_code))
-        
+
         return b.getvalue()

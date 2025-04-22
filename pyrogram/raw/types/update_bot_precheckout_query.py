@@ -17,11 +17,16 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -63,12 +68,30 @@ class UpdateBotPrecheckoutQuery(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["query_id", "user_id", "payload", "currency", "total_amount", "info", "shipping_option_id"]
+    __slots__: list[str] = [
+        "currency",
+        "info",
+        "payload",
+        "query_id",
+        "shipping_option_id",
+        "total_amount",
+        "user_id",
+    ]
 
-    ID = 0x8caa9a96
+    ID = 0x8CAA9A96
     QUALNAME = "types.UpdateBotPrecheckoutQuery"
 
-    def __init__(self, *, query_id: int, user_id: int, payload: bytes, currency: str, total_amount: int, info: "raw.base.PaymentRequestedInfo" = None, shipping_option_id: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        query_id: int,
+        user_id: int,
+        payload: bytes,
+        currency: str,
+        total_amount: int,
+        info: "raw.base.PaymentRequestedInfo" = None,
+        shipping_option_id: str | None = None,
+    ) -> None:
         self.query_id = query_id  # long
         self.user_id = user_id  # long
         self.payload = payload  # bytes
@@ -79,23 +102,30 @@ class UpdateBotPrecheckoutQuery(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateBotPrecheckoutQuery":
-        
         flags = Int.read(b)
-        
+
         query_id = Long.read(b)
-        
+
         user_id = Long.read(b)
-        
+
         payload = Bytes.read(b)
-        
+
         info = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         shipping_option_id = String.read(b) if flags & (1 << 1) else None
         currency = String.read(b)
-        
+
         total_amount = Long.read(b)
-        
-        return UpdateBotPrecheckoutQuery(query_id=query_id, user_id=user_id, payload=payload, currency=currency, total_amount=total_amount, info=info, shipping_option_id=shipping_option_id)
+
+        return UpdateBotPrecheckoutQuery(
+            query_id=query_id,
+            user_id=user_id,
+            payload=payload,
+            currency=currency,
+            total_amount=total_amount,
+            info=info,
+            shipping_option_id=shipping_option_id,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -105,21 +135,21 @@ class UpdateBotPrecheckoutQuery(TLObject):  # type: ignore
         flags |= (1 << 0) if self.info is not None else 0
         flags |= (1 << 1) if self.shipping_option_id is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.query_id))
-        
+
         b.write(Long(self.user_id))
-        
+
         b.write(Bytes(self.payload))
-        
+
         if self.info is not None:
             b.write(self.info.write())
-        
+
         if self.shipping_option_id is not None:
             b.write(String(self.shipping_option_id))
-        
+
         b.write(String(self.currency))
-        
+
         b.write(Long(self.total_amount))
-        
+
         return b.getvalue()

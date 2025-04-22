@@ -17,11 +17,16 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -67,12 +72,20 @@ class StarsStatus(TLObject):  # type: ignore
             payments.GetStarsTransactions
     """
 
-    __slots__: List[str] = ["balance", "history", "chats", "users", "next_offset"]
+    __slots__: list[str] = ["balance", "chats", "history", "next_offset", "users"]
 
-    ID = 0x8cf4ee60
+    ID = 0x8CF4EE60
     QUALNAME = "types.payments.StarsStatus"
 
-    def __init__(self, *, balance: int, history: List["raw.base.StarsTransaction"], chats: List["raw.base.Chat"], users: List["raw.base.User"], next_offset: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        balance: int,
+        history: list["raw.base.StarsTransaction"],
+        chats: list["raw.base.Chat"],
+        users: list["raw.base.User"],
+        next_offset: str | None = None,
+    ) -> None:
         self.balance = balance  # long
         self.history = history  # Vector<StarsTransaction>
         self.chats = chats  # Vector<Chat>
@@ -81,19 +94,24 @@ class StarsStatus(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "StarsStatus":
-        
         flags = Int.read(b)
-        
+
         balance = Long.read(b)
-        
+
         history = TLObject.read(b)
-        
+
         next_offset = String.read(b) if flags & (1 << 0) else None
         chats = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
-        return StarsStatus(balance=balance, history=history, chats=chats, users=users, next_offset=next_offset)
+
+        return StarsStatus(
+            balance=balance,
+            history=history,
+            chats=chats,
+            users=users,
+            next_offset=next_offset,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -102,16 +120,16 @@ class StarsStatus(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.next_offset is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.balance))
-        
+
         b.write(Vector(self.history))
-        
+
         if self.next_offset is not None:
             b.write(String(self.next_offset))
-        
+
         b.write(Vector(self.chats))
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

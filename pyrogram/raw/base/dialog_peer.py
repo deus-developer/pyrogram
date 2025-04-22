@@ -4,8 +4,6 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type DialogPeer = Union["raw.types.DialogPeer, raw.types.DialogPeerFolder"]
+type DialogPeer = raw.types.DialogPeer | raw.types.DialogPeerFolder

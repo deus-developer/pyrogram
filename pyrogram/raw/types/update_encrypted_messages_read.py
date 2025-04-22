@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,9 +52,9 @@ class UpdateEncryptedMessagesRead(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["chat_id", "max_date", "date"]
+    __slots__: list[str] = ["chat_id", "date", "max_date"]
 
-    ID = 0x38fe25b7
+    ID = 0x38FE25B7
     QUALNAME = "types.UpdateEncryptedMessagesRead"
 
     def __init__(self, *, chat_id: int, max_date: int, date: int) -> None:
@@ -64,25 +65,29 @@ class UpdateEncryptedMessagesRead(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateEncryptedMessagesRead":
         # No flags
-        
+
         chat_id = Int.read(b)
-        
+
         max_date = Int.read(b)
-        
+
         date = Int.read(b)
-        
-        return UpdateEncryptedMessagesRead(chat_id=chat_id, max_date=max_date, date=date)
+
+        return UpdateEncryptedMessagesRead(
+            chat_id=chat_id,
+            max_date=max_date,
+            date=date,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.chat_id))
-        
+
         b.write(Int(self.max_date))
-        
+
         b.write(Int(self.date))
-        
+
         return b.getvalue()

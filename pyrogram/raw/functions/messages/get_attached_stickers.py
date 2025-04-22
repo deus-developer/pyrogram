@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetAttachedStickers(TLObject):  # type: ignore
+class GetAttachedStickers(TLFunction[list["raw.base.StickerSetCovered"]]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetAttachedStickers(TLObject):  # type: ignore
         List of :obj:`StickerSetCovered <pyrogram.raw.base.StickerSetCovered>`
     """
 
-    __slots__: List[str] = ["media"]
+    __slots__: list[str] = ["media"]
 
-    ID = 0xcc5b67cc
+    ID = 0xCC5B67CC
     QUALNAME = "functions.messages.GetAttachedStickers"
 
     def __init__(self, *, media: "raw.base.InputStickeredMedia") -> None:
@@ -56,9 +58,9 @@ class GetAttachedStickers(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetAttachedStickers":
         # No flags
-        
+
         media = TLObject.read(b)
-        
+
         return GetAttachedStickers(media=media)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class GetAttachedStickers(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.media.write())
-        
+
         return b.getvalue()

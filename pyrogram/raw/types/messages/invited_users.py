@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -59,23 +62,28 @@ class InvitedUsers(TLObject):  # type: ignore
             channels.InviteToChannel
     """
 
-    __slots__: List[str] = ["updates", "missing_invitees"]
+    __slots__: list[str] = ["missing_invitees", "updates"]
 
-    ID = 0x7f5defa6
+    ID = 0x7F5DEFA6
     QUALNAME = "types.messages.InvitedUsers"
 
-    def __init__(self, *, updates: "raw.base.Updates", missing_invitees: List["raw.base.MissingInvitee"]) -> None:
+    def __init__(
+        self,
+        *,
+        updates: "raw.base.Updates",
+        missing_invitees: list["raw.base.MissingInvitee"],
+    ) -> None:
         self.updates = updates  # Updates
         self.missing_invitees = missing_invitees  # Vector<MissingInvitee>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InvitedUsers":
         # No flags
-        
+
         updates = TLObject.read(b)
-        
+
         missing_invitees = TLObject.read(b)
-        
+
         return InvitedUsers(updates=updates, missing_invitees=missing_invitees)
 
     def write(self, *args) -> bytes:
@@ -83,9 +91,9 @@ class InvitedUsers(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.updates.write())
-        
+
         b.write(Vector(self.missing_invitees))
-        
+
         return b.getvalue()

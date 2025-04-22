@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,12 +63,18 @@ class AdminLogResults(TLObject):  # type: ignore
             channels.GetAdminLog
     """
 
-    __slots__: List[str] = ["events", "chats", "users"]
+    __slots__: list[str] = ["chats", "events", "users"]
 
-    ID = 0xed8af74d
+    ID = 0xED8AF74D
     QUALNAME = "types.channels.AdminLogResults"
 
-    def __init__(self, *, events: List["raw.base.ChannelAdminLogEvent"], chats: List["raw.base.Chat"], users: List["raw.base.User"]) -> None:
+    def __init__(
+        self,
+        *,
+        events: list["raw.base.ChannelAdminLogEvent"],
+        chats: list["raw.base.Chat"],
+        users: list["raw.base.User"],
+    ) -> None:
         self.events = events  # Vector<ChannelAdminLogEvent>
         self.chats = chats  # Vector<Chat>
         self.users = users  # Vector<User>
@@ -73,13 +82,13 @@ class AdminLogResults(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "AdminLogResults":
         # No flags
-        
+
         events = TLObject.read(b)
-        
+
         chats = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
+
         return AdminLogResults(events=events, chats=chats, users=users)
 
     def write(self, *args) -> bytes:
@@ -87,11 +96,11 @@ class AdminLogResults(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.events))
-        
+
         b.write(Vector(self.chats))
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

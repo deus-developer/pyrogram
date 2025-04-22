@@ -211,9 +211,11 @@ def start(format: bool = False):
         schema = (f1.read() + f2.read() + f3.read()).splitlines()
 
     with open(HOME_PATH / "template/type.txt") as f1, \
-        open(HOME_PATH / "template/combinator.txt") as f2:
+        open(HOME_PATH / "template/combinator.txt") as f2, \
+        open(HOME_PATH / "template/combinator_function.txt") as f3:
         type_tmpl = f1.read()
         combinator_tmpl = f2.read()
+        combinator_function_tmpl = f3.read()
 
     with open(NOTICE_PATH, encoding="utf-8") as f:
         notice = []
@@ -435,8 +437,10 @@ def start(format: bool = False):
         docstring += f"    Parameters:\n        " + \
                      (f"\n        ".join(docstring_args) if docstring_args else "No parameters required.\n")
 
+        function_returns_type_hint: str | None = None
         if c.section == "functions":
             docstring += "\n    Returns:\n        " + get_docstring_arg_type(c.qualtype)
+            function_returns_type_hint = get_type_hint(c.qualtype)
         else:
             references, count = get_references(c.qualname, "constructors")
 
@@ -542,7 +546,12 @@ def start(format: bool = False):
         slots = ", ".join([f'"{i[0]}"' for i in sorted_args])
         return_arguments = ", ".join([f"{i[0]}={i[0]}" for i in sorted_args])
 
-        compiled_combinator = combinator_tmpl.format(
+        if c.section == "functions":
+            tmpl = combinator_function_tmpl
+        else:
+            tmpl = combinator_tmpl
+
+        compiled_combinator = tmpl.format(
             notice=notice,
             warning=WARNING,
             name=c.name,
@@ -554,7 +563,8 @@ def start(format: bool = False):
             fields=fields,
             read_types=read_types,
             write_types=write_types,
-            return_arguments=return_arguments
+            return_arguments=return_arguments,
+            returns=function_returns_type_hint
         )
 
         directory = "types" if c.section == "types" else c.section

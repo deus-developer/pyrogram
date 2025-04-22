@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,9 +54,9 @@ class MessagePeerVote(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "option", "date"]
+    __slots__: list[str] = ["date", "option", "peer"]
 
-    ID = 0xb6cc2d5c
+    ID = 0xB6CC2D5C
     QUALNAME = "types.MessagePeerVote"
 
     def __init__(self, *, peer: "raw.base.Peer", option: bytes, date: int) -> None:
@@ -64,13 +67,13 @@ class MessagePeerVote(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessagePeerVote":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         option = Bytes.read(b)
-        
+
         date = Int.read(b)
-        
+
         return MessagePeerVote(peer=peer, option=option, date=date)
 
     def write(self, *args) -> bytes:
@@ -78,11 +81,11 @@ class MessagePeerVote(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Bytes(self.option))
-        
+
         b.write(Int(self.date))
-        
+
         return b.getvalue()

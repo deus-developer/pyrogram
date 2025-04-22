@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -64,12 +68,19 @@ class BoostsList(TLObject):  # type: ignore
             premium.GetUserBoosts
     """
 
-    __slots__: List[str] = ["count", "boosts", "users", "next_offset"]
+    __slots__: list[str] = ["boosts", "count", "next_offset", "users"]
 
-    ID = 0x86f8613c
+    ID = 0x86F8613C
     QUALNAME = "types.premium.BoostsList"
 
-    def __init__(self, *, count: int, boosts: List["raw.base.Boost"], users: List["raw.base.User"], next_offset: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        count: int,
+        boosts: list["raw.base.Boost"],
+        users: list["raw.base.User"],
+        next_offset: str | None = None,
+    ) -> None:
         self.count = count  # int
         self.boosts = boosts  # Vector<Boost>
         self.users = users  # Vector<User>
@@ -77,17 +88,21 @@ class BoostsList(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "BoostsList":
-        
         flags = Int.read(b)
-        
+
         count = Int.read(b)
-        
+
         boosts = TLObject.read(b)
-        
+
         next_offset = String.read(b) if flags & (1 << 0) else None
         users = TLObject.read(b)
-        
-        return BoostsList(count=count, boosts=boosts, users=users, next_offset=next_offset)
+
+        return BoostsList(
+            count=count,
+            boosts=boosts,
+            users=users,
+            next_offset=next_offset,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -96,14 +111,14 @@ class BoostsList(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.next_offset is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.count))
-        
+
         b.write(Vector(self.boosts))
-        
+
         if self.next_offset is not None:
             b.write(String(self.next_offset))
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

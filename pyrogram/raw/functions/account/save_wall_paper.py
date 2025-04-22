@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SaveWallPaper(TLObject):  # type: ignore
+class SaveWallPaper(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +54,18 @@ class SaveWallPaper(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["wallpaper", "unsave", "settings"]
+    __slots__: list[str] = ["settings", "unsave", "wallpaper"]
 
-    ID = 0x6c5a5b37
+    ID = 0x6C5A5B37
     QUALNAME = "functions.account.SaveWallPaper"
 
-    def __init__(self, *, wallpaper: "raw.base.InputWallPaper", unsave: bool, settings: "raw.base.WallPaperSettings") -> None:
+    def __init__(
+        self,
+        *,
+        wallpaper: "raw.base.InputWallPaper",
+        unsave: bool,
+        settings: "raw.base.WallPaperSettings",
+    ) -> None:
         self.wallpaper = wallpaper  # InputWallPaper
         self.unsave = unsave  # Bool
         self.settings = settings  # WallPaperSettings
@@ -64,13 +73,13 @@ class SaveWallPaper(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SaveWallPaper":
         # No flags
-        
+
         wallpaper = TLObject.read(b)
-        
+
         unsave = Bool.read(b)
-        
+
         settings = TLObject.read(b)
-        
+
         return SaveWallPaper(wallpaper=wallpaper, unsave=unsave, settings=settings)
 
     def write(self, *args) -> bytes:
@@ -78,11 +87,11 @@ class SaveWallPaper(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.wallpaper.write())
-        
+
         b.write(Bool(self.unsave))
-        
+
         b.write(self.settings.write())
-        
+
         return b.getvalue()

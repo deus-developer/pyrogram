@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -66,12 +68,32 @@ class PageTableCell(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["header", "align_center", "align_right", "valign_middle", "valign_bottom", "text", "colspan", "rowspan"]
+    __slots__: list[str] = [
+        "align_center",
+        "align_right",
+        "colspan",
+        "header",
+        "rowspan",
+        "text",
+        "valign_bottom",
+        "valign_middle",
+    ]
 
-    ID = 0x34566b6a
+    ID = 0x34566B6A
     QUALNAME = "types.PageTableCell"
 
-    def __init__(self, *, header: Optional[bool] = None, align_center: Optional[bool] = None, align_right: Optional[bool] = None, valign_middle: Optional[bool] = None, valign_bottom: Optional[bool] = None, text: "raw.base.RichText" = None, colspan: Optional[int] = None, rowspan: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        header: bool | None = None,
+        align_center: bool | None = None,
+        align_right: bool | None = None,
+        valign_middle: bool | None = None,
+        valign_bottom: bool | None = None,
+        text: "raw.base.RichText" = None,
+        colspan: int | None = None,
+        rowspan: int | None = None,
+    ) -> None:
         self.header = header  # flags.0?true
         self.align_center = align_center  # flags.3?true
         self.align_right = align_right  # flags.4?true
@@ -83,19 +105,27 @@ class PageTableCell(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PageTableCell":
-        
         flags = Int.read(b)
-        
+
         header = True if flags & (1 << 0) else False
         align_center = True if flags & (1 << 3) else False
         align_right = True if flags & (1 << 4) else False
         valign_middle = True if flags & (1 << 5) else False
         valign_bottom = True if flags & (1 << 6) else False
         text = TLObject.read(b) if flags & (1 << 7) else None
-        
+
         colspan = Int.read(b) if flags & (1 << 1) else None
         rowspan = Int.read(b) if flags & (1 << 2) else None
-        return PageTableCell(header=header, align_center=align_center, align_right=align_right, valign_middle=valign_middle, valign_bottom=valign_bottom, text=text, colspan=colspan, rowspan=rowspan)
+        return PageTableCell(
+            header=header,
+            align_center=align_center,
+            align_right=align_right,
+            valign_middle=valign_middle,
+            valign_bottom=valign_bottom,
+            text=text,
+            colspan=colspan,
+            rowspan=rowspan,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -111,14 +141,14 @@ class PageTableCell(TLObject):  # type: ignore
         flags |= (1 << 1) if self.colspan is not None else 0
         flags |= (1 << 2) if self.rowspan is not None else 0
         b.write(Int(flags))
-        
+
         if self.text is not None:
             b.write(self.text.write())
-        
+
         if self.colspan is not None:
             b.write(Int(self.colspan))
-        
+
         if self.rowspan is not None:
             b.write(Int(self.rowspan))
-        
+
         return b.getvalue()

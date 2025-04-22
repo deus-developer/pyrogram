@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SendInlineBotResult(TLObject):  # type: ignore
+class SendInlineBotResult(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -78,12 +82,40 @@ class SendInlineBotResult(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["peer", "random_id", "query_id", "id", "silent", "background", "clear_draft", "hide_via", "reply_to", "schedule_date", "send_as", "quick_reply_shortcut"]
+    __slots__: list[str] = [
+        "background",
+        "clear_draft",
+        "hide_via",
+        "id",
+        "peer",
+        "query_id",
+        "quick_reply_shortcut",
+        "random_id",
+        "reply_to",
+        "schedule_date",
+        "send_as",
+        "silent",
+    ]
 
-    ID = 0x3ebee86a
+    ID = 0x3EBEE86A
     QUALNAME = "functions.messages.SendInlineBotResult"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", random_id: int, query_id: int, id: str, silent: Optional[bool] = None, background: Optional[bool] = None, clear_draft: Optional[bool] = None, hide_via: Optional[bool] = None, reply_to: "raw.base.InputReplyTo" = None, schedule_date: Optional[int] = None, send_as: "raw.base.InputPeer" = None, quick_reply_shortcut: "raw.base.InputQuickReplyShortcut" = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        random_id: int,
+        query_id: int,
+        id: str,
+        silent: bool | None = None,
+        background: bool | None = None,
+        clear_draft: bool | None = None,
+        hide_via: bool | None = None,
+        reply_to: "raw.base.InputReplyTo" = None,
+        schedule_date: int | None = None,
+        send_as: "raw.base.InputPeer" = None,
+        quick_reply_shortcut: "raw.base.InputQuickReplyShortcut" = None,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.random_id = random_id  # long
         self.query_id = query_id  # long
@@ -95,33 +127,47 @@ class SendInlineBotResult(TLObject):  # type: ignore
         self.reply_to = reply_to  # flags.0?InputReplyTo
         self.schedule_date = schedule_date  # flags.10?int
         self.send_as = send_as  # flags.13?InputPeer
-        self.quick_reply_shortcut = quick_reply_shortcut  # flags.17?InputQuickReplyShortcut
+        self.quick_reply_shortcut = (
+            quick_reply_shortcut  # flags.17?InputQuickReplyShortcut
+        )
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SendInlineBotResult":
-        
         flags = Int.read(b)
-        
+
         silent = True if flags & (1 << 5) else False
         background = True if flags & (1 << 6) else False
         clear_draft = True if flags & (1 << 7) else False
         hide_via = True if flags & (1 << 11) else False
         peer = TLObject.read(b)
-        
+
         reply_to = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         random_id = Long.read(b)
-        
+
         query_id = Long.read(b)
-        
+
         id = String.read(b)
-        
+
         schedule_date = Int.read(b) if flags & (1 << 10) else None
         send_as = TLObject.read(b) if flags & (1 << 13) else None
-        
+
         quick_reply_shortcut = TLObject.read(b) if flags & (1 << 17) else None
-        
-        return SendInlineBotResult(peer=peer, random_id=random_id, query_id=query_id, id=id, silent=silent, background=background, clear_draft=clear_draft, hide_via=hide_via, reply_to=reply_to, schedule_date=schedule_date, send_as=send_as, quick_reply_shortcut=quick_reply_shortcut)
+
+        return SendInlineBotResult(
+            peer=peer,
+            random_id=random_id,
+            query_id=query_id,
+            id=id,
+            silent=silent,
+            background=background,
+            clear_draft=clear_draft,
+            hide_via=hide_via,
+            reply_to=reply_to,
+            schedule_date=schedule_date,
+            send_as=send_as,
+            quick_reply_shortcut=quick_reply_shortcut,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -137,25 +183,25 @@ class SendInlineBotResult(TLObject):  # type: ignore
         flags |= (1 << 13) if self.send_as is not None else 0
         flags |= (1 << 17) if self.quick_reply_shortcut is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         if self.reply_to is not None:
             b.write(self.reply_to.write())
-        
+
         b.write(Long(self.random_id))
-        
+
         b.write(Long(self.query_id))
-        
+
         b.write(String(self.id))
-        
+
         if self.schedule_date is not None:
             b.write(Int(self.schedule_date))
-        
+
         if self.send_as is not None:
             b.write(self.send_as.write())
-        
+
         if self.quick_reply_shortcut is not None:
             b.write(self.quick_reply_shortcut.write())
-        
+
         return b.getvalue()

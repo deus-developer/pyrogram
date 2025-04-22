@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +55,9 @@ class UrlAuthResultDefault(TLObject):  # type: ignore
             messages.AcceptUrlAuth
     """
 
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
-    ID = 0xa9d6db1f
+    ID = 0xA9D6DB1F
     QUALNAME = "types.UrlAuthResultDefault"
 
     def __init__(self) -> None:
@@ -65,7 +66,7 @@ class UrlAuthResultDefault(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UrlAuthResultDefault":
         # No flags
-        
+
         return UrlAuthResultDefault()
 
     def write(self, *args) -> bytes:
@@ -73,5 +74,5 @@ class UrlAuthResultDefault(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,33 +59,41 @@ class StoryStats(TLObject):  # type: ignore
             stats.GetStoryStats
     """
 
-    __slots__: List[str] = ["views_graph", "reactions_by_emotion_graph"]
+    __slots__: list[str] = ["reactions_by_emotion_graph", "views_graph"]
 
-    ID = 0x50cd067c
+    ID = 0x50CD067C
     QUALNAME = "types.stats.StoryStats"
 
-    def __init__(self, *, views_graph: "raw.base.StatsGraph", reactions_by_emotion_graph: "raw.base.StatsGraph") -> None:
+    def __init__(
+        self,
+        *,
+        views_graph: "raw.base.StatsGraph",
+        reactions_by_emotion_graph: "raw.base.StatsGraph",
+    ) -> None:
         self.views_graph = views_graph  # StatsGraph
         self.reactions_by_emotion_graph = reactions_by_emotion_graph  # StatsGraph
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "StoryStats":
         # No flags
-        
+
         views_graph = TLObject.read(b)
-        
+
         reactions_by_emotion_graph = TLObject.read(b)
-        
-        return StoryStats(views_graph=views_graph, reactions_by_emotion_graph=reactions_by_emotion_graph)
+
+        return StoryStats(
+            views_graph=views_graph,
+            reactions_by_emotion_graph=reactions_by_emotion_graph,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.views_graph.write())
-        
+
         b.write(self.reactions_by_emotion_graph.write())
-        
+
         return b.getvalue()

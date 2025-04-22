@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,20 +48,20 @@ class MessageActionSecureValuesSent(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["types"]
+    __slots__: list[str] = ["types"]
 
-    ID = 0xd95c6154
+    ID = 0xD95C6154
     QUALNAME = "types.MessageActionSecureValuesSent"
 
-    def __init__(self, *, types: List["raw.base.SecureValueType"]) -> None:
+    def __init__(self, *, types: list["raw.base.SecureValueType"]) -> None:
         self.types = types  # Vector<SecureValueType>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageActionSecureValuesSent":
         # No flags
-        
+
         types = TLObject.read(b)
-        
+
         return MessageActionSecureValuesSent(types=types)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class MessageActionSecureValuesSent(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.types))
-        
+
         return b.getvalue()

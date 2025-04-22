@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetChannels(TLObject):  # type: ignore
+class GetChannels(TLFunction["raw.base.messages.Chats"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,20 +48,20 @@ class GetChannels(TLObject):  # type: ignore
         :obj:`messages.Chats <pyrogram.raw.base.messages.Chats>`
     """
 
-    __slots__: List[str] = ["id"]
+    __slots__: list[str] = ["id"]
 
-    ID = 0xa7f6bbb
+    ID = 0xA7F6BBB
     QUALNAME = "functions.channels.GetChannels"
 
-    def __init__(self, *, id: List["raw.base.InputChannel"]) -> None:
+    def __init__(self, *, id: list["raw.base.InputChannel"]) -> None:
         self.id = id  # Vector<InputChannel>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetChannels":
         # No flags
-        
+
         id = TLObject.read(b)
-        
+
         return GetChannels(id=id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class GetChannels(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.id))
-        
+
         return b.getvalue()

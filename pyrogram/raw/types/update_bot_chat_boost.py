@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,12 +53,18 @@ class UpdateBotChatBoost(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "boost", "qts"]
+    __slots__: list[str] = ["boost", "peer", "qts"]
 
-    ID = 0x904dd49c
+    ID = 0x904DD49C
     QUALNAME = "types.UpdateBotChatBoost"
 
-    def __init__(self, *, peer: "raw.base.Peer", boost: "raw.base.Boost", qts: int) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.Peer",
+        boost: "raw.base.Boost",
+        qts: int,
+    ) -> None:
         self.peer = peer  # Peer
         self.boost = boost  # Boost
         self.qts = qts  # int
@@ -64,13 +72,13 @@ class UpdateBotChatBoost(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateBotChatBoost":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         boost = TLObject.read(b)
-        
+
         qts = Int.read(b)
-        
+
         return UpdateBotChatBoost(peer=peer, boost=boost, qts=qts)
 
     def write(self, *args) -> bytes:
@@ -78,11 +86,11 @@ class UpdateBotChatBoost(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(self.boost.write())
-        
+
         b.write(Int(self.qts))
-        
+
         return b.getvalue()

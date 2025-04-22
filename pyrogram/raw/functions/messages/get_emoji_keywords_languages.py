@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetEmojiKeywordsLanguages(TLObject):  # type: ignore
+class GetEmojiKeywordsLanguages(TLFunction[list["raw.base.EmojiLanguage"]]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,20 +49,20 @@ class GetEmojiKeywordsLanguages(TLObject):  # type: ignore
         List of :obj:`EmojiLanguage <pyrogram.raw.base.EmojiLanguage>`
     """
 
-    __slots__: List[str] = ["lang_codes"]
+    __slots__: list[str] = ["lang_codes"]
 
-    ID = 0x4e9963b2
+    ID = 0x4E9963B2
     QUALNAME = "functions.messages.GetEmojiKeywordsLanguages"
 
-    def __init__(self, *, lang_codes: List[str]) -> None:
+    def __init__(self, *, lang_codes: list[str]) -> None:
         self.lang_codes = lang_codes  # Vector<string>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetEmojiKeywordsLanguages":
         # No flags
-        
+
         lang_codes = TLObject.read(b, String)
-        
+
         return GetEmojiKeywordsLanguages(lang_codes=lang_codes)
 
     def write(self, *args) -> bytes:
@@ -66,7 +70,7 @@ class GetEmojiKeywordsLanguages(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.lang_codes, String))
-        
+
         return b.getvalue()

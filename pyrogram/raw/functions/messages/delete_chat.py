@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class DeleteChat(TLObject):  # type: ignore
+class DeleteChat(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class DeleteChat(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["chat_id"]
+    __slots__: list[str] = ["chat_id"]
 
-    ID = 0x5bd0ee50
+    ID = 0x5BD0EE50
     QUALNAME = "functions.messages.DeleteChat"
 
     def __init__(self, *, chat_id: int) -> None:
@@ -56,9 +58,9 @@ class DeleteChat(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DeleteChat":
         # No flags
-        
+
         chat_id = Long.read(b)
-        
+
         return DeleteChat(chat_id=chat_id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class DeleteChat(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.chat_id))
-        
+
         return b.getvalue()

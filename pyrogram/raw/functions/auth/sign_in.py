@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SignIn(TLObject):  # type: ignore
+class SignIn(TLFunction["raw.base.auth.Authorization"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +57,24 @@ class SignIn(TLObject):  # type: ignore
         :obj:`auth.Authorization <pyrogram.raw.base.auth.Authorization>`
     """
 
-    __slots__: List[str] = ["phone_number", "phone_code_hash", "phone_code", "email_verification"]
+    __slots__: list[str] = [
+        "email_verification",
+        "phone_code",
+        "phone_code_hash",
+        "phone_number",
+    ]
 
-    ID = 0x8d52a951
+    ID = 0x8D52A951
     QUALNAME = "functions.auth.SignIn"
 
-    def __init__(self, *, phone_number: str, phone_code_hash: str, phone_code: Optional[str] = None, email_verification: "raw.base.EmailVerification" = None) -> None:
+    def __init__(
+        self,
+        *,
+        phone_number: str,
+        phone_code_hash: str,
+        phone_code: str | None = None,
+        email_verification: "raw.base.EmailVerification" = None,
+    ) -> None:
         self.phone_number = phone_number  # string
         self.phone_code_hash = phone_code_hash  # string
         self.phone_code = phone_code  # flags.0?string
@@ -67,17 +82,21 @@ class SignIn(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SignIn":
-        
         flags = Int.read(b)
-        
+
         phone_number = String.read(b)
-        
+
         phone_code_hash = String.read(b)
-        
+
         phone_code = String.read(b) if flags & (1 << 0) else None
         email_verification = TLObject.read(b) if flags & (1 << 1) else None
-        
-        return SignIn(phone_number=phone_number, phone_code_hash=phone_code_hash, phone_code=phone_code, email_verification=email_verification)
+
+        return SignIn(
+            phone_number=phone_number,
+            phone_code_hash=phone_code_hash,
+            phone_code=phone_code,
+            email_verification=email_verification,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -87,15 +106,15 @@ class SignIn(TLObject):  # type: ignore
         flags |= (1 << 0) if self.phone_code is not None else 0
         flags |= (1 << 1) if self.email_verification is not None else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.phone_number))
-        
+
         b.write(String(self.phone_code_hash))
-        
+
         if self.phone_code is not None:
             b.write(String(self.phone_code))
-        
+
         if self.email_verification is not None:
             b.write(self.email_verification.write())
-        
+
         return b.getvalue()

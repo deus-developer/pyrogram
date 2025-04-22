@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class DeletePhoneCallHistory(TLObject):  # type: ignore
+class DeletePhoneCallHistory(TLFunction["raw.base.messages.AffectedFoundMessages"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,19 +46,18 @@ class DeletePhoneCallHistory(TLObject):  # type: ignore
         :obj:`messages.AffectedFoundMessages <pyrogram.raw.base.messages.AffectedFoundMessages>`
     """
 
-    __slots__: List[str] = ["revoke"]
+    __slots__: list[str] = ["revoke"]
 
-    ID = 0xf9cbe409
+    ID = 0xF9CBE409
     QUALNAME = "functions.messages.DeletePhoneCallHistory"
 
-    def __init__(self, *, revoke: Optional[bool] = None) -> None:
+    def __init__(self, *, revoke: bool | None = None) -> None:
         self.revoke = revoke  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DeletePhoneCallHistory":
-        
         flags = Int.read(b)
-        
+
         revoke = True if flags & (1 << 0) else False
         return DeletePhoneCallHistory(revoke=revoke)
 
@@ -68,5 +68,5 @@ class DeletePhoneCallHistory(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.revoke else 0
         b.write(Int(flags))
-        
+
         return b.getvalue()

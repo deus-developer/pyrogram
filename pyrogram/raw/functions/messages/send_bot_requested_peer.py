@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SendBotRequestedPeer(TLObject):  # type: ignore
+class SendBotRequestedPeer(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +57,19 @@ class SendBotRequestedPeer(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["peer", "msg_id", "button_id", "requested_peers"]
+    __slots__: list[str] = ["button_id", "msg_id", "peer", "requested_peers"]
 
-    ID = 0x91b2d060
+    ID = 0x91B2D060
     QUALNAME = "functions.messages.SendBotRequestedPeer"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", msg_id: int, button_id: int, requested_peers: List["raw.base.InputPeer"]) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        msg_id: int,
+        button_id: int,
+        requested_peers: list["raw.base.InputPeer"],
+    ) -> None:
         self.peer = peer  # InputPeer
         self.msg_id = msg_id  # int
         self.button_id = button_id  # int
@@ -68,29 +78,34 @@ class SendBotRequestedPeer(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SendBotRequestedPeer":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         msg_id = Int.read(b)
-        
+
         button_id = Int.read(b)
-        
+
         requested_peers = TLObject.read(b)
-        
-        return SendBotRequestedPeer(peer=peer, msg_id=msg_id, button_id=button_id, requested_peers=requested_peers)
+
+        return SendBotRequestedPeer(
+            peer=peer,
+            msg_id=msg_id,
+            button_id=button_id,
+            requested_peers=requested_peers,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.msg_id))
-        
+
         b.write(Int(self.button_id))
-        
+
         b.write(Vector(self.requested_peers))
-        
+
         return b.getvalue()

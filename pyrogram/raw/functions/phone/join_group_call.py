@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class JoinGroupCall(TLObject):  # type: ignore
+class JoinGroupCall(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -60,12 +63,28 @@ class JoinGroupCall(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["call", "join_as", "params", "muted", "video_stopped", "invite_hash"]
+    __slots__: list[str] = [
+        "call",
+        "invite_hash",
+        "join_as",
+        "muted",
+        "params",
+        "video_stopped",
+    ]
 
-    ID = 0xb132ff7b
+    ID = 0xB132FF7B
     QUALNAME = "functions.phone.JoinGroupCall"
 
-    def __init__(self, *, call: "raw.base.InputGroupCall", join_as: "raw.base.InputPeer", params: "raw.base.DataJSON", muted: Optional[bool] = None, video_stopped: Optional[bool] = None, invite_hash: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        call: "raw.base.InputGroupCall",
+        join_as: "raw.base.InputPeer",
+        params: "raw.base.DataJSON",
+        muted: bool | None = None,
+        video_stopped: bool | None = None,
+        invite_hash: str | None = None,
+    ) -> None:
         self.call = call  # InputGroupCall
         self.join_as = join_as  # InputPeer
         self.params = params  # DataJSON
@@ -75,19 +94,25 @@ class JoinGroupCall(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "JoinGroupCall":
-        
         flags = Int.read(b)
-        
+
         muted = True if flags & (1 << 0) else False
         video_stopped = True if flags & (1 << 2) else False
         call = TLObject.read(b)
-        
+
         join_as = TLObject.read(b)
-        
+
         invite_hash = String.read(b) if flags & (1 << 1) else None
         params = TLObject.read(b)
-        
-        return JoinGroupCall(call=call, join_as=join_as, params=params, muted=muted, video_stopped=video_stopped, invite_hash=invite_hash)
+
+        return JoinGroupCall(
+            call=call,
+            join_as=join_as,
+            params=params,
+            muted=muted,
+            video_stopped=video_stopped,
+            invite_hash=invite_hash,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -98,14 +123,14 @@ class JoinGroupCall(TLObject):  # type: ignore
         flags |= (1 << 2) if self.video_stopped else 0
         flags |= (1 << 1) if self.invite_hash is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.call.write())
-        
+
         b.write(self.join_as.write())
-        
+
         if self.invite_hash is not None:
             b.write(String(self.invite_hash))
-        
+
         b.write(self.params.write())
-        
+
         return b.getvalue()

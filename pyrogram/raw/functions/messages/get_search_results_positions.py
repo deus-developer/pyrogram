@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetSearchResultsPositions(TLObject):  # type: ignore
+class GetSearchResultsPositions(TLFunction["raw.base.messages.SearchResultsPositions"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -57,12 +59,20 @@ class GetSearchResultsPositions(TLObject):  # type: ignore
         :obj:`messages.SearchResultsPositions <pyrogram.raw.base.messages.SearchResultsPositions>`
     """
 
-    __slots__: List[str] = ["peer", "filter", "offset_id", "limit", "saved_peer_id"]
+    __slots__: list[str] = ["filter", "limit", "offset_id", "peer", "saved_peer_id"]
 
-    ID = 0x9c7f2f10
+    ID = 0x9C7F2F10
     QUALNAME = "functions.messages.GetSearchResultsPositions"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", filter: "raw.base.MessagesFilter", offset_id: int, limit: int, saved_peer_id: "raw.base.InputPeer" = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        filter: "raw.base.MessagesFilter",
+        offset_id: int,
+        limit: int,
+        saved_peer_id: "raw.base.InputPeer" = None,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.filter = filter  # MessagesFilter
         self.offset_id = offset_id  # int
@@ -71,20 +81,25 @@ class GetSearchResultsPositions(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetSearchResultsPositions":
-        
         flags = Int.read(b)
-        
+
         peer = TLObject.read(b)
-        
+
         saved_peer_id = TLObject.read(b) if flags & (1 << 2) else None
-        
+
         filter = TLObject.read(b)
-        
+
         offset_id = Int.read(b)
-        
+
         limit = Int.read(b)
-        
-        return GetSearchResultsPositions(peer=peer, filter=filter, offset_id=offset_id, limit=limit, saved_peer_id=saved_peer_id)
+
+        return GetSearchResultsPositions(
+            peer=peer,
+            filter=filter,
+            offset_id=offset_id,
+            limit=limit,
+            saved_peer_id=saved_peer_id,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -93,16 +108,16 @@ class GetSearchResultsPositions(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 2) if self.saved_peer_id is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         if self.saved_peer_id is not None:
             b.write(self.saved_peer_id.write())
-        
+
         b.write(self.filter.write())
-        
+
         b.write(Int(self.offset_id))
-        
+
         b.write(Int(self.limit))
-        
+
         return b.getvalue()

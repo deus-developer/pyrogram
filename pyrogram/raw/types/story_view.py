@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,12 +60,26 @@ class StoryView(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["user_id", "date", "blocked", "blocked_my_stories_from", "reaction"]
+    __slots__: list[str] = [
+        "blocked",
+        "blocked_my_stories_from",
+        "date",
+        "reaction",
+        "user_id",
+    ]
 
-    ID = 0xb0bdeac5
+    ID = 0xB0BDEAC5
     QUALNAME = "types.StoryView"
 
-    def __init__(self, *, user_id: int, date: int, blocked: Optional[bool] = None, blocked_my_stories_from: Optional[bool] = None, reaction: "raw.base.Reaction" = None) -> None:
+    def __init__(
+        self,
+        *,
+        user_id: int,
+        date: int,
+        blocked: bool | None = None,
+        blocked_my_stories_from: bool | None = None,
+        reaction: "raw.base.Reaction" = None,
+    ) -> None:
         self.user_id = user_id  # long
         self.date = date  # int
         self.blocked = blocked  # flags.0?true
@@ -71,18 +88,23 @@ class StoryView(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "StoryView":
-        
         flags = Int.read(b)
-        
+
         blocked = True if flags & (1 << 0) else False
         blocked_my_stories_from = True if flags & (1 << 1) else False
         user_id = Long.read(b)
-        
+
         date = Int.read(b)
-        
+
         reaction = TLObject.read(b) if flags & (1 << 2) else None
-        
-        return StoryView(user_id=user_id, date=date, blocked=blocked, blocked_my_stories_from=blocked_my_stories_from, reaction=reaction)
+
+        return StoryView(
+            user_id=user_id,
+            date=date,
+            blocked=blocked,
+            blocked_my_stories_from=blocked_my_stories_from,
+            reaction=reaction,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -93,12 +115,12 @@ class StoryView(TLObject):  # type: ignore
         flags |= (1 << 1) if self.blocked_my_stories_from else 0
         flags |= (1 << 2) if self.reaction is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.user_id))
-        
+
         b.write(Int(self.date))
-        
+
         if self.reaction is not None:
             b.write(self.reaction.write())
-        
+
         return b.getvalue()

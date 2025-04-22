@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +47,9 @@ class ChannelParticipantsContacts(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["q"]
+    __slots__: list[str] = ["q"]
 
-    ID = 0xbb6ae88d
+    ID = 0xBB6AE88D
     QUALNAME = "types.ChannelParticipantsContacts"
 
     def __init__(self, *, q: str) -> None:
@@ -56,9 +58,9 @@ class ChannelParticipantsContacts(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChannelParticipantsContacts":
         # No flags
-        
+
         q = String.read(b)
-        
+
         return ChannelParticipantsContacts(q=q)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class ChannelParticipantsContacts(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.q))
-        
+
         return b.getvalue()

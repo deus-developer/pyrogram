@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class UpdateDialogFiltersOrder(TLObject):  # type: ignore
+class UpdateDialogFiltersOrder(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,20 +47,20 @@ class UpdateDialogFiltersOrder(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["order"]
+    __slots__: list[str] = ["order"]
 
-    ID = 0xc563c1e4
+    ID = 0xC563C1E4
     QUALNAME = "functions.messages.UpdateDialogFiltersOrder"
 
-    def __init__(self, *, order: List[int]) -> None:
+    def __init__(self, *, order: list[int]) -> None:
         self.order = order  # Vector<int>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateDialogFiltersOrder":
         # No flags
-        
+
         order = TLObject.read(b, Int)
-        
+
         return UpdateDialogFiltersOrder(order=order)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class UpdateDialogFiltersOrder(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.order, Int))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +56,19 @@ class MsgDetailedInfo(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["msg_id", "answer_msg_id", "bytes", "status"]
+    __slots__: list[str] = ["answer_msg_id", "bytes", "msg_id", "status"]
 
-    ID = 0x276d3ec6
+    ID = 0x276D3EC6
     QUALNAME = "types.MsgDetailedInfo"
 
-    def __init__(self, *, msg_id: int, answer_msg_id: int, bytes: int, status: int) -> None:
+    def __init__(
+        self,
+        *,
+        msg_id: int,
+        answer_msg_id: int,
+        bytes: int,
+        status: int,
+    ) -> None:
         self.msg_id = msg_id  # long
         self.answer_msg_id = answer_msg_id  # long
         self.bytes = bytes  # int
@@ -68,29 +77,34 @@ class MsgDetailedInfo(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MsgDetailedInfo":
         # No flags
-        
+
         msg_id = Long.read(b)
-        
+
         answer_msg_id = Long.read(b)
-        
+
         bytes = Int.read(b)
-        
+
         status = Int.read(b)
-        
-        return MsgDetailedInfo(msg_id=msg_id, answer_msg_id=answer_msg_id, bytes=bytes, status=status)
+
+        return MsgDetailedInfo(
+            msg_id=msg_id,
+            answer_msg_id=answer_msg_id,
+            bytes=bytes,
+            status=status,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.msg_id))
-        
+
         b.write(Long(self.answer_msg_id))
-        
+
         b.write(Int(self.bytes))
-        
+
         b.write(Int(self.status))
-        
+
         return b.getvalue()

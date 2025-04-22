@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -72,12 +76,30 @@ class AllStories(TLObject):  # type: ignore
             stories.GetAllStories
     """
 
-    __slots__: List[str] = ["count", "state", "peer_stories", "chats", "users", "stealth_mode", "has_more"]
+    __slots__: list[str] = [
+        "chats",
+        "count",
+        "has_more",
+        "peer_stories",
+        "state",
+        "stealth_mode",
+        "users",
+    ]
 
-    ID = 0x6efc5e81
+    ID = 0x6EFC5E81
     QUALNAME = "types.stories.AllStories"
 
-    def __init__(self, *, count: int, state: str, peer_stories: List["raw.base.PeerStories"], chats: List["raw.base.Chat"], users: List["raw.base.User"], stealth_mode: "raw.base.StoriesStealthMode", has_more: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        count: int,
+        state: str,
+        peer_stories: list["raw.base.PeerStories"],
+        chats: list["raw.base.Chat"],
+        users: list["raw.base.User"],
+        stealth_mode: "raw.base.StoriesStealthMode",
+        has_more: bool | None = None,
+    ) -> None:
         self.count = count  # int
         self.state = state  # string
         self.peer_stories = peer_stories  # Vector<PeerStories>
@@ -88,23 +110,30 @@ class AllStories(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "AllStories":
-        
         flags = Int.read(b)
-        
+
         has_more = True if flags & (1 << 0) else False
         count = Int.read(b)
-        
+
         state = String.read(b)
-        
+
         peer_stories = TLObject.read(b)
-        
+
         chats = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
+
         stealth_mode = TLObject.read(b)
-        
-        return AllStories(count=count, state=state, peer_stories=peer_stories, chats=chats, users=users, stealth_mode=stealth_mode, has_more=has_more)
+
+        return AllStories(
+            count=count,
+            state=state,
+            peer_stories=peer_stories,
+            chats=chats,
+            users=users,
+            stealth_mode=stealth_mode,
+            has_more=has_more,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -113,17 +142,17 @@ class AllStories(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.has_more else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.count))
-        
+
         b.write(String(self.state))
-        
+
         b.write(Vector(self.peer_stories))
-        
+
         b.write(Vector(self.chats))
-        
+
         b.write(Vector(self.users))
-        
+
         b.write(self.stealth_mode.write())
-        
+
         return b.getvalue()

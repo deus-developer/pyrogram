@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class RequestEncryption(TLObject):  # type: ignore
+class RequestEncryption(TLFunction["raw.base.EncryptedChat"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +54,18 @@ class RequestEncryption(TLObject):  # type: ignore
         :obj:`EncryptedChat <pyrogram.raw.base.EncryptedChat>`
     """
 
-    __slots__: List[str] = ["user_id", "random_id", "g_a"]
+    __slots__: list[str] = ["g_a", "random_id", "user_id"]
 
-    ID = 0xf64daf43
+    ID = 0xF64DAF43
     QUALNAME = "functions.messages.RequestEncryption"
 
-    def __init__(self, *, user_id: "raw.base.InputUser", random_id: int, g_a: bytes) -> None:
+    def __init__(
+        self,
+        *,
+        user_id: "raw.base.InputUser",
+        random_id: int,
+        g_a: bytes,
+    ) -> None:
         self.user_id = user_id  # InputUser
         self.random_id = random_id  # int
         self.g_a = g_a  # bytes
@@ -64,13 +73,13 @@ class RequestEncryption(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "RequestEncryption":
         # No flags
-        
+
         user_id = TLObject.read(b)
-        
+
         random_id = Int.read(b)
-        
+
         g_a = Bytes.read(b)
-        
+
         return RequestEncryption(user_id=user_id, random_id=random_id, g_a=g_a)
 
     def write(self, *args) -> bytes:
@@ -78,11 +87,11 @@ class RequestEncryption(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.user_id.write())
-        
+
         b.write(Int(self.random_id))
-        
+
         b.write(Bytes(self.g_a))
-        
+
         return b.getvalue()

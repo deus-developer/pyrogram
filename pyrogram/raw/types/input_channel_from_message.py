@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,12 +54,18 @@ class InputChannelFromMessage(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "msg_id", "channel_id"]
+    __slots__: list[str] = ["channel_id", "msg_id", "peer"]
 
-    ID = 0x5b934f9d
+    ID = 0x5B934F9D
     QUALNAME = "types.InputChannelFromMessage"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", msg_id: int, channel_id: int) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        msg_id: int,
+        channel_id: int,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.msg_id = msg_id  # int
         self.channel_id = channel_id  # long
@@ -64,13 +73,13 @@ class InputChannelFromMessage(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputChannelFromMessage":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         msg_id = Int.read(b)
-        
+
         channel_id = Long.read(b)
-        
+
         return InputChannelFromMessage(peer=peer, msg_id=msg_id, channel_id=channel_id)
 
     def write(self, *args) -> bytes:
@@ -78,11 +87,11 @@ class InputChannelFromMessage(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.msg_id))
-        
+
         b.write(Long(self.channel_id))
-        
+
         return b.getvalue()

@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -87,12 +91,46 @@ class DialogFilter(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "title", "pinned_peers", "include_peers", "exclude_peers", "contacts", "non_contacts", "groups", "broadcasts", "bots", "exclude_muted", "exclude_read", "exclude_archived", "emoticon", "color"]
+    __slots__: list[str] = [
+        "bots",
+        "broadcasts",
+        "color",
+        "contacts",
+        "emoticon",
+        "exclude_archived",
+        "exclude_muted",
+        "exclude_peers",
+        "exclude_read",
+        "groups",
+        "id",
+        "include_peers",
+        "non_contacts",
+        "pinned_peers",
+        "title",
+    ]
 
-    ID = 0x5fb5523b
+    ID = 0x5FB5523B
     QUALNAME = "types.DialogFilter"
 
-    def __init__(self, *, id: int, title: str, pinned_peers: List["raw.base.InputPeer"], include_peers: List["raw.base.InputPeer"], exclude_peers: List["raw.base.InputPeer"], contacts: Optional[bool] = None, non_contacts: Optional[bool] = None, groups: Optional[bool] = None, broadcasts: Optional[bool] = None, bots: Optional[bool] = None, exclude_muted: Optional[bool] = None, exclude_read: Optional[bool] = None, exclude_archived: Optional[bool] = None, emoticon: Optional[str] = None, color: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: int,
+        title: str,
+        pinned_peers: list["raw.base.InputPeer"],
+        include_peers: list["raw.base.InputPeer"],
+        exclude_peers: list["raw.base.InputPeer"],
+        contacts: bool | None = None,
+        non_contacts: bool | None = None,
+        groups: bool | None = None,
+        broadcasts: bool | None = None,
+        bots: bool | None = None,
+        exclude_muted: bool | None = None,
+        exclude_read: bool | None = None,
+        exclude_archived: bool | None = None,
+        emoticon: str | None = None,
+        color: int | None = None,
+    ) -> None:
         self.id = id  # int
         self.title = title  # string
         self.pinned_peers = pinned_peers  # Vector<InputPeer>
@@ -111,9 +149,8 @@ class DialogFilter(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DialogFilter":
-        
         flags = Int.read(b)
-        
+
         contacts = True if flags & (1 << 0) else False
         non_contacts = True if flags & (1 << 1) else False
         groups = True if flags & (1 << 2) else False
@@ -123,18 +160,34 @@ class DialogFilter(TLObject):  # type: ignore
         exclude_read = True if flags & (1 << 12) else False
         exclude_archived = True if flags & (1 << 13) else False
         id = Int.read(b)
-        
+
         title = String.read(b)
-        
+
         emoticon = String.read(b) if flags & (1 << 25) else None
         color = Int.read(b) if flags & (1 << 27) else None
         pinned_peers = TLObject.read(b)
-        
+
         include_peers = TLObject.read(b)
-        
+
         exclude_peers = TLObject.read(b)
-        
-        return DialogFilter(id=id, title=title, pinned_peers=pinned_peers, include_peers=include_peers, exclude_peers=exclude_peers, contacts=contacts, non_contacts=non_contacts, groups=groups, broadcasts=broadcasts, bots=bots, exclude_muted=exclude_muted, exclude_read=exclude_read, exclude_archived=exclude_archived, emoticon=emoticon, color=color)
+
+        return DialogFilter(
+            id=id,
+            title=title,
+            pinned_peers=pinned_peers,
+            include_peers=include_peers,
+            exclude_peers=exclude_peers,
+            contacts=contacts,
+            non_contacts=non_contacts,
+            groups=groups,
+            broadcasts=broadcasts,
+            bots=bots,
+            exclude_muted=exclude_muted,
+            exclude_read=exclude_read,
+            exclude_archived=exclude_archived,
+            emoticon=emoticon,
+            color=color,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -152,21 +205,21 @@ class DialogFilter(TLObject):  # type: ignore
         flags |= (1 << 25) if self.emoticon is not None else 0
         flags |= (1 << 27) if self.color is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.id))
-        
+
         b.write(String(self.title))
-        
+
         if self.emoticon is not None:
             b.write(String(self.emoticon))
-        
+
         if self.color is not None:
             b.write(Int(self.color))
-        
+
         b.write(Vector(self.pinned_peers))
-        
+
         b.write(Vector(self.include_peers))
-        
+
         b.write(Vector(self.exclude_peers))
-        
+
         return b.getvalue()

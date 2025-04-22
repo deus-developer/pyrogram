@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,33 +50,44 @@ class ChannelAdminLogEventActionParticipantToggleAdmin(TLObject):  # type: ignor
 
     """
 
-    __slots__: List[str] = ["prev_participant", "new_participant"]
+    __slots__: list[str] = ["new_participant", "prev_participant"]
 
-    ID = 0xd5676710
+    ID = 0xD5676710
     QUALNAME = "types.ChannelAdminLogEventActionParticipantToggleAdmin"
 
-    def __init__(self, *, prev_participant: "raw.base.ChannelParticipant", new_participant: "raw.base.ChannelParticipant") -> None:
+    def __init__(
+        self,
+        *,
+        prev_participant: "raw.base.ChannelParticipant",
+        new_participant: "raw.base.ChannelParticipant",
+    ) -> None:
         self.prev_participant = prev_participant  # ChannelParticipant
         self.new_participant = new_participant  # ChannelParticipant
 
     @staticmethod
-    def read(b: BytesIO, *args: Any) -> "ChannelAdminLogEventActionParticipantToggleAdmin":
+    def read(
+        b: BytesIO,
+        *args: Any,
+    ) -> "ChannelAdminLogEventActionParticipantToggleAdmin":
         # No flags
-        
+
         prev_participant = TLObject.read(b)
-        
+
         new_participant = TLObject.read(b)
-        
-        return ChannelAdminLogEventActionParticipantToggleAdmin(prev_participant=prev_participant, new_participant=new_participant)
+
+        return ChannelAdminLogEventActionParticipantToggleAdmin(
+            prev_participant=prev_participant,
+            new_participant=new_participant,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.prev_participant.write())
-        
+
         b.write(self.new_participant.write())
-        
+
         return b.getvalue()

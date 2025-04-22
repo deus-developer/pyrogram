@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,20 +47,23 @@ class ChannelAdminLogEventActionTogglePreHistoryHidden(TLObject):  # type: ignor
 
     """
 
-    __slots__: List[str] = ["new_value"]
+    __slots__: list[str] = ["new_value"]
 
-    ID = 0x5f5c95f1
+    ID = 0x5F5C95F1
     QUALNAME = "types.ChannelAdminLogEventActionTogglePreHistoryHidden"
 
     def __init__(self, *, new_value: bool) -> None:
         self.new_value = new_value  # Bool
 
     @staticmethod
-    def read(b: BytesIO, *args: Any) -> "ChannelAdminLogEventActionTogglePreHistoryHidden":
+    def read(
+        b: BytesIO,
+        *args: Any,
+    ) -> "ChannelAdminLogEventActionTogglePreHistoryHidden":
         # No flags
-        
+
         new_value = Bool.read(b)
-        
+
         return ChannelAdminLogEventActionTogglePreHistoryHidden(new_value=new_value)
 
     def write(self, *args) -> bytes:
@@ -66,7 +71,7 @@ class ChannelAdminLogEventActionTogglePreHistoryHidden(TLObject):  # type: ignor
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Bool(self.new_value))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetAllStories(TLObject):  # type: ignore
+class GetAllStories(TLFunction["raw.base.stories.AllStories"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,21 +53,26 @@ class GetAllStories(TLObject):  # type: ignore
         :obj:`stories.AllStories <pyrogram.raw.base.stories.AllStories>`
     """
 
-    __slots__: List[str] = ["next", "hidden", "state"]
+    __slots__: list[str] = ["hidden", "next", "state"]
 
-    ID = 0xeeb0d625
+    ID = 0xEEB0D625
     QUALNAME = "functions.stories.GetAllStories"
 
-    def __init__(self, *, next: Optional[bool] = None, hidden: Optional[bool] = None, state: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        next: bool | None = None,
+        hidden: bool | None = None,
+        state: str | None = None,
+    ) -> None:
         self.next = next  # flags.1?true
         self.hidden = hidden  # flags.2?true
         self.state = state  # flags.0?string
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetAllStories":
-        
         flags = Int.read(b)
-        
+
         next = True if flags & (1 << 1) else False
         hidden = True if flags & (1 << 2) else False
         state = String.read(b) if flags & (1 << 0) else None
@@ -80,8 +87,8 @@ class GetAllStories(TLObject):  # type: ignore
         flags |= (1 << 2) if self.hidden else 0
         flags |= (1 << 0) if self.state is not None else 0
         b.write(Int(flags))
-        
+
         if self.state is not None:
             b.write(String(self.state))
-        
+
         return b.getvalue()

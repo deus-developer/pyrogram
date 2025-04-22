@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class InviteToGroupCall(TLObject):  # type: ignore
+class InviteToGroupCall(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +51,28 @@ class InviteToGroupCall(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["call", "users"]
+    __slots__: list[str] = ["call", "users"]
 
-    ID = 0x7b393160
+    ID = 0x7B393160
     QUALNAME = "functions.phone.InviteToGroupCall"
 
-    def __init__(self, *, call: "raw.base.InputGroupCall", users: List["raw.base.InputUser"]) -> None:
+    def __init__(
+        self,
+        *,
+        call: "raw.base.InputGroupCall",
+        users: list["raw.base.InputUser"],
+    ) -> None:
         self.call = call  # InputGroupCall
         self.users = users  # Vector<InputUser>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InviteToGroupCall":
         # No flags
-        
+
         call = TLObject.read(b)
-        
+
         users = TLObject.read(b)
-        
+
         return InviteToGroupCall(call=call, users=users)
 
     def write(self, *args) -> bytes:
@@ -72,9 +80,9 @@ class InviteToGroupCall(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.call.write())
-        
+
         b.write(Vector(self.users))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,9 +53,9 @@ class Timezone(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "name", "utc_offset"]
+    __slots__: list[str] = ["id", "name", "utc_offset"]
 
-    ID = 0xff9289f5
+    ID = 0xFF9289F5
     QUALNAME = "types.Timezone"
 
     def __init__(self, *, id: str, name: str, utc_offset: int) -> None:
@@ -64,13 +66,13 @@ class Timezone(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "Timezone":
         # No flags
-        
+
         id = String.read(b)
-        
+
         name = String.read(b)
-        
+
         utc_offset = Int.read(b)
-        
+
         return Timezone(id=id, name=name, utc_offset=utc_offset)
 
     def write(self, *args) -> bytes:
@@ -78,11 +80,11 @@ class Timezone(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.id))
-        
+
         b.write(String(self.name))
-        
+
         b.write(Int(self.utc_offset))
-        
+
         return b.getvalue()

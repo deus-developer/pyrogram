@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ReadHistory(TLObject):  # type: ignore
+class ReadHistory(TLFunction["raw.base.messages.AffectedMessages"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class ReadHistory(TLObject):  # type: ignore
         :obj:`messages.AffectedMessages <pyrogram.raw.base.messages.AffectedMessages>`
     """
 
-    __slots__: List[str] = ["peer", "max_id"]
+    __slots__: list[str] = ["max_id", "peer"]
 
-    ID = 0xe306d3a
+    ID = 0xE306D3A
     QUALNAME = "functions.messages.ReadHistory"
 
     def __init__(self, *, peer: "raw.base.InputPeer", max_id: int) -> None:
@@ -60,11 +62,11 @@ class ReadHistory(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ReadHistory":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         max_id = Int.read(b)
-        
+
         return ReadHistory(peer=peer, max_id=max_id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class ReadHistory(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.max_id))
-        
+
         return b.getvalue()

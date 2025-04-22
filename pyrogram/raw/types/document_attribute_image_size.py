@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +49,9 @@ class DocumentAttributeImageSize(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["w", "h"]
+    __slots__: list[str] = ["h", "w"]
 
-    ID = 0x6c37c15c
+    ID = 0x6C37C15C
     QUALNAME = "types.DocumentAttributeImageSize"
 
     def __init__(self, *, w: int, h: int) -> None:
@@ -60,11 +61,11 @@ class DocumentAttributeImageSize(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DocumentAttributeImageSize":
         # No flags
-        
+
         w = Int.read(b)
-        
+
         h = Int.read(b)
-        
+
         return DocumentAttributeImageSize(w=w, h=h)
 
     def write(self, *args) -> bytes:
@@ -72,9 +73,9 @@ class DocumentAttributeImageSize(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.w))
-        
+
         b.write(Int(self.h))
-        
+
         return b.getvalue()

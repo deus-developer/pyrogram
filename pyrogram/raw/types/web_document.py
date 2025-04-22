@@ -17,11 +17,16 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,12 +62,20 @@ class WebDocument(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["url", "access_hash", "size", "mime_type", "attributes"]
+    __slots__: list[str] = ["access_hash", "attributes", "mime_type", "size", "url"]
 
-    ID = 0x1c570ed1
+    ID = 0x1C570ED1
     QUALNAME = "types.WebDocument"
 
-    def __init__(self, *, url: str, access_hash: int, size: int, mime_type: str, attributes: List["raw.base.DocumentAttribute"]) -> None:
+    def __init__(
+        self,
+        *,
+        url: str,
+        access_hash: int,
+        size: int,
+        mime_type: str,
+        attributes: list["raw.base.DocumentAttribute"],
+    ) -> None:
         self.url = url  # string
         self.access_hash = access_hash  # long
         self.size = size  # int
@@ -72,33 +85,39 @@ class WebDocument(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "WebDocument":
         # No flags
-        
+
         url = String.read(b)
-        
+
         access_hash = Long.read(b)
-        
+
         size = Int.read(b)
-        
+
         mime_type = String.read(b)
-        
+
         attributes = TLObject.read(b)
-        
-        return WebDocument(url=url, access_hash=access_hash, size=size, mime_type=mime_type, attributes=attributes)
+
+        return WebDocument(
+            url=url,
+            access_hash=access_hash,
+            size=size,
+            mime_type=mime_type,
+            attributes=attributes,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.url))
-        
+
         b.write(Long(self.access_hash))
-        
+
         b.write(Int(self.size))
-        
+
         b.write(String(self.mime_type))
-        
+
         b.write(Vector(self.attributes))
-        
+
         return b.getvalue()

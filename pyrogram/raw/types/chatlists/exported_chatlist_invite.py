@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,23 +59,28 @@ class ExportedChatlistInvite(TLObject):  # type: ignore
             chatlists.ExportChatlistInvite
     """
 
-    __slots__: List[str] = ["filter", "invite"]
+    __slots__: list[str] = ["filter", "invite"]
 
-    ID = 0x10e6e3a6
+    ID = 0x10E6E3A6
     QUALNAME = "types.chatlists.ExportedChatlistInvite"
 
-    def __init__(self, *, filter: "raw.base.DialogFilter", invite: "raw.base.ExportedChatlistInvite") -> None:
+    def __init__(
+        self,
+        *,
+        filter: "raw.base.DialogFilter",
+        invite: "raw.base.ExportedChatlistInvite",
+    ) -> None:
         self.filter = filter  # DialogFilter
         self.invite = invite  # ExportedChatlistInvite
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ExportedChatlistInvite":
         # No flags
-        
+
         filter = TLObject.read(b)
-        
+
         invite = TLObject.read(b)
-        
+
         return ExportedChatlistInvite(filter=filter, invite=invite)
 
     def write(self, *args) -> bytes:
@@ -81,9 +88,9 @@ class ExportedChatlistInvite(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.filter.write())
-        
+
         b.write(self.invite.write())
-        
+
         return b.getvalue()

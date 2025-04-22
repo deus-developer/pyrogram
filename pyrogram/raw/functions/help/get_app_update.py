@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetAppUpdate(TLObject):  # type: ignore
+class GetAppUpdate(TLFunction["raw.base.help.AppUpdate"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetAppUpdate(TLObject):  # type: ignore
         :obj:`help.AppUpdate <pyrogram.raw.base.help.AppUpdate>`
     """
 
-    __slots__: List[str] = ["source"]
+    __slots__: list[str] = ["source"]
 
-    ID = 0x522d5a7d
+    ID = 0x522D5A7D
     QUALNAME = "functions.help.GetAppUpdate"
 
     def __init__(self, *, source: str) -> None:
@@ -56,9 +58,9 @@ class GetAppUpdate(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetAppUpdate":
         # No flags
-        
+
         source = String.read(b)
-        
+
         return GetAppUpdate(source=source)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class GetAppUpdate(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.source))
-        
+
         return b.getvalue()

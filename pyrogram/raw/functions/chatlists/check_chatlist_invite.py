@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class CheckChatlistInvite(TLObject):  # type: ignore
+class CheckChatlistInvite(TLFunction["raw.base.chatlists.ChatlistInvite"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class CheckChatlistInvite(TLObject):  # type: ignore
         :obj:`chatlists.ChatlistInvite <pyrogram.raw.base.chatlists.ChatlistInvite>`
     """
 
-    __slots__: List[str] = ["slug"]
+    __slots__: list[str] = ["slug"]
 
-    ID = 0x41c10fff
+    ID = 0x41C10FFF
     QUALNAME = "functions.chatlists.CheckChatlistInvite"
 
     def __init__(self, *, slug: str) -> None:
@@ -56,9 +58,9 @@ class CheckChatlistInvite(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "CheckChatlistInvite":
         # No flags
-        
+
         slug = String.read(b)
-        
+
         return CheckChatlistInvite(slug=slug)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class CheckChatlistInvite(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.slug))
-        
+
         return b.getvalue()

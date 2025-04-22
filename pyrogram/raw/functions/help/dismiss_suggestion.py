@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class DismissSuggestion(TLObject):  # type: ignore
+class DismissSuggestion(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class DismissSuggestion(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["peer", "suggestion"]
+    __slots__: list[str] = ["peer", "suggestion"]
 
-    ID = 0xf50dbaa1
+    ID = 0xF50DBAA1
     QUALNAME = "functions.help.DismissSuggestion"
 
     def __init__(self, *, peer: "raw.base.InputPeer", suggestion: str) -> None:
@@ -60,11 +63,11 @@ class DismissSuggestion(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DismissSuggestion":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         suggestion = String.read(b)
-        
+
         return DismissSuggestion(peer=peer, suggestion=suggestion)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class DismissSuggestion(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(String(self.suggestion))
-        
+
         return b.getvalue()

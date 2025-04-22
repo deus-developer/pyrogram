@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +56,9 @@ class SupportName(TLObject):  # type: ignore
             help.GetSupportName
     """
 
-    __slots__: List[str] = ["name"]
+    __slots__: list[str] = ["name"]
 
-    ID = 0x8c05f1c9
+    ID = 0x8C05F1C9
     QUALNAME = "types.help.SupportName"
 
     def __init__(self, *, name: str) -> None:
@@ -65,9 +67,9 @@ class SupportName(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SupportName":
         # No flags
-        
+
         name = String.read(b)
-        
+
         return SupportName(name=name)
 
     def write(self, *args) -> bytes:
@@ -75,7 +77,7 @@ class SupportName(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.name))
-        
+
         return b.getvalue()

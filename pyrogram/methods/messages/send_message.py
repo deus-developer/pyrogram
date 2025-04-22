@@ -17,30 +17,29 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Union, List, Optional
+from typing import Optional, Union
 
 import pyrogram
-from pyrogram import raw, utils, enums
-from pyrogram import types
+from pyrogram import enums, raw, types, utils
 
 
 class SendMessage:
     async def send_message(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         text: str,
         parse_mode: Optional["enums.ParseMode"] = None,
-        entities: List["types.MessageEntity"] = None,
+        entities: list["types.MessageEntity"] = None,
         disable_web_page_preview: bool = None,
         disable_notification: bool = None,
         message_thread_id: int = None,
         effect_id: int = None,
         show_above_text: bool = None,
         reply_to_message_id: int = None,
-        reply_to_chat_id: Union[int, str] = None,
+        reply_to_chat_id: int | str = None,
         reply_to_story_id: int = None,
         quote_text: str = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         quote_offset: int = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
@@ -49,8 +48,8 @@ class SendMessage:
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply"
-        ] = None
+            "types.ForceReply",
+        ] = None,
     ) -> "types.Message":
         """Send text messages.
 
@@ -132,8 +131,9 @@ class SendMessage:
                 await app.send_message("me", "Message sent with **Pyrogram**!")
 
                 # Disable web page previews
-                await app.send_message("me", "https://docs.pyrogram.org",
-                    disable_web_page_preview=True)
+                await app.send_message(
+                    "me", "https://docs.pyrogram.org", disable_web_page_preview=True
+                )
 
                 # Reply to a message using its id
                 await app.send_message("me", "this is a reply", reply_to_message_id=123)
@@ -143,26 +143,50 @@ class SendMessage:
                 # For bots only, send messages with keyboards attached
 
                 from pyrogram.types import (
-                    ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton)
+                    ReplyKeyboardMarkup,
+                    InlineKeyboardMarkup,
+                    InlineKeyboardButton,
+                )
 
                 # Send a normal keyboard
                 await app.send_message(
-                    chat_id, "Look at that button!",
-                    reply_markup=ReplyKeyboardMarkup([["Nice!"]]))
+                    chat_id,
+                    "Look at that button!",
+                    reply_markup=ReplyKeyboardMarkup([["Nice!"]]),
+                )
 
                 # Send an inline keyboard
                 await app.send_message(
-                    chat_id, "These are inline buttons",
+                    chat_id,
+                    "These are inline buttons",
                     reply_markup=InlineKeyboardMarkup(
                         [
-                            [InlineKeyboardButton("Data", callback_data="callback_data")],
-                            [InlineKeyboardButton("Docs", url="https://docs.pyrogram.org")]
-                        ]))
+                            [
+                                InlineKeyboardButton(
+                                    "Data", callback_data="callback_data"
+                                )
+                            ],
+                            [
+                                InlineKeyboardButton(
+                                    "Docs", url="https://docs.pyrogram.org"
+                                )
+                            ],
+                        ]
+                    ),
+                )
         """
+        message, entities = (
+            await utils.parse_text_entities(self, text, parse_mode, entities)
+        ).values()
 
-        message, entities = (await utils.parse_text_entities(self, text, parse_mode, entities)).values()
-
-        quote_text, quote_entities = (await utils.parse_text_entities(self, quote_text, parse_mode, quote_entities)).values()
+        quote_text, quote_entities = (
+            await utils.parse_text_entities(
+                self,
+                quote_text,
+                parse_mode,
+                quote_entities,
+            )
+        ).values()
 
         peer = await self.resolve_peer(chat_id)
         r = await self.invoke(
@@ -174,7 +198,9 @@ class SendMessage:
                 reply_to=utils.get_reply_to(
                     reply_to_message_id=reply_to_message_id,
                     message_thread_id=message_thread_id,
-                    reply_to_peer=await self.resolve_peer(reply_to_chat_id) if reply_to_chat_id else None,
+                    reply_to_peer=await self.resolve_peer(reply_to_chat_id)
+                    if reply_to_chat_id
+                    else None,
                     reply_to_story_id=reply_to_story_id,
                     quote_text=quote_text,
                     quote_entities=quote_entities,
@@ -186,9 +212,9 @@ class SendMessage:
                 message=message,
                 entities=entities,
                 noforwards=protect_content,
-                effect=effect_id
+                effect=effect_id,
             ),
-            business_connection_id=business_connection_id
+            business_connection_id=business_connection_id,
         )
 
         if isinstance(r, raw.types.UpdateShortSentMessage):
@@ -205,7 +231,7 @@ class SendMessage:
                 chat=types.Chat(
                     id=peer_id,
                     type=enums.ChatType.PRIVATE,
-                    client=self
+                    client=self,
                 ),
                 text=message,
                 date=utils.timestamp_to_datetime(r.date),
@@ -214,17 +240,25 @@ class SendMessage:
                 entities=[
                     types.MessageEntity.from_raw_tl(None, entity, {})
                     for entity in entities
-                ] if entities else None,
-                client=self
+                ]
+                if entities
+                else None,
+                client=self,
             )
 
         for i in r.updates:
-            if isinstance(i, (raw.types.UpdateNewMessage,
-                              raw.types.UpdateNewChannelMessage,
-                              raw.types.UpdateNewScheduledMessage,
-                              raw.types.UpdateBotNewBusinessMessage)):
+            if isinstance(
+                i,
+                (
+                    raw.types.UpdateNewMessage,
+                    raw.types.UpdateNewChannelMessage,
+                    raw.types.UpdateNewScheduledMessage,
+                    raw.types.UpdateBotNewBusinessMessage,
+                ),
+            ):
                 return await types.Message.from_raw_tl(
-                    self, i.message,
+                    self,
+                    i.message,
                     is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
-                    business_connection_id=getattr(i, "connection_id", None)
+                    business_connection_id=getattr(i, "connection_id", None),
                 )

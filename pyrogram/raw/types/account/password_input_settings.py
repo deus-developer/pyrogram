@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,12 +61,26 @@ class PasswordInputSettings(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["new_algo", "new_password_hash", "hint", "email", "new_secure_settings"]
+    __slots__: list[str] = [
+        "email",
+        "hint",
+        "new_algo",
+        "new_password_hash",
+        "new_secure_settings",
+    ]
 
-    ID = 0xc23727c9
+    ID = 0xC23727C9
     QUALNAME = "types.account.PasswordInputSettings"
 
-    def __init__(self, *, new_algo: "raw.base.PasswordKdfAlgo" = None, new_password_hash: Optional[bytes] = None, hint: Optional[str] = None, email: Optional[str] = None, new_secure_settings: "raw.base.SecureSecretSettings" = None) -> None:
+    def __init__(
+        self,
+        *,
+        new_algo: "raw.base.PasswordKdfAlgo" = None,
+        new_password_hash: bytes | None = None,
+        hint: str | None = None,
+        email: str | None = None,
+        new_secure_settings: "raw.base.SecureSecretSettings" = None,
+    ) -> None:
         self.new_algo = new_algo  # flags.0?PasswordKdfAlgo
         self.new_password_hash = new_password_hash  # flags.0?bytes
         self.hint = hint  # flags.0?string
@@ -71,17 +89,22 @@ class PasswordInputSettings(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PasswordInputSettings":
-        
         flags = Int.read(b)
-        
+
         new_algo = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         new_password_hash = Bytes.read(b) if flags & (1 << 0) else None
         hint = String.read(b) if flags & (1 << 0) else None
         email = String.read(b) if flags & (1 << 1) else None
         new_secure_settings = TLObject.read(b) if flags & (1 << 2) else None
-        
-        return PasswordInputSettings(new_algo=new_algo, new_password_hash=new_password_hash, hint=hint, email=email, new_secure_settings=new_secure_settings)
+
+        return PasswordInputSettings(
+            new_algo=new_algo,
+            new_password_hash=new_password_hash,
+            hint=hint,
+            email=email,
+            new_secure_settings=new_secure_settings,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -94,20 +117,20 @@ class PasswordInputSettings(TLObject):  # type: ignore
         flags |= (1 << 1) if self.email is not None else 0
         flags |= (1 << 2) if self.new_secure_settings is not None else 0
         b.write(Int(flags))
-        
+
         if self.new_algo is not None:
             b.write(self.new_algo.write())
-        
+
         if self.new_password_hash is not None:
             b.write(Bytes(self.new_password_hash))
-        
+
         if self.hint is not None:
             b.write(String(self.hint))
-        
+
         if self.email is not None:
             b.write(String(self.email))
-        
+
         if self.new_secure_settings is not None:
             b.write(self.new_secure_settings.write())
-        
+
         return b.getvalue()

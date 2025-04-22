@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +49,9 @@ class BusinessWeeklyOpen(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["start_minute", "end_minute"]
+    __slots__: list[str] = ["end_minute", "start_minute"]
 
-    ID = 0x120b1ab9
+    ID = 0x120B1AB9
     QUALNAME = "types.BusinessWeeklyOpen"
 
     def __init__(self, *, start_minute: int, end_minute: int) -> None:
@@ -60,11 +61,11 @@ class BusinessWeeklyOpen(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "BusinessWeeklyOpen":
         # No flags
-        
+
         start_minute = Int.read(b)
-        
+
         end_minute = Int.read(b)
-        
+
         return BusinessWeeklyOpen(start_minute=start_minute, end_minute=end_minute)
 
     def write(self, *args) -> bytes:
@@ -72,9 +73,9 @@ class BusinessWeeklyOpen(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.start_minute))
-        
+
         b.write(Int(self.end_minute))
-        
+
         return b.getvalue()

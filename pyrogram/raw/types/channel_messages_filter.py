@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,24 +51,31 @@ class ChannelMessagesFilter(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["ranges", "exclude_new_messages"]
+    __slots__: list[str] = ["exclude_new_messages", "ranges"]
 
-    ID = 0xcd77d957
+    ID = 0xCD77D957
     QUALNAME = "types.ChannelMessagesFilter"
 
-    def __init__(self, *, ranges: List["raw.base.MessageRange"], exclude_new_messages: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        ranges: list["raw.base.MessageRange"],
+        exclude_new_messages: bool | None = None,
+    ) -> None:
         self.ranges = ranges  # Vector<MessageRange>
         self.exclude_new_messages = exclude_new_messages  # flags.1?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChannelMessagesFilter":
-        
         flags = Int.read(b)
-        
+
         exclude_new_messages = True if flags & (1 << 1) else False
         ranges = TLObject.read(b)
-        
-        return ChannelMessagesFilter(ranges=ranges, exclude_new_messages=exclude_new_messages)
+
+        return ChannelMessagesFilter(
+            ranges=ranges,
+            exclude_new_messages=exclude_new_messages,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -74,7 +84,7 @@ class ChannelMessagesFilter(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 1) if self.exclude_new_messages else 0
         b.write(Int(flags))
-        
+
         b.write(Vector(self.ranges))
-        
+
         return b.getvalue()

@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,27 +55,32 @@ class AttachMenuBotIcon(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["name", "icon", "colors"]
+    __slots__: list[str] = ["colors", "icon", "name"]
 
-    ID = 0xb2a7386b
+    ID = 0xB2A7386B
     QUALNAME = "types.AttachMenuBotIcon"
 
-    def __init__(self, *, name: str, icon: "raw.base.Document", colors: Optional[List["raw.base.AttachMenuBotIconColor"]] = None) -> None:
+    def __init__(
+        self,
+        *,
+        name: str,
+        icon: "raw.base.Document",
+        colors: list["raw.base.AttachMenuBotIconColor"] | None = None,
+    ) -> None:
         self.name = name  # string
         self.icon = icon  # Document
         self.colors = colors  # flags.0?Vector<AttachMenuBotIconColor>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "AttachMenuBotIcon":
-        
         flags = Int.read(b)
-        
+
         name = String.read(b)
-        
+
         icon = TLObject.read(b)
-        
+
         colors = TLObject.read(b) if flags & (1 << 0) else []
-        
+
         return AttachMenuBotIcon(name=name, icon=icon, colors=colors)
 
     def write(self, *args) -> bytes:
@@ -81,12 +90,12 @@ class AttachMenuBotIcon(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.colors else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.name))
-        
+
         b.write(self.icon.write())
-        
+
         if self.colors is not None:
             b.write(Vector(self.colors))
-        
+
         return b.getvalue()

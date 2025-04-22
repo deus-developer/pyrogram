@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetAccountTTL(TLObject):  # type: ignore
+class SetAccountTTL(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class SetAccountTTL(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["ttl"]
+    __slots__: list[str] = ["ttl"]
 
-    ID = 0x2442485e
+    ID = 0x2442485E
     QUALNAME = "functions.account.SetAccountTTL"
 
     def __init__(self, *, ttl: "raw.base.AccountDaysTTL") -> None:
@@ -56,9 +58,9 @@ class SetAccountTTL(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetAccountTTL":
         # No flags
-        
+
         ttl = TLObject.read(b)
-        
+
         return SetAccountTTL(ttl=ttl)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class SetAccountTTL(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.ttl.write())
-        
+
         return b.getvalue()

@@ -18,10 +18,10 @@
 
 import logging
 from datetime import datetime
-from typing import Union, List, Optional
+from typing import Optional, Union
 
 import pyrogram
-from pyrogram import types, enums, utils
+from pyrogram import enums, types
 
 log = logging.getLogger(__name__)
 
@@ -29,16 +29,16 @@ log = logging.getLogger(__name__)
 class CopyMessage:
     async def copy_message(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        from_chat_id: Union[int, str],
+        chat_id: int | str,
+        from_chat_id: int | str,
         message_id: int,
         caption: str = None,
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         disable_notification: bool = None,
         message_thread_id: int = None,
         reply_to_message_id: int = None,
-        reply_to_chat_id: Union[int, str] = None,
+        reply_to_chat_id: int | str = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
         has_spoiler: bool = None,
@@ -47,8 +47,8 @@ class CopyMessage:
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
-            "types.ForceReply"
-        ] = None
+            "types.ForceReply",
+        ] = None,
     ) -> "types.Message":
         """Copy messages of any kind.
 
@@ -138,5 +138,5 @@ class CopyMessage:
             protect_content=protect_content,
             has_spoiler=has_spoiler,
             reply_markup=reply_markup,
-            business_connection_id=business_connection_id
+            business_connection_id=business_connection_id,
         )

@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,9 +58,9 @@ class ReceivedNotifyMessage(TLObject):  # type: ignore
             messages.ReceivedMessages
     """
 
-    __slots__: List[str] = ["id", "flags"]
+    __slots__: list[str] = ["flags", "id"]
 
-    ID = 0xa384b779
+    ID = 0xA384B779
     QUALNAME = "types.ReceivedNotifyMessage"
 
     def __init__(self, *, id: int, flags: int) -> None:
@@ -69,11 +70,11 @@ class ReceivedNotifyMessage(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ReceivedNotifyMessage":
         # No flags
-        
+
         id = Int.read(b)
-        
+
         flags = Int.read(b)
-        
+
         return ReceivedNotifyMessage(id=id, flags=flags)
 
     def write(self, *args) -> bytes:
@@ -81,9 +82,9 @@ class ReceivedNotifyMessage(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.id))
-        
+
         b.write(Int(self.flags))
-        
+
         return b.getvalue()

@@ -17,8 +17,8 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
+from pyrogram import raw, types
+
 from ..object import Object
 
 
@@ -42,7 +42,7 @@ class GameHighScore(Object):
         client: "pyrogram.Client" = None,
         user: "types.User",
         score: int,
-        position: int = None
+        position: int = None,
     ):
         super().__init__(client)
 
@@ -53,16 +53,22 @@ class GameHighScore(Object):
     @staticmethod
     def from_raw_tl(client, game_high_score: raw.types.HighScore) -> "GameHighScore":
         return GameHighScore(
-            user=types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=game_high_score.user_id)),
+            user=types.User.from_raw_tl(
+                client,
+                client.entity_cache.get_user(user_id=game_high_score.user_id),
+            ),
             score=game_high_score.score,
             position=game_high_score.pos,
-            client=client
+            client=client,
         )
 
     @staticmethod
     def from_raw_tl_action(client, service: raw.types.MessageService):
         return GameHighScore(
-            user=types.User.from_raw_tl(client, client.entity_cache.get_peer(peer=service.from_id or service.peer_id)),
+            user=types.User.from_raw_tl(
+                client,
+                client.entity_cache.get_peer(peer=service.from_id or service.peer_id),
+            ),
             score=service.action.score,
-            client=client
+            client=client,
         )

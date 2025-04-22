@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class InstallTheme(TLObject):  # type: ignore
+class InstallTheme(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +57,19 @@ class InstallTheme(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["dark", "theme", "format", "base_theme"]
+    __slots__: list[str] = ["base_theme", "dark", "format", "theme"]
 
-    ID = 0xc727bb3b
+    ID = 0xC727BB3B
     QUALNAME = "functions.account.InstallTheme"
 
-    def __init__(self, *, dark: Optional[bool] = None, theme: "raw.base.InputTheme" = None, format: Optional[str] = None, base_theme: "raw.base.BaseTheme" = None) -> None:
+    def __init__(
+        self,
+        *,
+        dark: bool | None = None,
+        theme: "raw.base.InputTheme" = None,
+        format: str | None = None,
+        base_theme: "raw.base.BaseTheme" = None,
+    ) -> None:
         self.dark = dark  # flags.0?true
         self.theme = theme  # flags.1?InputTheme
         self.format = format  # flags.2?string
@@ -67,16 +77,20 @@ class InstallTheme(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InstallTheme":
-        
         flags = Int.read(b)
-        
+
         dark = True if flags & (1 << 0) else False
         theme = TLObject.read(b) if flags & (1 << 1) else None
-        
+
         format = String.read(b) if flags & (1 << 2) else None
         base_theme = TLObject.read(b) if flags & (1 << 3) else None
-        
-        return InstallTheme(dark=dark, theme=theme, format=format, base_theme=base_theme)
+
+        return InstallTheme(
+            dark=dark,
+            theme=theme,
+            format=format,
+            base_theme=base_theme,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -88,14 +102,14 @@ class InstallTheme(TLObject):  # type: ignore
         flags |= (1 << 2) if self.format is not None else 0
         flags |= (1 << 3) if self.base_theme is not None else 0
         b.write(Int(flags))
-        
+
         if self.theme is not None:
             b.write(self.theme.write())
-        
+
         if self.format is not None:
             b.write(String(self.format))
-        
+
         if self.base_theme is not None:
             b.write(self.base_theme.write())
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,25 +53,30 @@ class MessageViews(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["views", "forwards", "replies"]
+    __slots__: list[str] = ["forwards", "replies", "views"]
 
-    ID = 0x455b853d
+    ID = 0x455B853D
     QUALNAME = "types.MessageViews"
 
-    def __init__(self, *, views: Optional[int] = None, forwards: Optional[int] = None, replies: "raw.base.MessageReplies" = None) -> None:
+    def __init__(
+        self,
+        *,
+        views: int | None = None,
+        forwards: int | None = None,
+        replies: "raw.base.MessageReplies" = None,
+    ) -> None:
         self.views = views  # flags.0?int
         self.forwards = forwards  # flags.1?int
         self.replies = replies  # flags.2?MessageReplies
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageViews":
-        
         flags = Int.read(b)
-        
+
         views = Int.read(b) if flags & (1 << 0) else None
         forwards = Int.read(b) if flags & (1 << 1) else None
         replies = TLObject.read(b) if flags & (1 << 2) else None
-        
+
         return MessageViews(views=views, forwards=forwards, replies=replies)
 
     def write(self, *args) -> bytes:
@@ -81,14 +88,14 @@ class MessageViews(TLObject):  # type: ignore
         flags |= (1 << 1) if self.forwards is not None else 0
         flags |= (1 << 2) if self.replies is not None else 0
         b.write(Int(flags))
-        
+
         if self.views is not None:
             b.write(Int(self.views))
-        
+
         if self.forwards is not None:
             b.write(Int(self.forwards))
-        
+
         if self.replies is not None:
             b.write(self.replies.write())
-        
+
         return b.getvalue()

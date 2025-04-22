@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,7 +50,7 @@ class SentCodeTypeMissedCall(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["prefix", "length"]
+    __slots__: list[str] = ["length", "prefix"]
 
     ID = 0x82006484
     QUALNAME = "types.auth.SentCodeTypeMissedCall"
@@ -60,11 +62,11 @@ class SentCodeTypeMissedCall(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SentCodeTypeMissedCall":
         # No flags
-        
+
         prefix = String.read(b)
-        
+
         length = Int.read(b)
-        
+
         return SentCodeTypeMissedCall(prefix=prefix, length=length)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class SentCodeTypeMissedCall(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.prefix))
-        
+
         b.write(Int(self.length))
-        
+
         return b.getvalue()

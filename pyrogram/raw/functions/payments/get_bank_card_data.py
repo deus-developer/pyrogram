@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetBankCardData(TLObject):  # type: ignore
+class GetBankCardData(TLFunction["raw.base.payments.BankCardData"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetBankCardData(TLObject):  # type: ignore
         :obj:`payments.BankCardData <pyrogram.raw.base.payments.BankCardData>`
     """
 
-    __slots__: List[str] = ["number"]
+    __slots__: list[str] = ["number"]
 
-    ID = 0x2e79d779
+    ID = 0x2E79D779
     QUALNAME = "functions.payments.GetBankCardData"
 
     def __init__(self, *, number: str) -> None:
@@ -56,9 +58,9 @@ class GetBankCardData(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetBankCardData":
         # No flags
-        
+
         number = String.read(b)
-        
+
         return GetBankCardData(number=number)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class GetBankCardData(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.number))
-        
+
         return b.getvalue()

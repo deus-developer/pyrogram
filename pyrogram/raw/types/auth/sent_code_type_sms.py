@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +46,9 @@ class SentCodeTypeSms(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["length"]
+    __slots__: list[str] = ["length"]
 
-    ID = 0xc000bba2
+    ID = 0xC000BBA2
     QUALNAME = "types.auth.SentCodeTypeSms"
 
     def __init__(self, *, length: int) -> None:
@@ -56,9 +57,9 @@ class SentCodeTypeSms(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SentCodeTypeSms":
         # No flags
-        
+
         length = Int.read(b)
-        
+
         return SentCodeTypeSms(length=length)
 
     def write(self, *args) -> bytes:
@@ -66,7 +67,7 @@ class SentCodeTypeSms(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.length))
-        
+
         return b.getvalue()

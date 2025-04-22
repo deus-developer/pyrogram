@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -25,8 +24,8 @@ from pyrogram import raw
 class DeclineAllChatJoinRequests:
     async def decline_all_chat_join_requests(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        invite_link: str = None
+        chat_id: int | str,
+        invite_link: str = None,
     ) -> bool:
         """Decline all pending join requests in a chat.
 
@@ -48,8 +47,8 @@ class DeclineAllChatJoinRequests:
             raw.functions.messages.HideAllChatJoinRequests(
                 peer=await self.resolve_peer(chat_id),
                 approved=False,
-                link=invite_link
-            )
+                link=invite_link,
+            ),
         )
 
         return True

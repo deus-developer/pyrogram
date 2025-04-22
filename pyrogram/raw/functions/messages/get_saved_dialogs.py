@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetSavedDialogs(TLObject):  # type: ignore
+class GetSavedDialogs(TLFunction["raw.base.messages.SavedDialogs"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -60,12 +63,28 @@ class GetSavedDialogs(TLObject):  # type: ignore
         :obj:`messages.SavedDialogs <pyrogram.raw.base.messages.SavedDialogs>`
     """
 
-    __slots__: List[str] = ["offset_date", "offset_id", "offset_peer", "limit", "hash", "exclude_pinned"]
+    __slots__: list[str] = [
+        "exclude_pinned",
+        "hash",
+        "limit",
+        "offset_date",
+        "offset_id",
+        "offset_peer",
+    ]
 
-    ID = 0x5381d21a
+    ID = 0x5381D21A
     QUALNAME = "functions.messages.GetSavedDialogs"
 
-    def __init__(self, *, offset_date: int, offset_id: int, offset_peer: "raw.base.InputPeer", limit: int, hash: int, exclude_pinned: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        offset_date: int,
+        offset_id: int,
+        offset_peer: "raw.base.InputPeer",
+        limit: int,
+        hash: int,
+        exclude_pinned: bool | None = None,
+    ) -> None:
         self.offset_date = offset_date  # int
         self.offset_id = offset_id  # int
         self.offset_peer = offset_peer  # InputPeer
@@ -75,21 +94,27 @@ class GetSavedDialogs(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetSavedDialogs":
-        
         flags = Int.read(b)
-        
+
         exclude_pinned = True if flags & (1 << 0) else False
         offset_date = Int.read(b)
-        
+
         offset_id = Int.read(b)
-        
+
         offset_peer = TLObject.read(b)
-        
+
         limit = Int.read(b)
-        
+
         hash = Long.read(b)
-        
-        return GetSavedDialogs(offset_date=offset_date, offset_id=offset_id, offset_peer=offset_peer, limit=limit, hash=hash, exclude_pinned=exclude_pinned)
+
+        return GetSavedDialogs(
+            offset_date=offset_date,
+            offset_id=offset_id,
+            offset_peer=offset_peer,
+            limit=limit,
+            hash=hash,
+            exclude_pinned=exclude_pinned,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -98,15 +123,15 @@ class GetSavedDialogs(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.exclude_pinned else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.offset_date))
-        
+
         b.write(Int(self.offset_id))
-        
+
         b.write(self.offset_peer.write())
-        
+
         b.write(Int(self.limit))
-        
+
         b.write(Long(self.hash))
-        
+
         return b.getvalue()

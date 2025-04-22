@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetCallRating(TLObject):  # type: ignore
+class SetCallRating(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +57,19 @@ class SetCallRating(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["peer", "rating", "comment", "user_initiative"]
+    __slots__: list[str] = ["comment", "peer", "rating", "user_initiative"]
 
-    ID = 0x59ead627
+    ID = 0x59EAD627
     QUALNAME = "functions.phone.SetCallRating"
 
-    def __init__(self, *, peer: "raw.base.InputPhoneCall", rating: int, comment: str, user_initiative: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPhoneCall",
+        rating: int,
+        comment: str,
+        user_initiative: bool | None = None,
+    ) -> None:
         self.peer = peer  # InputPhoneCall
         self.rating = rating  # int
         self.comment = comment  # string
@@ -67,17 +77,21 @@ class SetCallRating(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetCallRating":
-        
         flags = Int.read(b)
-        
+
         user_initiative = True if flags & (1 << 0) else False
         peer = TLObject.read(b)
-        
+
         rating = Int.read(b)
-        
+
         comment = String.read(b)
-        
-        return SetCallRating(peer=peer, rating=rating, comment=comment, user_initiative=user_initiative)
+
+        return SetCallRating(
+            peer=peer,
+            rating=rating,
+            comment=comment,
+            user_initiative=user_initiative,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -86,11 +100,11 @@ class SetCallRating(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.user_initiative else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.rating))
-        
+
         b.write(String(self.comment))
-        
+
         return b.getvalue()

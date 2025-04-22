@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class EditCreator(TLObject):  # type: ignore
+class EditCreator(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +53,18 @@ class EditCreator(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["channel", "user_id", "password"]
+    __slots__: list[str] = ["channel", "password", "user_id"]
 
-    ID = 0x8f38cd1f
+    ID = 0x8F38CD1F
     QUALNAME = "functions.channels.EditCreator"
 
-    def __init__(self, *, channel: "raw.base.InputChannel", user_id: "raw.base.InputUser", password: "raw.base.InputCheckPasswordSRP") -> None:
+    def __init__(
+        self,
+        *,
+        channel: "raw.base.InputChannel",
+        user_id: "raw.base.InputUser",
+        password: "raw.base.InputCheckPasswordSRP",
+    ) -> None:
         self.channel = channel  # InputChannel
         self.user_id = user_id  # InputUser
         self.password = password  # InputCheckPasswordSRP
@@ -64,13 +72,13 @@ class EditCreator(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EditCreator":
         # No flags
-        
+
         channel = TLObject.read(b)
-        
+
         user_id = TLObject.read(b)
-        
+
         password = TLObject.read(b)
-        
+
         return EditCreator(channel=channel, user_id=user_id, password=password)
 
     def write(self, *args) -> bytes:
@@ -78,11 +86,11 @@ class EditCreator(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.channel.write())
-        
+
         b.write(self.user_id.write())
-        
+
         b.write(self.password.write())
-        
+
         return b.getvalue()

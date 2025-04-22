@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class EditPeerFolders(TLObject):  # type: ignore
+class EditPeerFolders(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,20 +48,20 @@ class EditPeerFolders(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["folder_peers"]
+    __slots__: list[str] = ["folder_peers"]
 
-    ID = 0x6847d0ab
+    ID = 0x6847D0AB
     QUALNAME = "functions.folders.EditPeerFolders"
 
-    def __init__(self, *, folder_peers: List["raw.base.InputFolderPeer"]) -> None:
+    def __init__(self, *, folder_peers: list["raw.base.InputFolderPeer"]) -> None:
         self.folder_peers = folder_peers  # Vector<InputFolderPeer>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EditPeerFolders":
         # No flags
-        
+
         folder_peers = TLObject.read(b)
-        
+
         return EditPeerFolders(folder_peers=folder_peers)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class EditPeerFolders(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.folder_peers))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class EditQuickReplyShortcut(TLObject):  # type: ignore
+class EditQuickReplyShortcut(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class EditQuickReplyShortcut(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["shortcut_id", "shortcut"]
+    __slots__: list[str] = ["shortcut", "shortcut_id"]
 
-    ID = 0x5c003cef
+    ID = 0x5C003CEF
     QUALNAME = "functions.messages.EditQuickReplyShortcut"
 
     def __init__(self, *, shortcut_id: int, shortcut: str) -> None:
@@ -60,11 +62,11 @@ class EditQuickReplyShortcut(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EditQuickReplyShortcut":
         # No flags
-        
+
         shortcut_id = Int.read(b)
-        
+
         shortcut = String.read(b)
-        
+
         return EditQuickReplyShortcut(shortcut_id=shortcut_id, shortcut=shortcut)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class EditQuickReplyShortcut(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.shortcut_id))
-        
+
         b.write(String(self.shortcut))
-        
+
         return b.getvalue()

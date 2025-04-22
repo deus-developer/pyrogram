@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,9 +53,9 @@ class ChatParticipant(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["user_id", "inviter_id", "date"]
+    __slots__: list[str] = ["date", "inviter_id", "user_id"]
 
-    ID = 0xc02d4007
+    ID = 0xC02D4007
     QUALNAME = "types.ChatParticipant"
 
     def __init__(self, *, user_id: int, inviter_id: int, date: int) -> None:
@@ -64,13 +66,13 @@ class ChatParticipant(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChatParticipant":
         # No flags
-        
+
         user_id = Long.read(b)
-        
+
         inviter_id = Long.read(b)
-        
+
         date = Int.read(b)
-        
+
         return ChatParticipant(user_id=user_id, inviter_id=inviter_id, date=date)
 
     def write(self, *args) -> bytes:
@@ -78,11 +80,11 @@ class ChatParticipant(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.user_id))
-        
+
         b.write(Long(self.inviter_id))
-        
+
         b.write(Int(self.date))
-        
+
         return b.getvalue()

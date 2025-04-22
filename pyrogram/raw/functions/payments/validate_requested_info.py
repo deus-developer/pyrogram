@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ValidateRequestedInfo(TLObject):  # type: ignore
+class ValidateRequestedInfo(TLFunction["raw.base.payments.ValidatedRequestedInfo"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,26 +53,31 @@ class ValidateRequestedInfo(TLObject):  # type: ignore
         :obj:`payments.ValidatedRequestedInfo <pyrogram.raw.base.payments.ValidatedRequestedInfo>`
     """
 
-    __slots__: List[str] = ["invoice", "info", "save"]
+    __slots__: list[str] = ["info", "invoice", "save"]
 
-    ID = 0xb6c8f12b
+    ID = 0xB6C8F12B
     QUALNAME = "functions.payments.ValidateRequestedInfo"
 
-    def __init__(self, *, invoice: "raw.base.InputInvoice", info: "raw.base.PaymentRequestedInfo", save: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        invoice: "raw.base.InputInvoice",
+        info: "raw.base.PaymentRequestedInfo",
+        save: bool | None = None,
+    ) -> None:
         self.invoice = invoice  # InputInvoice
         self.info = info  # PaymentRequestedInfo
         self.save = save  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ValidateRequestedInfo":
-        
         flags = Int.read(b)
-        
+
         save = True if flags & (1 << 0) else False
         invoice = TLObject.read(b)
-        
+
         info = TLObject.read(b)
-        
+
         return ValidateRequestedInfo(invoice=invoice, info=info, save=save)
 
     def write(self, *args) -> bytes:
@@ -80,9 +87,9 @@ class ValidateRequestedInfo(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.save else 0
         b.write(Int(flags))
-        
+
         b.write(self.invoice.write())
-        
+
         b.write(self.info.write())
-        
+
         return b.getvalue()

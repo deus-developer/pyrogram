@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,12 +53,18 @@ class InputBusinessGreetingMessage(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["shortcut_id", "recipients", "no_activity_days"]
+    __slots__: list[str] = ["no_activity_days", "recipients", "shortcut_id"]
 
-    ID = 0x194cb3b
+    ID = 0x194CB3B
     QUALNAME = "types.InputBusinessGreetingMessage"
 
-    def __init__(self, *, shortcut_id: int, recipients: "raw.base.InputBusinessRecipients", no_activity_days: int) -> None:
+    def __init__(
+        self,
+        *,
+        shortcut_id: int,
+        recipients: "raw.base.InputBusinessRecipients",
+        no_activity_days: int,
+    ) -> None:
         self.shortcut_id = shortcut_id  # int
         self.recipients = recipients  # InputBusinessRecipients
         self.no_activity_days = no_activity_days  # int
@@ -64,25 +72,29 @@ class InputBusinessGreetingMessage(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputBusinessGreetingMessage":
         # No flags
-        
+
         shortcut_id = Int.read(b)
-        
+
         recipients = TLObject.read(b)
-        
+
         no_activity_days = Int.read(b)
-        
-        return InputBusinessGreetingMessage(shortcut_id=shortcut_id, recipients=recipients, no_activity_days=no_activity_days)
+
+        return InputBusinessGreetingMessage(
+            shortcut_id=shortcut_id,
+            recipients=recipients,
+            no_activity_days=no_activity_days,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.shortcut_id))
-        
+
         b.write(self.recipients.write())
-        
+
         b.write(Int(self.no_activity_days))
-        
+
         return b.getvalue()

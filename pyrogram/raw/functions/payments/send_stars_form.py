@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SendStarsForm(TLObject):  # type: ignore
+class SendStarsForm(TLFunction["raw.base.payments.PaymentResult"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class SendStarsForm(TLObject):  # type: ignore
         :obj:`payments.PaymentResult <pyrogram.raw.base.payments.PaymentResult>`
     """
 
-    __slots__: List[str] = ["form_id", "invoice"]
+    __slots__: list[str] = ["form_id", "invoice"]
 
-    ID = 0x2bb731d
+    ID = 0x2BB731D
     QUALNAME = "functions.payments.SendStarsForm"
 
     def __init__(self, *, form_id: int, invoice: "raw.base.InputInvoice") -> None:
@@ -59,13 +62,12 @@ class SendStarsForm(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SendStarsForm":
-        
         flags = Int.read(b)
-        
+
         form_id = Long.read(b)
-        
+
         invoice = TLObject.read(b)
-        
+
         return SendStarsForm(form_id=form_id, invoice=invoice)
 
     def write(self, *args) -> bytes:
@@ -73,11 +75,11 @@ class SendStarsForm(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         flags = 0
-        
+
         b.write(Int(flags))
-        
+
         b.write(Long(self.form_id))
-        
+
         b.write(self.invoice.write())
-        
+
         return b.getvalue()

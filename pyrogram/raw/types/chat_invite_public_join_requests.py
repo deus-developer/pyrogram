@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -53,9 +54,9 @@ class ChatInvitePublicJoinRequests(TLObject):  # type: ignore
             messages.ExportChatInvite
     """
 
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
-    ID = 0xed107ab7
+    ID = 0xED107AB7
     QUALNAME = "types.ChatInvitePublicJoinRequests"
 
     def __init__(self) -> None:
@@ -64,7 +65,7 @@ class ChatInvitePublicJoinRequests(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChatInvitePublicJoinRequests":
         # No flags
-        
+
         return ChatInvitePublicJoinRequests()
 
     def write(self, *args) -> bytes:
@@ -72,5 +73,5 @@ class ChatInvitePublicJoinRequests(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         return b.getvalue()

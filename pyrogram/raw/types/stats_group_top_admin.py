@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +56,9 @@ class StatsGroupTopAdmin(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["user_id", "deleted", "kicked", "banned"]
+    __slots__: list[str] = ["banned", "deleted", "kicked", "user_id"]
 
-    ID = 0xd7584c87
+    ID = 0xD7584C87
     QUALNAME = "types.StatsGroupTopAdmin"
 
     def __init__(self, *, user_id: int, deleted: int, kicked: int, banned: int) -> None:
@@ -68,29 +70,34 @@ class StatsGroupTopAdmin(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "StatsGroupTopAdmin":
         # No flags
-        
+
         user_id = Long.read(b)
-        
+
         deleted = Int.read(b)
-        
+
         kicked = Int.read(b)
-        
+
         banned = Int.read(b)
-        
-        return StatsGroupTopAdmin(user_id=user_id, deleted=deleted, kicked=kicked, banned=banned)
+
+        return StatsGroupTopAdmin(
+            user_id=user_id,
+            deleted=deleted,
+            kicked=kicked,
+            banned=banned,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.user_id))
-        
+
         b.write(Int(self.deleted))
-        
+
         b.write(Int(self.kicked))
-        
+
         b.write(Int(self.banned))
-        
+
         return b.getvalue()

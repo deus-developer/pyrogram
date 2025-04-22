@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,12 +61,20 @@ class UpdateTranscribedAudio(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "msg_id", "transcription_id", "text", "pending"]
+    __slots__: list[str] = ["msg_id", "peer", "pending", "text", "transcription_id"]
 
-    ID = 0x84cd5a
+    ID = 0x84CD5A
     QUALNAME = "types.UpdateTranscribedAudio"
 
-    def __init__(self, *, peer: "raw.base.Peer", msg_id: int, transcription_id: int, text: str, pending: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.Peer",
+        msg_id: int,
+        transcription_id: int,
+        text: str,
+        pending: bool | None = None,
+    ) -> None:
         self.peer = peer  # Peer
         self.msg_id = msg_id  # int
         self.transcription_id = transcription_id  # long
@@ -71,19 +83,24 @@ class UpdateTranscribedAudio(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateTranscribedAudio":
-        
         flags = Int.read(b)
-        
+
         pending = True if flags & (1 << 0) else False
         peer = TLObject.read(b)
-        
+
         msg_id = Int.read(b)
-        
+
         transcription_id = Long.read(b)
-        
+
         text = String.read(b)
-        
-        return UpdateTranscribedAudio(peer=peer, msg_id=msg_id, transcription_id=transcription_id, text=text, pending=pending)
+
+        return UpdateTranscribedAudio(
+            peer=peer,
+            msg_id=msg_id,
+            transcription_id=transcription_id,
+            text=text,
+            pending=pending,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -92,13 +109,13 @@ class UpdateTranscribedAudio(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.pending else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.msg_id))
-        
+
         b.write(Long(self.transcription_id))
-        
+
         b.write(String(self.text))
-        
+
         return b.getvalue()

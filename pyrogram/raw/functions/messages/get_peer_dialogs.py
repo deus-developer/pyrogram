@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetPeerDialogs(TLObject):  # type: ignore
+class GetPeerDialogs(TLFunction["raw.base.messages.PeerDialogs"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,20 +48,20 @@ class GetPeerDialogs(TLObject):  # type: ignore
         :obj:`messages.PeerDialogs <pyrogram.raw.base.messages.PeerDialogs>`
     """
 
-    __slots__: List[str] = ["peers"]
+    __slots__: list[str] = ["peers"]
 
-    ID = 0xe470bcfd
+    ID = 0xE470BCFD
     QUALNAME = "functions.messages.GetPeerDialogs"
 
-    def __init__(self, *, peers: List["raw.base.InputDialogPeer"]) -> None:
+    def __init__(self, *, peers: list["raw.base.InputDialogPeer"]) -> None:
         self.peers = peers  # Vector<InputDialogPeer>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetPeerDialogs":
         # No flags
-        
+
         peers = TLObject.read(b)
-        
+
         return GetPeerDialogs(peers=peers)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class GetPeerDialogs(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.peers))
-        
+
         return b.getvalue()

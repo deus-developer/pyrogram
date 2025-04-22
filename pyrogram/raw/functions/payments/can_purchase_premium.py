@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class CanPurchasePremium(TLObject):  # type: ignore
+class CanPurchasePremium(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class CanPurchasePremium(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["purpose"]
+    __slots__: list[str] = ["purpose"]
 
-    ID = 0x9fc19eb6
+    ID = 0x9FC19EB6
     QUALNAME = "functions.payments.CanPurchasePremium"
 
     def __init__(self, *, purpose: "raw.base.InputStorePaymentPurpose") -> None:
@@ -56,9 +58,9 @@ class CanPurchasePremium(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "CanPurchasePremium":
         # No flags
-        
+
         purpose = TLObject.read(b)
-        
+
         return CanPurchasePremium(purpose=purpose)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class CanPurchasePremium(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.purpose.write())
-        
+
         return b.getvalue()

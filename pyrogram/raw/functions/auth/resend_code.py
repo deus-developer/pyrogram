@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ResendCode(TLObject):  # type: ignore
+class ResendCode(TLFunction["raw.base.auth.SentCode"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,27 +53,36 @@ class ResendCode(TLObject):  # type: ignore
         :obj:`auth.SentCode <pyrogram.raw.base.auth.SentCode>`
     """
 
-    __slots__: List[str] = ["phone_number", "phone_code_hash", "reason"]
+    __slots__: list[str] = ["phone_code_hash", "phone_number", "reason"]
 
-    ID = 0xcae47523
+    ID = 0xCAE47523
     QUALNAME = "functions.auth.ResendCode"
 
-    def __init__(self, *, phone_number: str, phone_code_hash: str, reason: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        phone_number: str,
+        phone_code_hash: str,
+        reason: str | None = None,
+    ) -> None:
         self.phone_number = phone_number  # string
         self.phone_code_hash = phone_code_hash  # string
         self.reason = reason  # flags.0?string
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ResendCode":
-        
         flags = Int.read(b)
-        
+
         phone_number = String.read(b)
-        
+
         phone_code_hash = String.read(b)
-        
+
         reason = String.read(b) if flags & (1 << 0) else None
-        return ResendCode(phone_number=phone_number, phone_code_hash=phone_code_hash, reason=reason)
+        return ResendCode(
+            phone_number=phone_number,
+            phone_code_hash=phone_code_hash,
+            reason=reason,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -80,12 +91,12 @@ class ResendCode(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.reason is not None else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.phone_number))
-        
+
         b.write(String(self.phone_code_hash))
-        
+
         if self.reason is not None:
             b.write(String(self.reason))
-        
+
         return b.getvalue()

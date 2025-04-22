@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ToggleParticipantsHidden(TLObject):  # type: ignore
+class ToggleParticipantsHidden(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +51,9 @@ class ToggleParticipantsHidden(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["channel", "enabled"]
+    __slots__: list[str] = ["channel", "enabled"]
 
-    ID = 0x6a6e7854
+    ID = 0x6A6E7854
     QUALNAME = "functions.channels.ToggleParticipantsHidden"
 
     def __init__(self, *, channel: "raw.base.InputChannel", enabled: bool) -> None:
@@ -60,11 +63,11 @@ class ToggleParticipantsHidden(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ToggleParticipantsHidden":
         # No flags
-        
+
         channel = TLObject.read(b)
-        
+
         enabled = Bool.read(b)
-        
+
         return ToggleParticipantsHidden(channel=channel, enabled=enabled)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class ToggleParticipantsHidden(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.channel.write())
-        
+
         b.write(Bool(self.enabled))
-        
+
         return b.getvalue()

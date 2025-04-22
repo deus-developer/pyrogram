@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,7 +49,7 @@ class ChannelAdminLogEventActionToggleSlowMode(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["prev_value", "new_value"]
+    __slots__: list[str] = ["new_value", "prev_value"]
 
     ID = 0x53909779
     QUALNAME = "types.ChannelAdminLogEventActionToggleSlowMode"
@@ -60,21 +61,24 @@ class ChannelAdminLogEventActionToggleSlowMode(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChannelAdminLogEventActionToggleSlowMode":
         # No flags
-        
+
         prev_value = Int.read(b)
-        
+
         new_value = Int.read(b)
-        
-        return ChannelAdminLogEventActionToggleSlowMode(prev_value=prev_value, new_value=new_value)
+
+        return ChannelAdminLogEventActionToggleSlowMode(
+            prev_value=prev_value,
+            new_value=new_value,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.prev_value))
-        
+
         b.write(Int(self.new_value))
-        
+
         return b.getvalue()

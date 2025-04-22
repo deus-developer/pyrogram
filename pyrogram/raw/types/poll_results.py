@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,12 +64,28 @@ class PollResults(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["min", "results", "total_voters", "recent_voters", "solution", "solution_entities"]
+    __slots__: list[str] = [
+        "min",
+        "recent_voters",
+        "results",
+        "solution",
+        "solution_entities",
+        "total_voters",
+    ]
 
-    ID = 0x7adf2420
+    ID = 0x7ADF2420
     QUALNAME = "types.PollResults"
 
-    def __init__(self, *, min: Optional[bool] = None, results: Optional[List["raw.base.PollAnswerVoters"]] = None, total_voters: Optional[int] = None, recent_voters: Optional[List["raw.base.Peer"]] = None, solution: Optional[str] = None, solution_entities: Optional[List["raw.base.MessageEntity"]] = None) -> None:
+    def __init__(
+        self,
+        *,
+        min: bool | None = None,
+        results: list["raw.base.PollAnswerVoters"] | None = None,
+        total_voters: int | None = None,
+        recent_voters: list["raw.base.Peer"] | None = None,
+        solution: str | None = None,
+        solution_entities: list["raw.base.MessageEntity"] | None = None,
+    ) -> None:
         self.min = min  # flags.0?true
         self.results = results  # flags.1?Vector<PollAnswerVoters>
         self.total_voters = total_voters  # flags.2?int
@@ -75,19 +95,25 @@ class PollResults(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PollResults":
-        
         flags = Int.read(b)
-        
+
         min = True if flags & (1 << 0) else False
         results = TLObject.read(b) if flags & (1 << 1) else []
-        
+
         total_voters = Int.read(b) if flags & (1 << 2) else None
         recent_voters = TLObject.read(b) if flags & (1 << 3) else []
-        
+
         solution = String.read(b) if flags & (1 << 4) else None
         solution_entities = TLObject.read(b) if flags & (1 << 4) else []
-        
-        return PollResults(min=min, results=results, total_voters=total_voters, recent_voters=recent_voters, solution=solution, solution_entities=solution_entities)
+
+        return PollResults(
+            min=min,
+            results=results,
+            total_voters=total_voters,
+            recent_voters=recent_voters,
+            solution=solution,
+            solution_entities=solution_entities,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -101,20 +127,20 @@ class PollResults(TLObject):  # type: ignore
         flags |= (1 << 4) if self.solution is not None else 0
         flags |= (1 << 4) if self.solution_entities else 0
         b.write(Int(flags))
-        
+
         if self.results is not None:
             b.write(Vector(self.results))
-        
+
         if self.total_voters is not None:
             b.write(Int(self.total_voters))
-        
+
         if self.recent_voters is not None:
             b.write(Vector(self.recent_voters))
-        
+
         if self.solution is not None:
             b.write(String(self.solution))
-        
+
         if self.solution_entities is not None:
             b.write(Vector(self.solution_entities))
-        
+
         return b.getvalue()

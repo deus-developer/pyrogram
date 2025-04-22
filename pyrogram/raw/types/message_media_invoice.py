@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -83,12 +87,36 @@ class MessageMediaInvoice(TLObject):  # type: ignore
             messages.UploadImportedMedia
     """
 
-    __slots__: List[str] = ["title", "description", "currency", "total_amount", "start_param", "shipping_address_requested", "test", "photo", "receipt_msg_id", "extended_media"]
+    __slots__: list[str] = [
+        "currency",
+        "description",
+        "extended_media",
+        "photo",
+        "receipt_msg_id",
+        "shipping_address_requested",
+        "start_param",
+        "test",
+        "title",
+        "total_amount",
+    ]
 
-    ID = 0xf6a548d3
+    ID = 0xF6A548D3
     QUALNAME = "types.MessageMediaInvoice"
 
-    def __init__(self, *, title: str, description: str, currency: str, total_amount: int, start_param: str, shipping_address_requested: Optional[bool] = None, test: Optional[bool] = None, photo: "raw.base.WebDocument" = None, receipt_msg_id: Optional[int] = None, extended_media: "raw.base.MessageExtendedMedia" = None) -> None:
+    def __init__(
+        self,
+        *,
+        title: str,
+        description: str,
+        currency: str,
+        total_amount: int,
+        start_param: str,
+        shipping_address_requested: bool | None = None,
+        test: bool | None = None,
+        photo: "raw.base.WebDocument" = None,
+        receipt_msg_id: int | None = None,
+        extended_media: "raw.base.MessageExtendedMedia" = None,
+    ) -> None:
         self.title = title  # string
         self.description = description  # string
         self.currency = currency  # string
@@ -102,27 +130,37 @@ class MessageMediaInvoice(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageMediaInvoice":
-        
         flags = Int.read(b)
-        
+
         shipping_address_requested = True if flags & (1 << 1) else False
         test = True if flags & (1 << 3) else False
         title = String.read(b)
-        
+
         description = String.read(b)
-        
+
         photo = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         receipt_msg_id = Int.read(b) if flags & (1 << 2) else None
         currency = String.read(b)
-        
+
         total_amount = Long.read(b)
-        
+
         start_param = String.read(b)
-        
+
         extended_media = TLObject.read(b) if flags & (1 << 4) else None
-        
-        return MessageMediaInvoice(title=title, description=description, currency=currency, total_amount=total_amount, start_param=start_param, shipping_address_requested=shipping_address_requested, test=test, photo=photo, receipt_msg_id=receipt_msg_id, extended_media=extended_media)
+
+        return MessageMediaInvoice(
+            title=title,
+            description=description,
+            currency=currency,
+            total_amount=total_amount,
+            start_param=start_param,
+            shipping_address_requested=shipping_address_requested,
+            test=test,
+            photo=photo,
+            receipt_msg_id=receipt_msg_id,
+            extended_media=extended_media,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -135,24 +173,24 @@ class MessageMediaInvoice(TLObject):  # type: ignore
         flags |= (1 << 2) if self.receipt_msg_id is not None else 0
         flags |= (1 << 4) if self.extended_media is not None else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.title))
-        
+
         b.write(String(self.description))
-        
+
         if self.photo is not None:
             b.write(self.photo.write())
-        
+
         if self.receipt_msg_id is not None:
             b.write(Int(self.receipt_msg_id))
-        
+
         b.write(String(self.currency))
-        
+
         b.write(Long(self.total_amount))
-        
+
         b.write(String(self.start_param))
-        
+
         if self.extended_media is not None:
             b.write(self.extended_media.write())
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +56,9 @@ class ExportedStoryLink(TLObject):  # type: ignore
             stories.ExportStoryLink
     """
 
-    __slots__: List[str] = ["link"]
+    __slots__: list[str] = ["link"]
 
-    ID = 0x3fc9053b
+    ID = 0x3FC9053B
     QUALNAME = "types.ExportedStoryLink"
 
     def __init__(self, *, link: str) -> None:
@@ -65,9 +67,9 @@ class ExportedStoryLink(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ExportedStoryLink":
         # No flags
-        
+
         link = String.read(b)
-        
+
         return ExportedStoryLink(link=link)
 
     def write(self, *args) -> bytes:
@@ -75,7 +77,7 @@ class ExportedStoryLink(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.link))
-        
+
         return b.getvalue()

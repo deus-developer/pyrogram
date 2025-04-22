@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +56,9 @@ class DhConfigNotModified(TLObject):  # type: ignore
             messages.GetDhConfig
     """
 
-    __slots__: List[str] = ["random"]
+    __slots__: list[str] = ["random"]
 
-    ID = 0xc0e24635
+    ID = 0xC0E24635
     QUALNAME = "types.messages.DhConfigNotModified"
 
     def __init__(self, *, random: bytes) -> None:
@@ -65,9 +67,9 @@ class DhConfigNotModified(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DhConfigNotModified":
         # No flags
-        
+
         random = Bytes.read(b)
-        
+
         return DhConfigNotModified(random=random)
 
     def write(self, *args) -> bytes:
@@ -75,7 +77,7 @@ class DhConfigNotModified(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Bytes(self.random))
-        
+
         return b.getvalue()

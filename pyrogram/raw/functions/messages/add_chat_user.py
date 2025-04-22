@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class AddChatUser(TLObject):  # type: ignore
+class AddChatUser(TLFunction["raw.base.messages.InvitedUsers"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +54,18 @@ class AddChatUser(TLObject):  # type: ignore
         :obj:`messages.InvitedUsers <pyrogram.raw.base.messages.InvitedUsers>`
     """
 
-    __slots__: List[str] = ["chat_id", "user_id", "fwd_limit"]
+    __slots__: list[str] = ["chat_id", "fwd_limit", "user_id"]
 
-    ID = 0xcbc6d107
+    ID = 0xCBC6D107
     QUALNAME = "functions.messages.AddChatUser"
 
-    def __init__(self, *, chat_id: int, user_id: "raw.base.InputUser", fwd_limit: int) -> None:
+    def __init__(
+        self,
+        *,
+        chat_id: int,
+        user_id: "raw.base.InputUser",
+        fwd_limit: int,
+    ) -> None:
         self.chat_id = chat_id  # long
         self.user_id = user_id  # InputUser
         self.fwd_limit = fwd_limit  # int
@@ -64,13 +73,13 @@ class AddChatUser(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "AddChatUser":
         # No flags
-        
+
         chat_id = Long.read(b)
-        
+
         user_id = TLObject.read(b)
-        
+
         fwd_limit = Int.read(b)
-        
+
         return AddChatUser(chat_id=chat_id, user_id=user_id, fwd_limit=fwd_limit)
 
     def write(self, *args) -> bytes:
@@ -78,11 +87,11 @@ class AddChatUser(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.chat_id))
-        
+
         b.write(self.user_id.write())
-        
+
         b.write(Int(self.fwd_limit))
-        
+
         return b.getvalue()

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +57,19 @@ class KeyboardButtonRequestPeer(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["text", "button_id", "peer_type", "max_quantity"]
+    __slots__: list[str] = ["button_id", "max_quantity", "peer_type", "text"]
 
-    ID = 0x53d7bfd8
+    ID = 0x53D7BFD8
     QUALNAME = "types.KeyboardButtonRequestPeer"
 
-    def __init__(self, *, text: str, button_id: int, peer_type: "raw.base.RequestPeerType", max_quantity: int) -> None:
+    def __init__(
+        self,
+        *,
+        text: str,
+        button_id: int,
+        peer_type: "raw.base.RequestPeerType",
+        max_quantity: int,
+    ) -> None:
         self.text = text  # string
         self.button_id = button_id  # int
         self.peer_type = peer_type  # RequestPeerType
@@ -68,29 +78,34 @@ class KeyboardButtonRequestPeer(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "KeyboardButtonRequestPeer":
         # No flags
-        
+
         text = String.read(b)
-        
+
         button_id = Int.read(b)
-        
+
         peer_type = TLObject.read(b)
-        
+
         max_quantity = Int.read(b)
-        
-        return KeyboardButtonRequestPeer(text=text, button_id=button_id, peer_type=peer_type, max_quantity=max_quantity)
+
+        return KeyboardButtonRequestPeer(
+            text=text,
+            button_id=button_id,
+            peer_type=peer_type,
+            max_quantity=max_quantity,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.text))
-        
+
         b.write(Int(self.button_id))
-        
+
         b.write(self.peer_type.write())
-        
+
         b.write(Int(self.max_quantity))
-        
+
         return b.getvalue()

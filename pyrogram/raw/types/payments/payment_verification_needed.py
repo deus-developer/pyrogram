@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -55,9 +57,9 @@ class PaymentVerificationNeeded(TLObject):  # type: ignore
             payments.SendStarsForm
     """
 
-    __slots__: List[str] = ["url"]
+    __slots__: list[str] = ["url"]
 
-    ID = 0xd8411139
+    ID = 0xD8411139
     QUALNAME = "types.payments.PaymentVerificationNeeded"
 
     def __init__(self, *, url: str) -> None:
@@ -66,9 +68,9 @@ class PaymentVerificationNeeded(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PaymentVerificationNeeded":
         # No flags
-        
+
         url = String.read(b)
-        
+
         return PaymentVerificationNeeded(url=url)
 
     def write(self, *args) -> bytes:
@@ -76,7 +78,7 @@ class PaymentVerificationNeeded(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.url))
-        
+
         return b.getvalue()

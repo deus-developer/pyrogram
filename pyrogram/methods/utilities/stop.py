@@ -22,7 +22,7 @@ import pyrogram
 class Stop:
     async def stop(
         self: "pyrogram.Client",
-        block: bool = True
+        block: bool = True,
     ):
         """Stop the Client.
 

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -58,9 +60,9 @@ class LoginToken(TLObject):  # type: ignore
             auth.ImportLoginToken
     """
 
-    __slots__: List[str] = ["expires", "token"]
+    __slots__: list[str] = ["expires", "token"]
 
-    ID = 0x629f1980
+    ID = 0x629F1980
     QUALNAME = "types.auth.LoginToken"
 
     def __init__(self, *, expires: int, token: bytes) -> None:
@@ -70,11 +72,11 @@ class LoginToken(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "LoginToken":
         # No flags
-        
+
         expires = Int.read(b)
-        
+
         token = Bytes.read(b)
-        
+
         return LoginToken(expires=expires, token=token)
 
     def write(self, *args) -> bytes:
@@ -82,9 +84,9 @@ class LoginToken(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.expires))
-        
+
         b.write(Bytes(self.token))
-        
+
         return b.getvalue()

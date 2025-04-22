@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +57,19 @@ class EncryptedMessageService(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["random_id", "chat_id", "date", "bytes"]
+    __slots__: list[str] = ["bytes", "chat_id", "date", "random_id"]
 
-    ID = 0x23734b06
+    ID = 0x23734B06
     QUALNAME = "types.EncryptedMessageService"
 
-    def __init__(self, *, random_id: int, chat_id: int, date: int, bytes: bytes) -> None:
+    def __init__(
+        self,
+        *,
+        random_id: int,
+        chat_id: int,
+        date: int,
+        bytes: bytes,
+    ) -> None:
         self.random_id = random_id  # long
         self.chat_id = chat_id  # int
         self.date = date  # int
@@ -68,29 +78,34 @@ class EncryptedMessageService(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EncryptedMessageService":
         # No flags
-        
+
         random_id = Long.read(b)
-        
+
         chat_id = Int.read(b)
-        
+
         date = Int.read(b)
-        
+
         bytes = Bytes.read(b)
-        
-        return EncryptedMessageService(random_id=random_id, chat_id=chat_id, date=date, bytes=bytes)
+
+        return EncryptedMessageService(
+            random_id=random_id,
+            chat_id=chat_id,
+            date=date,
+            bytes=bytes,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.random_id))
-        
+
         b.write(Int(self.chat_id))
-        
+
         b.write(Int(self.date))
-        
+
         b.write(Bytes(self.bytes))
-        
+
         return b.getvalue()

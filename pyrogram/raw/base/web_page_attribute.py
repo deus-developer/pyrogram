@@ -4,8 +4,10 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type WebPageAttribute = Union["raw.types.WebPageAttributeStickerSet, raw.types.WebPageAttributeStory, raw.types.WebPageAttributeTheme"]
+type WebPageAttribute = (
+    raw.types.WebPageAttributeStickerSet
+    | raw.types.WebPageAttributeStory
+    | raw.types.WebPageAttributeTheme
+)

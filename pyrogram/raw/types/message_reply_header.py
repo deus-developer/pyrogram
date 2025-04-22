@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -75,12 +79,38 @@ class MessageReplyHeader(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["reply_to_scheduled", "forum_topic", "quote", "reply_to_msg_id", "reply_to_peer_id", "reply_from", "reply_media", "reply_to_top_id", "quote_text", "quote_entities", "quote_offset"]
+    __slots__: list[str] = [
+        "forum_topic",
+        "quote",
+        "quote_entities",
+        "quote_offset",
+        "quote_text",
+        "reply_from",
+        "reply_media",
+        "reply_to_msg_id",
+        "reply_to_peer_id",
+        "reply_to_scheduled",
+        "reply_to_top_id",
+    ]
 
-    ID = 0xafbc09db
+    ID = 0xAFBC09DB
     QUALNAME = "types.MessageReplyHeader"
 
-    def __init__(self, *, reply_to_scheduled: Optional[bool] = None, forum_topic: Optional[bool] = None, quote: Optional[bool] = None, reply_to_msg_id: Optional[int] = None, reply_to_peer_id: "raw.base.Peer" = None, reply_from: "raw.base.MessageFwdHeader" = None, reply_media: "raw.base.MessageMedia" = None, reply_to_top_id: Optional[int] = None, quote_text: Optional[str] = None, quote_entities: Optional[List["raw.base.MessageEntity"]] = None, quote_offset: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        reply_to_scheduled: bool | None = None,
+        forum_topic: bool | None = None,
+        quote: bool | None = None,
+        reply_to_msg_id: int | None = None,
+        reply_to_peer_id: "raw.base.Peer" = None,
+        reply_from: "raw.base.MessageFwdHeader" = None,
+        reply_media: "raw.base.MessageMedia" = None,
+        reply_to_top_id: int | None = None,
+        quote_text: str | None = None,
+        quote_entities: list["raw.base.MessageEntity"] | None = None,
+        quote_offset: int | None = None,
+    ) -> None:
         self.reply_to_scheduled = reply_to_scheduled  # flags.2?true
         self.forum_topic = forum_topic  # flags.3?true
         self.quote = quote  # flags.9?true
@@ -95,25 +125,36 @@ class MessageReplyHeader(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageReplyHeader":
-        
         flags = Int.read(b)
-        
+
         reply_to_scheduled = True if flags & (1 << 2) else False
         forum_topic = True if flags & (1 << 3) else False
         quote = True if flags & (1 << 9) else False
         reply_to_msg_id = Int.read(b) if flags & (1 << 4) else None
         reply_to_peer_id = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         reply_from = TLObject.read(b) if flags & (1 << 5) else None
-        
+
         reply_media = TLObject.read(b) if flags & (1 << 8) else None
-        
+
         reply_to_top_id = Int.read(b) if flags & (1 << 1) else None
         quote_text = String.read(b) if flags & (1 << 6) else None
         quote_entities = TLObject.read(b) if flags & (1 << 7) else []
-        
+
         quote_offset = Int.read(b) if flags & (1 << 10) else None
-        return MessageReplyHeader(reply_to_scheduled=reply_to_scheduled, forum_topic=forum_topic, quote=quote, reply_to_msg_id=reply_to_msg_id, reply_to_peer_id=reply_to_peer_id, reply_from=reply_from, reply_media=reply_media, reply_to_top_id=reply_to_top_id, quote_text=quote_text, quote_entities=quote_entities, quote_offset=quote_offset)
+        return MessageReplyHeader(
+            reply_to_scheduled=reply_to_scheduled,
+            forum_topic=forum_topic,
+            quote=quote,
+            reply_to_msg_id=reply_to_msg_id,
+            reply_to_peer_id=reply_to_peer_id,
+            reply_from=reply_from,
+            reply_media=reply_media,
+            reply_to_top_id=reply_to_top_id,
+            quote_text=quote_text,
+            quote_entities=quote_entities,
+            quote_offset=quote_offset,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -132,29 +173,29 @@ class MessageReplyHeader(TLObject):  # type: ignore
         flags |= (1 << 7) if self.quote_entities else 0
         flags |= (1 << 10) if self.quote_offset is not None else 0
         b.write(Int(flags))
-        
+
         if self.reply_to_msg_id is not None:
             b.write(Int(self.reply_to_msg_id))
-        
+
         if self.reply_to_peer_id is not None:
             b.write(self.reply_to_peer_id.write())
-        
+
         if self.reply_from is not None:
             b.write(self.reply_from.write())
-        
+
         if self.reply_media is not None:
             b.write(self.reply_media.write())
-        
+
         if self.reply_to_top_id is not None:
             b.write(Int(self.reply_to_top_id))
-        
+
         if self.quote_text is not None:
             b.write(String(self.quote_text))
-        
+
         if self.quote_entities is not None:
             b.write(Vector(self.quote_entities))
-        
+
         if self.quote_offset is not None:
             b.write(Int(self.quote_offset))
-        
+
         return b.getvalue()

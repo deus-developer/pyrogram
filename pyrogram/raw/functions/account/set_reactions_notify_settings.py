@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetReactionsNotifySettings(TLObject):  # type: ignore
+class SetReactionsNotifySettings(TLFunction["raw.base.ReactionsNotifySettings"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class SetReactionsNotifySettings(TLObject):  # type: ignore
         :obj:`ReactionsNotifySettings <pyrogram.raw.base.ReactionsNotifySettings>`
     """
 
-    __slots__: List[str] = ["settings"]
+    __slots__: list[str] = ["settings"]
 
-    ID = 0x316ce548
+    ID = 0x316CE548
     QUALNAME = "functions.account.SetReactionsNotifySettings"
 
     def __init__(self, *, settings: "raw.base.ReactionsNotifySettings") -> None:
@@ -56,9 +58,9 @@ class SetReactionsNotifySettings(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetReactionsNotifySettings":
         # No flags
-        
+
         settings = TLObject.read(b)
-        
+
         return SetReactionsNotifySettings(settings=settings)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class SetReactionsNotifySettings(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.settings.write())
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,9 +53,9 @@ class GroupCallStreamChannel(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["channel", "scale", "last_timestamp_ms"]
+    __slots__: list[str] = ["channel", "last_timestamp_ms", "scale"]
 
-    ID = 0x80eb48af
+    ID = 0x80EB48AF
     QUALNAME = "types.GroupCallStreamChannel"
 
     def __init__(self, *, channel: int, scale: int, last_timestamp_ms: int) -> None:
@@ -64,25 +66,29 @@ class GroupCallStreamChannel(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GroupCallStreamChannel":
         # No flags
-        
+
         channel = Int.read(b)
-        
+
         scale = Int.read(b)
-        
+
         last_timestamp_ms = Long.read(b)
-        
-        return GroupCallStreamChannel(channel=channel, scale=scale, last_timestamp_ms=last_timestamp_ms)
+
+        return GroupCallStreamChannel(
+            channel=channel,
+            scale=scale,
+            last_timestamp_ms=last_timestamp_ms,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.channel))
-        
+
         b.write(Int(self.scale))
-        
+
         b.write(Long(self.last_timestamp_ms))
-        
+
         return b.getvalue()

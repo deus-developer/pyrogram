@@ -18,12 +18,13 @@
 
 import asyncio
 import os
+from collections.abc import Callable
 from datetime import datetime
-from typing import Union, Optional, Callable, BinaryIO
+from typing import BinaryIO, Union
 
 import pyrogram
 from pyrogram import types
-from pyrogram.file_id import FileId, FileType, PHOTO_TYPES
+from pyrogram.file_id import PHOTO_TYPES, FileId, FileType
 
 DEFAULT_DOWNLOAD_DIR = "downloads/"
 
@@ -36,8 +37,8 @@ class DownloadMedia:
         in_memory: bool = False,
         block: bool = True,
         progress: Callable = None,
-        progress_args: tuple = ()
-    ) -> Optional[Union[str, BinaryIO]]:
+        progress_args: tuple = (),
+    ) -> str | BinaryIO | None:
         """Download the media from a message.
 
         .. include:: /_includes/usable-by/users-bots.rst
@@ -107,9 +108,11 @@ class DownloadMedia:
                 # Download document of a message
                 await app.download_media(message.document)
 
+
                 # Keep track of the progress while downloading
                 async def progress(current, total):
                     print(f"{current * 100 / total:.1f}%")
+
 
                 await app.download_media(message, progress=progress)
 
@@ -122,8 +125,17 @@ class DownloadMedia:
                 file_name = file.name
                 file_bytes = bytes(file.getbuffer())
         """
-        available_media = ("audio", "document", "photo", "sticker", "animation", "video", "voice", "video_note",
-                           "new_chat_photo")
+        available_media = (
+            "audio",
+            "document",
+            "photo",
+            "sticker",
+            "animation",
+            "video",
+            "voice",
+            "video_note",
+            "new_chat_photo",
+        )
 
         media = None
 
@@ -142,7 +154,7 @@ class DownloadMedia:
         elif isinstance(message, str):
             media = message
         elif hasattr(message, "file_id"):
-            media = getattr(message, "file_id")
+            media = message.file_id
 
         if not media:
             raise ValueError("This message doesn't contain any downloadable media")
@@ -188,14 +200,21 @@ class DownloadMedia:
                 FileType(file_id_obj.file_type).name.lower(),
                 (date or datetime.now()).strftime("%Y-%m-%d_%H-%M-%S"),
                 self.rnd_id(),
-                extension
+                extension,
             )
 
         downloader = self.handle_download(
-            (file_id_obj, directory, file_name, in_memory, file_size, progress, progress_args)
+            (
+                file_id_obj,
+                directory,
+                file_name,
+                in_memory,
+                file_size,
+                progress,
+                progress_args,
+            ),
         )
 
         if block:
             return await downloader
-        else:
-            asyncio.get_event_loop().create_task(downloader)
+        asyncio.get_event_loop().create_task(downloader)

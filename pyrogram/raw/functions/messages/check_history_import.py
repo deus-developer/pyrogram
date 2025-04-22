@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class CheckHistoryImport(TLObject):  # type: ignore
+class CheckHistoryImport(TLFunction["raw.base.messages.HistoryImportParsed"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class CheckHistoryImport(TLObject):  # type: ignore
         :obj:`messages.HistoryImportParsed <pyrogram.raw.base.messages.HistoryImportParsed>`
     """
 
-    __slots__: List[str] = ["import_head"]
+    __slots__: list[str] = ["import_head"]
 
-    ID = 0x43fe19f3
+    ID = 0x43FE19F3
     QUALNAME = "functions.messages.CheckHistoryImport"
 
     def __init__(self, *, import_head: str) -> None:
@@ -56,9 +58,9 @@ class CheckHistoryImport(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "CheckHistoryImport":
         # No flags
-        
+
         import_head = String.read(b)
-        
+
         return CheckHistoryImport(import_head=import_head)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class CheckHistoryImport(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.import_head))
-        
+
         return b.getvalue()

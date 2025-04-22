@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class ChannelAdminLogEventActionChangeLinkedChat(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["prev_value", "new_value"]
+    __slots__: list[str] = ["new_value", "prev_value"]
 
-    ID = 0x50c7ac8
+    ID = 0x50C7AC8
     QUALNAME = "types.ChannelAdminLogEventActionChangeLinkedChat"
 
     def __init__(self, *, prev_value: int, new_value: int) -> None:
@@ -60,21 +62,24 @@ class ChannelAdminLogEventActionChangeLinkedChat(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChannelAdminLogEventActionChangeLinkedChat":
         # No flags
-        
+
         prev_value = Long.read(b)
-        
+
         new_value = Long.read(b)
-        
-        return ChannelAdminLogEventActionChangeLinkedChat(prev_value=prev_value, new_value=new_value)
+
+        return ChannelAdminLogEventActionChangeLinkedChat(
+            prev_value=prev_value,
+            new_value=new_value,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.prev_value))
-        
+
         b.write(Long(self.new_value))
-        
+
         return b.getvalue()

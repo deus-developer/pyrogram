@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetSupportName(TLObject):  # type: ignore
+class GetSupportName(TLFunction["raw.base.help.SupportName"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -44,9 +45,9 @@ class GetSupportName(TLObject):  # type: ignore
         :obj:`help.SupportName <pyrogram.raw.base.help.SupportName>`
     """
 
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
-    ID = 0xd360e72c
+    ID = 0xD360E72C
     QUALNAME = "functions.help.GetSupportName"
 
     def __init__(self) -> None:
@@ -55,7 +56,7 @@ class GetSupportName(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetSupportName":
         # No flags
-        
+
         return GetSupportName()
 
     def write(self, *args) -> bytes:
@@ -63,5 +64,5 @@ class GetSupportName(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         return b.getvalue()

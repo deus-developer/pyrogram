@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetStoryPublicForwards(TLObject):  # type: ignore
+class GetStoryPublicForwards(TLFunction["raw.base.stats.PublicForwards"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +57,19 @@ class GetStoryPublicForwards(TLObject):  # type: ignore
         :obj:`stats.PublicForwards <pyrogram.raw.base.stats.PublicForwards>`
     """
 
-    __slots__: List[str] = ["peer", "id", "offset", "limit"]
+    __slots__: list[str] = ["id", "limit", "offset", "peer"]
 
-    ID = 0xa6437ef6
+    ID = 0xA6437EF6
     QUALNAME = "functions.stats.GetStoryPublicForwards"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", id: int, offset: str, limit: int) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        id: int,
+        offset: str,
+        limit: int,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.id = id  # int
         self.offset = offset  # string
@@ -68,15 +78,15 @@ class GetStoryPublicForwards(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetStoryPublicForwards":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         id = Int.read(b)
-        
+
         offset = String.read(b)
-        
+
         limit = Int.read(b)
-        
+
         return GetStoryPublicForwards(peer=peer, id=id, offset=offset, limit=limit)
 
     def write(self, *args) -> bytes:
@@ -84,13 +94,13 @@ class GetStoryPublicForwards(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.id))
-        
+
         b.write(String(self.offset))
-        
+
         b.write(Int(self.limit))
-        
+
         return b.getvalue()

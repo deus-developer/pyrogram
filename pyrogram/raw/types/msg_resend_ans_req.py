@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,20 +48,20 @@ class MsgResendAnsReq(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["msg_ids"]
+    __slots__: list[str] = ["msg_ids"]
 
-    ID = 0x8610baeb
+    ID = 0x8610BAEB
     QUALNAME = "types.MsgResendAnsReq"
 
-    def __init__(self, *, msg_ids: List[int]) -> None:
+    def __init__(self, *, msg_ids: list[int]) -> None:
         self.msg_ids = msg_ids  # Vector<long>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MsgResendAnsReq":
         # No flags
-        
+
         msg_ids = TLObject.read(b, Long)
-        
+
         return MsgResendAnsReq(msg_ids=msg_ids)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class MsgResendAnsReq(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.msg_ids, Long))
-        
+
         return b.getvalue()

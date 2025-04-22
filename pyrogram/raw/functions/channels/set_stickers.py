@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetStickers(TLObject):  # type: ignore
+class SetStickers(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,28 @@ class SetStickers(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["channel", "stickerset"]
+    __slots__: list[str] = ["channel", "stickerset"]
 
-    ID = 0xea8ca4f9
+    ID = 0xEA8CA4F9
     QUALNAME = "functions.channels.SetStickers"
 
-    def __init__(self, *, channel: "raw.base.InputChannel", stickerset: "raw.base.InputStickerSet") -> None:
+    def __init__(
+        self,
+        *,
+        channel: "raw.base.InputChannel",
+        stickerset: "raw.base.InputStickerSet",
+    ) -> None:
         self.channel = channel  # InputChannel
         self.stickerset = stickerset  # InputStickerSet
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetStickers":
         # No flags
-        
+
         channel = TLObject.read(b)
-        
+
         stickerset = TLObject.read(b)
-        
+
         return SetStickers(channel=channel, stickerset=stickerset)
 
     def write(self, *args) -> bytes:
@@ -72,9 +79,9 @@ class SetStickers(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.channel.write())
-        
+
         b.write(self.stickerset.write())
-        
+
         return b.getvalue()

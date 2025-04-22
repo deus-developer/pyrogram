@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class LeaveGroupCall(TLObject):  # type: ignore
+class LeaveGroupCall(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +50,9 @@ class LeaveGroupCall(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["call", "source"]
+    __slots__: list[str] = ["call", "source"]
 
-    ID = 0x500377f9
+    ID = 0x500377F9
     QUALNAME = "functions.phone.LeaveGroupCall"
 
     def __init__(self, *, call: "raw.base.InputGroupCall", source: int) -> None:
@@ -60,11 +62,11 @@ class LeaveGroupCall(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "LeaveGroupCall":
         # No flags
-        
+
         call = TLObject.read(b)
-        
+
         source = Int.read(b)
-        
+
         return LeaveGroupCall(call=call, source=source)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class LeaveGroupCall(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.call.write())
-        
+
         b.write(Int(self.source))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +56,9 @@ class StatsGraphAsync(TLObject):  # type: ignore
             stats.LoadAsyncGraph
     """
 
-    __slots__: List[str] = ["token"]
+    __slots__: list[str] = ["token"]
 
-    ID = 0x4a27eb2d
+    ID = 0x4A27EB2D
     QUALNAME = "types.StatsGraphAsync"
 
     def __init__(self, *, token: str) -> None:
@@ -65,9 +67,9 @@ class StatsGraphAsync(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "StatsGraphAsync":
         # No flags
-        
+
         token = String.read(b)
-        
+
         return StatsGraphAsync(token=token)
 
     def write(self, *args) -> bytes:
@@ -75,7 +77,7 @@ class StatsGraphAsync(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.token))
-        
+
         return b.getvalue()

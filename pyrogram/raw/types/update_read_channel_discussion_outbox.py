@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,9 +53,9 @@ class UpdateReadChannelDiscussionOutbox(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["channel_id", "top_msg_id", "read_max_id"]
+    __slots__: list[str] = ["channel_id", "read_max_id", "top_msg_id"]
 
-    ID = 0x695c9e7c
+    ID = 0x695C9E7C
     QUALNAME = "types.UpdateReadChannelDiscussionOutbox"
 
     def __init__(self, *, channel_id: int, top_msg_id: int, read_max_id: int) -> None:
@@ -64,25 +66,29 @@ class UpdateReadChannelDiscussionOutbox(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateReadChannelDiscussionOutbox":
         # No flags
-        
+
         channel_id = Long.read(b)
-        
+
         top_msg_id = Int.read(b)
-        
+
         read_max_id = Int.read(b)
-        
-        return UpdateReadChannelDiscussionOutbox(channel_id=channel_id, top_msg_id=top_msg_id, read_max_id=read_max_id)
+
+        return UpdateReadChannelDiscussionOutbox(
+            channel_id=channel_id,
+            top_msg_id=top_msg_id,
+            read_max_id=read_max_id,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.channel_id))
-        
+
         b.write(Int(self.top_msg_id))
-        
+
         b.write(Int(self.read_max_id))
-        
+
         return b.getvalue()

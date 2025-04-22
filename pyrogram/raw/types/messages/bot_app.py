@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -63,12 +65,19 @@ class BotApp(TLObject):  # type: ignore
             messages.GetBotApp
     """
 
-    __slots__: List[str] = ["app", "inactive", "request_write_access", "has_settings"]
+    __slots__: list[str] = ["app", "has_settings", "inactive", "request_write_access"]
 
-    ID = 0xeb50adf5
+    ID = 0xEB50ADF5
     QUALNAME = "types.messages.BotApp"
 
-    def __init__(self, *, app: "raw.base.BotApp", inactive: Optional[bool] = None, request_write_access: Optional[bool] = None, has_settings: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        app: "raw.base.BotApp",
+        inactive: bool | None = None,
+        request_write_access: bool | None = None,
+        has_settings: bool | None = None,
+    ) -> None:
         self.app = app  # BotApp
         self.inactive = inactive  # flags.0?true
         self.request_write_access = request_write_access  # flags.1?true
@@ -76,15 +85,19 @@ class BotApp(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "BotApp":
-        
         flags = Int.read(b)
-        
+
         inactive = True if flags & (1 << 0) else False
         request_write_access = True if flags & (1 << 1) else False
         has_settings = True if flags & (1 << 2) else False
         app = TLObject.read(b)
-        
-        return BotApp(app=app, inactive=inactive, request_write_access=request_write_access, has_settings=has_settings)
+
+        return BotApp(
+            app=app,
+            inactive=inactive,
+            request_write_access=request_write_access,
+            has_settings=has_settings,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -95,7 +108,7 @@ class BotApp(TLObject):  # type: ignore
         flags |= (1 << 1) if self.request_write_access else 0
         flags |= (1 << 2) if self.has_settings else 0
         b.write(Int(flags))
-        
+
         b.write(self.app.write())
-        
+
         return b.getvalue()

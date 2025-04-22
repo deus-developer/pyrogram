@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetStoriesViews(TLObject):  # type: ignore
+class GetStoriesViews(TLFunction["raw.base.stories.StoryViews"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +51,23 @@ class GetStoriesViews(TLObject):  # type: ignore
         :obj:`stories.StoryViews <pyrogram.raw.base.stories.StoryViews>`
     """
 
-    __slots__: List[str] = ["peer", "id"]
+    __slots__: list[str] = ["id", "peer"]
 
-    ID = 0x28e16cc8
+    ID = 0x28E16CC8
     QUALNAME = "functions.stories.GetStoriesViews"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", id: List[int]) -> None:
+    def __init__(self, *, peer: "raw.base.InputPeer", id: list[int]) -> None:
         self.peer = peer  # InputPeer
         self.id = id  # Vector<int>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetStoriesViews":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         id = TLObject.read(b, Int)
-        
+
         return GetStoriesViews(peer=peer, id=id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class GetStoriesViews(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Vector(self.id, Int))
-        
+
         return b.getvalue()

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class EditLocation(TLObject):  # type: ignore
+class EditLocation(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +54,18 @@ class EditLocation(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["channel", "geo_point", "address"]
+    __slots__: list[str] = ["address", "channel", "geo_point"]
 
-    ID = 0x58e63f6d
+    ID = 0x58E63F6D
     QUALNAME = "functions.channels.EditLocation"
 
-    def __init__(self, *, channel: "raw.base.InputChannel", geo_point: "raw.base.InputGeoPoint", address: str) -> None:
+    def __init__(
+        self,
+        *,
+        channel: "raw.base.InputChannel",
+        geo_point: "raw.base.InputGeoPoint",
+        address: str,
+    ) -> None:
         self.channel = channel  # InputChannel
         self.geo_point = geo_point  # InputGeoPoint
         self.address = address  # string
@@ -64,13 +73,13 @@ class EditLocation(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EditLocation":
         # No flags
-        
+
         channel = TLObject.read(b)
-        
+
         geo_point = TLObject.read(b)
-        
+
         address = String.read(b)
-        
+
         return EditLocation(channel=channel, geo_point=geo_point, address=address)
 
     def write(self, *args) -> bytes:
@@ -78,11 +87,11 @@ class EditLocation(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.channel.write())
-        
+
         b.write(self.geo_point.write())
-        
+
         b.write(String(self.address))
-        
+
         return b.getvalue()

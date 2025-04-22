@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,20 +48,20 @@ class UpdatePeerLocated(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peers"]
+    __slots__: list[str] = ["peers"]
 
-    ID = 0xb4afcfb0
+    ID = 0xB4AFCFB0
     QUALNAME = "types.UpdatePeerLocated"
 
-    def __init__(self, *, peers: List["raw.base.PeerLocated"]) -> None:
+    def __init__(self, *, peers: list["raw.base.PeerLocated"]) -> None:
         self.peers = peers  # Vector<PeerLocated>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdatePeerLocated":
         # No flags
-        
+
         peers = TLObject.read(b)
-        
+
         return UpdatePeerLocated(peers=peers)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class UpdatePeerLocated(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.peers))
-        
+
         return b.getvalue()

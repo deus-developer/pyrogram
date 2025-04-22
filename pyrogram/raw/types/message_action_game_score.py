@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +50,9 @@ class MessageActionGameScore(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["game_id", "score"]
+    __slots__: list[str] = ["game_id", "score"]
 
-    ID = 0x92a72876
+    ID = 0x92A72876
     QUALNAME = "types.MessageActionGameScore"
 
     def __init__(self, *, game_id: int, score: int) -> None:
@@ -60,11 +62,11 @@ class MessageActionGameScore(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageActionGameScore":
         # No flags
-        
+
         game_id = Long.read(b)
-        
+
         score = Int.read(b)
-        
+
         return MessageActionGameScore(game_id=game_id, score=score)
 
     def write(self, *args) -> bytes:
@@ -72,9 +74,9 @@ class MessageActionGameScore(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.game_id))
-        
+
         b.write(Int(self.score))
-        
+
         return b.getvalue()

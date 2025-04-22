@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class BlockFromReplies(TLObject):  # type: ignore
+class BlockFromReplies(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +55,19 @@ class BlockFromReplies(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["msg_id", "delete_message", "delete_history", "report_spam"]
+    __slots__: list[str] = ["delete_history", "delete_message", "msg_id", "report_spam"]
 
-    ID = 0x29a8962c
+    ID = 0x29A8962C
     QUALNAME = "functions.contacts.BlockFromReplies"
 
-    def __init__(self, *, msg_id: int, delete_message: Optional[bool] = None, delete_history: Optional[bool] = None, report_spam: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        msg_id: int,
+        delete_message: bool | None = None,
+        delete_history: bool | None = None,
+        report_spam: bool | None = None,
+    ) -> None:
         self.msg_id = msg_id  # int
         self.delete_message = delete_message  # flags.0?true
         self.delete_history = delete_history  # flags.1?true
@@ -67,15 +75,19 @@ class BlockFromReplies(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "BlockFromReplies":
-        
         flags = Int.read(b)
-        
+
         delete_message = True if flags & (1 << 0) else False
         delete_history = True if flags & (1 << 1) else False
         report_spam = True if flags & (1 << 2) else False
         msg_id = Int.read(b)
-        
-        return BlockFromReplies(msg_id=msg_id, delete_message=delete_message, delete_history=delete_history, report_spam=report_spam)
+
+        return BlockFromReplies(
+            msg_id=msg_id,
+            delete_message=delete_message,
+            delete_history=delete_history,
+            report_spam=report_spam,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -86,7 +98,7 @@ class BlockFromReplies(TLObject):  # type: ignore
         flags |= (1 << 1) if self.delete_history else 0
         flags |= (1 << 2) if self.report_spam else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.msg_id))
-        
+
         return b.getvalue()

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class EditAdmin(TLObject):  # type: ignore
+class EditAdmin(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +57,19 @@ class EditAdmin(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["channel", "user_id", "admin_rights", "rank"]
+    __slots__: list[str] = ["admin_rights", "channel", "rank", "user_id"]
 
-    ID = 0xd33c8902
+    ID = 0xD33C8902
     QUALNAME = "functions.channels.EditAdmin"
 
-    def __init__(self, *, channel: "raw.base.InputChannel", user_id: "raw.base.InputUser", admin_rights: "raw.base.ChatAdminRights", rank: str) -> None:
+    def __init__(
+        self,
+        *,
+        channel: "raw.base.InputChannel",
+        user_id: "raw.base.InputUser",
+        admin_rights: "raw.base.ChatAdminRights",
+        rank: str,
+    ) -> None:
         self.channel = channel  # InputChannel
         self.user_id = user_id  # InputUser
         self.admin_rights = admin_rights  # ChatAdminRights
@@ -68,29 +78,34 @@ class EditAdmin(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "EditAdmin":
         # No flags
-        
+
         channel = TLObject.read(b)
-        
+
         user_id = TLObject.read(b)
-        
+
         admin_rights = TLObject.read(b)
-        
+
         rank = String.read(b)
-        
-        return EditAdmin(channel=channel, user_id=user_id, admin_rights=admin_rights, rank=rank)
+
+        return EditAdmin(
+            channel=channel,
+            user_id=user_id,
+            admin_rights=admin_rights,
+            rank=rank,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.channel.write())
-        
+
         b.write(self.user_id.write())
-        
+
         b.write(self.admin_rights.write())
-        
+
         b.write(String(self.rank))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,7 +47,7 @@ class ChatEmpty(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id"]
+    __slots__: list[str] = ["id"]
 
     ID = 0x29562865
     QUALNAME = "types.ChatEmpty"
@@ -56,9 +58,9 @@ class ChatEmpty(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChatEmpty":
         # No flags
-        
+
         id = Long.read(b)
-        
+
         return ChatEmpty(id=id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class ChatEmpty(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.id))
-        
+
         return b.getvalue()

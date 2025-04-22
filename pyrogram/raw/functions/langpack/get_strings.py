@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +34,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetStrings(TLObject):  # type: ignore
+class GetStrings(TLFunction[list["raw.base.LangPackString"]]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +55,12 @@ class GetStrings(TLObject):  # type: ignore
         List of :obj:`LangPackString <pyrogram.raw.base.LangPackString>`
     """
 
-    __slots__: List[str] = ["lang_pack", "lang_code", "keys"]
+    __slots__: list[str] = ["keys", "lang_code", "lang_pack"]
 
-    ID = 0xefea3803
+    ID = 0xEFEA3803
     QUALNAME = "functions.langpack.GetStrings"
 
-    def __init__(self, *, lang_pack: str, lang_code: str, keys: List[str]) -> None:
+    def __init__(self, *, lang_pack: str, lang_code: str, keys: list[str]) -> None:
         self.lang_pack = lang_pack  # string
         self.lang_code = lang_code  # string
         self.keys = keys  # Vector<string>
@@ -64,13 +68,13 @@ class GetStrings(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetStrings":
         # No flags
-        
+
         lang_pack = String.read(b)
-        
+
         lang_code = String.read(b)
-        
+
         keys = TLObject.read(b, String)
-        
+
         return GetStrings(lang_pack=lang_pack, lang_code=lang_code, keys=keys)
 
     def write(self, *args) -> bytes:
@@ -78,11 +82,11 @@ class GetStrings(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.lang_pack))
-        
+
         b.write(String(self.lang_code))
-        
+
         b.write(Vector(self.keys, String))
-        
+
         return b.getvalue()

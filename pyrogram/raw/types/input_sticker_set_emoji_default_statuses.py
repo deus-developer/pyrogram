@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -44,9 +45,9 @@ class InputStickerSetEmojiDefaultStatuses(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = []
+    __slots__: list[str] = []
 
-    ID = 0x29d0f5ee
+    ID = 0x29D0F5EE
     QUALNAME = "types.InputStickerSetEmojiDefaultStatuses"
 
     def __init__(self) -> None:
@@ -55,7 +56,7 @@ class InputStickerSetEmojiDefaultStatuses(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InputStickerSetEmojiDefaultStatuses":
         # No flags
-        
+
         return InputStickerSetEmojiDefaultStatuses()
 
     def write(self, *args) -> bytes:
@@ -63,5 +64,5 @@ class InputStickerSetEmojiDefaultStatuses(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         return b.getvalue()

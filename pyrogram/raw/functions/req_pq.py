@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    Int128,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ReqPq(TLObject):  # type: ignore
+class ReqPq(TLFunction["raw.base.ResPQ"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,7 +47,7 @@ class ReqPq(TLObject):  # type: ignore
         :obj:`ResPQ <pyrogram.raw.base.ResPQ>`
     """
 
-    __slots__: List[str] = ["nonce"]
+    __slots__: list[str] = ["nonce"]
 
     ID = 0x60469778
     QUALNAME = "functions.ReqPq"
@@ -56,9 +58,9 @@ class ReqPq(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ReqPq":
         # No flags
-        
+
         nonce = Int128.read(b)
-        
+
         return ReqPq(nonce=nonce)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class ReqPq(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int128(self.nonce))
-        
+
         return b.getvalue()

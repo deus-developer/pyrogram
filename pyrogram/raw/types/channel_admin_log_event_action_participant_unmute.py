@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +47,9 @@ class ChannelAdminLogEventActionParticipantUnmute(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["participant"]
+    __slots__: list[str] = ["participant"]
 
-    ID = 0xe64429c0
+    ID = 0xE64429C0
     QUALNAME = "types.ChannelAdminLogEventActionParticipantUnmute"
 
     def __init__(self, *, participant: "raw.base.GroupCallParticipant") -> None:
@@ -56,9 +58,9 @@ class ChannelAdminLogEventActionParticipantUnmute(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChannelAdminLogEventActionParticipantUnmute":
         # No flags
-        
+
         participant = TLObject.read(b)
-        
+
         return ChannelAdminLogEventActionParticipantUnmute(participant=participant)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class ChannelAdminLogEventActionParticipantUnmute(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.participant.write())
-        
+
         return b.getvalue()

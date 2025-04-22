@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,9 +47,9 @@ class MessageActionSuggestProfilePhoto(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["photo"]
+    __slots__: list[str] = ["photo"]
 
-    ID = 0x57de635e
+    ID = 0x57DE635E
     QUALNAME = "types.MessageActionSuggestProfilePhoto"
 
     def __init__(self, *, photo: "raw.base.Photo") -> None:
@@ -56,9 +58,9 @@ class MessageActionSuggestProfilePhoto(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageActionSuggestProfilePhoto":
         # No flags
-        
+
         photo = TLObject.read(b)
-        
+
         return MessageActionSuggestProfilePhoto(photo=photo)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class MessageActionSuggestProfilePhoto(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.photo.write())
-        
+
         return b.getvalue()

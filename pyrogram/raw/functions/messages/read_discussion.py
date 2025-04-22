@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ReadDiscussion(TLObject):  # type: ignore
+class ReadDiscussion(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +53,18 @@ class ReadDiscussion(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["peer", "msg_id", "read_max_id"]
+    __slots__: list[str] = ["msg_id", "peer", "read_max_id"]
 
-    ID = 0xf731a9f4
+    ID = 0xF731A9F4
     QUALNAME = "functions.messages.ReadDiscussion"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", msg_id: int, read_max_id: int) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        msg_id: int,
+        read_max_id: int,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.msg_id = msg_id  # int
         self.read_max_id = read_max_id  # int
@@ -64,13 +72,13 @@ class ReadDiscussion(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ReadDiscussion":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         msg_id = Int.read(b)
-        
+
         read_max_id = Int.read(b)
-        
+
         return ReadDiscussion(peer=peer, msg_id=msg_id, read_max_id=read_max_id)
 
     def write(self, *args) -> bytes:
@@ -78,11 +86,11 @@ class ReadDiscussion(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.msg_id))
-        
+
         b.write(Int(self.read_max_id))
-        
+
         return b.getvalue()

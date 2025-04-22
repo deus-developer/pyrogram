@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -57,12 +60,20 @@ class UpdateBotMessageReactions(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "msg_id", "date", "reactions", "qts"]
+    __slots__: list[str] = ["date", "msg_id", "peer", "qts", "reactions"]
 
-    ID = 0x9cb7759
+    ID = 0x9CB7759
     QUALNAME = "types.UpdateBotMessageReactions"
 
-    def __init__(self, *, peer: "raw.base.Peer", msg_id: int, date: int, reactions: List["raw.base.ReactionCount"], qts: int) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.Peer",
+        msg_id: int,
+        date: int,
+        reactions: list["raw.base.ReactionCount"],
+        qts: int,
+    ) -> None:
         self.peer = peer  # Peer
         self.msg_id = msg_id  # int
         self.date = date  # int
@@ -72,33 +83,39 @@ class UpdateBotMessageReactions(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateBotMessageReactions":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         msg_id = Int.read(b)
-        
+
         date = Int.read(b)
-        
+
         reactions = TLObject.read(b)
-        
+
         qts = Int.read(b)
-        
-        return UpdateBotMessageReactions(peer=peer, msg_id=msg_id, date=date, reactions=reactions, qts=qts)
+
+        return UpdateBotMessageReactions(
+            peer=peer,
+            msg_id=msg_id,
+            date=date,
+            reactions=reactions,
+            qts=qts,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.msg_id))
-        
+
         b.write(Int(self.date))
-        
+
         b.write(Vector(self.reactions))
-        
+
         b.write(Int(self.qts))
-        
+
         return b.getvalue()

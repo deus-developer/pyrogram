@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,9 +62,9 @@ class NearestDc(TLObject):  # type: ignore
             help.GetNearestDc
     """
 
-    __slots__: List[str] = ["country", "this_dc", "nearest_dc"]
+    __slots__: list[str] = ["country", "nearest_dc", "this_dc"]
 
-    ID = 0x8e1a1775
+    ID = 0x8E1A1775
     QUALNAME = "types.NearestDc"
 
     def __init__(self, *, country: str, this_dc: int, nearest_dc: int) -> None:
@@ -73,13 +75,13 @@ class NearestDc(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "NearestDc":
         # No flags
-        
+
         country = String.read(b)
-        
+
         this_dc = Int.read(b)
-        
+
         nearest_dc = Int.read(b)
-        
+
         return NearestDc(country=country, this_dc=this_dc, nearest_dc=nearest_dc)
 
     def write(self, *args) -> bytes:
@@ -87,11 +89,11 @@ class NearestDc(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.country))
-        
+
         b.write(Int(self.this_dc))
-        
+
         b.write(Int(self.nearest_dc))
-        
+
         return b.getvalue()

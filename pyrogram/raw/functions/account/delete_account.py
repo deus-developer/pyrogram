@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class DeleteAccount(TLObject):  # type: ignore
+class DeleteAccount(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,24 +51,28 @@ class DeleteAccount(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["reason", "password"]
+    __slots__: list[str] = ["password", "reason"]
 
-    ID = 0xa2c0cf74
+    ID = 0xA2C0CF74
     QUALNAME = "functions.account.DeleteAccount"
 
-    def __init__(self, *, reason: str, password: "raw.base.InputCheckPasswordSRP" = None) -> None:
+    def __init__(
+        self,
+        *,
+        reason: str,
+        password: "raw.base.InputCheckPasswordSRP" = None,
+    ) -> None:
         self.reason = reason  # string
         self.password = password  # flags.0?InputCheckPasswordSRP
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DeleteAccount":
-        
         flags = Int.read(b)
-        
+
         reason = String.read(b)
-        
+
         password = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         return DeleteAccount(reason=reason, password=password)
 
     def write(self, *args) -> bytes:
@@ -75,10 +82,10 @@ class DeleteAccount(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.password is not None else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.reason))
-        
+
         if self.password is not None:
             b.write(self.password.write())
-        
+
         return b.getvalue()

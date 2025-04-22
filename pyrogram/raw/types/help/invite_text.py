@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +56,9 @@ class InviteText(TLObject):  # type: ignore
             help.GetInviteText
     """
 
-    __slots__: List[str] = ["message"]
+    __slots__: list[str] = ["message"]
 
-    ID = 0x18cb9f78
+    ID = 0x18CB9F78
     QUALNAME = "types.help.InviteText"
 
     def __init__(self, *, message: str) -> None:
@@ -65,9 +67,9 @@ class InviteText(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InviteText":
         # No flags
-        
+
         message = String.read(b)
-        
+
         return InviteText(message=message)
 
     def write(self, *args) -> bytes:
@@ -75,7 +77,7 @@ class InviteText(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.message))
-        
+
         return b.getvalue()

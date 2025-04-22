@@ -16,9 +16,9 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import List
 
 from pyrogram import raw, types
+
 from ..object import Object
 
 
@@ -61,7 +61,7 @@ class BoostsStatus(Object):
         my_boost: bool = None,
         gift_boosts: int = None,
         next_level_boosts: int = None,
-        my_boost_slots: List[int] = None
+        my_boost_slots: list[int] = None,
     ):
         super().__init__()
 

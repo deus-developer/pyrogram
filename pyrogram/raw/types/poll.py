@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -69,12 +73,34 @@ class Poll(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "question", "answers", "closed", "public_voters", "multiple_choice", "quiz", "close_period", "close_date"]
+    __slots__: list[str] = [
+        "answers",
+        "close_date",
+        "close_period",
+        "closed",
+        "id",
+        "multiple_choice",
+        "public_voters",
+        "question",
+        "quiz",
+    ]
 
     ID = 0x58747131
     QUALNAME = "types.Poll"
 
-    def __init__(self, *, id: int, question: "raw.base.TextWithEntities", answers: List["raw.base.PollAnswer"], closed: Optional[bool] = None, public_voters: Optional[bool] = None, multiple_choice: Optional[bool] = None, quiz: Optional[bool] = None, close_period: Optional[int] = None, close_date: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: int,
+        question: "raw.base.TextWithEntities",
+        answers: list["raw.base.PollAnswer"],
+        closed: bool | None = None,
+        public_voters: bool | None = None,
+        multiple_choice: bool | None = None,
+        quiz: bool | None = None,
+        close_period: int | None = None,
+        close_date: int | None = None,
+    ) -> None:
         self.id = id  # long
         self.question = question  # TextWithEntities
         self.answers = answers  # Vector<PollAnswer>
@@ -87,28 +113,36 @@ class Poll(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "Poll":
-        
         id = Long.read(b)
-        
+
         flags = Int.read(b)
-        
+
         closed = True if flags & (1 << 0) else False
         public_voters = True if flags & (1 << 1) else False
         multiple_choice = True if flags & (1 << 2) else False
         quiz = True if flags & (1 << 3) else False
         question = TLObject.read(b)
-        
+
         answers = TLObject.read(b)
-        
+
         close_period = Int.read(b) if flags & (1 << 4) else None
         close_date = Int.read(b) if flags & (1 << 5) else None
-        return Poll(id=id, question=question, answers=answers, closed=closed, public_voters=public_voters, multiple_choice=multiple_choice, quiz=quiz, close_period=close_period, close_date=close_date)
+        return Poll(
+            id=id,
+            question=question,
+            answers=answers,
+            closed=closed,
+            public_voters=public_voters,
+            multiple_choice=multiple_choice,
+            quiz=quiz,
+            close_period=close_period,
+            close_date=close_date,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
-        
         b.write(Long(self.id))
         flags = 0
         flags |= (1 << 0) if self.closed else 0
@@ -118,15 +152,15 @@ class Poll(TLObject):  # type: ignore
         flags |= (1 << 4) if self.close_period is not None else 0
         flags |= (1 << 5) if self.close_date is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.question.write())
-        
+
         b.write(Vector(self.answers))
-        
+
         if self.close_period is not None:
             b.write(Int(self.close_period))
-        
+
         if self.close_date is not None:
             b.write(Int(self.close_date))
-        
+
         return b.getvalue()

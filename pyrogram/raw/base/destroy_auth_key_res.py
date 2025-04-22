@@ -4,8 +4,10 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type DestroyAuthKeyRes = Union["raw.types.DestroyAuthKeyFail, raw.types.DestroyAuthKeyNone, raw.types.DestroyAuthKeyOk"]
+type DestroyAuthKeyRes = (
+    raw.types.DestroyAuthKeyFail
+    | raw.types.DestroyAuthKeyNone
+    | raw.types.DestroyAuthKeyOk
+)

@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ExportChatInvite(TLObject):  # type: ignore
+class ExportChatInvite(TLFunction["raw.base.ExportedChatInvite"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -60,12 +63,28 @@ class ExportChatInvite(TLObject):  # type: ignore
         :obj:`ExportedChatInvite <pyrogram.raw.base.ExportedChatInvite>`
     """
 
-    __slots__: List[str] = ["peer", "legacy_revoke_permanent", "request_needed", "expire_date", "usage_limit", "title"]
+    __slots__: list[str] = [
+        "expire_date",
+        "legacy_revoke_permanent",
+        "peer",
+        "request_needed",
+        "title",
+        "usage_limit",
+    ]
 
-    ID = 0xa02ce5d5
+    ID = 0xA02CE5D5
     QUALNAME = "functions.messages.ExportChatInvite"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", legacy_revoke_permanent: Optional[bool] = None, request_needed: Optional[bool] = None, expire_date: Optional[int] = None, usage_limit: Optional[int] = None, title: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        legacy_revoke_permanent: bool | None = None,
+        request_needed: bool | None = None,
+        expire_date: int | None = None,
+        usage_limit: int | None = None,
+        title: str | None = None,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.legacy_revoke_permanent = legacy_revoke_permanent  # flags.2?true
         self.request_needed = request_needed  # flags.3?true
@@ -75,17 +94,23 @@ class ExportChatInvite(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ExportChatInvite":
-        
         flags = Int.read(b)
-        
+
         legacy_revoke_permanent = True if flags & (1 << 2) else False
         request_needed = True if flags & (1 << 3) else False
         peer = TLObject.read(b)
-        
+
         expire_date = Int.read(b) if flags & (1 << 0) else None
         usage_limit = Int.read(b) if flags & (1 << 1) else None
         title = String.read(b) if flags & (1 << 4) else None
-        return ExportChatInvite(peer=peer, legacy_revoke_permanent=legacy_revoke_permanent, request_needed=request_needed, expire_date=expire_date, usage_limit=usage_limit, title=title)
+        return ExportChatInvite(
+            peer=peer,
+            legacy_revoke_permanent=legacy_revoke_permanent,
+            request_needed=request_needed,
+            expire_date=expire_date,
+            usage_limit=usage_limit,
+            title=title,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -98,16 +123,16 @@ class ExportChatInvite(TLObject):  # type: ignore
         flags |= (1 << 1) if self.usage_limit is not None else 0
         flags |= (1 << 4) if self.title is not None else 0
         b.write(Int(flags))
-        
+
         b.write(self.peer.write())
-        
+
         if self.expire_date is not None:
             b.write(Int(self.expire_date))
-        
+
         if self.usage_limit is not None:
             b.write(Int(self.usage_limit))
-        
+
         if self.title is not None:
             b.write(String(self.title))
-        
+
         return b.getvalue()

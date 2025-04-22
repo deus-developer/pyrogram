@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,23 +50,28 @@ class StoryReactionPublicRepost(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer_id", "story"]
+    __slots__: list[str] = ["peer_id", "story"]
 
-    ID = 0xcfcd0f13
+    ID = 0xCFCD0F13
     QUALNAME = "types.StoryReactionPublicRepost"
 
-    def __init__(self, *, peer_id: "raw.base.Peer", story: "raw.base.StoryItem") -> None:
+    def __init__(
+        self,
+        *,
+        peer_id: "raw.base.Peer",
+        story: "raw.base.StoryItem",
+    ) -> None:
         self.peer_id = peer_id  # Peer
         self.story = story  # StoryItem
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "StoryReactionPublicRepost":
         # No flags
-        
+
         peer_id = TLObject.read(b)
-        
+
         story = TLObject.read(b)
-        
+
         return StoryReactionPublicRepost(peer_id=peer_id, story=story)
 
     def write(self, *args) -> bytes:
@@ -72,9 +79,9 @@ class StoryReactionPublicRepost(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer_id.write())
-        
+
         b.write(self.story.write())
-        
+
         return b.getvalue()

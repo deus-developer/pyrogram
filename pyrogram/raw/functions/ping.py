@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class Ping(TLObject):  # type: ignore
+class Ping(TLFunction["raw.base.Pong"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class Ping(TLObject):  # type: ignore
         :obj:`Pong <pyrogram.raw.base.Pong>`
     """
 
-    __slots__: List[str] = ["ping_id"]
+    __slots__: list[str] = ["ping_id"]
 
-    ID = 0x7abe77ec
+    ID = 0x7ABE77EC
     QUALNAME = "functions.Ping"
 
     def __init__(self, *, ping_id: int) -> None:
@@ -56,9 +58,9 @@ class Ping(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "Ping":
         # No flags
-        
+
         ping_id = Long.read(b)
-        
+
         return Ping(ping_id=ping_id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class Ping(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.ping_id))
-        
+
         return b.getvalue()

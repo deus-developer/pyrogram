@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Int128,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetClientDHParams(TLObject):  # type: ignore
+class SetClientDHParams(TLFunction["raw.base.SetClientDHParamsAnswer"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,9 +54,9 @@ class SetClientDHParams(TLObject):  # type: ignore
         :obj:`SetClientDHParamsAnswer <pyrogram.raw.base.SetClientDHParamsAnswer>`
     """
 
-    __slots__: List[str] = ["nonce", "server_nonce", "encrypted_data"]
+    __slots__: list[str] = ["encrypted_data", "nonce", "server_nonce"]
 
-    ID = 0xf5045f1f
+    ID = 0xF5045F1F
     QUALNAME = "functions.SetClientDHParams"
 
     def __init__(self, *, nonce: int, server_nonce: int, encrypted_data: bytes) -> None:
@@ -64,25 +67,29 @@ class SetClientDHParams(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetClientDHParams":
         # No flags
-        
+
         nonce = Int128.read(b)
-        
+
         server_nonce = Int128.read(b)
-        
+
         encrypted_data = Bytes.read(b)
-        
-        return SetClientDHParams(nonce=nonce, server_nonce=server_nonce, encrypted_data=encrypted_data)
+
+        return SetClientDHParams(
+            nonce=nonce,
+            server_nonce=server_nonce,
+            encrypted_data=encrypted_data,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int128(self.nonce))
-        
+
         b.write(Int128(self.server_nonce))
-        
+
         b.write(Bytes(self.encrypted_data))
-        
+
         return b.getvalue()

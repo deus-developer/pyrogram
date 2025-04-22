@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class DeleteMessages(TLObject):  # type: ignore
+class DeleteMessages(TLFunction["raw.base.messages.AffectedMessages"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,22 @@ class DeleteMessages(TLObject):  # type: ignore
         :obj:`messages.AffectedMessages <pyrogram.raw.base.messages.AffectedMessages>`
     """
 
-    __slots__: List[str] = ["id", "revoke"]
+    __slots__: list[str] = ["id", "revoke"]
 
-    ID = 0xe58e95d2
+    ID = 0xE58E95D2
     QUALNAME = "functions.messages.DeleteMessages"
 
-    def __init__(self, *, id: List[int], revoke: Optional[bool] = None) -> None:
+    def __init__(self, *, id: list[int], revoke: bool | None = None) -> None:
         self.id = id  # Vector<int>
         self.revoke = revoke  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DeleteMessages":
-        
         flags = Int.read(b)
-        
+
         revoke = True if flags & (1 << 0) else False
         id = TLObject.read(b, Int)
-        
+
         return DeleteMessages(id=id, revoke=revoke)
 
     def write(self, *args) -> bytes:
@@ -74,7 +75,7 @@ class DeleteMessages(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.revoke else 0
         b.write(Int(flags))
-        
+
         b.write(Vector(self.id, Int))
-        
+
         return b.getvalue()

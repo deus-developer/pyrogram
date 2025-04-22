@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class InitTakeoutSession(TLObject):  # type: ignore
+class InitTakeoutSession(TLFunction["raw.base.account.Takeout"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -63,12 +65,30 @@ class InitTakeoutSession(TLObject):  # type: ignore
         :obj:`account.Takeout <pyrogram.raw.base.account.Takeout>`
     """
 
-    __slots__: List[str] = ["contacts", "message_users", "message_chats", "message_megagroups", "message_channels", "files", "file_max_size"]
+    __slots__: list[str] = [
+        "contacts",
+        "file_max_size",
+        "files",
+        "message_channels",
+        "message_chats",
+        "message_megagroups",
+        "message_users",
+    ]
 
-    ID = 0x8ef3eab0
+    ID = 0x8EF3EAB0
     QUALNAME = "functions.account.InitTakeoutSession"
 
-    def __init__(self, *, contacts: Optional[bool] = None, message_users: Optional[bool] = None, message_chats: Optional[bool] = None, message_megagroups: Optional[bool] = None, message_channels: Optional[bool] = None, files: Optional[bool] = None, file_max_size: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        contacts: bool | None = None,
+        message_users: bool | None = None,
+        message_chats: bool | None = None,
+        message_megagroups: bool | None = None,
+        message_channels: bool | None = None,
+        files: bool | None = None,
+        file_max_size: int | None = None,
+    ) -> None:
         self.contacts = contacts  # flags.0?true
         self.message_users = message_users  # flags.1?true
         self.message_chats = message_chats  # flags.2?true
@@ -79,9 +99,8 @@ class InitTakeoutSession(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "InitTakeoutSession":
-        
         flags = Int.read(b)
-        
+
         contacts = True if flags & (1 << 0) else False
         message_users = True if flags & (1 << 1) else False
         message_chats = True if flags & (1 << 2) else False
@@ -89,7 +108,15 @@ class InitTakeoutSession(TLObject):  # type: ignore
         message_channels = True if flags & (1 << 4) else False
         files = True if flags & (1 << 5) else False
         file_max_size = Long.read(b) if flags & (1 << 5) else None
-        return InitTakeoutSession(contacts=contacts, message_users=message_users, message_chats=message_chats, message_megagroups=message_megagroups, message_channels=message_channels, files=files, file_max_size=file_max_size)
+        return InitTakeoutSession(
+            contacts=contacts,
+            message_users=message_users,
+            message_chats=message_chats,
+            message_megagroups=message_megagroups,
+            message_channels=message_channels,
+            files=files,
+            file_max_size=file_max_size,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -104,8 +131,8 @@ class InitTakeoutSession(TLObject):  # type: ignore
         flags |= (1 << 5) if self.files else 0
         flags |= (1 << 5) if self.file_max_size is not None else 0
         b.write(Int(flags))
-        
+
         if self.file_max_size is not None:
             b.write(Long(self.file_max_size))
-        
+
         return b.getvalue()

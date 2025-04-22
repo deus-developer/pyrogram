@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,9 +53,9 @@ class SecureData(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["data", "data_hash", "secret"]
+    __slots__: list[str] = ["data", "data_hash", "secret"]
 
-    ID = 0x8aeabec3
+    ID = 0x8AEABEC3
     QUALNAME = "types.SecureData"
 
     def __init__(self, *, data: bytes, data_hash: bytes, secret: bytes) -> None:
@@ -64,13 +66,13 @@ class SecureData(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SecureData":
         # No flags
-        
+
         data = Bytes.read(b)
-        
+
         data_hash = Bytes.read(b)
-        
+
         secret = Bytes.read(b)
-        
+
         return SecureData(data=data, data_hash=data_hash, secret=secret)
 
     def write(self, *args) -> bytes:
@@ -78,11 +80,11 @@ class SecureData(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Bytes(self.data))
-        
+
         b.write(Bytes(self.data_hash))
-        
+
         b.write(Bytes(self.secret))
-        
+
         return b.getvalue()

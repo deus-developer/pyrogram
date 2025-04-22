@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,20 +48,20 @@ class TextConcat(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["texts"]
+    __slots__: list[str] = ["texts"]
 
-    ID = 0x7e6260d7
+    ID = 0x7E6260D7
     QUALNAME = "types.TextConcat"
 
-    def __init__(self, *, texts: List["raw.base.RichText"]) -> None:
+    def __init__(self, *, texts: list["raw.base.RichText"]) -> None:
         self.texts = texts  # Vector<RichText>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "TextConcat":
         # No flags
-        
+
         texts = TLObject.read(b)
-        
+
         return TextConcat(texts=texts)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class TextConcat(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.texts))
-        
+
         return b.getvalue()

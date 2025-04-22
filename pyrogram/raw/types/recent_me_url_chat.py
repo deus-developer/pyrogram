@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +51,9 @@ class RecentMeUrlChat(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["url", "chat_id"]
+    __slots__: list[str] = ["chat_id", "url"]
 
-    ID = 0xb2da71d2
+    ID = 0xB2DA71D2
     QUALNAME = "types.RecentMeUrlChat"
 
     def __init__(self, *, url: str, chat_id: int) -> None:
@@ -60,11 +63,11 @@ class RecentMeUrlChat(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "RecentMeUrlChat":
         # No flags
-        
+
         url = String.read(b)
-        
+
         chat_id = Long.read(b)
-        
+
         return RecentMeUrlChat(url=url, chat_id=chat_id)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class RecentMeUrlChat(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.url))
-        
+
         b.write(Long(self.chat_id))
-        
+
         return b.getvalue()

@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetEmojiStatusGroups(TLObject):  # type: ignore
+class GetEmojiStatusGroups(TLFunction["raw.base.messages.EmojiGroups"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +46,9 @@ class GetEmojiStatusGroups(TLObject):  # type: ignore
         :obj:`messages.EmojiGroups <pyrogram.raw.base.messages.EmojiGroups>`
     """
 
-    __slots__: List[str] = ["hash"]
+    __slots__: list[str] = ["hash"]
 
-    ID = 0x2ecd56cd
+    ID = 0x2ECD56CD
     QUALNAME = "functions.messages.GetEmojiStatusGroups"
 
     def __init__(self, *, hash: int) -> None:
@@ -56,9 +57,9 @@ class GetEmojiStatusGroups(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetEmojiStatusGroups":
         # No flags
-        
+
         hash = Int.read(b)
-        
+
         return GetEmojiStatusGroups(hash=hash)
 
     def write(self, *args) -> bytes:
@@ -66,7 +67,7 @@ class GetEmojiStatusGroups(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.hash))
-        
+
         return b.getvalue()

@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -45,19 +46,18 @@ class DraftMessageEmpty(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["date"]
+    __slots__: list[str] = ["date"]
 
-    ID = 0x1b0c841a
+    ID = 0x1B0C841A
     QUALNAME = "types.DraftMessageEmpty"
 
-    def __init__(self, *, date: Optional[int] = None) -> None:
+    def __init__(self, *, date: int | None = None) -> None:
         self.date = date  # flags.0?int
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "DraftMessageEmpty":
-        
         flags = Int.read(b)
-        
+
         date = Int.read(b) if flags & (1 << 0) else None
         return DraftMessageEmpty(date=date)
 
@@ -68,8 +68,8 @@ class DraftMessageEmpty(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.date is not None else 0
         b.write(Int(flags))
-        
+
         if self.date is not None:
             b.write(Int(self.date))
-        
+
         return b.getvalue()

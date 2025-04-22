@@ -20,8 +20,8 @@ from base64 import b64encode
 from struct import pack
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
+
 from ..object import Object
 from ..update import Update
 
@@ -61,7 +61,7 @@ class ChosenInlineResult(Object, Update):
         from_user: "types.User",
         query: str,
         location: "types.Location" = None,
-        inline_message_id: str = None
+        inline_message_id: str = None,
     ):
         super().__init__(client)
 
@@ -72,28 +72,40 @@ class ChosenInlineResult(Object, Update):
         self.inline_message_id = inline_message_id
 
     @staticmethod
-    def from_raw_tl(client, chosen_inline_result: raw.types.UpdateBotInlineSend) -> "ChosenInlineResult":
+    def from_raw_tl(
+        client,
+        chosen_inline_result: raw.types.UpdateBotInlineSend,
+    ) -> "ChosenInlineResult":
         inline_message_id = None
 
         if isinstance(chosen_inline_result.msg_id, raw.types.InputBotInlineMessageID):
-            inline_message_id = b64encode(
-                pack(
-                    "<iqq",
-                    chosen_inline_result.msg_id.dc_id,
-                    chosen_inline_result.msg_id.id,
-                    chosen_inline_result.msg_id.access_hash
-                ),
-                b"-_"
-            ).decode().rstrip("=")
+            inline_message_id = (
+                b64encode(
+                    pack(
+                        "<iqq",
+                        chosen_inline_result.msg_id.dc_id,
+                        chosen_inline_result.msg_id.id,
+                        chosen_inline_result.msg_id.access_hash,
+                    ),
+                    b"-_",
+                )
+                .decode()
+                .rstrip("=")
+            )
 
         return ChosenInlineResult(
             result_id=str(chosen_inline_result.id),
-            from_user=types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=chosen_inline_result.user_id)),
+            from_user=types.User.from_raw_tl(
+                client,
+                client.entity_cache.get_user(user_id=chosen_inline_result.user_id),
+            ),
             query=chosen_inline_result.query,
             location=types.Location(
                 longitude=chosen_inline_result.geo.long,
                 latitude=chosen_inline_result.geo.lat,
-                client=client
-            ) if chosen_inline_result.geo else None,
-            inline_message_id=inline_message_id
+                client=client,
+            )
+            if chosen_inline_result.geo
+            else None,
+            inline_message_id=inline_message_id,
         )

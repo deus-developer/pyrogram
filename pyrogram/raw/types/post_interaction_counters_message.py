@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +55,19 @@ class PostInteractionCountersMessage(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["msg_id", "views", "forwards", "reactions"]
+    __slots__: list[str] = ["forwards", "msg_id", "reactions", "views"]
 
-    ID = 0xe7058e7f
+    ID = 0xE7058E7F
     QUALNAME = "types.PostInteractionCountersMessage"
 
-    def __init__(self, *, msg_id: int, views: int, forwards: int, reactions: int) -> None:
+    def __init__(
+        self,
+        *,
+        msg_id: int,
+        views: int,
+        forwards: int,
+        reactions: int,
+    ) -> None:
         self.msg_id = msg_id  # int
         self.views = views  # int
         self.forwards = forwards  # int
@@ -68,29 +76,34 @@ class PostInteractionCountersMessage(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PostInteractionCountersMessage":
         # No flags
-        
+
         msg_id = Int.read(b)
-        
+
         views = Int.read(b)
-        
+
         forwards = Int.read(b)
-        
+
         reactions = Int.read(b)
-        
-        return PostInteractionCountersMessage(msg_id=msg_id, views=views, forwards=forwards, reactions=reactions)
+
+        return PostInteractionCountersMessage(
+            msg_id=msg_id,
+            views=views,
+            forwards=forwards,
+            reactions=reactions,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.msg_id))
-        
+
         b.write(Int(self.views))
-        
+
         b.write(Int(self.forwards))
-        
+
         b.write(Int(self.reactions))
-        
+
         return b.getvalue()

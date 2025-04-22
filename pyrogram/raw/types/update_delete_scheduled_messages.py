@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,23 +51,23 @@ class UpdateDeleteScheduledMessages(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["peer", "messages"]
+    __slots__: list[str] = ["messages", "peer"]
 
-    ID = 0x90866cee
+    ID = 0x90866CEE
     QUALNAME = "types.UpdateDeleteScheduledMessages"
 
-    def __init__(self, *, peer: "raw.base.Peer", messages: List[int]) -> None:
+    def __init__(self, *, peer: "raw.base.Peer", messages: list[int]) -> None:
         self.peer = peer  # Peer
         self.messages = messages  # Vector<int>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateDeleteScheduledMessages":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         messages = TLObject.read(b, Int)
-        
+
         return UpdateDeleteScheduledMessages(peer=peer, messages=messages)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class UpdateDeleteScheduledMessages(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Vector(self.messages, Int))
-        
+
         return b.getvalue()

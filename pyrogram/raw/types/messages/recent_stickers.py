@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -63,12 +67,19 @@ class RecentStickers(TLObject):  # type: ignore
             messages.GetRecentStickers
     """
 
-    __slots__: List[str] = ["hash", "packs", "stickers", "dates"]
+    __slots__: list[str] = ["dates", "hash", "packs", "stickers"]
 
-    ID = 0x88d37c56
+    ID = 0x88D37C56
     QUALNAME = "types.messages.RecentStickers"
 
-    def __init__(self, *, hash: int, packs: List["raw.base.StickerPack"], stickers: List["raw.base.Document"], dates: List[int]) -> None:
+    def __init__(
+        self,
+        *,
+        hash: int,
+        packs: list["raw.base.StickerPack"],
+        stickers: list["raw.base.Document"],
+        dates: list[int],
+    ) -> None:
         self.hash = hash  # long
         self.packs = packs  # Vector<StickerPack>
         self.stickers = stickers  # Vector<Document>
@@ -77,15 +88,15 @@ class RecentStickers(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "RecentStickers":
         # No flags
-        
+
         hash = Long.read(b)
-        
+
         packs = TLObject.read(b)
-        
+
         stickers = TLObject.read(b)
-        
+
         dates = TLObject.read(b, Int)
-        
+
         return RecentStickers(hash=hash, packs=packs, stickers=stickers, dates=dates)
 
     def write(self, *args) -> bytes:
@@ -93,13 +104,13 @@ class RecentStickers(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.hash))
-        
+
         b.write(Vector(self.packs))
-        
+
         b.write(Vector(self.stickers))
-        
+
         b.write(Vector(self.dates, Int))
-        
+
         return b.getvalue()

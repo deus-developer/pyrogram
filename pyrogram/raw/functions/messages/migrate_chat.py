@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class MigrateChat(TLObject):  # type: ignore
+class MigrateChat(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class MigrateChat(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["chat_id"]
+    __slots__: list[str] = ["chat_id"]
 
-    ID = 0xa2875319
+    ID = 0xA2875319
     QUALNAME = "functions.messages.MigrateChat"
 
     def __init__(self, *, chat_id: int) -> None:
@@ -56,9 +58,9 @@ class MigrateChat(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MigrateChat":
         # No flags
-        
+
         chat_id = Long.read(b)
-        
+
         return MigrateChat(chat_id=chat_id)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class MigrateChat(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Long(self.chat_id))
-        
+
         return b.getvalue()

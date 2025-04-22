@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,12 +63,28 @@ class ChannelForbidden(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "access_hash", "title", "broadcast", "megagroup", "until_date"]
+    __slots__: list[str] = [
+        "access_hash",
+        "broadcast",
+        "id",
+        "megagroup",
+        "title",
+        "until_date",
+    ]
 
-    ID = 0x17d493d5
+    ID = 0x17D493D5
     QUALNAME = "types.ChannelForbidden"
 
-    def __init__(self, *, id: int, access_hash: int, title: str, broadcast: Optional[bool] = None, megagroup: Optional[bool] = None, until_date: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: int,
+        access_hash: int,
+        title: str,
+        broadcast: bool | None = None,
+        megagroup: bool | None = None,
+        until_date: int | None = None,
+    ) -> None:
         self.id = id  # long
         self.access_hash = access_hash  # long
         self.title = title  # string
@@ -75,19 +94,25 @@ class ChannelForbidden(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChannelForbidden":
-        
         flags = Int.read(b)
-        
+
         broadcast = True if flags & (1 << 5) else False
         megagroup = True if flags & (1 << 8) else False
         id = Long.read(b)
-        
+
         access_hash = Long.read(b)
-        
+
         title = String.read(b)
-        
+
         until_date = Int.read(b) if flags & (1 << 16) else None
-        return ChannelForbidden(id=id, access_hash=access_hash, title=title, broadcast=broadcast, megagroup=megagroup, until_date=until_date)
+        return ChannelForbidden(
+            id=id,
+            access_hash=access_hash,
+            title=title,
+            broadcast=broadcast,
+            megagroup=megagroup,
+            until_date=until_date,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -98,14 +123,14 @@ class ChannelForbidden(TLObject):  # type: ignore
         flags |= (1 << 8) if self.megagroup else 0
         flags |= (1 << 16) if self.until_date is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.id))
-        
+
         b.write(Long(self.access_hash))
-        
+
         b.write(String(self.title))
-        
+
         if self.until_date is not None:
             b.write(Int(self.until_date))
-        
+
         return b.getvalue()

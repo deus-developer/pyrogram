@@ -4,8 +4,6 @@
 # All changes made in this file will be lost! #
 # # # # # # # # # # # # # # # # # # # # # # # #
 
-from typing import Union, TypeAlias
 from pyrogram import raw
-from pyrogram.raw.core import TLObject
 
-type PeerColors = Union["raw.types.help.PeerColors, raw.types.help.PeerColorsNotModified"]
+type PeerColors = raw.types.help.PeerColors | raw.types.help.PeerColorsNotModified

@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -87,12 +88,46 @@ class ChatAdminRights(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["change_info", "post_messages", "edit_messages", "delete_messages", "ban_users", "invite_users", "pin_messages", "add_admins", "anonymous", "manage_call", "other", "manage_topics", "post_stories", "edit_stories", "delete_stories"]
+    __slots__: list[str] = [
+        "add_admins",
+        "anonymous",
+        "ban_users",
+        "change_info",
+        "delete_messages",
+        "delete_stories",
+        "edit_messages",
+        "edit_stories",
+        "invite_users",
+        "manage_call",
+        "manage_topics",
+        "other",
+        "pin_messages",
+        "post_messages",
+        "post_stories",
+    ]
 
-    ID = 0x5fb224d5
+    ID = 0x5FB224D5
     QUALNAME = "types.ChatAdminRights"
 
-    def __init__(self, *, change_info: Optional[bool] = None, post_messages: Optional[bool] = None, edit_messages: Optional[bool] = None, delete_messages: Optional[bool] = None, ban_users: Optional[bool] = None, invite_users: Optional[bool] = None, pin_messages: Optional[bool] = None, add_admins: Optional[bool] = None, anonymous: Optional[bool] = None, manage_call: Optional[bool] = None, other: Optional[bool] = None, manage_topics: Optional[bool] = None, post_stories: Optional[bool] = None, edit_stories: Optional[bool] = None, delete_stories: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        change_info: bool | None = None,
+        post_messages: bool | None = None,
+        edit_messages: bool | None = None,
+        delete_messages: bool | None = None,
+        ban_users: bool | None = None,
+        invite_users: bool | None = None,
+        pin_messages: bool | None = None,
+        add_admins: bool | None = None,
+        anonymous: bool | None = None,
+        manage_call: bool | None = None,
+        other: bool | None = None,
+        manage_topics: bool | None = None,
+        post_stories: bool | None = None,
+        edit_stories: bool | None = None,
+        delete_stories: bool | None = None,
+    ) -> None:
         self.change_info = change_info  # flags.0?true
         self.post_messages = post_messages  # flags.1?true
         self.edit_messages = edit_messages  # flags.2?true
@@ -111,9 +146,8 @@ class ChatAdminRights(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ChatAdminRights":
-        
         flags = Int.read(b)
-        
+
         change_info = True if flags & (1 << 0) else False
         post_messages = True if flags & (1 << 1) else False
         edit_messages = True if flags & (1 << 2) else False
@@ -129,7 +163,23 @@ class ChatAdminRights(TLObject):  # type: ignore
         post_stories = True if flags & (1 << 14) else False
         edit_stories = True if flags & (1 << 15) else False
         delete_stories = True if flags & (1 << 16) else False
-        return ChatAdminRights(change_info=change_info, post_messages=post_messages, edit_messages=edit_messages, delete_messages=delete_messages, ban_users=ban_users, invite_users=invite_users, pin_messages=pin_messages, add_admins=add_admins, anonymous=anonymous, manage_call=manage_call, other=other, manage_topics=manage_topics, post_stories=post_stories, edit_stories=edit_stories, delete_stories=delete_stories)
+        return ChatAdminRights(
+            change_info=change_info,
+            post_messages=post_messages,
+            edit_messages=edit_messages,
+            delete_messages=delete_messages,
+            ban_users=ban_users,
+            invite_users=invite_users,
+            pin_messages=pin_messages,
+            add_admins=add_admins,
+            anonymous=anonymous,
+            manage_call=manage_call,
+            other=other,
+            manage_topics=manage_topics,
+            post_stories=post_stories,
+            edit_stories=edit_stories,
+            delete_stories=delete_stories,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -152,5 +202,5 @@ class ChatAdminRights(TLObject):  # type: ignore
         flags |= (1 << 15) if self.edit_stories else 0
         flags |= (1 << 16) if self.delete_stories else 0
         b.write(Int(flags))
-        
+
         return b.getvalue()

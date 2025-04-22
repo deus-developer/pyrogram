@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetMultiWallPapers(TLObject):  # type: ignore
+class GetMultiWallPapers(TLFunction[list["raw.base.WallPaper"]]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,20 +48,20 @@ class GetMultiWallPapers(TLObject):  # type: ignore
         List of :obj:`WallPaper <pyrogram.raw.base.WallPaper>`
     """
 
-    __slots__: List[str] = ["wallpapers"]
+    __slots__: list[str] = ["wallpapers"]
 
-    ID = 0x65ad71dc
+    ID = 0x65AD71DC
     QUALNAME = "functions.account.GetMultiWallPapers"
 
-    def __init__(self, *, wallpapers: List["raw.base.InputWallPaper"]) -> None:
+    def __init__(self, *, wallpapers: list["raw.base.InputWallPaper"]) -> None:
         self.wallpapers = wallpapers  # Vector<InputWallPaper>
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetMultiWallPapers":
         # No flags
-        
+
         wallpapers = TLObject.read(b)
-        
+
         return GetMultiWallPapers(wallpapers=wallpapers)
 
     def write(self, *args) -> bytes:
@@ -66,7 +69,7 @@ class GetMultiWallPapers(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Vector(self.wallpapers))
-        
+
         return b.getvalue()

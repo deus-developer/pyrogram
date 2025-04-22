@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,9 +53,9 @@ class MessageEntityTextUrl(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["offset", "length", "url"]
+    __slots__: list[str] = ["length", "offset", "url"]
 
-    ID = 0x76a6d327
+    ID = 0x76A6D327
     QUALNAME = "types.MessageEntityTextUrl"
 
     def __init__(self, *, offset: int, length: int, url: str) -> None:
@@ -64,13 +66,13 @@ class MessageEntityTextUrl(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "MessageEntityTextUrl":
         # No flags
-        
+
         offset = Int.read(b)
-        
+
         length = Int.read(b)
-        
+
         url = String.read(b)
-        
+
         return MessageEntityTextUrl(offset=offset, length=length, url=url)
 
     def write(self, *args) -> bytes:
@@ -78,11 +80,11 @@ class MessageEntityTextUrl(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.offset))
-        
+
         b.write(Int(self.length))
-        
+
         b.write(String(self.url))
-        
+
         return b.getvalue()

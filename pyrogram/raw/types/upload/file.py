@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,12 +63,18 @@ class File(TLObject):  # type: ignore
             upload.GetFile
     """
 
-    __slots__: List[str] = ["type", "mtime", "bytes"]
+    __slots__: list[str] = ["bytes", "mtime", "type"]
 
-    ID = 0x96a18d5
+    ID = 0x96A18D5
     QUALNAME = "types.upload.File"
 
-    def __init__(self, *, type: "raw.base.storage.FileType", mtime: int, bytes: bytes) -> None:
+    def __init__(
+        self,
+        *,
+        type: "raw.base.storage.FileType",
+        mtime: int,
+        bytes: bytes,
+    ) -> None:
         self.type = type  # storage.FileType
         self.mtime = mtime  # int
         self.bytes = bytes  # bytes
@@ -73,13 +82,13 @@ class File(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "File":
         # No flags
-        
+
         type = TLObject.read(b)
-        
+
         mtime = Int.read(b)
-        
+
         bytes = Bytes.read(b)
-        
+
         return File(type=type, mtime=mtime, bytes=bytes)
 
     def write(self, *args) -> bytes:
@@ -87,11 +96,11 @@ class File(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.type.write())
-        
+
         b.write(Int(self.mtime))
-        
+
         b.write(Bytes(self.bytes))
-        
+
         return b.getvalue()

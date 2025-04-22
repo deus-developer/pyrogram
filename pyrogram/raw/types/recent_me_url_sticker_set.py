@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,9 +51,9 @@ class RecentMeUrlStickerSet(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["url", "set"]
+    __slots__: list[str] = ["set", "url"]
 
-    ID = 0xbc0a57dc
+    ID = 0xBC0A57DC
     QUALNAME = "types.RecentMeUrlStickerSet"
 
     def __init__(self, *, url: str, set: "raw.base.StickerSetCovered") -> None:
@@ -60,11 +63,11 @@ class RecentMeUrlStickerSet(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "RecentMeUrlStickerSet":
         # No flags
-        
+
         url = String.read(b)
-        
+
         set = TLObject.read(b)
-        
+
         return RecentMeUrlStickerSet(url=url, set=set)
 
     def write(self, *args) -> bytes:
@@ -72,9 +75,9 @@ class RecentMeUrlStickerSet(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.url))
-        
+
         b.write(self.set.write())
-        
+
         return b.getvalue()

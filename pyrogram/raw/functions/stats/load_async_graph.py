@@ -17,11 +17,14 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +33,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class LoadAsyncGraph(TLObject):  # type: ignore
+class LoadAsyncGraph(TLFunction["raw.base.StatsGraph"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,22 +51,21 @@ class LoadAsyncGraph(TLObject):  # type: ignore
         :obj:`StatsGraph <pyrogram.raw.base.StatsGraph>`
     """
 
-    __slots__: List[str] = ["token", "x"]
+    __slots__: list[str] = ["token", "x"]
 
-    ID = 0x621d5fa0
+    ID = 0x621D5FA0
     QUALNAME = "functions.stats.LoadAsyncGraph"
 
-    def __init__(self, *, token: str, x: Optional[int] = None) -> None:
+    def __init__(self, *, token: str, x: int | None = None) -> None:
         self.token = token  # string
         self.x = x  # flags.0?long
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "LoadAsyncGraph":
-        
         flags = Int.read(b)
-        
+
         token = String.read(b)
-        
+
         x = Long.read(b) if flags & (1 << 0) else None
         return LoadAsyncGraph(token=token, x=x)
 
@@ -74,10 +76,10 @@ class LoadAsyncGraph(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.x is not None else 0
         b.write(Int(flags))
-        
+
         b.write(String(self.token))
-        
+
         if self.x is not None:
             b.write(Long(self.x))
-        
+
         return b.getvalue()

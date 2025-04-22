@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SetBotMenuButton(TLObject):  # type: ignore
+class SetBotMenuButton(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,28 @@ class SetBotMenuButton(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["user_id", "button"]
+    __slots__: list[str] = ["button", "user_id"]
 
-    ID = 0x4504d54f
+    ID = 0x4504D54F
     QUALNAME = "functions.bots.SetBotMenuButton"
 
-    def __init__(self, *, user_id: "raw.base.InputUser", button: "raw.base.BotMenuButton") -> None:
+    def __init__(
+        self,
+        *,
+        user_id: "raw.base.InputUser",
+        button: "raw.base.BotMenuButton",
+    ) -> None:
         self.user_id = user_id  # InputUser
         self.button = button  # BotMenuButton
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SetBotMenuButton":
         # No flags
-        
+
         user_id = TLObject.read(b)
-        
+
         button = TLObject.read(b)
-        
+
         return SetBotMenuButton(user_id=user_id, button=button)
 
     def write(self, *args) -> bytes:
@@ -72,9 +79,9 @@ class SetBotMenuButton(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.user_id.write())
-        
+
         b.write(self.button.write())
-        
+
         return b.getvalue()

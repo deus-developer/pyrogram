@@ -17,12 +17,17 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import List
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
-from pyrogram.file_id import FileId, FileType, FileUniqueId, FileUniqueType, ThumbnailSource
+from pyrogram import raw, types, utils
+from pyrogram.file_id import (
+    FileId,
+    FileType,
+    FileUniqueId,
+    FileUniqueType,
+    ThumbnailSource,
+)
+
 from ..object import Object
 
 
@@ -67,7 +72,7 @@ class Photo(Object):
         file_size: int,
         date: datetime,
         ttl_seconds: int = None,
-        thumbs: List["types.Thumbnail"] = None
+        thumbs: list["types.Thumbnail"] = None,
     ):
         super().__init__(client)
 
@@ -81,9 +86,13 @@ class Photo(Object):
         self.thumbs = thumbs
 
     @staticmethod
-    def from_raw_tl(client, photo: "raw.types.Photo", ttl_seconds: int = None) -> "Photo":
+    def from_raw_tl(
+        client,
+        photo: "raw.types.Photo",
+        ttl_seconds: int = None,
+    ) -> "Photo":
         if isinstance(photo, raw.types.Photo):
-            photos: List[raw.types.PhotoSize] = []
+            photos: list[raw.types.PhotoSize] = []
 
             for p in photo.sizes:
                 if isinstance(p, raw.types.PhotoSize):
@@ -95,8 +104,8 @@ class Photo(Object):
                             type=p.type,
                             w=p.w,
                             h=p.h,
-                            size=max(p.sizes)
-                        )
+                            size=max(p.sizes),
+                        ),
                     )
 
             photos.sort(key=lambda p: p.size)
@@ -114,11 +123,11 @@ class Photo(Object):
                     thumbnail_file_type=FileType.PHOTO,
                     thumbnail_size=main.type,
                     volume_id=0,
-                    local_id=0
+                    local_id=0,
                 ).encode(),
                 file_unique_id=FileUniqueId(
                     file_unique_type=FileUniqueType.DOCUMENT,
-                    media_id=photo.id
+                    media_id=photo.id,
                 ).encode(),
                 width=main.w,
                 height=main.h,
@@ -126,5 +135,5 @@ class Photo(Object):
                 date=utils.timestamp_to_datetime(photo.date),
                 ttl_seconds=ttl_seconds,
                 thumbs=types.Thumbnail.from_raw_tl(client, photo),
-                client=client
+                client=client,
             )

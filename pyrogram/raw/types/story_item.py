@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+    Vector,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -105,12 +109,58 @@ class StoryItem(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "date", "expire_date", "media", "pinned", "public", "close_friends", "min", "noforwards", "edited", "contacts", "selected_contacts", "out", "from_id", "fwd_from", "caption", "entities", "media_areas", "privacy", "views", "sent_reaction"]
+    __slots__: list[str] = [
+        "caption",
+        "close_friends",
+        "contacts",
+        "date",
+        "edited",
+        "entities",
+        "expire_date",
+        "from_id",
+        "fwd_from",
+        "id",
+        "media",
+        "media_areas",
+        "min",
+        "noforwards",
+        "out",
+        "pinned",
+        "privacy",
+        "public",
+        "selected_contacts",
+        "sent_reaction",
+        "views",
+    ]
 
-    ID = 0x79b26a24
+    ID = 0x79B26A24
     QUALNAME = "types.StoryItem"
 
-    def __init__(self, *, id: int, date: int, expire_date: int, media: "raw.base.MessageMedia", pinned: Optional[bool] = None, public: Optional[bool] = None, close_friends: Optional[bool] = None, min: Optional[bool] = None, noforwards: Optional[bool] = None, edited: Optional[bool] = None, contacts: Optional[bool] = None, selected_contacts: Optional[bool] = None, out: Optional[bool] = None, from_id: "raw.base.Peer" = None, fwd_from: "raw.base.StoryFwdHeader" = None, caption: Optional[str] = None, entities: Optional[List["raw.base.MessageEntity"]] = None, media_areas: Optional[List["raw.base.MediaArea"]] = None, privacy: Optional[List["raw.base.PrivacyRule"]] = None, views: "raw.base.StoryViews" = None, sent_reaction: "raw.base.Reaction" = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: int,
+        date: int,
+        expire_date: int,
+        media: "raw.base.MessageMedia",
+        pinned: bool | None = None,
+        public: bool | None = None,
+        close_friends: bool | None = None,
+        min: bool | None = None,
+        noforwards: bool | None = None,
+        edited: bool | None = None,
+        contacts: bool | None = None,
+        selected_contacts: bool | None = None,
+        out: bool | None = None,
+        from_id: "raw.base.Peer" = None,
+        fwd_from: "raw.base.StoryFwdHeader" = None,
+        caption: str | None = None,
+        entities: list["raw.base.MessageEntity"] | None = None,
+        media_areas: list["raw.base.MediaArea"] | None = None,
+        privacy: list["raw.base.PrivacyRule"] | None = None,
+        views: "raw.base.StoryViews" = None,
+        sent_reaction: "raw.base.Reaction" = None,
+    ) -> None:
         self.id = id  # int
         self.date = date  # int
         self.expire_date = expire_date  # int
@@ -135,9 +185,8 @@ class StoryItem(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "StoryItem":
-        
         flags = Int.read(b)
-        
+
         pinned = True if flags & (1 << 5) else False
         public = True if flags & (1 << 7) else False
         close_friends = True if flags & (1 << 8) else False
@@ -148,29 +197,51 @@ class StoryItem(TLObject):  # type: ignore
         selected_contacts = True if flags & (1 << 13) else False
         out = True if flags & (1 << 16) else False
         id = Int.read(b)
-        
+
         date = Int.read(b)
-        
+
         from_id = TLObject.read(b) if flags & (1 << 18) else None
-        
+
         fwd_from = TLObject.read(b) if flags & (1 << 17) else None
-        
+
         expire_date = Int.read(b)
-        
+
         caption = String.read(b) if flags & (1 << 0) else None
         entities = TLObject.read(b) if flags & (1 << 1) else []
-        
+
         media = TLObject.read(b)
-        
+
         media_areas = TLObject.read(b) if flags & (1 << 14) else []
-        
+
         privacy = TLObject.read(b) if flags & (1 << 2) else []
-        
+
         views = TLObject.read(b) if flags & (1 << 3) else None
-        
+
         sent_reaction = TLObject.read(b) if flags & (1 << 15) else None
-        
-        return StoryItem(id=id, date=date, expire_date=expire_date, media=media, pinned=pinned, public=public, close_friends=close_friends, min=min, noforwards=noforwards, edited=edited, contacts=contacts, selected_contacts=selected_contacts, out=out, from_id=from_id, fwd_from=fwd_from, caption=caption, entities=entities, media_areas=media_areas, privacy=privacy, views=views, sent_reaction=sent_reaction)
+
+        return StoryItem(
+            id=id,
+            date=date,
+            expire_date=expire_date,
+            media=media,
+            pinned=pinned,
+            public=public,
+            close_friends=close_friends,
+            min=min,
+            noforwards=noforwards,
+            edited=edited,
+            contacts=contacts,
+            selected_contacts=selected_contacts,
+            out=out,
+            from_id=from_id,
+            fwd_from=fwd_from,
+            caption=caption,
+            entities=entities,
+            media_areas=media_areas,
+            privacy=privacy,
+            views=views,
+            sent_reaction=sent_reaction,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -195,37 +266,37 @@ class StoryItem(TLObject):  # type: ignore
         flags |= (1 << 3) if self.views is not None else 0
         flags |= (1 << 15) if self.sent_reaction is not None else 0
         b.write(Int(flags))
-        
+
         b.write(Int(self.id))
-        
+
         b.write(Int(self.date))
-        
+
         if self.from_id is not None:
             b.write(self.from_id.write())
-        
+
         if self.fwd_from is not None:
             b.write(self.fwd_from.write())
-        
+
         b.write(Int(self.expire_date))
-        
+
         if self.caption is not None:
             b.write(String(self.caption))
-        
+
         if self.entities is not None:
             b.write(Vector(self.entities))
-        
+
         b.write(self.media.write())
-        
+
         if self.media_areas is not None:
             b.write(Vector(self.media_areas))
-        
+
         if self.privacy is not None:
             b.write(Vector(self.privacy))
-        
+
         if self.views is not None:
             b.write(self.views.write())
-        
+
         if self.sent_reaction is not None:
             b.write(self.sent_reaction.write())
-        
+
         return b.getvalue()

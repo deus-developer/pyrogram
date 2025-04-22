@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +56,9 @@ class CdnFileReuploadNeeded(TLObject):  # type: ignore
             upload.GetCdnFile
     """
 
-    __slots__: List[str] = ["request_token"]
+    __slots__: list[str] = ["request_token"]
 
-    ID = 0xeea8e46e
+    ID = 0xEEA8E46E
     QUALNAME = "types.upload.CdnFileReuploadNeeded"
 
     def __init__(self, *, request_token: bytes) -> None:
@@ -65,9 +67,9 @@ class CdnFileReuploadNeeded(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "CdnFileReuploadNeeded":
         # No flags
-        
+
         request_token = Bytes.read(b)
-        
+
         return CdnFileReuploadNeeded(request_token=request_token)
 
     def write(self, *args) -> bytes:
@@ -75,7 +77,7 @@ class CdnFileReuploadNeeded(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Bytes(self.request_token))
-        
+
         return b.getvalue()

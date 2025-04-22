@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -48,23 +50,27 @@ class UpdateGroupCallConnection(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["params", "presentation"]
+    __slots__: list[str] = ["params", "presentation"]
 
-    ID = 0xb783982
+    ID = 0xB783982
     QUALNAME = "types.UpdateGroupCallConnection"
 
-    def __init__(self, *, params: "raw.base.DataJSON", presentation: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        params: "raw.base.DataJSON",
+        presentation: bool | None = None,
+    ) -> None:
         self.params = params  # DataJSON
         self.presentation = presentation  # flags.0?true
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateGroupCallConnection":
-        
         flags = Int.read(b)
-        
+
         presentation = True if flags & (1 << 0) else False
         params = TLObject.read(b)
-        
+
         return UpdateGroupCallConnection(params=params, presentation=presentation)
 
     def write(self, *args) -> bytes:
@@ -74,7 +80,7 @@ class UpdateGroupCallConnection(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.presentation else 0
         b.write(Int(flags))
-        
+
         b.write(self.params.write())
-        
+
         return b.getvalue()

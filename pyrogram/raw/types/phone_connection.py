@@ -17,11 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+    Long,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -60,12 +64,21 @@ class PhoneConnection(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["id", "ip", "ipv6", "port", "peer_tag", "tcp"]
+    __slots__: list[str] = ["id", "ip", "ipv6", "peer_tag", "port", "tcp"]
 
-    ID = 0x9cc123c7
+    ID = 0x9CC123C7
     QUALNAME = "types.PhoneConnection"
 
-    def __init__(self, *, id: int, ip: str, ipv6: str, port: int, peer_tag: bytes, tcp: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        id: int,
+        ip: str,
+        ipv6: str,
+        port: int,
+        peer_tag: bytes,
+        tcp: bool | None = None,
+    ) -> None:
         self.id = id  # long
         self.ip = ip  # string
         self.ipv6 = ipv6  # string
@@ -75,21 +88,27 @@ class PhoneConnection(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "PhoneConnection":
-        
         flags = Int.read(b)
-        
+
         tcp = True if flags & (1 << 0) else False
         id = Long.read(b)
-        
+
         ip = String.read(b)
-        
+
         ipv6 = String.read(b)
-        
+
         port = Int.read(b)
-        
+
         peer_tag = Bytes.read(b)
-        
-        return PhoneConnection(id=id, ip=ip, ipv6=ipv6, port=port, peer_tag=peer_tag, tcp=tcp)
+
+        return PhoneConnection(
+            id=id,
+            ip=ip,
+            ipv6=ipv6,
+            port=port,
+            peer_tag=peer_tag,
+            tcp=tcp,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -98,15 +117,15 @@ class PhoneConnection(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.tcp else 0
         b.write(Int(flags))
-        
+
         b.write(Long(self.id))
-        
+
         b.write(String(self.ip))
-        
+
         b.write(String(self.ipv6))
-        
+
         b.write(Int(self.port))
-        
+
         b.write(Bytes(self.peer_tag))
-        
+
         return b.getvalue()

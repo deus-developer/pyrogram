@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Bytes,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -51,9 +53,9 @@ class SecureCredentialsEncrypted(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["data", "hash", "secret"]
+    __slots__: list[str] = ["data", "hash", "secret"]
 
-    ID = 0x33f0ea47
+    ID = 0x33F0EA47
     QUALNAME = "types.SecureCredentialsEncrypted"
 
     def __init__(self, *, data: bytes, hash: bytes, secret: bytes) -> None:
@@ -64,13 +66,13 @@ class SecureCredentialsEncrypted(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SecureCredentialsEncrypted":
         # No flags
-        
+
         data = Bytes.read(b)
-        
+
         hash = Bytes.read(b)
-        
+
         secret = Bytes.read(b)
-        
+
         return SecureCredentialsEncrypted(data=data, hash=hash, secret=secret)
 
     def write(self, *args) -> bytes:
@@ -78,11 +80,11 @@ class SecureCredentialsEncrypted(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Bytes(self.data))
-        
+
         b.write(Bytes(self.hash))
-        
+
         b.write(Bytes(self.secret))
-        
+
         return b.getvalue()

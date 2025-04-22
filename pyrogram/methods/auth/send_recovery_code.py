@@ -38,6 +38,8 @@ class SendRecoveryCode:
         Raises:
             BadRequest: In case no recovery email was set up.
         """
-        return (await self.invoke(
-            raw.functions.auth.RequestPasswordRecovery()
-        )).email_pattern
+        return (
+            await self.invoke(
+                raw.functions.auth.RequestPasswordRecovery(),
+            )
+        ).email_pattern

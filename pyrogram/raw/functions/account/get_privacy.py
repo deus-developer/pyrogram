@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetPrivacy(TLObject):  # type: ignore
+class GetPrivacy(TLFunction["raw.base.account.PrivacyRules"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class GetPrivacy(TLObject):  # type: ignore
         :obj:`account.PrivacyRules <pyrogram.raw.base.account.PrivacyRules>`
     """
 
-    __slots__: List[str] = ["key"]
+    __slots__: list[str] = ["key"]
 
-    ID = 0xdadbc950
+    ID = 0xDADBC950
     QUALNAME = "functions.account.GetPrivacy"
 
     def __init__(self, *, key: "raw.base.InputPrivacyKey") -> None:
@@ -56,9 +58,9 @@ class GetPrivacy(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetPrivacy":
         # No flags
-        
+
         key = TLObject.read(b)
-        
+
         return GetPrivacy(key=key)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class GetPrivacy(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.key.write())
-        
+
         return b.getvalue()

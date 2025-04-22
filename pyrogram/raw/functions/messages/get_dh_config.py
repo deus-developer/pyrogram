@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +31,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetDhConfig(TLObject):  # type: ignore
+class GetDhConfig(TLFunction["raw.base.messages.DhConfig"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,9 +49,9 @@ class GetDhConfig(TLObject):  # type: ignore
         :obj:`messages.DhConfig <pyrogram.raw.base.messages.DhConfig>`
     """
 
-    __slots__: List[str] = ["version", "random_length"]
+    __slots__: list[str] = ["random_length", "version"]
 
-    ID = 0x26cf8950
+    ID = 0x26CF8950
     QUALNAME = "functions.messages.GetDhConfig"
 
     def __init__(self, *, version: int, random_length: int) -> None:
@@ -60,11 +61,11 @@ class GetDhConfig(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetDhConfig":
         # No flags
-        
+
         version = Int.read(b)
-        
+
         random_length = Int.read(b)
-        
+
         return GetDhConfig(version=version, random_length=random_length)
 
     def write(self, *args) -> bytes:
@@ -72,9 +73,9 @@ class GetDhConfig(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.version))
-        
+
         b.write(Int(self.random_length))
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class SaveCallDebug(TLObject):  # type: ignore
+class SaveCallDebug(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,28 @@ class SaveCallDebug(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["peer", "debug"]
+    __slots__: list[str] = ["debug", "peer"]
 
-    ID = 0x277add7e
+    ID = 0x277ADD7E
     QUALNAME = "functions.phone.SaveCallDebug"
 
-    def __init__(self, *, peer: "raw.base.InputPhoneCall", debug: "raw.base.DataJSON") -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPhoneCall",
+        debug: "raw.base.DataJSON",
+    ) -> None:
         self.peer = peer  # InputPhoneCall
         self.debug = debug  # DataJSON
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SaveCallDebug":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         debug = TLObject.read(b)
-        
+
         return SaveCallDebug(peer=peer, debug=debug)
 
     def write(self, *args) -> bytes:
@@ -72,9 +79,9 @@ class SaveCallDebug(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(self.debug.write())
-        
+
         return b.getvalue()

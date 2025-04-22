@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -25,7 +24,7 @@ from pyrogram import raw
 class UpdatePersonalChannel:
     async def update_personal_channel(
         self: "pyrogram.Client",
-        chat_id: Union[int, str] = None
+        chat_id: int | str = None,
     ) -> bool:
         """Update your personal channel.
 
@@ -59,7 +58,7 @@ class UpdatePersonalChannel:
         return bool(
             await self.invoke(
                 raw.functions.account.UpdatePersonalChannel(
-                    channel=peer
-                )
-            )
+                    channel=peer,
+                ),
+            ),
         )

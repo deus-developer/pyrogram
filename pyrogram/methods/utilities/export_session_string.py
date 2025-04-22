@@ -21,7 +21,7 @@ import pyrogram
 
 class ExportSessionString:
     async def export_session_string(
-        self: "pyrogram.Client"
+        self: "pyrogram.Client",
     ):
         """Export the current authorized session as a serialized string.
 

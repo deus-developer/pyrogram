@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction
+from pyrogram.raw.core.primitives import (
+    Bool,
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class UpdateStatus(TLObject):  # type: ignore
+class UpdateStatus(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,9 +47,9 @@ class UpdateStatus(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["offline"]
+    __slots__: list[str] = ["offline"]
 
-    ID = 0x6628562c
+    ID = 0x6628562C
     QUALNAME = "functions.account.UpdateStatus"
 
     def __init__(self, *, offline: bool) -> None:
@@ -56,9 +58,9 @@ class UpdateStatus(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateStatus":
         # No flags
-        
+
         offline = Bool.read(b)
-        
+
         return UpdateStatus(offline=offline)
 
     def write(self, *args) -> bytes:
@@ -66,7 +68,7 @@ class UpdateStatus(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Bool(self.offline))
-        
+
         return b.getvalue()

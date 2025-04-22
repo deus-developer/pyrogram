@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+    String,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,9 +56,9 @@ class LangPackStringDeleted(TLObject):  # type: ignore
             langpack.GetStrings
     """
 
-    __slots__: List[str] = ["key"]
+    __slots__: list[str] = ["key"]
 
-    ID = 0x2979eeb2
+    ID = 0x2979EEB2
     QUALNAME = "types.LangPackStringDeleted"
 
     def __init__(self, *, key: str) -> None:
@@ -65,9 +67,9 @@ class LangPackStringDeleted(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "LangPackStringDeleted":
         # No flags
-        
+
         key = String.read(b)
-        
+
         return LangPackStringDeleted(key=key)
 
     def write(self, *args) -> bytes:
@@ -75,7 +77,7 @@ class LangPackStringDeleted(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(String(self.key))
-        
+
         return b.getvalue()

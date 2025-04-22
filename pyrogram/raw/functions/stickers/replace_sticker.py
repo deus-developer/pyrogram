@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class ReplaceSticker(TLObject):  # type: ignore
+class ReplaceSticker(TLFunction["raw.base.messages.StickerSet"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,28 @@ class ReplaceSticker(TLObject):  # type: ignore
         :obj:`messages.StickerSet <pyrogram.raw.base.messages.StickerSet>`
     """
 
-    __slots__: List[str] = ["sticker", "new_sticker"]
+    __slots__: list[str] = ["new_sticker", "sticker"]
 
-    ID = 0x4696459a
+    ID = 0x4696459A
     QUALNAME = "functions.stickers.ReplaceSticker"
 
-    def __init__(self, *, sticker: "raw.base.InputDocument", new_sticker: "raw.base.InputStickerSetItem") -> None:
+    def __init__(
+        self,
+        *,
+        sticker: "raw.base.InputDocument",
+        new_sticker: "raw.base.InputStickerSetItem",
+    ) -> None:
         self.sticker = sticker  # InputDocument
         self.new_sticker = new_sticker  # InputStickerSetItem
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "ReplaceSticker":
         # No flags
-        
+
         sticker = TLObject.read(b)
-        
+
         new_sticker = TLObject.read(b)
-        
+
         return ReplaceSticker(sticker=sticker, new_sticker=new_sticker)
 
     def write(self, *args) -> bytes:
@@ -72,9 +79,9 @@ class ReplaceSticker(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.sticker.write())
-        
+
         b.write(self.new_sticker.write())
-        
+
         return b.getvalue()

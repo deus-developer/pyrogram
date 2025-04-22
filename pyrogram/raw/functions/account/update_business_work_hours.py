@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class UpdateBusinessWorkHours(TLObject):  # type: ignore
+class UpdateBusinessWorkHours(TLFunction[bool]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -45,21 +47,24 @@ class UpdateBusinessWorkHours(TLObject):  # type: ignore
         ``bool``
     """
 
-    __slots__: List[str] = ["business_work_hours"]
+    __slots__: list[str] = ["business_work_hours"]
 
-    ID = 0x4b00e066
+    ID = 0x4B00E066
     QUALNAME = "functions.account.UpdateBusinessWorkHours"
 
-    def __init__(self, *, business_work_hours: "raw.base.BusinessWorkHours" = None) -> None:
+    def __init__(
+        self,
+        *,
+        business_work_hours: "raw.base.BusinessWorkHours" = None,
+    ) -> None:
         self.business_work_hours = business_work_hours  # flags.0?BusinessWorkHours
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateBusinessWorkHours":
-        
         flags = Int.read(b)
-        
+
         business_work_hours = TLObject.read(b) if flags & (1 << 0) else None
-        
+
         return UpdateBusinessWorkHours(business_work_hours=business_work_hours)
 
     def write(self, *args) -> bytes:
@@ -69,8 +74,8 @@ class UpdateBusinessWorkHours(TLObject):  # type: ignore
         flags = 0
         flags |= (1 << 0) if self.business_work_hours is not None else 0
         b.write(Int(flags))
-        
+
         if self.business_work_hours is not None:
             b.write(self.business_work_hours.write())
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class VerifyEmail(TLObject):  # type: ignore
+class VerifyEmail(TLFunction["raw.base.account.EmailVerified"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -48,23 +50,28 @@ class VerifyEmail(TLObject):  # type: ignore
         :obj:`account.EmailVerified <pyrogram.raw.base.account.EmailVerified>`
     """
 
-    __slots__: List[str] = ["purpose", "verification"]
+    __slots__: list[str] = ["purpose", "verification"]
 
-    ID = 0x32da4cf
+    ID = 0x32DA4CF
     QUALNAME = "functions.account.VerifyEmail"
 
-    def __init__(self, *, purpose: "raw.base.EmailVerifyPurpose", verification: "raw.base.EmailVerification") -> None:
+    def __init__(
+        self,
+        *,
+        purpose: "raw.base.EmailVerifyPurpose",
+        verification: "raw.base.EmailVerification",
+    ) -> None:
         self.purpose = purpose  # EmailVerifyPurpose
         self.verification = verification  # EmailVerification
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "VerifyEmail":
         # No flags
-        
+
         purpose = TLObject.read(b)
-        
+
         verification = TLObject.read(b)
-        
+
         return VerifyEmail(purpose=purpose, verification=verification)
 
     def write(self, *args) -> bytes:
@@ -72,9 +79,9 @@ class VerifyEmail(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.purpose.write())
-        
+
         b.write(self.verification.write())
-        
+
         return b.getvalue()

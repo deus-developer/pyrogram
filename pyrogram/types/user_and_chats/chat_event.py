@@ -17,11 +17,10 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import List, Optional
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types, utils, enums
+from pyrogram import enums, raw, types, utils
+
 from ..object import Object
 
 
@@ -145,69 +144,50 @@ class ChatEvent(Object):
     """
 
     def __init__(
-        self, *,
+        self,
+        *,
         id: int,
         date: datetime,
         user: "types.User",
         action: str,
-
         old_description: str = None,
         new_description: str = None,
-
         old_history_ttl: int = None,
         new_history_ttl: int = None,
-
         old_linked_chat: "types.Chat" = None,
         new_linked_chat: "types.Chat" = None,
-
         old_photo: "types.Photo" = None,
         new_photo: "types.Photo" = None,
-
         old_title: str = None,
         new_title: str = None,
-
         old_username: str = None,
         new_username: str = None,
-
         old_chat_permissions: "types.ChatPermissions" = None,
         new_chat_permissions: "types.ChatPermissions" = None,
-
         deleted_message: "types.Message" = None,
-
         old_message: "types.Message" = None,
         new_message: "types.Message" = None,
-
         invited_member: "types.ChatMember" = None,
-
         old_administrator_privileges: "types.ChatMember" = None,
         new_administrator_privileges: "types.ChatMember" = None,
-
         old_member_permissions: "types.ChatMember" = None,
         new_member_permissions: "types.ChatMember" = None,
-
         stopped_poll: "types.Message" = None,
-
         invites_enabled: "types.ChatMember" = None,
-
         history_hidden: bool = None,
-
         signatures_enabled: bool = None,
-
         old_slow_mode: int = None,
         new_slow_mode: int = None,
-
         pinned_message: "types.Message" = None,
         unpinned_message: "types.Message" = None,
-
         old_invite_link: "types.ChatInviteLink" = None,
         new_invite_link: "types.ChatInviteLink" = None,
         revoked_invite_link: "types.ChatInviteLink" = None,
         deleted_invite_link: "types.ChatInviteLink" = None,
-
         created_forum_topic: "types.ForumTopic" = None,
         old_forum_topic: "types.ForumTopic" = None,
         new_forum_topic: "types.ForumTopic" = None,
-        deleted_forum_topic: "types.ForumTopic" = None
+        deleted_forum_topic: "types.ForumTopic" = None,
     ):
         super().__init__()
 
@@ -279,66 +259,69 @@ class ChatEvent(Object):
         client: "pyrogram.Client",
         event: "raw.base.ChannelAdminLogEvent",
     ):
-        user = types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=event.user_id))
+        user = types.User.from_raw_tl(
+            client,
+            client.entity_cache.get_user(user_id=event.user_id),
+        )
         action = event.action
 
-        old_description: Optional[str] = None
-        new_description: Optional[str] = None
+        old_description: str | None = None
+        new_description: str | None = None
 
-        old_history_ttl: Optional[int] = None
-        new_history_ttl: Optional[int] = None
+        old_history_ttl: int | None = None
+        new_history_ttl: int | None = None
 
-        old_linked_chat: Optional[types.Chat] = None
-        new_linked_chat: Optional[types.Chat] = None
+        old_linked_chat: types.Chat | None = None
+        new_linked_chat: types.Chat | None = None
 
-        old_photo: Optional[types.Photo] = None
-        new_photo: Optional[types.Photo] = None
+        old_photo: types.Photo | None = None
+        new_photo: types.Photo | None = None
 
-        old_title: Optional[str] = None
-        new_title: Optional[str] = None
+        old_title: str | None = None
+        new_title: str | None = None
 
-        old_username: Optional[str] = None
-        new_username: Optional[str] = None
+        old_username: str | None = None
+        new_username: str | None = None
 
-        old_chat_permissions: Optional[types.ChatPermissions] = None
-        new_chat_permissions: Optional[types.ChatPermissions] = None
+        old_chat_permissions: types.ChatPermissions | None = None
+        new_chat_permissions: types.ChatPermissions | None = None
 
-        deleted_message: Optional[types.Message] = None
+        deleted_message: types.Message | None = None
 
-        old_message: Optional[types.Message] = None
-        new_message: Optional[types.Message] = None
+        old_message: types.Message | None = None
+        new_message: types.Message | None = None
 
-        invited_member: Optional[types.ChatMember] = None
+        invited_member: types.ChatMember | None = None
 
-        old_administrator_privileges: Optional[types.ChatMember] = None
-        new_administrator_privileges: Optional[types.ChatMember] = None
+        old_administrator_privileges: types.ChatMember | None = None
+        new_administrator_privileges: types.ChatMember | None = None
 
-        old_member_permissions: Optional[types.ChatMember] = None
-        new_member_permissions: Optional[types.ChatMember] = None
+        old_member_permissions: types.ChatMember | None = None
+        new_member_permissions: types.ChatMember | None = None
 
-        stopped_poll: Optional[types.Message] = None
+        stopped_poll: types.Message | None = None
 
-        invites_enabled: Optional[bool] = None
+        invites_enabled: bool | None = None
 
-        history_hidden: Optional[bool] = None
+        history_hidden: bool | None = None
 
-        signatures_enabled: Optional[bool] = None
+        signatures_enabled: bool | None = None
 
-        old_slow_mode: Optional[int] = None
-        new_slow_mode: Optional[int] = None
+        old_slow_mode: int | None = None
+        new_slow_mode: int | None = None
 
-        pinned_message: Optional[types.Message] = None
-        unpinned_message: Optional[types.Message] = None
+        pinned_message: types.Message | None = None
+        unpinned_message: types.Message | None = None
 
-        old_invite_link: Optional[types.ChatInviteLink] = None
-        new_invite_link: Optional[types.ChatInviteLink] = None
-        revoked_invite_link: Optional[types.ChatInviteLink] = None
-        deleted_invite_link: Optional[types.ChatInviteLink] = None
+        old_invite_link: types.ChatInviteLink | None = None
+        new_invite_link: types.ChatInviteLink | None = None
+        revoked_invite_link: types.ChatInviteLink | None = None
+        deleted_invite_link: types.ChatInviteLink | None = None
 
-        created_forum_topic: Optional[types.ForumTopic] = None
-        old_forum_topic: Optional[types.ForumTopic] = None
-        new_forum_topic: Optional[types.ForumTopic] = None
-        deleted_forum_topic: Optional[types.ForumTopic] = None
+        created_forum_topic: types.ForumTopic | None = None
+        old_forum_topic: types.ForumTopic | None = None
+        new_forum_topic: types.ForumTopic | None = None
+        deleted_forum_topic: types.ForumTopic | None = None
 
         if isinstance(action, raw.types.ChannelAdminLogEventActionChangeAbout):
             old_description = action.prev_value
@@ -351,8 +334,14 @@ class ChatEvent(Object):
             action = enums.ChatEventAction.HISTORY_TTL_CHANGED
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionChangeLinkedChat):
-            old_linked_chat = types.Chat.from_raw_tl_chat(client, client.entity_cache.get_chat(chat_id=action.prev_value))
-            new_linked_chat = types.Chat.from_raw_tl_chat(client, client.entity_cache.get_chat(chat_id=action.new_value))
+            old_linked_chat = types.Chat.from_raw_tl_chat(
+                client,
+                client.entity_cache.get_chat(chat_id=action.prev_value),
+            )
+            new_linked_chat = types.Chat.from_raw_tl_chat(
+                client,
+                client.entity_cache.get_chat(chat_id=action.new_value),
+            )
             action = enums.ChatEventAction.LINKED_CHAT_CHANGED
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionChangePhoto):
@@ -370,9 +359,16 @@ class ChatEvent(Object):
             new_username = action.new_value
             action = enums.ChatEventAction.USERNAME_CHANGED
 
-        elif isinstance(action, raw.types.ChannelAdminLogEventActionDefaultBannedRights):
-            old_chat_permissions = types.ChatPermissions.from_raw_tl(action.prev_banned_rights)
-            new_chat_permissions = types.ChatPermissions.from_raw_tl(action.new_banned_rights)
+        elif isinstance(
+            action,
+            raw.types.ChannelAdminLogEventActionDefaultBannedRights,
+        ):
+            old_chat_permissions = types.ChatPermissions.from_raw_tl(
+                action.prev_banned_rights,
+            )
+            new_chat_permissions = types.ChatPermissions.from_raw_tl(
+                action.new_banned_rights,
+            )
             action = enums.ChatEventAction.CHAT_PERMISSIONS_CHANGED
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionDeleteMessage):
@@ -388,14 +384,32 @@ class ChatEvent(Object):
             invited_member = types.ChatMember.from_raw_tl(client, action.participant)
             action = enums.ChatEventAction.MEMBER_INVITED
 
-        elif isinstance(action, raw.types.ChannelAdminLogEventActionParticipantToggleAdmin):
-            old_administrator_privileges = types.ChatMember.from_raw_tl(client, action.prev_participant)
-            new_administrator_privileges = types.ChatMember.from_raw_tl(client, action.new_participant)
+        elif isinstance(
+            action,
+            raw.types.ChannelAdminLogEventActionParticipantToggleAdmin,
+        ):
+            old_administrator_privileges = types.ChatMember.from_raw_tl(
+                client,
+                action.prev_participant,
+            )
+            new_administrator_privileges = types.ChatMember.from_raw_tl(
+                client,
+                action.new_participant,
+            )
             action = enums.ChatEventAction.ADMINISTRATOR_PRIVILEGES_CHANGED
 
-        elif isinstance(action, raw.types.ChannelAdminLogEventActionParticipantToggleBan):
-            old_member_permissions = types.ChatMember.from_raw_tl(client, action.prev_participant)
-            new_member_permissions = types.ChatMember.from_raw_tl(client, action.new_participant)
+        elif isinstance(
+            action,
+            raw.types.ChannelAdminLogEventActionParticipantToggleBan,
+        ):
+            old_member_permissions = types.ChatMember.from_raw_tl(
+                client,
+                action.prev_participant,
+            )
+            new_member_permissions = types.ChatMember.from_raw_tl(
+                client,
+                action.new_participant,
+            )
             action = enums.ChatEventAction.MEMBER_PERMISSIONS_CHANGED
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionStopPoll):
@@ -412,7 +426,10 @@ class ChatEvent(Object):
             invites_enabled = action.new_value
             action = enums.ChatEventAction.INVITES_ENABLED
 
-        elif isinstance(action, raw.types.ChannelAdminLogEventActionTogglePreHistoryHidden):
+        elif isinstance(
+            action,
+            raw.types.ChannelAdminLogEventActionTogglePreHistoryHidden,
+        ):
             history_hidden = action.new_value
             action = enums.ChatEventAction.HISTORY_HIDDEN
 
@@ -438,16 +455,34 @@ class ChatEvent(Object):
                 action = enums.ChatEventAction.MESSAGE_PIN_CHANGED
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionExportedInviteEdit):
-            old_invite_link = types.ChatInviteLink.from_raw_tl(client, action.prev_invite)
-            new_invite_link = types.ChatInviteLink.from_raw_tl(client, action.new_invite)
+            old_invite_link = types.ChatInviteLink.from_raw_tl(
+                client,
+                action.prev_invite,
+            )
+            new_invite_link = types.ChatInviteLink.from_raw_tl(
+                client,
+                action.new_invite,
+            )
             action = enums.ChatEventAction.INVITE_LINK_EDITED
 
-        elif isinstance(action, raw.types.ChannelAdminLogEventActionExportedInviteRevoke):
-            revoked_invite_link = types.ChatInviteLink.from_raw_tl(client, action.invite)
+        elif isinstance(
+            action,
+            raw.types.ChannelAdminLogEventActionExportedInviteRevoke,
+        ):
+            revoked_invite_link = types.ChatInviteLink.from_raw_tl(
+                client,
+                action.invite,
+            )
             action = enums.ChatEventAction.INVITE_LINK_REVOKED
 
-        elif isinstance(action, raw.types.ChannelAdminLogEventActionExportedInviteDelete):
-            deleted_invite_link = types.ChatInviteLink.from_raw_tl(client, action.invite)
+        elif isinstance(
+            action,
+            raw.types.ChannelAdminLogEventActionExportedInviteDelete,
+        ):
+            deleted_invite_link = types.ChatInviteLink.from_raw_tl(
+                client,
+                action.invite,
+            )
             action = enums.ChatEventAction.INVITE_LINK_DELETED
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionCreateTopic):
@@ -473,59 +508,40 @@ class ChatEvent(Object):
             action=action,
             old_description=old_description,
             new_description=new_description,
-
             old_history_ttl=old_history_ttl,
             new_history_ttl=new_history_ttl,
-
             old_linked_chat=old_linked_chat,
             new_linked_chat=new_linked_chat,
-
             old_photo=old_photo,
             new_photo=new_photo,
-
             old_title=old_title,
             new_title=new_title,
-
             old_username=old_username,
             new_username=new_username,
-
             old_chat_permissions=old_chat_permissions,
             new_chat_permissions=new_chat_permissions,
-
             deleted_message=deleted_message,
-
             old_message=old_message,
             new_message=new_message,
-
             invited_member=invited_member,
-
             old_administrator_privileges=old_administrator_privileges,
             new_administrator_privileges=new_administrator_privileges,
-
             old_member_permissions=old_member_permissions,
             new_member_permissions=new_member_permissions,
-
             stopped_poll=stopped_poll,
-
             invites_enabled=invites_enabled,
-
             history_hidden=history_hidden,
-
             signatures_enabled=signatures_enabled,
-
             old_slow_mode=old_slow_mode,
             new_slow_mode=new_slow_mode,
-
             pinned_message=pinned_message,
             unpinned_message=unpinned_message,
-
             old_invite_link=old_invite_link,
             new_invite_link=new_invite_link,
             revoked_invite_link=revoked_invite_link,
             deleted_invite_link=deleted_invite_link,
-
             created_forum_topic=created_forum_topic,
             old_forum_topic=old_forum_topic,
             new_forum_topic=new_forum_topic,
-            deleted_forum_topic=deleted_forum_topic
+            deleted_forum_topic=deleted_forum_topic,
         )

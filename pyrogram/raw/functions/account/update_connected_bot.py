@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class UpdateConnectedBot(TLObject):  # type: ignore
+class UpdateConnectedBot(TLFunction["raw.base.Updates"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -54,12 +56,19 @@ class UpdateConnectedBot(TLObject):  # type: ignore
         :obj:`Updates <pyrogram.raw.base.Updates>`
     """
 
-    __slots__: List[str] = ["bot", "recipients", "can_reply", "deleted"]
+    __slots__: list[str] = ["bot", "can_reply", "deleted", "recipients"]
 
-    ID = 0x43d8521d
+    ID = 0x43D8521D
     QUALNAME = "functions.account.UpdateConnectedBot"
 
-    def __init__(self, *, bot: "raw.base.InputUser", recipients: "raw.base.InputBusinessBotRecipients", can_reply: Optional[bool] = None, deleted: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        *,
+        bot: "raw.base.InputUser",
+        recipients: "raw.base.InputBusinessBotRecipients",
+        can_reply: bool | None = None,
+        deleted: bool | None = None,
+    ) -> None:
         self.bot = bot  # InputUser
         self.recipients = recipients  # InputBusinessBotRecipients
         self.can_reply = can_reply  # flags.0?true
@@ -67,16 +76,20 @@ class UpdateConnectedBot(TLObject):  # type: ignore
 
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "UpdateConnectedBot":
-        
         flags = Int.read(b)
-        
+
         can_reply = True if flags & (1 << 0) else False
         deleted = True if flags & (1 << 1) else False
         bot = TLObject.read(b)
-        
+
         recipients = TLObject.read(b)
-        
-        return UpdateConnectedBot(bot=bot, recipients=recipients, can_reply=can_reply, deleted=deleted)
+
+        return UpdateConnectedBot(
+            bot=bot,
+            recipients=recipients,
+            can_reply=can_reply,
+            deleted=deleted,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
@@ -86,9 +99,9 @@ class UpdateConnectedBot(TLObject):  # type: ignore
         flags |= (1 << 0) if self.can_reply else 0
         flags |= (1 << 1) if self.deleted else 0
         b.write(Int(flags))
-        
+
         b.write(self.bot.write())
-        
+
         b.write(self.recipients.write())
-        
+
         return b.getvalue()

@@ -17,11 +17,13 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
-from pyrogram.raw.core import TLObject
 from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core import TLFunction, TLObject
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -30,7 +32,7 @@ from typing import List, Optional, Any
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-class GetPinnedStories(TLObject):  # type: ignore
+class GetPinnedStories(TLFunction["raw.base.stories.Stories"]):  # type: ignore
     """Telegram API function.
 
     Details:
@@ -51,12 +53,18 @@ class GetPinnedStories(TLObject):  # type: ignore
         :obj:`stories.Stories <pyrogram.raw.base.stories.Stories>`
     """
 
-    __slots__: List[str] = ["peer", "offset_id", "limit"]
+    __slots__: list[str] = ["limit", "offset_id", "peer"]
 
-    ID = 0x5821a5dc
+    ID = 0x5821A5DC
     QUALNAME = "functions.stories.GetPinnedStories"
 
-    def __init__(self, *, peer: "raw.base.InputPeer", offset_id: int, limit: int) -> None:
+    def __init__(
+        self,
+        *,
+        peer: "raw.base.InputPeer",
+        offset_id: int,
+        limit: int,
+    ) -> None:
         self.peer = peer  # InputPeer
         self.offset_id = offset_id  # int
         self.limit = limit  # int
@@ -64,13 +72,13 @@ class GetPinnedStories(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "GetPinnedStories":
         # No flags
-        
+
         peer = TLObject.read(b)
-        
+
         offset_id = Int.read(b)
-        
+
         limit = Int.read(b)
-        
+
         return GetPinnedStories(peer=peer, offset_id=offset_id, limit=limit)
 
     def write(self, *args) -> bytes:
@@ -78,11 +86,11 @@ class GetPinnedStories(TLObject):  # type: ignore
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(self.peer.write())
-        
+
         b.write(Int(self.offset_id))
-        
+
         b.write(Int(self.limit))
-        
+
         return b.getvalue()

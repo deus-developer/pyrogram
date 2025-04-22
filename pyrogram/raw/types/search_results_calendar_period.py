@@ -17,11 +17,12 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from io import BytesIO
+from typing import Any
 
-from pyrogram.raw.core.primitives import Int, Long, Int128, Int256, Bool, Bytes, String, Double, Vector
 from pyrogram.raw.core import TLObject
-from pyrogram import raw
-from typing import List, Optional, Any
+from pyrogram.raw.core.primitives import (
+    Int,
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # #
 #               !!! WARNING !!!               #
@@ -54,12 +55,19 @@ class SearchResultsCalendarPeriod(TLObject):  # type: ignore
 
     """
 
-    __slots__: List[str] = ["date", "min_msg_id", "max_msg_id", "count"]
+    __slots__: list[str] = ["count", "date", "max_msg_id", "min_msg_id"]
 
-    ID = 0xc9b0539f
+    ID = 0xC9B0539F
     QUALNAME = "types.SearchResultsCalendarPeriod"
 
-    def __init__(self, *, date: int, min_msg_id: int, max_msg_id: int, count: int) -> None:
+    def __init__(
+        self,
+        *,
+        date: int,
+        min_msg_id: int,
+        max_msg_id: int,
+        count: int,
+    ) -> None:
         self.date = date  # int
         self.min_msg_id = min_msg_id  # int
         self.max_msg_id = max_msg_id  # int
@@ -68,29 +76,34 @@ class SearchResultsCalendarPeriod(TLObject):  # type: ignore
     @staticmethod
     def read(b: BytesIO, *args: Any) -> "SearchResultsCalendarPeriod":
         # No flags
-        
+
         date = Int.read(b)
-        
+
         min_msg_id = Int.read(b)
-        
+
         max_msg_id = Int.read(b)
-        
+
         count = Int.read(b)
-        
-        return SearchResultsCalendarPeriod(date=date, min_msg_id=min_msg_id, max_msg_id=max_msg_id, count=count)
+
+        return SearchResultsCalendarPeriod(
+            date=date,
+            min_msg_id=min_msg_id,
+            max_msg_id=max_msg_id,
+            count=count,
+        )
 
     def write(self, *args) -> bytes:
         b = BytesIO()
         b.write(Int(self.ID, False))
 
         # No flags
-        
+
         b.write(Int(self.date))
-        
+
         b.write(Int(self.min_msg_id))
-        
+
         b.write(Int(self.max_msg_id))
-        
+
         b.write(Int(self.count))
-        
+
         return b.getvalue()
