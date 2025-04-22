@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-WebDocument: TypeAlias = Union["raw.types.WebDocument, raw.types.WebDocumentNoProxy"]
+type WebDocument = Union["raw.types.WebDocument, raw.types.WebDocumentNoProxy"]

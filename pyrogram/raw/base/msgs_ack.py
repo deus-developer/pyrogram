@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-MsgsAck: TypeAlias = Union["raw.types.MsgsAck"]
+type MsgsAck = Union["raw.types.MsgsAck"]

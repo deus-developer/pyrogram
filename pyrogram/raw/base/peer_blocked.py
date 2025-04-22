@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-PeerBlocked: TypeAlias = Union["raw.types.PeerBlocked"]
+type PeerBlocked = Union["raw.types.PeerBlocked"]

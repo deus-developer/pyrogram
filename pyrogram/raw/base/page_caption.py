@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-PageCaption: TypeAlias = Union["raw.types.PageCaption"]
+type PageCaption = Union["raw.types.PageCaption"]

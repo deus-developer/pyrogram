@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-EncryptedChat: TypeAlias = Union["raw.types.EncryptedChat, raw.types.EncryptedChatDiscarded, raw.types.EncryptedChatEmpty, raw.types.EncryptedChatRequested, raw.types.EncryptedChatWaiting"]
+type EncryptedChat = Union["raw.types.EncryptedChat, raw.types.EncryptedChatDiscarded, raw.types.EncryptedChatEmpty, raw.types.EncryptedChatRequested, raw.types.EncryptedChatWaiting"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-DcOption: TypeAlias = Union["raw.types.DcOption"]
+type DcOption = Union["raw.types.DcOption"]

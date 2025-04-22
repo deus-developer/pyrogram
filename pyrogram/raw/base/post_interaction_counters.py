@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-PostInteractionCounters: TypeAlias = Union["raw.types.PostInteractionCountersMessage, raw.types.PostInteractionCountersStory"]
+type PostInteractionCounters = Union["raw.types.PostInteractionCountersMessage, raw.types.PostInteractionCountersStory"]

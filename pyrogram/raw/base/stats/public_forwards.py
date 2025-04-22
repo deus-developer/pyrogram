@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-PublicForwards: TypeAlias = Union["raw.types.stats.PublicForwards"]
+type PublicForwards = Union["raw.types.stats.PublicForwards"]

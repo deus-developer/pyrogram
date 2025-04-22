@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-RecentMeUrls: TypeAlias = Union["raw.types.help.RecentMeUrls"]
+type RecentMeUrls = Union["raw.types.help.RecentMeUrls"]

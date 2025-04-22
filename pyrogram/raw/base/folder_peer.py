@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-FolderPeer: TypeAlias = Union["raw.types.FolderPeer"]
+type FolderPeer = Union["raw.types.FolderPeer"]

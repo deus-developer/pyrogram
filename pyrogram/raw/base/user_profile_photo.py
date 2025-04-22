@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-UserProfilePhoto: TypeAlias = Union["raw.types.UserProfilePhoto, raw.types.UserProfilePhotoEmpty"]
+type UserProfilePhoto = Union["raw.types.UserProfilePhoto, raw.types.UserProfilePhotoEmpty"]

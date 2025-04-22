@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-MaskCoords: TypeAlias = Union["raw.types.MaskCoords"]
+type MaskCoords = Union["raw.types.MaskCoords"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-StatsPercentValue: TypeAlias = Union["raw.types.StatsPercentValue"]
+type StatsPercentValue = Union["raw.types.StatsPercentValue"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-WebPageAttribute: TypeAlias = Union["raw.types.WebPageAttributeStickerSet, raw.types.WebPageAttributeStory, raw.types.WebPageAttributeTheme"]
+type WebPageAttribute = Union["raw.types.WebPageAttributeStickerSet, raw.types.WebPageAttributeStory, raw.types.WebPageAttributeTheme"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-StarsTopupOption: TypeAlias = Union["raw.types.StarsTopupOption"]
+type StarsTopupOption = Union["raw.types.StarsTopupOption"]

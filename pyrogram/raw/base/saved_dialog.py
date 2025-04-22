@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-SavedDialog: TypeAlias = Union["raw.types.SavedDialog"]
+type SavedDialog = Union["raw.types.SavedDialog"]

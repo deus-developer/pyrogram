@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-EmojiKeywordsDifference: TypeAlias = Union["raw.types.EmojiKeywordsDifference"]
+type EmojiKeywordsDifference = Union["raw.types.EmojiKeywordsDifference"]

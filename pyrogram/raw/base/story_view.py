@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-StoryView: TypeAlias = Union["raw.types.StoryView, raw.types.StoryViewPublicForward, raw.types.StoryViewPublicRepost"]
+type StoryView = Union["raw.types.StoryView, raw.types.StoryViewPublicForward, raw.types.StoryViewPublicRepost"]

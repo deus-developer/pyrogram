@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-PaymentRequestedInfo: TypeAlias = Union["raw.types.PaymentRequestedInfo"]
+type PaymentRequestedInfo = Union["raw.types.PaymentRequestedInfo"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-PaymentSavedCredentials: TypeAlias = Union["raw.types.PaymentSavedCredentialsCard"]
+type PaymentSavedCredentials = Union["raw.types.PaymentSavedCredentialsCard"]

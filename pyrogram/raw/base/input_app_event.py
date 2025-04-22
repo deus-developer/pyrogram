@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-InputAppEvent: TypeAlias = Union["raw.types.InputAppEvent"]
+type InputAppEvent = Union["raw.types.InputAppEvent"]

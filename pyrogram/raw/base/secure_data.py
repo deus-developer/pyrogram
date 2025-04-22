@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-SecureData: TypeAlias = Union["raw.types.SecureData"]
+type SecureData = Union["raw.types.SecureData"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-WebPage: TypeAlias = Union["raw.types.messages.WebPage"]
+type WebPage = Union["raw.types.messages.WebPage"]

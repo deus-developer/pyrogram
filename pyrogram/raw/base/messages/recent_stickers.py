@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-RecentStickers: TypeAlias = Union["raw.types.messages.RecentStickers, raw.types.messages.RecentStickersNotModified"]
+type RecentStickers = Union["raw.types.messages.RecentStickers, raw.types.messages.RecentStickersNotModified"]

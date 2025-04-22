@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-GeoPoint: TypeAlias = Union["raw.types.GeoPoint, raw.types.GeoPointEmpty"]
+type GeoPoint = Union["raw.types.GeoPoint, raw.types.GeoPointEmpty"]

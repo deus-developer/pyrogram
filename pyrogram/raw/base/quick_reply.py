@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-QuickReply: TypeAlias = Union["raw.types.QuickReply"]
+type QuickReply = Union["raw.types.QuickReply"]

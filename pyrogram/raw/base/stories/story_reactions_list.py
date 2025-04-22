@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-StoryReactionsList: TypeAlias = Union["raw.types.stories.StoryReactionsList"]
+type StoryReactionsList = Union["raw.types.stories.StoryReactionsList"]

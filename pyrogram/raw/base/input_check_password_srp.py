@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-InputCheckPasswordSRP: TypeAlias = Union["raw.types.InputCheckPasswordEmpty, raw.types.InputCheckPasswordSRP"]
+type InputCheckPasswordSRP = Union["raw.types.InputCheckPasswordEmpty, raw.types.InputCheckPasswordSRP"]

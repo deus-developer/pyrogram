@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-HttpWait: TypeAlias = Union["raw.types.HttpWait"]
+type HttpWait = Union["raw.types.HttpWait"]

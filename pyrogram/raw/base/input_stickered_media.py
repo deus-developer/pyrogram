@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-InputStickeredMedia: TypeAlias = Union["raw.types.InputStickeredMediaDocument, raw.types.InputStickeredMediaPhoto"]
+type InputStickeredMedia = Union["raw.types.InputStickeredMediaDocument, raw.types.InputStickeredMediaPhoto"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-InputDocument: TypeAlias = Union["raw.types.InputDocument, raw.types.InputDocumentEmpty"]
+type InputDocument = Union["raw.types.InputDocument, raw.types.InputDocumentEmpty"]

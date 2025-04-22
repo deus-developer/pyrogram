@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-QuickReplies: TypeAlias = Union["raw.types.messages.QuickReplies, raw.types.messages.QuickRepliesNotModified"]
+type QuickReplies = Union["raw.types.messages.QuickReplies, raw.types.messages.QuickRepliesNotModified"]

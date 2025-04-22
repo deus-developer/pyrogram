@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-SavedRingtones: TypeAlias = Union["raw.types.account.SavedRingtones, raw.types.account.SavedRingtonesNotModified"]
+type SavedRingtones = Union["raw.types.account.SavedRingtones, raw.types.account.SavedRingtonesNotModified"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-ReactionNotificationsFrom: TypeAlias = Union["raw.types.ReactionNotificationsFromAll, raw.types.ReactionNotificationsFromContacts"]
+type ReactionNotificationsFrom = Union["raw.types.ReactionNotificationsFromAll, raw.types.ReactionNotificationsFromContacts"]

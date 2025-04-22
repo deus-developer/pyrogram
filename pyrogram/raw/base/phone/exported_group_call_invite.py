@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-ExportedGroupCallInvite: TypeAlias = Union["raw.types.phone.ExportedGroupCallInvite"]
+type ExportedGroupCallInvite = Union["raw.types.phone.ExportedGroupCallInvite"]

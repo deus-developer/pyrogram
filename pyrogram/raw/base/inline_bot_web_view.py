@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-InlineBotWebView: TypeAlias = Union["raw.types.InlineBotWebView"]
+type InlineBotWebView = Union["raw.types.InlineBotWebView"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-PageListOrderedItem: TypeAlias = Union["raw.types.PageListOrderedItemBlocks, raw.types.PageListOrderedItemText"]
+type PageListOrderedItem = Union["raw.types.PageListOrderedItemBlocks, raw.types.PageListOrderedItemText"]

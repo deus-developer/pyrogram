@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-DefaultHistoryTTL: TypeAlias = Union["raw.types.DefaultHistoryTTL"]
+type DefaultHistoryTTL = Union["raw.types.DefaultHistoryTTL"]

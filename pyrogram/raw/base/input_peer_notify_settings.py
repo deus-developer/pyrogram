@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-InputPeerNotifySettings: TypeAlias = Union["raw.types.InputPeerNotifySettings"]
+type InputPeerNotifySettings = Union["raw.types.InputPeerNotifySettings"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-TopPeer: TypeAlias = Union["raw.types.TopPeer"]
+type TopPeer = Union["raw.types.TopPeer"]

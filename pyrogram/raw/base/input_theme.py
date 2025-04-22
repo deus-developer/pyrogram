@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-InputTheme: TypeAlias = Union["raw.types.InputTheme, raw.types.InputThemeSlug"]
+type InputTheme = Union["raw.types.InputTheme, raw.types.InputThemeSlug"]

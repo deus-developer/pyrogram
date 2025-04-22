@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-StatsAbsValueAndPrev: TypeAlias = Union["raw.types.StatsAbsValueAndPrev"]
+type StatsAbsValueAndPrev = Union["raw.types.StatsAbsValueAndPrev"]

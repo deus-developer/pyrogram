@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-GroupCallParticipantVideoSourceGroup: TypeAlias = Union["raw.types.GroupCallParticipantVideoSourceGroup"]
+type GroupCallParticipantVideoSourceGroup = Union["raw.types.GroupCallParticipantVideoSourceGroup"]

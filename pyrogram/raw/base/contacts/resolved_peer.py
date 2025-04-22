@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-ResolvedPeer: TypeAlias = Union["raw.types.contacts.ResolvedPeer"]
+type ResolvedPeer = Union["raw.types.contacts.ResolvedPeer"]

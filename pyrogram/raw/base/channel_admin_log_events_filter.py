@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-ChannelAdminLogEventsFilter: TypeAlias = Union["raw.types.ChannelAdminLogEventsFilter"]
+type ChannelAdminLogEventsFilter = Union["raw.types.ChannelAdminLogEventsFilter"]

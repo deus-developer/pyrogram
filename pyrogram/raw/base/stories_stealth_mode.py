@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-StoriesStealthMode: TypeAlias = Union["raw.types.StoriesStealthMode"]
+type StoriesStealthMode = Union["raw.types.StoriesStealthMode"]

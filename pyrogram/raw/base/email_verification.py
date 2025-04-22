@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-EmailVerification: TypeAlias = Union["raw.types.EmailVerificationApple, raw.types.EmailVerificationCode, raw.types.EmailVerificationGoogle"]
+type EmailVerification = Union["raw.types.EmailVerificationApple, raw.types.EmailVerificationCode, raw.types.EmailVerificationGoogle"]

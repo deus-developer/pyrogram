@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-SearchResultsPositions: TypeAlias = Union["raw.types.messages.SearchResultsPositions"]
+type SearchResultsPositions = Union["raw.types.messages.SearchResultsPositions"]

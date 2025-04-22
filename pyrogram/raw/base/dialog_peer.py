@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-DialogPeer: TypeAlias = Union["raw.types.DialogPeer, raw.types.DialogPeerFolder"]
+type DialogPeer = Union["raw.types.DialogPeer, raw.types.DialogPeerFolder"]

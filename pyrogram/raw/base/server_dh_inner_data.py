@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-ServerDHInnerData: TypeAlias = Union["raw.types.ServerDHInnerData"]
+type ServerDHInnerData = Union["raw.types.ServerDHInnerData"]

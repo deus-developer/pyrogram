@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-LangPackLanguage: TypeAlias = Union["raw.types.LangPackLanguage"]
+type LangPackLanguage = Union["raw.types.LangPackLanguage"]

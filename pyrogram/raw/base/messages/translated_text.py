@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-TranslatedText: TypeAlias = Union["raw.types.messages.TranslateResult"]
+type TranslatedText = Union["raw.types.messages.TranslateResult"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-EligibilityToJoin: TypeAlias = Union["raw.types.smsjobs.EligibleToJoin"]
+type EligibilityToJoin = Union["raw.types.smsjobs.EligibleToJoin"]

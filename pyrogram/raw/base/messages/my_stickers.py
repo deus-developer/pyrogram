@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-MyStickers: TypeAlias = Union["raw.types.messages.MyStickers"]
+type MyStickers = Union["raw.types.messages.MyStickers"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-NewSession: TypeAlias = Union["raw.types.NewSessionCreated"]
+type NewSession = Union["raw.types.NewSessionCreated"]

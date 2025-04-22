@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-DialogFilterSuggested: TypeAlias = Union["raw.types.DialogFilterSuggested"]
+type DialogFilterSuggested = Union["raw.types.DialogFilterSuggested"]

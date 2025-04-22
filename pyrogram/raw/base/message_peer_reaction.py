@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-MessagePeerReaction: TypeAlias = Union["raw.types.MessagePeerReaction"]
+type MessagePeerReaction = Union["raw.types.MessagePeerReaction"]

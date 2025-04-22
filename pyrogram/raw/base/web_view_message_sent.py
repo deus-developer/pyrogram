@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-WebViewMessageSent: TypeAlias = Union["raw.types.WebViewMessageSent"]
+type WebViewMessageSent = Union["raw.types.WebViewMessageSent"]

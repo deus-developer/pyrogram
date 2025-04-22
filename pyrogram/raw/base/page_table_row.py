@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-PageTableRow: TypeAlias = Union["raw.types.PageTableRow"]
+type PageTableRow = Union["raw.types.PageTableRow"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-TextWithEntities: TypeAlias = Union["raw.types.TextWithEntities"]
+type TextWithEntities = Union["raw.types.TextWithEntities"]

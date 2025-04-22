@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-InputWebFileLocation: TypeAlias = Union["raw.types.InputWebFileAudioAlbumThumbLocation, raw.types.InputWebFileGeoPointLocation, raw.types.InputWebFileLocation"]
+type InputWebFileLocation = Union["raw.types.InputWebFileAudioAlbumThumbLocation, raw.types.InputWebFileGeoPointLocation, raw.types.InputWebFileLocation"]

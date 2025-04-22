@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-AutoDownloadSettings: TypeAlias = Union["raw.types.account.AutoDownloadSettings"]
+type AutoDownloadSettings = Union["raw.types.account.AutoDownloadSettings"]

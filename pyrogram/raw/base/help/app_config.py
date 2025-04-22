@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-AppConfig: TypeAlias = Union["raw.types.help.AppConfig, raw.types.help.AppConfigNotModified"]
+type AppConfig = Union["raw.types.help.AppConfig, raw.types.help.AppConfigNotModified"]

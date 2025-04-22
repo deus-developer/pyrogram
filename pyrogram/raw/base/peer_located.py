@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-PeerLocated: TypeAlias = Union["raw.types.PeerLocated, raw.types.PeerSelfLocated"]
+type PeerLocated = Union["raw.types.PeerLocated, raw.types.PeerSelfLocated"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-FoundStickerSets: TypeAlias = Union["raw.types.messages.FoundStickerSets, raw.types.messages.FoundStickerSetsNotModified"]
+type FoundStickerSets = Union["raw.types.messages.FoundStickerSets, raw.types.messages.FoundStickerSetsNotModified"]

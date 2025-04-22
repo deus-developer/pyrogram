@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-Country: TypeAlias = Union["raw.types.help.Country"]
+type Country = Union["raw.types.help.Country"]

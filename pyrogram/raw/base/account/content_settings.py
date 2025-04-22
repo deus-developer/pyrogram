@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-ContentSettings: TypeAlias = Union["raw.types.account.ContentSettings"]
+type ContentSettings = Union["raw.types.account.ContentSettings"]

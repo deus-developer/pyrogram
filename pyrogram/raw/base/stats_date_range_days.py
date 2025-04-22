@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-StatsDateRangeDays: TypeAlias = Union["raw.types.StatsDateRangeDays"]
+type StatsDateRangeDays = Union["raw.types.StatsDateRangeDays"]

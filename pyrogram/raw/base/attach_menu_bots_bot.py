@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-AttachMenuBotsBot: TypeAlias = Union["raw.types.AttachMenuBotsBot"]
+type AttachMenuBotsBot = Union["raw.types.AttachMenuBotsBot"]

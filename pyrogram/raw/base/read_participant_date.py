@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-ReadParticipantDate: TypeAlias = Union["raw.types.ReadParticipantDate"]
+type ReadParticipantDate = Union["raw.types.ReadParticipantDate"]

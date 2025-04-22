@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-StoryFwdHeader: TypeAlias = Union["raw.types.StoryFwdHeader"]
+type StoryFwdHeader = Union["raw.types.StoryFwdHeader"]

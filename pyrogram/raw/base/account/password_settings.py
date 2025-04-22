@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-PasswordSettings: TypeAlias = Union["raw.types.account.PasswordSettings"]
+type PasswordSettings = Union["raw.types.account.PasswordSettings"]

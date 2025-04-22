@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-GroupCallStreamChannel: TypeAlias = Union["raw.types.GroupCallStreamChannel"]
+type GroupCallStreamChannel = Union["raw.types.GroupCallStreamChannel"]

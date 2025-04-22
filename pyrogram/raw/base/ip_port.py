@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-IpPort: TypeAlias = Union["raw.types.IpPort, raw.types.IpPortSecret"]
+type IpPort = Union["raw.types.IpPort, raw.types.IpPortSecret"]

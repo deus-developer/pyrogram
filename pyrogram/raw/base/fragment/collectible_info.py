@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-CollectibleInfo: TypeAlias = Union["raw.types.fragment.CollectibleInfo"]
+type CollectibleInfo = Union["raw.types.fragment.CollectibleInfo"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-CdnConfig: TypeAlias = Union["raw.types.CdnConfig"]
+type CdnConfig = Union["raw.types.CdnConfig"]

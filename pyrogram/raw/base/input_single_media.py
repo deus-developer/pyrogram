@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-InputSingleMedia: TypeAlias = Union["raw.types.InputSingleMedia"]
+type InputSingleMedia = Union["raw.types.InputSingleMedia"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-DhConfig: TypeAlias = Union["raw.types.messages.DhConfig, raw.types.messages.DhConfigNotModified"]
+type DhConfig = Union["raw.types.messages.DhConfig, raw.types.messages.DhConfigNotModified"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-InputGame: TypeAlias = Union["raw.types.InputGameID, raw.types.InputGameShortName"]
+type InputGame = Union["raw.types.InputGameID, raw.types.InputGameShortName"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-SentCode: TypeAlias = Union["raw.types.auth.SentCode, raw.types.auth.SentCodeSuccess"]
+type SentCode = Union["raw.types.auth.SentCode, raw.types.auth.SentCodeSuccess"]

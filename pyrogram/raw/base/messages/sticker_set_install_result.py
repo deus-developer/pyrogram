@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-StickerSetInstallResult: TypeAlias = Union["raw.types.messages.StickerSetInstallResultArchive, raw.types.messages.StickerSetInstallResultSuccess"]
+type StickerSetInstallResult = Union["raw.types.messages.StickerSetInstallResultArchive, raw.types.messages.StickerSetInstallResultSuccess"]

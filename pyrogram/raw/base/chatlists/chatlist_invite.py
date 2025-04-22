@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-ChatlistInvite: TypeAlias = Union["raw.types.chatlists.ChatlistInvite, raw.types.chatlists.ChatlistInviteAlready"]
+type ChatlistInvite = Union["raw.types.chatlists.ChatlistInvite, raw.types.chatlists.ChatlistInviteAlready"]

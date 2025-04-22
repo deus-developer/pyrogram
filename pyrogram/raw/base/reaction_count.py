@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-ReactionCount: TypeAlias = Union["raw.types.ReactionCount"]
+type ReactionCount = Union["raw.types.ReactionCount"]

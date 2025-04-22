@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-KeyboardButtonRow: TypeAlias = Union["raw.types.KeyboardButtonRow"]
+type KeyboardButtonRow = Union["raw.types.KeyboardButtonRow"]

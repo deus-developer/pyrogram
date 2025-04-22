@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-FactCheck: TypeAlias = Union["raw.types.FactCheck"]
+type FactCheck = Union["raw.types.FactCheck"]

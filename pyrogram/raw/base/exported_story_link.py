@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-ExportedStoryLink: TypeAlias = Union["raw.types.ExportedStoryLink"]
+type ExportedStoryLink = Union["raw.types.ExportedStoryLink"]

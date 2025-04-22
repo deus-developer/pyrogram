@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-SearchResultsCalendarPeriod: TypeAlias = Union["raw.types.SearchResultsCalendarPeriod"]
+type SearchResultsCalendarPeriod = Union["raw.types.SearchResultsCalendarPeriod"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-DataJSON: TypeAlias = Union["raw.types.DataJSON"]
+type DataJSON = Union["raw.types.DataJSON"]

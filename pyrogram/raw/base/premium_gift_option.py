@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-PremiumGiftOption: TypeAlias = Union["raw.types.PremiumGiftOption"]
+type PremiumGiftOption = Union["raw.types.PremiumGiftOption"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-MediaAreaCoordinates: TypeAlias = Union["raw.types.MediaAreaCoordinates"]
+type MediaAreaCoordinates = Union["raw.types.MediaAreaCoordinates"]

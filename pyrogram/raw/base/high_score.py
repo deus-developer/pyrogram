@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-HighScore: TypeAlias = Union["raw.types.HighScore"]
+type HighScore = Union["raw.types.HighScore"]

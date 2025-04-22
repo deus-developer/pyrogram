@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-RpcError: TypeAlias = Union["raw.types.RpcError"]
+type RpcError = Union["raw.types.RpcError"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-StoryItem: TypeAlias = Union["raw.types.StoryItem, raw.types.StoryItemDeleted, raw.types.StoryItemSkipped"]
+type StoryItem = Union["raw.types.StoryItem, raw.types.StoryItemDeleted, raw.types.StoryItemSkipped"]

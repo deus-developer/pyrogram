@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-TermsOfServiceUpdate: TypeAlias = Union["raw.types.help.TermsOfServiceUpdate, raw.types.help.TermsOfServiceUpdateEmpty"]
+type TermsOfServiceUpdate = Union["raw.types.help.TermsOfServiceUpdate, raw.types.help.TermsOfServiceUpdateEmpty"]

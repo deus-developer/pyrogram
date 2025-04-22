@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-InvitedUsers: TypeAlias = Union["raw.types.messages.InvitedUsers"]
+type InvitedUsers = Union["raw.types.messages.InvitedUsers"]

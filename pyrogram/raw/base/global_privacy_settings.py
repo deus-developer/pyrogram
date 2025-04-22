@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-GlobalPrivacySettings: TypeAlias = Union["raw.types.GlobalPrivacySettings"]
+type GlobalPrivacySettings = Union["raw.types.GlobalPrivacySettings"]

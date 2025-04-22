@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-WebAuthorizations: TypeAlias = Union["raw.types.account.WebAuthorizations"]
+type WebAuthorizations = Union["raw.types.account.WebAuthorizations"]

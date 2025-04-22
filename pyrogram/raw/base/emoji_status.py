@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-EmojiStatus: TypeAlias = Union["raw.types.EmojiStatus, raw.types.EmojiStatusEmpty, raw.types.EmojiStatusUntil"]
+type EmojiStatus = Union["raw.types.EmojiStatus, raw.types.EmojiStatusEmpty, raw.types.EmojiStatusUntil"]

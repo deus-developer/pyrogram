@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-RpcResult: TypeAlias = Union["raw.types.RpcResult"]
+type RpcResult = Union["raw.types.RpcResult"]

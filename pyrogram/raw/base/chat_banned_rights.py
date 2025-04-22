@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-ChatBannedRights: TypeAlias = Union["raw.types.ChatBannedRights"]
+type ChatBannedRights = Union["raw.types.ChatBannedRights"]

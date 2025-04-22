@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-SimpleWebViewResult: TypeAlias = Union["raw.types.SimpleWebViewResultUrl"]
+type SimpleWebViewResult = Union["raw.types.SimpleWebViewResultUrl"]

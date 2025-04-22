@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-CdnFile: TypeAlias = Union["raw.types.upload.CdnFile, raw.types.upload.CdnFileReuploadNeeded"]
+type CdnFile = Union["raw.types.upload.CdnFile, raw.types.upload.CdnFileReuploadNeeded"]

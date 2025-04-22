@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-CdnPublicKey: TypeAlias = Union["raw.types.CdnPublicKey"]
+type CdnPublicKey = Union["raw.types.CdnPublicKey"]

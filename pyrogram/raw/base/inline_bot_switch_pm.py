@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-InlineBotSwitchPM: TypeAlias = Union["raw.types.InlineBotSwitchPM"]
+type InlineBotSwitchPM = Union["raw.types.InlineBotSwitchPM"]

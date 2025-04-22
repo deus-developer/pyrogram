@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-PeerColors: TypeAlias = Union["raw.types.help.PeerColors, raw.types.help.PeerColorsNotModified"]
+type PeerColors = Union["raw.types.help.PeerColors, raw.types.help.PeerColorsNotModified"]

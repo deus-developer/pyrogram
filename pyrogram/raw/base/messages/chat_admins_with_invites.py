@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-ChatAdminsWithInvites: TypeAlias = Union["raw.types.messages.ChatAdminsWithInvites"]
+type ChatAdminsWithInvites = Union["raw.types.messages.ChatAdminsWithInvites"]

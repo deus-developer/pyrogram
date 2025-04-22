@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-SuggestedShortName: TypeAlias = Union["raw.types.stickers.SuggestedShortName"]
+type SuggestedShortName = Union["raw.types.stickers.SuggestedShortName"]

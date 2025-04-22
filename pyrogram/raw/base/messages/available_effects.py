@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-AvailableEffects: TypeAlias = Union["raw.types.messages.AvailableEffects, raw.types.messages.AvailableEffectsNotModified"]
+type AvailableEffects = Union["raw.types.messages.AvailableEffects, raw.types.messages.AvailableEffectsNotModified"]

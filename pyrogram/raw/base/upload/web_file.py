@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-WebFile: TypeAlias = Union["raw.types.upload.WebFile"]
+type WebFile = Union["raw.types.upload.WebFile"]

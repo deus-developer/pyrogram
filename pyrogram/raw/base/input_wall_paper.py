@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-InputWallPaper: TypeAlias = Union["raw.types.InputWallPaper, raw.types.InputWallPaperNoFile, raw.types.InputWallPaperSlug"]
+type InputWallPaper = Union["raw.types.InputWallPaper, raw.types.InputWallPaperNoFile, raw.types.InputWallPaperSlug"]

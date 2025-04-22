@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-LoggedOut: TypeAlias = Union["raw.types.auth.LoggedOut"]
+type LoggedOut = Union["raw.types.auth.LoggedOut"]

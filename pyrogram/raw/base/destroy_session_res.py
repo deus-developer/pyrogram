@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-DestroySessionRes: TypeAlias = Union["raw.types.DestroySessionNone, raw.types.DestroySessionOk"]
+type DestroySessionRes = Union["raw.types.DestroySessionNone, raw.types.DestroySessionOk"]

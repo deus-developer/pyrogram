@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-AutoSaveException: TypeAlias = Union["raw.types.AutoSaveException"]
+type AutoSaveException = Union["raw.types.AutoSaveException"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-NearestDc: TypeAlias = Union["raw.types.NearestDc"]
+type NearestDc = Union["raw.types.NearestDc"]

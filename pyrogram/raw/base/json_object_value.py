@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-JSONObjectValue: TypeAlias = Union["raw.types.JsonObjectValue"]
+type JSONObjectValue = Union["raw.types.JsonObjectValue"]

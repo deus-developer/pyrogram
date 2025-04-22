@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-PasswordRecovery: TypeAlias = Union["raw.types.auth.PasswordRecovery"]
+type PasswordRecovery = Union["raw.types.auth.PasswordRecovery"]

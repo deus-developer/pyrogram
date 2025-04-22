@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-Reaction: TypeAlias = Union["raw.types.ReactionCustomEmoji, raw.types.ReactionEmoji, raw.types.ReactionEmpty"]
+type Reaction = Union["raw.types.ReactionCustomEmoji, raw.types.ReactionEmoji, raw.types.ReactionEmpty"]

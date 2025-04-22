@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-FileHash: TypeAlias = Union["raw.types.FileHash"]
+type FileHash = Union["raw.types.FileHash"]

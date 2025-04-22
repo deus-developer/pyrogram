@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-ChannelMessagesFilter: TypeAlias = Union["raw.types.ChannelMessagesFilter, raw.types.ChannelMessagesFilterEmpty"]
+type ChannelMessagesFilter = Union["raw.types.ChannelMessagesFilter, raw.types.ChannelMessagesFilterEmpty"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-InputChatlist: TypeAlias = Union["raw.types.InputChatlistDialogFilter"]
+type InputChatlist = Union["raw.types.InputChatlistDialogFilter"]

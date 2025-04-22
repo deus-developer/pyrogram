@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-SavedGifs: TypeAlias = Union["raw.types.messages.SavedGifs, raw.types.messages.SavedGifsNotModified"]
+type SavedGifs = Union["raw.types.messages.SavedGifs, raw.types.messages.SavedGifsNotModified"]

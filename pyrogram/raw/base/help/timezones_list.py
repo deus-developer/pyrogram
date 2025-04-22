@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-TimezonesList: TypeAlias = Union["raw.types.help.TimezonesList, raw.types.help.TimezonesListNotModified"]
+type TimezonesList = Union["raw.types.help.TimezonesList, raw.types.help.TimezonesListNotModified"]

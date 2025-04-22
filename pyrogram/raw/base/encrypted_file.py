@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-EncryptedFile: TypeAlias = Union["raw.types.EncryptedFile, raw.types.EncryptedFileEmpty"]
+type EncryptedFile = Union["raw.types.EncryptedFile, raw.types.EncryptedFileEmpty"]

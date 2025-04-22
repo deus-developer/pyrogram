@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-AccessPointRule: TypeAlias = Union["raw.types.AccessPointRule"]
+type AccessPointRule = Union["raw.types.AccessPointRule"]

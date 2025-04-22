@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-PassportConfig: TypeAlias = Union["raw.types.help.PassportConfig, raw.types.help.PassportConfigNotModified"]
+type PassportConfig = Union["raw.types.help.PassportConfig, raw.types.help.PassportConfigNotModified"]

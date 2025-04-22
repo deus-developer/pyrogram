@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-MessagePeerVote: TypeAlias = Union["raw.types.MessagePeerVote, raw.types.MessagePeerVoteInputOption, raw.types.MessagePeerVoteMultiple"]
+type MessagePeerVote = Union["raw.types.MessagePeerVote, raw.types.MessagePeerVoteInputOption, raw.types.MessagePeerVoteMultiple"]

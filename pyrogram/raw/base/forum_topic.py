@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-ForumTopic: TypeAlias = Union["raw.types.ForumTopic, raw.types.ForumTopicDeleted"]
+type ForumTopic = Union["raw.types.ForumTopic, raw.types.ForumTopicDeleted"]

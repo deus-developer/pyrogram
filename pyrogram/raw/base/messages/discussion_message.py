@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-DiscussionMessage: TypeAlias = Union["raw.types.messages.DiscussionMessage"]
+type DiscussionMessage = Union["raw.types.messages.DiscussionMessage"]

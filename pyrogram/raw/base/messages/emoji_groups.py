@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-EmojiGroups: TypeAlias = Union["raw.types.messages.EmojiGroups, raw.types.messages.EmojiGroupsNotModified"]
+type EmojiGroups = Union["raw.types.messages.EmojiGroups, raw.types.messages.EmojiGroupsNotModified"]

@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-LangPackString: TypeAlias = Union["raw.types.LangPackString, raw.types.LangPackStringDeleted, raw.types.LangPackStringPluralized"]
+type LangPackString = Union["raw.types.LangPackString, raw.types.LangPackStringDeleted, raw.types.LangPackStringPluralized"]

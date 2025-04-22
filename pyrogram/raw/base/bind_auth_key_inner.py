@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-BindAuthKeyInner: TypeAlias = Union["raw.types.BindAuthKeyInner"]
+type BindAuthKeyInner = Union["raw.types.BindAuthKeyInner"]

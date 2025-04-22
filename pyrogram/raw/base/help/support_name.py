@@ -8,4 +8,4 @@ from typing import Union, TypeAlias
 from pyrogram import raw
 from pyrogram.raw.core import TLObject
 
-SupportName: TypeAlias = Union["raw.types.help.SupportName"]
+type SupportName = Union["raw.types.help.SupportName"]
