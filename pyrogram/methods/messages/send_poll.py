@@ -33,10 +33,10 @@ class SendPoll:
         type: "enums.PollType" = enums.PollType.REGULAR,
         allows_multiple_answers: bool | None = None,
         correct_option_id: int | None = None,
-        questionfrom_raw_tl_mode: Optional["enums.ParseMode"] = None,
+        question_parse_mode: Optional["enums.ParseMode"] = None,
         question_entities: list["types.MessageEntity"] | None = None,
         explanation: str | None = None,
-        explanationfrom_raw_tl_mode: Optional["enums.ParseMode"] = None,
+        explanation_parse_mode: Optional["enums.ParseMode"] = None,
         explanation_entities: list["types.MessageEntity"] | None = None,
         open_period: int | None = None,
         close_date: datetime | None = None,
@@ -48,12 +48,12 @@ class SendPoll:
         reply_to_message_id: int | None = None,
         reply_to_chat_id: int | str | None = None,
         quote_text: str | None = None,
-        quotefrom_raw_tl_mode: Optional["enums.ParseMode"] = None,
+        quote_parse_mode: Optional["enums.ParseMode"] = None,
         quote_entities: list["types.MessageEntity"] | None = None,
         quote_offset: int | None = None,
         schedule_date: datetime | None = None,
         business_connection_id: str | None = None,
-        optionsfrom_raw_tl_mode: Optional["enums.ParseMode"] = None,
+        options_parse_mode: Optional["enums.ParseMode"] = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -93,7 +93,7 @@ class SendPoll:
             correct_option_id (``int``, *optional*):
                 0-based identifier of the correct answer option, required for polls in quiz mode.
 
-            questionfrom_raw_tl_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+            question_parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
                 By default, texts are parsed using both Markdown and HTML styles.
                 You can combine both syntaxes together.
 
@@ -105,7 +105,7 @@ class SendPoll:
                 Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style
                 poll, 0-200 characters with at most 2 line feeds after entities parsing.
 
-            explanationfrom_raw_tl_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+            explanation_parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
                 By default, texts are parsed using both Markdown and HTML styles.
                 You can combine both syntaxes together.
 
@@ -150,7 +150,7 @@ class SendPoll:
             quote_text (``str``, *optional*):
                 Text of the quote to be sent.
 
-            quotefrom_raw_tl_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+            quote_parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
                 By default, texts are parsed using both Markdown and HTML styles.
                 You can combine both syntaxes together.
 
@@ -166,7 +166,7 @@ class SendPoll:
             business_connection_id (``str``, *optional*):
                 Unique identifier of the business connection on behalf of which the message will be sent.
 
-            optionsfrom_raw_tl_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+            options_parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
                 By default, texts are parsed using both Markdown and HTML styles.
                 You can combine both syntaxes together.
 
@@ -188,7 +188,7 @@ class SendPoll:
             await utils.parse_text_entities(
                 self,
                 question,
-                questionfrom_raw_tl_mode,
+                question_parse_mode,
                 question_entities,
             )
         ).values()
@@ -197,7 +197,7 @@ class SendPoll:
             await utils.parse_text_entities(
                 self,
                 explanation,
-                explanationfrom_raw_tl_mode,
+                explanation_parse_mode,
                 explanation_entities,
             )
         ).values()
@@ -206,7 +206,7 @@ class SendPoll:
             await utils.parse_text_entities(
                 self,
                 quote_text,
-                quotefrom_raw_tl_mode,
+                quote_parse_mode,
                 quote_entities,
             )
         ).values()
@@ -218,7 +218,7 @@ class SendPoll:
                 await utils.parse_text_entities(
                     self,
                     opt,
-                    optionsfrom_raw_tl_mode,
+                    options_parse_mode,
                     None,
                 )
             ).values()

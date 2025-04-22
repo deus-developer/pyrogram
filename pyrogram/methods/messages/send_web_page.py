@@ -226,8 +226,7 @@ class SendWebPage:
                 outgoing=r.out,
                 reply_markup=reply_markup,
                 entities=[
-                    types.MessageEntity.from_raw_tl(None, entity, {})
-                    for entity in entities
+                    types.MessageEntity.from_raw_tl(None, entity) for entity in entities
                 ]
                 if entities
                 else None,

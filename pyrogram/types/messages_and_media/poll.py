@@ -151,7 +151,7 @@ class Poll(Object, Update):
                             filter(
                                 lambda x: x is not None,
                                 [
-                                    types.MessageEntity.from_raw_tl(client, entity, {})
+                                    types.MessageEntity.from_raw_tl(client, entity)
                                     for entity in (answer.text.entities or [])
                                 ],
                             ),
@@ -170,7 +170,7 @@ class Poll(Object, Update):
                     filter(
                         lambda x: x is not None,
                         [
-                            types.MessageEntity.from_raw_tl(client, entity, {})
+                            types.MessageEntity.from_raw_tl(client, entity)
                             for entity in (poll.question.entities or [])
                         ],
                     ),
@@ -185,14 +185,14 @@ class Poll(Object, Update):
             chosen_option_id=chosen_option_id,
             correct_option_id=correct_option_id,
             question_entities=[
-                types.MessageEntity.from_raw_tl(client, i, {})
+                types.MessageEntity.from_raw_tl(client, i)
                 for i in poll.question.entities
             ]
             if poll.question.entities
             else None,
             explanation=poll_results.solution,
             explanation_entities=[
-                types.MessageEntity.from_raw_tl(client, i, {})
+                types.MessageEntity.from_raw_tl(client, i)
                 for i in poll_results.solution_entities
             ]
             if poll_results.solution_entities

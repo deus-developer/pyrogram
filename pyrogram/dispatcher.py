@@ -101,7 +101,7 @@ class Dispatcher:
         self.updates_queue = asyncio.Queue[TLObject | None]()
         self.groups = OrderedDict()
 
-        async def messagefrom_raw_tlr(update):
+        async def message_parser(update):
             return (
                 await pyrogram.types.Message.from_raw_tl(
                     self.client,
@@ -113,64 +113,64 @@ class Dispatcher:
                 MessageHandler,
             )
 
-        async def edited_messagefrom_raw_tlr(update):
+        async def edited_message_parser(update):
             # Edited messages are parsed the same way as new messages, but the handler is different
-            parsed, _ = await messagefrom_raw_tlr(update)
+            parsed, _ = await message_parser(update)
 
             return (
                 parsed,
                 EditedMessageHandler,
             )
 
-        async def deleted_messagesfrom_raw_tlr(update):
+        async def deleted_messages_parser(update):
             return (
                 utils.parse_deleted_messages(self.client, update),
                 DeletedMessagesHandler,
             )
 
-        async def callback_queryfrom_raw_tlr(update):
+        async def callback_query_parser(update):
             return (
                 await pyrogram.types.CallbackQuery.from_raw_tl(self.client, update),
                 CallbackQueryHandler,
             )
 
-        async def user_statusfrom_raw_tlr(update):
+        async def user_status_parser(update):
             return (
                 pyrogram.types.User.from_raw_tl_user_status(self.client, update),
                 UserStatusHandler,
             )
 
-        async def inline_queryfrom_raw_tlr(update):
+        async def inline_query_parser(update):
             return (
                 pyrogram.types.InlineQuery.from_raw_tl(self.client, update),
                 InlineQueryHandler,
             )
 
-        async def pollfrom_raw_tlr(update):
+        async def poll_parser(update):
             return (
                 pyrogram.types.Poll.from_raw_tl_update(self.client, update),
                 PollHandler,
             )
 
-        async def chosen_inline_resultfrom_raw_tlr(update):
+        async def chosen_inline_result_parser(update):
             return (
                 pyrogram.types.ChosenInlineResult.from_raw_tl(self.client, update),
                 ChosenInlineResultHandler,
             )
 
-        async def chat_member_updatedfrom_raw_tlr(update):
+        async def chat_member_updated_parser(update):
             return (
                 pyrogram.types.ChatMemberUpdated.from_raw_tl(self.client, update),
                 ChatMemberUpdatedHandler,
             )
 
-        async def chat_join_requestfrom_raw_tlr(update):
+        async def chat_join_request_parser(update):
             return (
                 pyrogram.types.ChatJoinRequest.from_raw_tl(self.client, update),
                 ChatJoinRequestHandler,
             )
 
-        async def storyfrom_raw_tlr(update):
+        async def story_parser(update):
             return (
                 await pyrogram.types.Story.from_raw_tl(
                     self.client,
@@ -180,30 +180,30 @@ class Dispatcher:
                 StoryHandler,
             )
 
-        async def pre_checkout_queryfrom_raw_tlr(update):
+        async def pre_checkout_query_parser(update):
             return (
                 await pyrogram.types.PreCheckoutQuery.from_raw_tl(self.client, update),
                 PreCheckoutQueryHandler,
             )
 
-        self.updatefrom_raw_tlrs = {
-            Dispatcher.NEW_MESSAGE_UPDATES: messagefrom_raw_tlr,
-            Dispatcher.EDIT_MESSAGE_UPDATES: edited_messagefrom_raw_tlr,
-            Dispatcher.DELETE_MESSAGES_UPDATES: deleted_messagesfrom_raw_tlr,
-            Dispatcher.CALLBACK_QUERY_UPDATES: callback_queryfrom_raw_tlr,
-            Dispatcher.USER_STATUS_UPDATES: user_statusfrom_raw_tlr,
-            Dispatcher.BOT_INLINE_QUERY_UPDATES: inline_queryfrom_raw_tlr,
-            Dispatcher.POLL_UPDATES: pollfrom_raw_tlr,
-            Dispatcher.CHOSEN_INLINE_RESULT_UPDATES: chosen_inline_resultfrom_raw_tlr,
-            Dispatcher.CHAT_MEMBER_UPDATES: chat_member_updatedfrom_raw_tlr,
-            Dispatcher.CHAT_JOIN_REQUEST_UPDATES: chat_join_requestfrom_raw_tlr,
-            Dispatcher.NEW_STORY_UPDATES: storyfrom_raw_tlr,
-            Dispatcher.PRE_CHECKOUT_QUERY_UPDATES: pre_checkout_queryfrom_raw_tlr,
+        self.update_parsers = {
+            Dispatcher.NEW_MESSAGE_UPDATES: message_parser,
+            Dispatcher.EDIT_MESSAGE_UPDATES: edited_message_parser,
+            Dispatcher.DELETE_MESSAGES_UPDATES: deleted_messages_parser,
+            Dispatcher.CALLBACK_QUERY_UPDATES: callback_query_parser,
+            Dispatcher.USER_STATUS_UPDATES: user_status_parser,
+            Dispatcher.BOT_INLINE_QUERY_UPDATES: inline_query_parser,
+            Dispatcher.POLL_UPDATES: poll_parser,
+            Dispatcher.CHOSEN_INLINE_RESULT_UPDATES: chosen_inline_result_parser,
+            Dispatcher.CHAT_MEMBER_UPDATES: chat_member_updated_parser,
+            Dispatcher.CHAT_JOIN_REQUEST_UPDATES: chat_join_request_parser,
+            Dispatcher.NEW_STORY_UPDATES: story_parser,
+            Dispatcher.PRE_CHECKOUT_QUERY_UPDATES: pre_checkout_query_parser,
         }
 
-        self.updatefrom_raw_tlrs = {
+        self.update_parsers = {
             key: value
-            for key_tuple, value in self.updatefrom_raw_tlrs.items()
+            for key_tuple, value in self.update_parsers.items()
             for key in key_tuple
         }
 
@@ -277,7 +277,7 @@ class Dispatcher:
                 break
 
             try:
-                parser = self.updatefrom_raw_tlrs.get(type(update), None)
+                parser = self.update_parsers.get(type(update), None)
 
                 parsed_update, handler_type = (
                     await parser(update) if parser is not None else (None, type(None))

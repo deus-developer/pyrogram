@@ -88,35 +88,123 @@ class GetMessages:
         Raises:
             ValueError: In case of invalid arguments.
         """
-        ids, ids_type = (
-            (message_ids, raw.types.InputMessageID)
-            if message_ids
-            else (reply_to_message_ids, raw.types.InputMessageReplyTo)
-            if reply_to_message_ids
-            else (None, None)
-        )
-
-        if ids is None:
-            raise ValueError(
-                "No argument supplied. Either pass message_ids or reply_to_message_ids",
+        if reply_to_message_ids:
+            return await self.get_reply_messages(
+                chat_id=chat_id,
+                message_ids=reply_to_message_ids,
+                replies=replies,
             )
 
-        peer = await self.resolve_peer(chat_id)
+        is_iterable = not isinstance(message_ids, int)
+        ids: list[raw.types.InputMessageID] = []
 
-        is_iterable = not isinstance(ids, int)
-        ids = list(ids) if is_iterable else [ids]
-        ids = [ids_type(id=i) for i in ids]
+        if is_iterable:
+            ids.extend(
+                raw.types.InputMessageID(id=message_id) for message_id in message_ids
+            )
+        else:
+            ids.append(raw.types.InputMessageID(id=message_ids))
+
+        messages = await self._get_messages(
+            chat_id=chat_id,
+            message_ids=ids,
+            replies=replies,
+        )
+
+        if is_iterable:
+            return messages
+        return messages[0] if messages else None
+
+    async def _get_messages(
+        self: "pyrogram.Client",
+        chat_id: int,
+        message_ids: list[raw.base.InputMessage],
+        replies: int = 1,
+    ) -> list[types.Message]:
+        if len(message_ids) < 1:
+            raise ValueError("No message_ids were provided")
 
         if replies < 0:
             replies = (1 << 31) - 1
 
+        peer = await self.resolve_peer(chat_id)
+
         if isinstance(peer, raw.types.InputPeerChannel):
-            rpc = raw.functions.channels.GetMessages(channel=peer, id=ids)
+            rpc = raw.functions.channels.GetMessages(channel=peer, id=message_ids)
         else:
-            rpc = raw.functions.messages.GetMessages(id=ids)
+            rpc = raw.functions.messages.GetMessages(id=message_ids)
 
         r = await self.invoke(rpc, sleep_threshold=-1)
+        return await utils.parse_messages(self, r, replies=replies)
 
-        messages = await utils.parse_messages(self, r, replies=replies)
+    def get_cached_message(
+        self: "pyrogram.Client",
+        *,
+        chat_id: int,
+        message_id: int,
+    ) -> types.Message | None:
+        try:
+            return self.message_cache[(chat_id, message_id)]
+        except (KeyError, IndexError):
+            return None
 
-        return messages if is_iterable else messages[0] if messages else None
+    async def get_callback_query_message(
+        self: "pyrogram.Client",
+        *,
+        chat_id: int,
+        message_id: int,
+        query_id: int,
+        replies: int = 1,
+        force: bool = False,
+    ) -> types.Message | None:
+        if not force:
+            cached_message = self.get_cached_message(
+                chat_id=chat_id,
+                message_id=message_id,
+            )
+            if cached_message:
+                return cached_message
+
+        messages = await self._get_messages(
+            chat_id=chat_id,
+            message_ids=[
+                raw.types.InputMessageCallbackQuery(
+                    id=message_id,
+                    query_id=query_id,
+                ),
+            ],
+            replies=replies,
+        )
+
+        for message in messages:
+            return message
+        return None
+
+    async def get_reply_messages(
+        self: "pyrogram.Client",
+        *,
+        chat_id: int,
+        message_ids: int | list[int],
+        replies: int = 1,
+    ) -> list[types.Message] | types.Message | None:
+        is_iterable = not isinstance(message_ids, int)
+
+        ids: list[raw.types.InputMessageReplyTo] = []
+
+        if is_iterable:
+            ids.extend(
+                raw.types.InputMessageReplyTo(id=message_id)
+                for message_id in message_ids
+            )
+        else:
+            ids.append(raw.types.InputMessageReplyTo(id=message_ids))
+
+        messages = await self._get_messages(
+            chat_id=chat_id,
+            message_ids=ids,
+            replies=replies,
+        )
+
+        if is_iterable:
+            return messages
+        return messages[0] if messages else None

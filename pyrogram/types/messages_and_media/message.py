@@ -1351,7 +1351,11 @@ class Message(Object, Update):
                         else:
                             parsed_message.reply_to_story = reply_to_story
 
-            if parsed_message.topic is None and parsed_message.chat.is_forum:
+            if (
+                parsed_message.topic is None
+                and parsed_message.chat.is_forum
+                and not client.self_user_is_bot
+            ):
                 with contextlib.suppress(BotMethodInvalid, ChannelForumMissing):
                     parsed_message.topic = await client.get_forum_topics_by_id(
                         chat_id=parsed_message.chat.id,
@@ -2884,10 +2888,10 @@ class Message(Object, Update):
         type: "enums.PollType" = enums.PollType.REGULAR,
         allows_multiple_answers: bool | None = None,
         correct_option_id: int | None = None,
-        questionfrom_raw_tl_mode: Optional["enums.ParseMode"] = None,
+        question_parse_mode: Optional["enums.ParseMode"] = None,
         question_entities: list["types.MessageEntity"] | None = None,
         explanation: str | None = None,
-        explanationfrom_raw_tl_mode: "enums.ParseMode" = None,
+        explanation_parse_mode: "enums.ParseMode" = None,
         explanation_entities: list["types.MessageEntity"] | None = None,
         open_period: int | None = None,
         close_date: datetime | None = None,
@@ -2899,12 +2903,12 @@ class Message(Object, Update):
         effect_id: int | None = None,
         reply_to_message_id: int | None = None,
         quote_text: str | None = None,
-        quotefrom_raw_tl_mode: Optional["enums.ParseMode"] = None,
+        quote_parse_mode: Optional["enums.ParseMode"] = None,
         quote_entities: list["types.MessageEntity"] | None = None,
         quote_offset: int | None = None,
         schedule_date: datetime | None = None,
         business_connection_id: str | None = None,
-        optionsfrom_raw_tl_mode: list["types.MessageEntity"] | None = None,
+        options_parse_mode: list["types.MessageEntity"] | None = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -2951,7 +2955,7 @@ class Message(Object, Update):
             correct_option_id (``int``, *optional*):
                 0-based identifier of the correct answer option, required for polls in quiz mode.
 
-            questionfrom_raw_tl_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+            question_parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
                 By default, texts are parsed using both Markdown and HTML styles.
                 You can combine both syntaxes together.
 
@@ -2963,7 +2967,7 @@ class Message(Object, Update):
                 Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style
                 poll, 0-200 characters with at most 2 line feeds after entities parsing.
 
-            explanationfrom_raw_tl_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+            explanation_parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
                 By default, texts are parsed using both Markdown and HTML styles.
                 You can combine both syntaxes together.
 
@@ -3010,7 +3014,7 @@ class Message(Object, Update):
             quote_text (``str``):
                 Text of the quote to be sent.
 
-            quotefrom_raw_tl_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+            quote_parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
                 By default, texts are parsed using both Markdown and HTML styles.
                 You can combine both syntaxes together.
 
@@ -3026,7 +3030,7 @@ class Message(Object, Update):
             business_connection_id (``str``, *optional*):
                 Unique identifier of the business connection on behalf of which the message will be sent.
 
-            optionsfrom_raw_tl_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+            options_parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
                 By default, texts are parsed using both Markdown and HTML styles.
                 You can combine both syntaxes together.
 
@@ -3060,10 +3064,10 @@ class Message(Object, Update):
             type=type,
             allows_multiple_answers=allows_multiple_answers,
             correct_option_id=correct_option_id,
-            questionfrom_raw_tl_mode=questionfrom_raw_tl_mode,
+            question_parse_mode=question_parse_mode,
             question_entities=question_entities,
             explanation=explanation,
-            explanationfrom_raw_tl_mode=explanationfrom_raw_tl_mode,
+            explanation_parse_mode=explanation_parse_mode,
             explanation_entities=explanation_entities,
             open_period=open_period,
             close_date=close_date,
@@ -3074,12 +3078,12 @@ class Message(Object, Update):
             effect_id=effect_id,
             reply_to_message_id=reply_to_message_id,
             quote_text=quote_text,
-            quotefrom_raw_tl_mode=quotefrom_raw_tl_mode,
+            quote_parse_mode=quote_parse_mode,
             quote_entities=quote_entities,
             quote_offset=quote_offset,
             schedule_date=schedule_date,
             business_connection_id=business_connection_id,
-            optionsfrom_raw_tl_mode=optionsfrom_raw_tl_mode,
+            options_parse_mode=options_parse_mode,
             reply_markup=reply_markup,
         )
 

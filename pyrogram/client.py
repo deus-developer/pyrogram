@@ -417,6 +417,12 @@ class Client(Methods):
         return self.me.id
 
     @property
+    def self_user_is_bot(self) -> bool:
+        if self.me is None:
+            raise RuntimeError("You must be logged in to get this property.")
+        return self.me.is_bot
+
+    @property
     def loop(self) -> asyncio.AbstractEventLoop:
         return asyncio.get_running_loop()
 

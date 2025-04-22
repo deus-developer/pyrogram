@@ -96,10 +96,12 @@ class CallbackQuery(Object, Update):
             chat_id = utils.get_peer_id(callback_query.peer)
             message_id = callback_query.msg_id
 
-            message = client.message_cache[(chat_id, message_id)]
-
-            if not message:
-                message = await client.get_messages(chat_id, message_id)
+            message = await client.get_callback_query_message(
+                chat_id=chat_id,
+                message_id=message_id,
+                query_id=callback_query.query_id,
+                replies=1,
+            )
         elif isinstance(callback_query, raw.types.UpdateInlineBotCallbackQuery):
             inline_message_id = utils.pack_inline_message_id(callback_query.msg_id)
 

@@ -1,9 +1,11 @@
 from collections.abc import Iterable
+from io import BytesIO
 from typing import (
     assert_never,
 )
 
 from pyrogram import raw
+from pyrogram.raw.core import TLObject
 
 type UserT = raw.types.User | raw.types.UserEmpty
 type ChatT = raw.types.Chat | raw.types.ChatEmpty | raw.types.ChatForbidden
@@ -97,13 +99,6 @@ class EntityCache:
 
         self.gc()
 
-    def setdefault(self, *, entity: EntityT) -> None:
-        index = get_entity_index(entity)
-        self._entity_by_index.setdefault(index, entity)
-        self._timestamp_by_index[index] = self._timestamp
-
-        self.gc()
-
     def add(self, *, entity: EntityT | None) -> None:
         if entity is None:
             return
@@ -125,7 +120,7 @@ class EntityCache:
                 raw.types.ChatEmpty,
             ),
         ):
-            self.setdefault(entity=entity)
+            return
         else:
             assert_never(entity)
 
@@ -135,13 +130,23 @@ class EntityCache:
 
     def get_user(self, *, user_id: int) -> UserT:
         index = user_id
+
+        entity = self._entity_by_index.get(index)
+        if entity is None:
+            return raw.types.UserEmpty(id=user_id)
+
         self._timestamp_by_index[index] = self._timestamp
-        return self._entity_by_index.setdefault(index, raw.types.UserEmpty(id=user_id))
+        return entity
 
     def get_chat(self, *, chat_id: int) -> ChatT:
         index = -chat_id
+
+        entity = self._entity_by_index.get(index)
+        if entity is None:
+            return raw.types.ChatEmpty(id=chat_id)
+
         self._timestamp_by_index[index] = self._timestamp
-        return self._entity_by_index.setdefault(index, raw.types.ChatEmpty(id=chat_id))
+        return entity
 
     def get_channel(self, *, channel_id: int) -> ChannelT | None:
         index = get_channel_id(channel_id)
@@ -190,9 +195,7 @@ class EntityCache:
             return self.get_user(user_id=signed_chat_id)
         if signed_chat_id < MAX_CHANNEL_ID:
             return self.get_channel(channel_id=get_channel_id(signed_chat_id))
-        if signed_chat_id < 0:
-            return self.get_chat(chat_id=-signed_chat_id)
-        return None
+        return self.get_chat(chat_id=-signed_chat_id)
 
     def get(
         self,
@@ -214,3 +217,16 @@ class EntityCache:
         if peer:
             return self.get_peer(peer=peer)
         raise ValueError("No arguments provided")
+
+    def update_from_tl(self, *, reader: BytesIO) -> None:
+        while True:
+            try:
+                tl_object = TLObject.read(reader)
+            except EOFError:
+                break
+
+            self.add(entity=tl_object)
+
+    def save_to_tl(self, *, writer: BytesIO) -> None:
+        for entity in self._entity_by_index.values():
+            writer.write(entity.write())

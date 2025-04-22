@@ -51,7 +51,7 @@ class TermsOfService(Object):
             id=terms_of_service.id.data,
             text=terms_of_service.text,
             entities=[
-                types.MessageEntity.from_raw_tl(None, entity, {})
+                types.MessageEntity.from_raw_tl(None, entity)
                 for entity in terms_of_service.entities
             ]
             if terms_of_service.entities
