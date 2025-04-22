@@ -69,4 +69,4 @@ class GetGameHighScores:
             )
         )
 
-        return types.List(types.GameHighScore._parse(self, score, r.users) for score in r.scores)
+        return types.List(types.GameHighScore.from_raw_tl(self, score) for score in r.scores)

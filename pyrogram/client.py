@@ -25,6 +25,8 @@ import platform
 import re
 import shutil
 import sys
+import time
+import warnings
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timedelta
 from hashlib import sha256
@@ -32,7 +34,15 @@ from importlib import import_module
 from io import StringIO, BytesIO
 from mimetypes import MimeTypes
 from pathlib import Path
-from typing import Union, List, Optional, Callable, AsyncGenerator, Type
+from typing import (
+    assert_never,
+    Union,
+    List,
+    Optional,
+    Callable,
+    AsyncGenerator,
+    Type,
+)
 
 import pyrogram
 from pyrogram import __version__, __license__
@@ -56,6 +66,7 @@ from pyrogram.utils import ainput
 from .connection import Connection
 from .connection.transport import TCP, TCPAbridged
 from .dispatcher import Dispatcher
+from .entity_cache import EntityCache
 from .file_id import FileId, FileType, ThumbnailSource
 from .mime_types import mime_types
 from .parser import Parser
@@ -268,7 +279,9 @@ class Client(Methods):
         client_platform: "enums.ClientPlatform" = enums.ClientPlatform.OTHER,
         init_connection_params: Optional["raw.base.JSONValue"] = None,
         connection_factory: Type[Connection] = Connection,
-        protocol_factory: Type[TCP] = TCPAbridged
+        protocol_factory: Type[TCP] = TCPAbridged,
+        entity_cache_time_to_live: float = 3600.0,
+        entity_cache_garbage_collection_interval: float = 900.0,
     ):
         super().__init__()
 
@@ -305,8 +318,6 @@ class Client(Methods):
         self.init_connection_params = init_connection_params
         self.connection_factory = connection_factory
         self.protocol_factory = protocol_factory
-
-        self.executor = ThreadPoolExecutor(self.workers, thread_name_prefix="Handler")
 
         self.storage: Storage
 
@@ -345,8 +356,13 @@ class Client(Methods):
 
         self.disconnect_handler = None
 
-        self.me: Optional[User] = None
+        self.me: User | None = None
+        self._config: raw.types.Config | None = None
 
+        self.entity_cache = EntityCache(
+            time_to_live=entity_cache_time_to_live,
+            garbage_collection_interval=entity_cache_garbage_collection_interval
+        )
         self.message_cache = Cache(self.max_message_cache_size)
 
         # Sometimes, for some reason, the server will stop sending updates and will only respond to pings.
@@ -354,9 +370,34 @@ class Client(Methods):
         # after some idle time has been detected.
         self.updates_watchdog_task = None
         self.updates_watchdog_event = asyncio.Event()
-        self.last_update_time = datetime.now()
+        self.last_update_time = time.time()
+        self._timestamp = time.time()
 
-        self.loop = asyncio.get_event_loop()
+    def set_timestamp(self, *, timestamp: float) -> None:
+        self._timestamp = timestamp
+        self.entity_cache.set_timestamp(timestamp=self._timestamp)
+    
+    @property
+    def timestamp(self) -> float:
+        return self._timestamp
+
+    @property
+    def self_user_id(self) -> int:
+        if self.me is None:
+            return 0
+        return self.me.id
+
+    @property
+    def loop(self) -> asyncio.AbstractEventLoop:
+        return asyncio.get_running_loop()
+
+    @loop.setter
+    def loop(self, loop: asyncio.AbstractEventLoop) -> None:
+        warnings.warn(
+            "Setting the loop is not supported. "
+            "The loop will be set automatically when the client is created.",
+            RuntimeWarning
+        )
 
     def __enter__(self):
         return self.start()
@@ -385,7 +426,7 @@ class Client(Methods):
             else:
                 break
 
-            if datetime.now() - self.last_update_time > timedelta(seconds=self.UPDATES_WATCHDOG_INTERVAL):
+            if time.time() - self.last_update_time > self.UPDATES_WATCHDOG_INTERVAL:
                 await self.invoke(raw.functions.updates.GetState())
 
     async def authorize(self) -> User:
@@ -506,45 +547,9 @@ class Client(Methods):
 
         return signed_up
 
-    def set_parse_mode(self, parse_mode: Optional["enums.ParseMode"]):
-        """Set the parse mode to be used globally by the client.
-
-        When setting the parse mode with this method, all other methods having a *parse_mode* parameter will follow the
-        global value by default.
-
-        Parameters:
-            parse_mode (:obj:`~pyrogram.enums.ParseMode`):
-                By default, texts are parsed using both Markdown and HTML styles.
-                You can combine both syntaxes together.
-
-        Example:
-            .. code-block:: python
-
-                from pyrogram import enums
-
-                # Default combined mode: Markdown + HTML
-                await app.send_message("me", "1. **markdown** and <i>html</i>")
-
-                # Force Markdown-only, HTML is disabled
-                app.set_parse_mode(enums.ParseMode.MARKDOWN)
-                await app.send_message("me", "2. **markdown** and <i>html</i>")
-
-                # Force HTML-only, Markdown is disabled
-                app.set_parse_mode(enums.ParseMode.HTML)
-                await app.send_message("me", "3. **markdown** and <i>html</i>")
-
-                # Disable the parser completely
-                app.set_parse_mode(enums.ParseMode.DISABLED)
-                await app.send_message("me", "4. **markdown** and <i>html</i>")
-
-                # Bring back the default combined mode
-                app.set_parse_mode(enums.ParseMode.DEFAULT)
-                await app.send_message("me", "5. **markdown** and <i>html</i>")
-        """
-
-        self.parse_mode = parse_mode
-
     async def fetch_peers(self, peers: List[Union[raw.types.User, raw.types.Chat, raw.types.Channel]]) -> bool:
+        self.entity_cache.update(entities=peers)
+
         is_min = False
         parsed_peers = []
 
@@ -592,17 +597,36 @@ class Client(Methods):
 
         return is_min
 
+    async def get_config(self, force: bool = False) -> raw.types.Config:
+        need_update = (
+            force or
+            self._config is None or
+            self._config.expires > time.time()
+        )
+
+        if need_update:
+            self._config = await self.invoke(raw.functions.help.GetConfig())
+
+        return self.config
+
+    @property
+    def config(self) -> raw.types.Config:
+        if self._config is None:
+            raise RuntimeError("Failed to get config")
+        return self._config
+
     async def handle_updates(self, updates):
-        self.last_update_time = datetime.now()
+        self.last_update_time = _timestamp = time.time()
+        self.set_timestamp(timestamp=_timestamp)
 
         if isinstance(updates, (raw.types.Updates, raw.types.UpdatesCombined)):
+            self.entity_cache.update(entities=updates.users)
+            self.entity_cache.update(entities=updates.chats)
+
             is_min = any((
                 await self.fetch_peers(updates.users),
                 await self.fetch_peers(updates.chats),
             ))
-
-            users = {u.id: u for u in updates.users}
-            chats = {c.id: c for c in updates.chats}
 
             for update in updates.updates:
                 channel_id = getattr(
@@ -616,19 +640,8 @@ class Client(Methods):
                 pts = getattr(update, "pts", None)
                 pts_count = getattr(update, "pts_count", None)
 
-                if pts and not self.skip_updates:
-                    await self.storage.update_state(
-                        (
-                            utils.get_channel_id(channel_id) if channel_id else 0,
-                            pts,
-                            None,
-                            updates.date,
-                            updates.seq
-                        )
-                    )
-
                 if isinstance(update, raw.types.UpdateChannelTooLong):
-                    log.info(update)
+                    log.warning(update)
 
                 if isinstance(update, raw.types.UpdateNewChannelMessage) and is_min:
                     message = update.message
@@ -651,24 +664,16 @@ class Client(Methods):
                         except ChannelPrivate:
                             pass
                         else:
-                            if not isinstance(diff, raw.types.updates.ChannelDifferenceEmpty):
-                                users.update({u.id: u for u in diff.users})
-                                chats.update({c.id: c for c in diff.chats})
+                            if isinstance(diff, (
+                                raw.types.updates.ChannelDifferenceTooLong,
+                                raw.types.updates.ChannelDifference,
+                            )):
+                                self.entity_cache.update(entities=diff.users)
+                                self.entity_cache.update(entities=diff.chats)
 
-                self.dispatcher.updates_queue.put_nowait((update, users, chats))
+                self.dispatcher.updates_queue.put_nowait(update)
         elif isinstance(updates, (raw.types.UpdateShortMessage, raw.types.UpdateShortChatMessage)):
-            if not self.skip_updates:
-                await self.storage.update_state(
-                    (
-                        0,
-                        updates.pts,
-                        None,
-                        updates.date,
-                        None
-                    )
-                )
-
-            diff = await self.invoke(
+            diff: raw.base.updates.Difference = await self.invoke(
                 raw.functions.updates.GetDifference(
                     pts=updates.pts - updates.pts_count,
                     date=updates.date,
@@ -676,23 +681,31 @@ class Client(Methods):
                 )
             )
 
-            if diff.new_messages:
-                self.dispatcher.updates_queue.put_nowait((
-                    raw.types.UpdateNewMessage(
-                        message=diff.new_messages[0],
-                        pts=updates.pts,
-                        pts_count=updates.pts_count
-                    ),
-                    {u.id: u for u in diff.users},
-                    {c.id: c for c in diff.chats}
+            new_messages: list[raw.base.Message] = []
+            other_updates: list[raw.base.Update] = []
+
+            if isinstance(diff, (
+                raw.types.updates.Difference,
+                raw.types.updates.DifferenceSlice,
+            )):
+                new_messages.extend(diff.new_messages)
+                other_updates.extend(diff.other_updates)
+                self.entity_cache.update(entities=diff.users)
+                self.entity_cache.update(entities=diff.chats)
+
+            for message in new_messages:
+                self.dispatcher.updates_queue.put_nowait(raw.types.UpdateNewMessage(
+                    message=message,
+                    pts=updates.pts,
+                    pts_count=updates.pts_count
                 ))
-            else:
-                if diff.other_updates:  # The other_updates list can be empty
-                    self.dispatcher.updates_queue.put_nowait((diff.other_updates[0], {}, {}))
+
+            for update in diff.other_updates:
+                self.dispatcher.updates_queue.put_nowait(update)
         elif isinstance(updates, raw.types.UpdateShort):
-            self.dispatcher.updates_queue.put_nowait((updates.update, {}, {}))
+            self.dispatcher.updates_queue.put_nowait(updates.update)
         elif isinstance(updates, raw.types.UpdatesTooLong):
-            log.info(updates)
+            log.warning(updates)
 
     async def load_session(self):
         await self.storage.open()
@@ -1010,10 +1023,7 @@ class Client(Methods):
                                 *progress_args
                             )
 
-                            if inspect.iscoroutinefunction(progress):
-                                await func()
-                            else:
-                                await self.loop.run_in_executor(self.executor, func)
+                            await func()
 
                         if len(chunk) < chunk_size or current >= total:
                             break
@@ -1098,10 +1108,7 @@ class Client(Methods):
                                     *progress_args
                                 )
 
-                                if inspect.iscoroutinefunction(progress):
-                                    await func()
-                                else:
-                                    await self.loop.run_in_executor(self.executor, func)
+                                await func()
 
                             if len(chunk) < chunk_size or current >= total:
                                 break

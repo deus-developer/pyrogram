@@ -49,7 +49,7 @@ class EmojiStatus(Object):
         self.until_date = until_date
 
     @staticmethod
-    def _parse(client, emoji_status: "raw.base.EmojiStatus") -> Optional["EmojiStatus"]:
+    def from_raw_tl(client, emoji_status: "raw.base.EmojiStatus") -> Optional["EmojiStatus"]:
         if isinstance(emoji_status, raw.types.EmojiStatus):
             return EmojiStatus(
                 client=client,

@@ -93,9 +93,7 @@ class ForwardStory:
             if isinstance(i, (raw.types.UpdateNewMessage,
                                 raw.types.UpdateNewChannelMessage,
                                 raw.types.UpdateNewScheduledMessage)):
-                return await types.Message._parse(
+                return await types.Message.from_raw_tl(
                     self, i.message,
-                    {i.id: i for i in r.users},
-                    {i.id: i for i in r.chats},
                     is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage)
                 )

@@ -81,7 +81,7 @@ class Photo(Object):
         self.thumbs = thumbs
 
     @staticmethod
-    def _parse(client, photo: "raw.types.Photo", ttl_seconds: int = None) -> "Photo":
+    def from_raw_tl(client, photo: "raw.types.Photo", ttl_seconds: int = None) -> "Photo":
         if isinstance(photo, raw.types.Photo):
             photos: List[raw.types.PhotoSize] = []
 
@@ -125,6 +125,6 @@ class Photo(Object):
                 file_size=main.size,
                 date=utils.timestamp_to_datetime(photo.date),
                 ttl_seconds=ttl_seconds,
-                thumbs=types.Thumbnail._parse(client, photo),
+                thumbs=types.Thumbnail.from_raw_tl(client, photo),
                 client=client
             )

@@ -53,7 +53,7 @@ class GetAvailableEffects:
 
         return types.List(
             [
-                await types.AvailableEffect._parse(self, effect, documents.get(effect.effect_sticker_id, None))
+                await types.AvailableEffect.from_raw_tl(self, effect, documents.get(effect.effect_sticker_id, None))
                 for effect in r.effects
             ]
         )

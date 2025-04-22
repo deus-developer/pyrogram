@@ -57,12 +57,10 @@ class RevokeChatInviteLink:
             )
         )
 
-        users = {i.id: i for i in r.users}
-
         chat_invite = (
             r.new_invite
             if isinstance(r, raw.types.messages.ExportedChatInviteReplaced)
             else r.invite
         )
 
-        return types.ChatInviteLink._parse(self, chat_invite, users)
+        return types.ChatInviteLink.from_raw_tl(self, chat_invite)

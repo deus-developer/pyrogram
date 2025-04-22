@@ -51,7 +51,7 @@ from .votes_list import VotesList
 from .message_views import MessageViews
 from .discussion_message import DiscussionMessage
 from .history_import import HistoryImport
-from .history_import_parsed import HistoryImportParsed
+from .history_importfrom_raw_tld import HistoryImportParsed
 from .affected_found_messages import AffectedFoundMessages
 from .exported_chat_invites import ExportedChatInvites
 from .exported_chat_invite import ExportedChatInvite

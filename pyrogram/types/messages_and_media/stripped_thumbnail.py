@@ -40,7 +40,7 @@ class StrippedThumbnail(Object):
         self.data = data
 
     @staticmethod
-    def _parse(client, stripped_thumbnail: "raw.types.PhotoStrippedSize") -> "StrippedThumbnail":
+    def from_raw_tl(client, stripped_thumbnail: "raw.types.PhotoStrippedSize") -> "StrippedThumbnail":
         return StrippedThumbnail(
             data=stripped_thumbnail.bytes,
             client=client

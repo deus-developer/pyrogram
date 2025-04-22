@@ -66,6 +66,6 @@ class GetUsers:
         users = types.List()
 
         for i in r:
-            users.append(types.User._parse(self, i))
+            users.append(types.User.from_raw_tl(self, i))
 
         return users if is_iterable else users[0]

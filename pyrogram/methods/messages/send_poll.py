@@ -34,10 +34,10 @@ class SendPoll:
         type: "enums.PollType" = enums.PollType.REGULAR,
         allows_multiple_answers: Optional[bool] = None,
         correct_option_id: Optional[int] = None,
-        question_parse_mode: Optional["enums.ParseMode"] = None,
+        questionfrom_raw_tl_mode: Optional["enums.ParseMode"] = None,
         question_entities: Optional[List["types.MessageEntity"]] = None,
         explanation: Optional[str] = None,
-        explanation_parse_mode: Optional["enums.ParseMode"] = None,
+        explanationfrom_raw_tl_mode: Optional["enums.ParseMode"] = None,
         explanation_entities: Optional[List["types.MessageEntity"]] = None,
         open_period: Optional[int] = None,
         close_date: Optional[datetime] = None,
@@ -49,12 +49,12 @@ class SendPoll:
         reply_to_message_id: Optional[int] = None,
         reply_to_chat_id: Optional[Union[int, str]] = None,
         quote_text: Optional[str] = None,
-        quote_parse_mode: Optional["enums.ParseMode"] = None,
+        quotefrom_raw_tl_mode: Optional["enums.ParseMode"] = None,
         quote_entities: Optional[List["types.MessageEntity"]] = None,
         quote_offset: Optional[int] = None,
         schedule_date: Optional[datetime] = None,
         business_connection_id: Optional[str] = None,
-        options_parse_mode: Optional["enums.ParseMode"] = None,
+        optionsfrom_raw_tl_mode: Optional["enums.ParseMode"] = None,
         reply_markup: Optional[
             Union[
                 "types.InlineKeyboardMarkup",
@@ -95,7 +95,7 @@ class SendPoll:
             correct_option_id (``int``, *optional*):
                 0-based identifier of the correct answer option, required for polls in quiz mode.
 
-            question_parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+            questionfrom_raw_tl_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
                 By default, texts are parsed using both Markdown and HTML styles.
                 You can combine both syntaxes together.
 
@@ -107,7 +107,7 @@ class SendPoll:
                 Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style
                 poll, 0-200 characters with at most 2 line feeds after entities parsing.
 
-            explanation_parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+            explanationfrom_raw_tl_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
                 By default, texts are parsed using both Markdown and HTML styles.
                 You can combine both syntaxes together.
 
@@ -152,7 +152,7 @@ class SendPoll:
             quote_text (``str``, *optional*):
                 Text of the quote to be sent.
 
-            quote_parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+            quotefrom_raw_tl_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
                 By default, texts are parsed using both Markdown and HTML styles.
                 You can combine both syntaxes together.
 
@@ -168,7 +168,7 @@ class SendPoll:
             business_connection_id (``str``, *optional*):
                 Unique identifier of the business connection on behalf of which the message will be sent.
 
-            options_parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+            optionsfrom_raw_tl_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
                 By default, texts are parsed using both Markdown and HTML styles.
                 You can combine both syntaxes together.
 
@@ -185,22 +185,22 @@ class SendPoll:
                 await app.send_poll(chat_id, "Is this a poll question?", ["Yes", "No", "Maybe"])
         """
         question, question_entities = (await utils.parse_text_entities(
-            self, question, question_parse_mode, question_entities
+            self, question, questionfrom_raw_tl_mode, question_entities
         )).values()
 
         solution, solution_entities = (await utils.parse_text_entities(
-            self, explanation, explanation_parse_mode, explanation_entities
+            self, explanation, explanationfrom_raw_tl_mode, explanation_entities
         )).values()
 
         quote_text, quote_entities = (await utils.parse_text_entities(
-            self, quote_text, quote_parse_mode, quote_entities
+            self, quote_text, quotefrom_raw_tl_mode, quote_entities
         )).values()
 
         answers = []
 
         for i, opt in enumerate(options):
             option, option_entities = (await utils.parse_text_entities(
-                self, opt, options_parse_mode, None
+                self, opt, optionsfrom_raw_tl_mode, None
             )).values()
 
             answers.append(
@@ -256,10 +256,8 @@ class SendPoll:
                               raw.types.UpdateNewChannelMessage,
                               raw.types.UpdateNewScheduledMessage,
                               raw.types.UpdateBotNewBusinessMessage)):
-                return await types.Message._parse(
+                return await types.Message.from_raw_tl(
                     self, i.message,
-                    {i.id: i for i in r.users},
-                    {i.id: i for i in r.chats},
                     is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
                     business_connection_id=getattr(i, "connection_id", None)
                 )

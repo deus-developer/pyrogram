@@ -60,7 +60,7 @@ class GetStickers:
 
         return types.List(
             [
-                await types.Sticker._parse(self, doc, {type(a): a for a in doc.attributes})
+                await types.Sticker.from_raw_tl(self, doc, {type(a): a for a in doc.attributes})
                 for doc in sticker_set.documents
             ]
         )

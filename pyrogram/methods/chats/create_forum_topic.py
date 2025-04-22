@@ -65,4 +65,4 @@ class CreateForumTopic:
             )
         )
 
-        return types.ForumTopicCreated._parse(r.updates[1].message)
+        return types.ForumTopicCreated.from_raw_tl(r.updates[1].message)

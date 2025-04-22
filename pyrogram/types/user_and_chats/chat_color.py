@@ -44,7 +44,7 @@ class ChatColor(Object):
         self.background_emoji_id = background_emoji_id
 
     @staticmethod
-    def _parse(color: "raw.types.PeerColor" = None) -> Optional["ChatColor"]:
+    def from_raw_tl(color: "raw.types.PeerColor" = None) -> Optional["ChatColor"]:
         if not color:
             return None
 
@@ -54,7 +54,7 @@ class ChatColor(Object):
         )
 
     @staticmethod
-    def _parse_profile_color(color: "raw.types.PeerColor" = None) -> Optional["ChatColor"]:
+    def from_raw_tl_profile_color(color: "raw.types.PeerColor" = None) -> Optional["ChatColor"]:
         if not color:
             return None
 

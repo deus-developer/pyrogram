@@ -275,16 +275,11 @@ class ChatEvent(Object):
         self.deleted_forum_topic = deleted_forum_topic
 
     @staticmethod
-    async def _parse(
+    async def from_raw_tl(
         client: "pyrogram.Client",
         event: "raw.base.ChannelAdminLogEvent",
-        users: List["raw.base.User"],
-        chats: List["raw.base.Chat"]
     ):
-        users = {i.id: i for i in users}
-        chats = {i.id: i for i in chats}
-
-        user = types.User._parse(client, users[event.user_id])
+        user = types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=event.user_id))
         action = event.action
 
         old_description: Optional[str] = None
@@ -356,13 +351,13 @@ class ChatEvent(Object):
             action = enums.ChatEventAction.HISTORY_TTL_CHANGED
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionChangeLinkedChat):
-            old_linked_chat = types.Chat._parse_chat(client, chats[action.prev_value])
-            new_linked_chat = types.Chat._parse_chat(client, chats[action.new_value])
+            old_linked_chat = types.Chat.from_raw_tl_chat(client, client.entity_cache.get_chat(chat_id=action.prev_value))
+            new_linked_chat = types.Chat.from_raw_tl_chat(client, client.entity_cache.get_chat(chat_id=action.new_value))
             action = enums.ChatEventAction.LINKED_CHAT_CHANGED
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionChangePhoto):
-            old_photo = types.Photo._parse(client, action.prev_photo)
-            new_photo = types.Photo._parse(client, action.new_photo)
+            old_photo = types.Photo.from_raw_tl(client, action.prev_photo)
+            new_photo = types.Photo.from_raw_tl(client, action.new_photo)
             action = enums.ChatEventAction.PHOTO_CHANGED
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionChangeTitle):
@@ -376,35 +371,35 @@ class ChatEvent(Object):
             action = enums.ChatEventAction.USERNAME_CHANGED
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionDefaultBannedRights):
-            old_chat_permissions = types.ChatPermissions._parse(action.prev_banned_rights)
-            new_chat_permissions = types.ChatPermissions._parse(action.new_banned_rights)
+            old_chat_permissions = types.ChatPermissions.from_raw_tl(action.prev_banned_rights)
+            new_chat_permissions = types.ChatPermissions.from_raw_tl(action.new_banned_rights)
             action = enums.ChatEventAction.CHAT_PERMISSIONS_CHANGED
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionDeleteMessage):
-            deleted_message = await types.Message._parse(client, action.message, users, chats)
+            deleted_message = await types.Message.from_raw_tl(client, action.message)
             action = enums.ChatEventAction.MESSAGE_DELETED
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionEditMessage):
-            old_message = await types.Message._parse(client, action.prev_message, users, chats)
-            new_message = await types.Message._parse(client, action.new_message, users, chats)
+            old_message = await types.Message.from_raw_tl(client, action.prev_message)
+            new_message = await types.Message.from_raw_tl(client, action.new_message)
             action = enums.ChatEventAction.MESSAGE_EDITED
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionParticipantInvite):
-            invited_member = types.ChatMember._parse(client, action.participant, users, chats)
+            invited_member = types.ChatMember.from_raw_tl(client, action.participant)
             action = enums.ChatEventAction.MEMBER_INVITED
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionParticipantToggleAdmin):
-            old_administrator_privileges = types.ChatMember._parse(client, action.prev_participant, users, chats)
-            new_administrator_privileges = types.ChatMember._parse(client, action.new_participant, users, chats)
+            old_administrator_privileges = types.ChatMember.from_raw_tl(client, action.prev_participant)
+            new_administrator_privileges = types.ChatMember.from_raw_tl(client, action.new_participant)
             action = enums.ChatEventAction.ADMINISTRATOR_PRIVILEGES_CHANGED
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionParticipantToggleBan):
-            old_member_permissions = types.ChatMember._parse(client, action.prev_participant, users, chats)
-            new_member_permissions = types.ChatMember._parse(client, action.new_participant, users, chats)
+            old_member_permissions = types.ChatMember.from_raw_tl(client, action.prev_participant)
+            new_member_permissions = types.ChatMember.from_raw_tl(client, action.new_participant)
             action = enums.ChatEventAction.MEMBER_PERMISSIONS_CHANGED
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionStopPoll):
-            stopped_poll = await types.Message._parse(client, action.message, users, chats)
+            stopped_poll = await types.Message.from_raw_tl(client, action.message)
             action = enums.ChatEventAction.POLL_STOPPED
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionParticipantJoin):
@@ -434,38 +429,38 @@ class ChatEvent(Object):
             message = action.message
 
             if isinstance(message, raw.types.Message) and message.pinned:
-                pinned_message = await types.Message._parse(client, message, users, chats)
+                pinned_message = await types.Message.from_raw_tl(client, message)
                 action = enums.ChatEventAction.MESSAGE_PINNED
             elif isinstance(message, raw.types.Message) and not message.pinned:
-                unpinned_message = await types.Message._parse(client, message, users, chats)
+                unpinned_message = await types.Message.from_raw_tl(client, message)
                 action = enums.ChatEventAction.MESSAGE_UNPINNED
             else:
                 action = enums.ChatEventAction.MESSAGE_PIN_CHANGED
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionExportedInviteEdit):
-            old_invite_link = types.ChatInviteLink._parse(client, action.prev_invite, users)
-            new_invite_link = types.ChatInviteLink._parse(client, action.new_invite, users)
+            old_invite_link = types.ChatInviteLink.from_raw_tl(client, action.prev_invite)
+            new_invite_link = types.ChatInviteLink.from_raw_tl(client, action.new_invite)
             action = enums.ChatEventAction.INVITE_LINK_EDITED
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionExportedInviteRevoke):
-            revoked_invite_link = types.ChatInviteLink._parse(client, action.invite, users)
+            revoked_invite_link = types.ChatInviteLink.from_raw_tl(client, action.invite)
             action = enums.ChatEventAction.INVITE_LINK_REVOKED
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionExportedInviteDelete):
-            deleted_invite_link = types.ChatInviteLink._parse(client, action.invite, users)
+            deleted_invite_link = types.ChatInviteLink.from_raw_tl(client, action.invite)
             action = enums.ChatEventAction.INVITE_LINK_DELETED
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionCreateTopic):
-            created_forum_topic = types.ForumTopic._parse(client, action.topic, users=users, chats=chats)
+            created_forum_topic = types.ForumTopic.from_raw_tl(client, action.topic)
             action = enums.ChatEventAction.CREATED_FORUM_TOPIC
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionEditTopic):
-            old_forum_topic = types.ForumTopic._parse(client, action.prev_topic, users=users, chats=chats)
-            new_forum_topic = types.ForumTopic._parse(client, action.new_topic, users=users, chats=chats)
+            old_forum_topic = types.ForumTopic.from_raw_tl(client, action.prev_topic)
+            new_forum_topic = types.ForumTopic.from_raw_tl(client, action.new_topic)
             action = enums.ChatEventAction.EDITED_FORUM_TOPIC
 
         elif isinstance(action, raw.types.ChannelAdminLogEventActionDeleteTopic):
-            created_forum_topic = types.ForumTopic._parse(client, action.topic, users=users, chats=chats)
+            created_forum_topic = types.ForumTopic.from_raw_tl(client, action.topic)
             action = enums.ChatEventAction.DELETED_FORUM_TOPIC
 
         else:

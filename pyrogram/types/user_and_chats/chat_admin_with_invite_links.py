@@ -51,13 +51,12 @@ class ChatAdminWithInviteLinks(Object):
         self.revoked_chat_invite_links_count = revoked_chat_invite_links_count
 
     @staticmethod
-    def _parse(
+    def from_raw_tl(
         client: "pyrogram.Client",
         admin: "raw.types.ChatAdminWithInvites",
-        users: Dict[int, "raw.types.User"] = None
     ) -> "ChatAdminWithInviteLinks":
         return ChatAdminWithInviteLinks(
-            admin=types.User._parse(client, users[admin.admin_id]),
+            admin=types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=admin.admin_id)),
             chat_invite_links_count=admin.invites_count,
             revoked_chat_invite_links_count=admin.revoked_invites_count
         )

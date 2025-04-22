@@ -59,10 +59,9 @@ class BusinessInfo(Object):
         self.working_hours = working_hours
 
     @staticmethod
-    def _parse(
+    def from_raw_tl(
         client,
         user: "raw.types.UserFull" = None,
-        users: dict = None
     ) -> Optional["BusinessInfo"]:
         working_hours = getattr(user, "business_work_hours", None)
         location = getattr(user, "business_location", None)
@@ -74,8 +73,8 @@ class BusinessInfo(Object):
 
         return BusinessInfo(
             address=getattr(location, "address", None),
-            location=types.Location._parse(client, getattr(location, "geo_point", None)),
-            greeting_message=types.BusinessMessage._parse(client, greeting_message, users),
-            away_message=types.BusinessMessage._parse(client, away_message, users),
-            working_hours=types.BusinessWorkingHours._parse(working_hours),
+            location=types.Location.from_raw_tl(client, getattr(location, "geo_point", None)),
+            greeting_message=types.BusinessMessage.from_raw_tl(client, greeting_message),
+            away_message=types.BusinessMessage.from_raw_tl(client, away_message),
+            working_hours=types.BusinessWorkingHours.from_raw_tl(working_hours),
         )

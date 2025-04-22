@@ -91,7 +91,7 @@ class Animation(Object):
         self.thumbs = thumbs
 
     @staticmethod
-    def _parse(
+    def from_raw_tl(
         client,
         animation: "raw.types.Document",
         video_attributes: "raw.types.DocumentAttributeVideo",
@@ -116,6 +116,6 @@ class Animation(Object):
             file_size=animation.size,
             file_name=file_name,
             date=utils.timestamp_to_datetime(animation.date),
-            thumbs=types.Thumbnail._parse(client, animation),
+            thumbs=types.Thumbnail.from_raw_tl(client, animation),
             client=client
         )

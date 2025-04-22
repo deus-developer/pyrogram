@@ -60,13 +60,10 @@ class Restart:
                 app.run(main())
         """
 
-        async def do_it():
-            await self.stop()
-            await self.start()
+        if not block:
+            raise RuntimeError("Not supported with block=False.")
 
-        if block:
-            await do_it()
-        else:
-            self.loop.create_task(do_it())
+        await self.stop()
+        await self.start()
 
         return self

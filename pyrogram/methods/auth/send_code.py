@@ -126,4 +126,4 @@ class SendCode:
 
                 await self.session.start()
             else:
-                return types.SentCode._parse(r)
+                return types.SentCode.from_raw_tl(r)

@@ -17,6 +17,7 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
+import time
 
 import pyrogram
 from pyrogram import raw
@@ -72,6 +73,8 @@ class Invoke:
         Raises:
             RPCError: In case of a Telegram RPC error.
         """
+        self.set_timestamp(timestamp=time.time())
+
         if not self.is_connected:
             raise ConnectionError("Client has not been started yet")
 

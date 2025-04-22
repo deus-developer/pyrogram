@@ -82,13 +82,12 @@ class Giveaway(Object):
         self.winners_are_visible = winners_are_visible
 
     @staticmethod
-    def _parse(
+    def from_raw_tl(
         client,
         giveaway: "raw.types.MessageMediaGiveaway",
-        chats: dict
     ) -> "Giveaway":
         return Giveaway(
-            chats=types.List(types.Chat._parse_channel_chat(client, chats.get(i)) for i in giveaway.channels),
+            chats=types.List(types.Chat.from_raw_tl_channel_chat(client, client.entity_cache.get_channel(channel_id=i)) for i in giveaway.channels),
             quantity=giveaway.quantity,
             months=giveaway.months,
             until_date=utils.timestamp_to_datetime(giveaway.until_date),

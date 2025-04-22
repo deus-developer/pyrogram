@@ -160,11 +160,9 @@ class EditStoryMedia:
                 else:
                     for i in r.updates:
                         if isinstance(i, raw.types.UpdateStory):
-                            return await types.Story._parse(
+                            return await types.Story.from_raw_tl(
                                 self,
                                 i.story,
-                                {i.id: i for i in r.users},
-                                {i.id: i for i in r.chats},
                                 i.peer
                             )
         except StopTransmission:

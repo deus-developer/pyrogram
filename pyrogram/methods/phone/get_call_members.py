@@ -82,10 +82,8 @@ class GetCallMembers:
                 sleep_threshold=60
             )
 
-            users = {u.id: u for u in r.users}
-            chats = {c.id: c for c in r.chats}
             members = [
-                types.GroupCallMember._parse(self, member, users, chats)
+                types.GroupCallMember.from_raw_tl(self, member)
                 for member in r.participants
             ]
 

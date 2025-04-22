@@ -50,4 +50,4 @@ class AnswerWebAppQuery:
             )
         )
 
-        return types.SentWebAppMessage._parse(r)
+        return types.SentWebAppMessage.from_raw_tl(r)

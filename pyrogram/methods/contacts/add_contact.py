@@ -75,4 +75,4 @@ class AddContact:
             )
         )
 
-        return types.User._parse(self, r.users[0])
+        return types.User.from_raw_tl(self, r.users[0])

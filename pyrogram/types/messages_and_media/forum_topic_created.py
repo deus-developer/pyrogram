@@ -53,7 +53,7 @@ class ForumTopicCreated(Object):
         self.icon_emoji_id = icon_emoji_id
 
     @staticmethod
-    def _parse(message: "raw.base.Message") -> "ForumTopicCreated":
+    def from_raw_tl(message: "raw.base.Message") -> "ForumTopicCreated":
         return ForumTopicCreated(
             id=getattr(message, "id", None),
             title=getattr(message.action, "title", None),

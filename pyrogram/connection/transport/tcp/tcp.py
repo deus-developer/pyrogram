@@ -53,7 +53,10 @@ class TCP:
         self.writer: Optional[asyncio.StreamWriter] = None
 
         self.lock = asyncio.Lock()
-        self.loop = asyncio.get_event_loop()
+
+    @property
+    def loop(self) -> asyncio.AbstractEventLoop:
+        return asyncio.get_running_loop()
 
     async def _connect_via_proxy(
         self,

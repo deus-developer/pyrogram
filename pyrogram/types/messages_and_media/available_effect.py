@@ -70,12 +70,12 @@ class AvailableEffect(Object):
         self.effect_animation_id = effect_animation_id
 
     @staticmethod
-    async def _parse(client, effect: "raw.types.AvailableEffect", document: "raw.types.Document" = None) -> "AvailableEffect":
+    async def from_raw_tl(client, effect: "raw.types.AvailableEffect", document: "raw.types.Document" = None) -> "AvailableEffect":
         sticker = None
 
         if document:
             attributes = {type(i): i for i in document.attributes}
-            sticker = await types.Sticker._parse(client, document, attributes)
+            sticker = await types.Sticker.from_raw_tl(client, document, attributes)
 
         return AvailableEffect(
             id=effect.id,

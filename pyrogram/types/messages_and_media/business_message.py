@@ -80,10 +80,9 @@ class BusinessMessage(Object):
         self.end_date = end_date
 
     @staticmethod
-    def _parse(
+    def from_raw_tl(
         client,
         message: Union["raw.types.BusinessGreetingMessage", "raw.types.BusinessAwayMessage"] = None,
-        users: dict = None
     ) -> Optional["BusinessMessage"]:
         if not message:
             return None
@@ -104,7 +103,7 @@ class BusinessMessage(Object):
             is_away=isinstance(message, raw.types.BusinessAwayMessage),
             no_activity_days=getattr(message, "no_activity_days", None),
             offline_only=getattr(message, "offline_only", None),
-            recipients=types.BusinessRecipients._parse(client, message.recipients, users),
+            recipients=types.BusinessRecipients.from_raw_tl(client, message.recipients),
             schedule=schedule,
             start_date=utils.timestamp_to_datetime(message.schedule.start_date) if schedule == enums.BusinessSchedule.CUSTOM else None,
             end_date=utils.timestamp_to_datetime(message.schedule.end_date) if schedule == enums.BusinessSchedule.CUSTOM else None

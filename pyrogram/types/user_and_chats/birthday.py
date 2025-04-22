@@ -49,7 +49,7 @@ class Birthday(Object):
         self.year = year
 
     @staticmethod
-    def _parse(
+    def from_raw_tl(
         birthday: "raw.types.Birthday" = None
     ) -> Optional["Birthday"]:
         if not birthday:

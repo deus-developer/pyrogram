@@ -40,11 +40,10 @@ class VideoChatMembersInvited(Object):
         self.users = users
 
     @staticmethod
-    def _parse(
+    def from_raw_tl(
         client,
         action: "raw.types.MessageActionInviteToGroupCall",
-        users: Dict[int, "raw.types.User"]
     ) -> "VideoChatMembersInvited":
-        users = [types.User._parse(client, users[i]) for i in action.users]
+        users = [types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=i)) for i in action.users]
 
         return VideoChatMembersInvited(users=users)

@@ -79,7 +79,7 @@ class Voice(Object):
         self.ttl_seconds = ttl_seconds
 
     @staticmethod
-    def _parse(client, voice: "raw.types.Document", attributes: "raw.types.DocumentAttributeAudio", ttl_seconds: int = None) -> "Voice":
+    def from_raw_tl(client, voice: "raw.types.Document", attributes: "raw.types.DocumentAttributeAudio", ttl_seconds: int = None) -> "Voice":
         return Voice(
             file_id=FileId(
                 file_type=FileType.VOICE,

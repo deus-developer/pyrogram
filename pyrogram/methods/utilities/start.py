@@ -70,7 +70,9 @@ class Start:
             await self.disconnect()
             raise
         else:
+            await self.get_config(force=True)
             self.me = await self.get_me()
+            self.entity_cache.set_self_user_id(self.me.id)
             await self.initialize()
 
             return self

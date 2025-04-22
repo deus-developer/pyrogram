@@ -62,13 +62,11 @@ class MyBoost(Object):
         self.cooldown_until_date = cooldown_until_date
 
     @staticmethod
-    def _parse(client: "pyrogram.Client", my_boost: "raw.types.MyBoost", users, chats) -> "MyBoost":
-        peer_id = utils.get_raw_peer_id(my_boost.peer)
-
+    def from_raw_tl(client: "pyrogram.Client", my_boost: "raw.types.MyBoost") -> "MyBoost":
         if isinstance(my_boost.peer, raw.types.PeerChannel):
-            chat = types.Chat._parse_channel_chat(client, chats.get(peer_id, None))
+            chat = types.Chat.from_raw_tl_channel_chat(client, client.entity_cache.get_peer(peer=my_boost.peer))
         else:
-            chat = types.Chat._parse_user_chat(client, users.get(peer_id, None))
+            chat = types.Chat.from_raw_tl_user_chat(client, client.entity_cache.get_peer(peer=my_boost.peer))
 
         return MyBoost(
             slot=my_boost.slot,

@@ -59,14 +59,9 @@ class GetChatStories:
             )
         )
 
-        users = {i.id: i for i in r.users}
-        chats = {i.id: i for i in r.chats}
-
         for story in r.stories.stories:
-            yield await types.Story._parse(
+            yield await types.Story.from_raw_tl(
                 self,
                 story,
-                users,
-                chats,
                 r.stories.peer
             )

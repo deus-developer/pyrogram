@@ -61,9 +61,9 @@ class JoinChat:
                 )
             )
             if isinstance(chat.chats[0], raw.types.Chat):
-                return types.Chat._parse_chat_chat(self, chat.chats[0])
+                return types.Chat.from_raw_tl_chat_chat(self, chat.chats[0])
             elif isinstance(chat.chats[0], raw.types.Channel):
-                return types.Chat._parse_channel_chat(self, chat.chats[0])
+                return types.Chat.from_raw_tl_channel_chat(self, chat.chats[0])
         else:
             chat = await self.invoke(
                 raw.functions.channels.JoinChannel(
@@ -71,4 +71,4 @@ class JoinChat:
                 )
             )
 
-            return types.Chat._parse_channel_chat(self, chat.chats[0])
+            return types.Chat.from_raw_tl_channel_chat(self, chat.chats[0])

@@ -44,6 +44,4 @@ class GetMe:
             )
         )
 
-        users = {u.id: u for u in r.users}
-
-        return types.User._parse(self, users[r.full_user.id])
+        return types.User.from_raw_tl(self, self.entity_cache.get_user(user_id=r.full_user.id))

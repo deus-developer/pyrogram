@@ -70,11 +70,11 @@ class SignIn:
 
         if isinstance(r, raw.types.auth.AuthorizationSignUpRequired):
             if r.terms_of_service:
-                return types.TermsOfService._parse(terms_of_service=r.terms_of_service)
+                return types.TermsOfService.from_raw_tl(terms_of_service=r.terms_of_service)
 
             return False
         else:
             await self.storage.user_id(r.user.id)
             await self.storage.is_bot(False)
 
-            return types.User._parse(self, r.user)
+            return types.User.from_raw_tl(self, r.user)

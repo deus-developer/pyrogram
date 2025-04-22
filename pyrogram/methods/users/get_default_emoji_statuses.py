@@ -44,4 +44,4 @@ class GetDefaultEmojiStatuses:
             raw.functions.account.GetDefaultEmojiStatuses(hash=0)
         )
 
-        return types.List([types.EmojiStatus._parse(self, i) for i in r.statuses])
+        return types.List([types.EmojiStatus.from_raw_tl(self, i) for i in r.statuses])

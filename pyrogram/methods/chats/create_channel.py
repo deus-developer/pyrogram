@@ -53,4 +53,4 @@ class CreateChannel:
             )
         )
 
-        return types.Chat._parse_chat(self, r.chats[0])
+        return types.Chat.from_raw_tl_chat(self, r.chats[0])

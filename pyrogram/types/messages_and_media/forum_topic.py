@@ -116,7 +116,10 @@ class ForumTopic(Object):
         self.is_deleted = is_deleted
 
     @staticmethod
-    def _parse(client: "pyrogram.Client", forum_topic: "raw.types.ForumTopic", messages: dict = {},  users: dict = {}, chats: dict = {}) -> "ForumTopic":
+    def from_raw_tl(client: "pyrogram.Client", forum_topic: "raw.types.ForumTopic", messages: dict = None) -> "ForumTopic":
+        if messages is None:
+            messages = {}
+
         if isinstance(forum_topic, raw.types.ForumTopicDeleted):
             return ForumTopic(id=forum_topic.id, is_deleted=True)
 
@@ -125,12 +128,10 @@ class ForumTopic(Object):
         peer = getattr(forum_topic, "from_id", None)
 
         if peer:
-            peer_id = utils.get_raw_peer_id(peer)
-
             if isinstance(peer, raw.types.PeerUser):
-                creator = types.Chat._parse_user_chat(client, users[peer_id])
+                creator = types.Chat.from_raw_tl_user_chat(client, client.entity_cache.get_peer(peer=peer))
             else:
-                creator = types.Chat._parse_channel_chat(client, chats[peer_id])
+                creator = types.Chat.from_raw_tl_channel_chat(client, client.entity_cache.get_peer(peer=peer))
 
         return ForumTopic(
             id=forum_topic.id,

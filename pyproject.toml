@@ -7,21 +7,73 @@ name = "Pyrogram"
 version = "0.1.0"
 description = "Elegant, modern and asynchronous Telegram MTProto API framework in Python for users and bots"
 readme = "README.md"
-requires-python = ">=3.12"
-license = {text = "LGPLv3"}
 authors = [
-  {name = "Dan", email = "dan@pyrogram.org"}
+  {name = "Dan", email = "dan@pyrogram.org"},
+  {name = "DeusDeveloper", email = "deusdeveloper@yandex.com"}
 ]
+
+requires-python = ">=3.12"
+
+dynamic = ["version"]
+
 dependencies = [
   "pysocks==1.7.1",
   "tgcrypto==1.2.5"
 ]
 
+license = {text = "LGPLv3"}
+
+
 [project.urls]
-Homepage = "https://github.com/pyrogram/pyrogram"
+Homepage = "https://github.com/deus-developer/pyrogram"
+
+[tool.hatch.version]
+path = "pyrogram/__init__.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["pyrogram"]
 
 [tool.hatch.metadata]
 allow-direct-references = true
+
+[tool.mypy]
+files = ["pyrogram"]
+strict = true
+python_version = "3.12"
+ignore_missing_imports = true
+install_types = true
+non_interactive = true
+
+# from https://blog.wolt.com/engineering/2021/09/30/professional-grade-mypy-configuration/
+disallow_untyped_defs = true
+no_implicit_optional = true
+check_untyped_defs = true
+warn_return_any = true
+show_error_codes = true
+warn_unused_ignores = true
+
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+disallow_any_unimported = false
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+include = [
+    "pyrogram/**/*.py",
+    "pyrogram/**/*.pyi",
+    "pyproject.toml",
+]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = []
+
+[tool.ruff.lint.isort]
+case-sensitive = true
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"

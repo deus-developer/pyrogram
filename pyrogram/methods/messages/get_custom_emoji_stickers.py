@@ -49,7 +49,7 @@ class GetCustomEmojiStickers:
         stickers = []
         for item in result:
             attributes = {type(i): i for i in item.attributes}
-            sticker = await types.Sticker._parse(self, item, attributes)
+            sticker = await types.Sticker.from_raw_tl(self, item, attributes)
             stickers.append(sticker)
 
         return types.List(stickers)

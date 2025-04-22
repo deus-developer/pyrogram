@@ -148,7 +148,7 @@ class Sticker(Object):
             return None
 
     @staticmethod
-    async def _parse(
+    async def from_raw_tl(
         client,
         sticker: "raw.types.Document",
         document_attributes: Dict[Type["raw.base.DocumentAttribute"], "raw.base.DocumentAttribute"],
@@ -207,6 +207,6 @@ class Sticker(Object):
             mime_type=sticker.mime_type,
             file_name=file_name,
             date=utils.timestamp_to_datetime(sticker.date),
-            thumbs=types.Thumbnail._parse(client, sticker),
+            thumbs=types.Thumbnail.from_raw_tl(client, sticker),
             client=client
         )

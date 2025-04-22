@@ -98,7 +98,9 @@ class Session:
 
         self.is_started = asyncio.Event()
 
-        self.loop = asyncio.get_event_loop()
+    @property
+    def loop(self) -> asyncio.AbstractEventLoop:
+        return asyncio.get_running_loop()
 
     async def start(self):
         while True:
@@ -114,7 +116,7 @@ class Session:
             try:
                 await self.connection.connect()
 
-                self.recv_task = self.loop.create_task(self.recv_worker())
+                self.recv_task = asyncio.create_task(self.recv_worker())
 
                 await self.send(raw.functions.Ping(ping_id=0), timeout=self.START_TIMEOUT)
 
@@ -137,7 +139,7 @@ class Session:
                         timeout=self.START_TIMEOUT
                     )
 
-                self.ping_task = self.loop.create_task(self.ping_worker())
+                self.ping_task = asyncio.create_task(self.ping_worker())
 
                 log.info("Session initialized: Layer %s", layer)
                 log.info("Device: %s - %s", self.client.device_model, self.client.app_version)
@@ -255,7 +257,7 @@ class Session:
                 msg_id = msg.body.msg_id
             else:
                 if self.client is not None:
-                    self.loop.create_task(self.client.handle_updates(msg.body))
+                    asyncio.create_task(self.client.handle_updates(msg.body))
 
             if msg_id in self.results:
                 self.results[msg_id].value = getattr(msg.body, "result", msg.body)
@@ -289,7 +291,7 @@ class Session:
                     ), False
                 )
             except OSError:
-                self.loop.create_task(self.restart())
+                asyncio.create_task(self.restart())
                 break
             except RPCError:
                 pass
@@ -318,11 +320,11 @@ class Session:
                     )
 
                 if self.is_started.is_set():
-                    self.loop.create_task(self.restart())
+                    asyncio.create_task(self.restart())
 
                 break
 
-            self.loop.create_task(self.handle_packet(packet))
+            await self.handle_packet(packet)
 
         log.info("NetworkTask stopped")
 

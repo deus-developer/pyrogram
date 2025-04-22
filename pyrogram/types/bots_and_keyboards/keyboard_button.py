@@ -105,8 +105,8 @@ class KeyboardButton(Object):
                         button_id=b.button_id,
                         is_creator=getattr(b.peer_type, "creator", None),
                         has_username=getattr(b.peer_type, "has_username", None),
-                        user_privileges=types.ChatPrivileges._parse(user_privileges) if user_privileges else None,
-                        bot_privileges=types.ChatPrivileges._parse(bot_privileges) if bot_privileges else None
+                        user_privileges=types.ChatPrivileges.from_raw_tl(user_privileges) if user_privileges else None,
+                        bot_privileges=types.ChatPrivileges.from_raw_tl(bot_privileges) if bot_privileges else None
                     )
                 )
 
@@ -122,8 +122,8 @@ class KeyboardButton(Object):
                         is_bot_participant=getattr(b.peer_type, "bot_participant", None),
                         has_username=getattr(b.peer_type, "has_username", None),
                         has_forum=getattr(b.peer_type, "forum", None),
-                        user_privileges=types.ChatPrivileges._parse(user_privileges) if user_privileges else None,
-                        bot_privileges=types.ChatPrivileges._parse(bot_privileges) if bot_privileges else None
+                        user_privileges=types.ChatPrivileges.from_raw_tl(user_privileges) if user_privileges else None,
+                        bot_privileges=types.ChatPrivileges.from_raw_tl(bot_privileges) if bot_privileges else None
                     )
                 )
 

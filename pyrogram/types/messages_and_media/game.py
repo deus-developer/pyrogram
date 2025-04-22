@@ -68,7 +68,7 @@ class Game(Object):
         self.animation = animation
 
     @staticmethod
-    def _parse(client, message: "raw.types.Message") -> "Game":
+    def from_raw_tl(client, message: "raw.types.Message") -> "Game":
         game: "raw.types.Game" = message.media.game
         animation = None
 
@@ -81,7 +81,7 @@ class Game(Object):
                 ), "file_name", None
             )
 
-            animation = types.Animation._parse(
+            animation = types.Animation.from_raw_tl(
                 client,
                 game.document,
                 attributes.get(raw.types.DocumentAttributeVideo, None),
@@ -93,7 +93,7 @@ class Game(Object):
             title=game.title,
             short_name=game.short_name,
             description=game.description,
-            photo=types.Photo._parse(client, game.photo),
+            photo=types.Photo.from_raw_tl(client, game.photo),
             animation=animation,
             client=client
         )

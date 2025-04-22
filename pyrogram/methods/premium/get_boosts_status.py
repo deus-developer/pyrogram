@@ -49,4 +49,4 @@ class GetBoostsStatus:
             raw.functions.premium.GetBoostsStatus(peer=await self.resolve_peer(chat_id))
         )
 
-        return types.BoostsStatus._parse(r)
+        return types.BoostsStatus.from_raw_tl(r)

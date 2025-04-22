@@ -84,4 +84,4 @@ class CreateChatInviteLink:
             )
         )
 
-        return types.ChatInviteLink._parse(self, r)
+        return types.ChatInviteLink.from_raw_tl(self, r)

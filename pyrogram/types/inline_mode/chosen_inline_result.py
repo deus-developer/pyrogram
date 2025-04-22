@@ -72,7 +72,7 @@ class ChosenInlineResult(Object, Update):
         self.inline_message_id = inline_message_id
 
     @staticmethod
-    def _parse(client, chosen_inline_result: raw.types.UpdateBotInlineSend, users) -> "ChosenInlineResult":
+    def from_raw_tl(client, chosen_inline_result: raw.types.UpdateBotInlineSend) -> "ChosenInlineResult":
         inline_message_id = None
 
         if isinstance(chosen_inline_result.msg_id, raw.types.InputBotInlineMessageID):
@@ -88,7 +88,7 @@ class ChosenInlineResult(Object, Update):
 
         return ChosenInlineResult(
             result_id=str(chosen_inline_result.id),
-            from_user=types.User._parse(client, users[chosen_inline_result.user_id]),
+            from_user=types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=chosen_inline_result.user_id)),
             query=chosen_inline_result.query,
             location=types.Location(
                 longitude=chosen_inline_result.geo.long,

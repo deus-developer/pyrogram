@@ -42,7 +42,7 @@ class MessageReactions(Object):
         self.reactions = reactions
 
     @staticmethod
-    def _parse(
+    def from_raw_tl(
         client: "pyrogram.Client",
         message_reactions: Optional["raw.base.MessageReactions"] = None
     ) -> Optional["MessageReactions"]:
@@ -51,6 +51,6 @@ class MessageReactions(Object):
 
         return MessageReactions(
             client=client,
-            reactions=[types.Reaction._parse_count(client, reaction)
+            reactions=[types.Reaction.from_raw_tl_count(client, reaction)
                        for reaction in message_reactions.results]
         )

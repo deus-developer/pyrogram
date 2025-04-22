@@ -70,4 +70,4 @@ class SignUp:
         await self.storage.user_id(r.user.id)
         await self.storage.is_bot(False)
 
-        return types.User._parse(self, r.user)
+        return types.User.from_raw_tl(self, r.user)

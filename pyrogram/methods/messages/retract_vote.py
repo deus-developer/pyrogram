@@ -58,4 +58,4 @@ class RetractVote:
             )
         )
 
-        return types.Poll._parse(self, r.updates[0])
+        return types.Poll.from_raw_tl(self, r.updates[0])

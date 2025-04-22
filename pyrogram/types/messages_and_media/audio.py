@@ -91,7 +91,7 @@ class Audio(Object):
         self.thumbs = thumbs
 
     @staticmethod
-    def _parse(
+    def from_raw_tl(
         client,
         audio: "raw.types.Document",
         audio_attributes: "raw.types.DocumentAttributeAudio",
@@ -116,6 +116,6 @@ class Audio(Object):
             file_size=audio.size,
             file_name=file_name,
             date=utils.timestamp_to_datetime(audio.date),
-            thumbs=types.Thumbnail._parse(client, audio),
+            thumbs=types.Thumbnail.from_raw_tl(client, audio),
             client=client
         )

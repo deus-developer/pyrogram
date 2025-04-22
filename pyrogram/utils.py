@@ -97,8 +97,6 @@ async def parse_messages(
     replies: int = 1,
     business_connection_id: str = None
 ) -> List["types.Message"]:
-    users = {i.id: i for i in messages.users}
-    chats = {i.id: i for i in messages.chats}
     topics = {i.id: i for i in messages.topics} if hasattr(messages, "topics") else None
 
     if not messages.messages:
@@ -108,11 +106,9 @@ async def parse_messages(
 
     for message in messages.messages:
         parsed_messages.append(
-            await types.Message._parse(
+            await types.Message.from_raw_tl(
                 client,
                 message,
-                users,
-                chats,
                 topics,
                 replies=0,
                 business_connection_id=business_connection_id
@@ -211,7 +207,7 @@ async def parse_messages(
     return types.List(parsed_messages)
 
 
-def parse_deleted_messages(client, update, users, chats) -> List["types.Message"]:
+def parse_deleted_messages(client, update) -> List["types.Message"]:
     messages = update.messages
     channel_id = getattr(update, "channel_id", None)
     business_connection_id = getattr(update, "connection_id", None)
@@ -229,14 +225,14 @@ def parse_deleted_messages(client, update, users, chats) -> List["types.Message"
         chat_id = get_raw_peer_id(peer)
         if chat_id:
             if isinstance(peer, raw.types.PeerUser):
-                chat = types.Chat._parse_user_chat(client, users[chat_id])
+                chat = types.Chat.from_raw_tl_user_chat(client, client.entity_cache.get_peer(peer=peer))
 
             elif isinstance(peer, raw.types.PeerChat):
-                chat = types.Chat._parse_chat_chat(client, chats[chat_id])
+                chat = types.Chat.from_raw_tl_chat_chat(client, client.entity_cache.get_peer(peer=peer))
 
             else:
-                chat = types.Chat._parse_channel_chat(
-                    client, chats[chat_id]
+                chat = types.Chat.from_raw_tl_channel_chat(
+                    client, client.entity_cache.get_peer(peer=peer)
                 )
 
     parsed_messages = []

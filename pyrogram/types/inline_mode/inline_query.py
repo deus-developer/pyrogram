@@ -77,7 +77,7 @@ class InlineQuery(Object, Update):
         self.matches = matches
 
     @staticmethod
-    def _parse(client, inline_query: raw.types.UpdateBotInlineQuery, users: dict) -> "InlineQuery":
+    def from_raw_tl(client, inline_query: raw.types.UpdateBotInlineQuery) -> "InlineQuery":
         peer_type = inline_query.peer_type
         chat_type = None
 
@@ -94,7 +94,7 @@ class InlineQuery(Object, Update):
 
         return InlineQuery(
             id=str(inline_query.query_id),
-            from_user=types.User._parse(client, users[inline_query.user_id]),
+            from_user=types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=inline_query.user_id)),
             query=inline_query.query,
             offset=inline_query.offset,
             chat_type=chat_type,

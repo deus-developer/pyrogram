@@ -264,7 +264,7 @@ class User(Object, Update):
         )
 
     @staticmethod
-    def _parse(client, user: "raw.base.User") -> Optional["User"]:
+    def from_raw_tl(client, user: "raw.base.User") -> Optional["User"]:
         if user is None or isinstance(user, raw.types.UserEmpty):
             return None
 
@@ -288,23 +288,23 @@ class User(Object, Update):
             is_business_bot=user.bot_business,
             first_name=user.first_name,
             last_name=user.last_name,
-            **User._parse_status(user.status, user.bot),
+            **User.from_raw_tl_status(user.status, user.bot),
             username=user.username or (user.usernames[0].username if user.usernames else None),
-            usernames=types.List([types.Username._parse(r) for r in user.usernames]) or None,
+            usernames=types.List([types.Username.from_raw_tl(r) for r in user.usernames]) or None,
             language_code=user.lang_code,
-            emoji_status=types.EmojiStatus._parse(client, user.emoji_status),
+            emoji_status=types.EmojiStatus.from_raw_tl(client, user.emoji_status),
             dc_id=getattr(user.photo, "dc_id", None),
             phone_number=user.phone,
-            photo=types.ChatPhoto._parse(client, user.photo, user.id, user.access_hash),
-            restrictions=types.List([types.Restriction._parse(r) for r in user.restriction_reason]) or None,
-            reply_color=types.ChatColor._parse(getattr(user, "color", None)),
-            profile_color=types.ChatColor._parse_profile_color(getattr(user, "profile_color", None)),
+            photo=types.ChatPhoto.from_raw_tl(client, user.photo, user.id, user.access_hash),
+            restrictions=types.List([types.Restriction.from_raw_tl(r) for r in user.restriction_reason]) or None,
+            reply_color=types.ChatColor.from_raw_tl(getattr(user, "color", None)),
+            profile_color=types.ChatColor.from_raw_tl_profile_color(getattr(user, "profile_color", None)),
             raw=user,
             client=client
         )
 
     @staticmethod
-    def _parse_status(user_status: "raw.base.UserStatus", is_bot: bool = False):
+    def from_raw_tl_status(user_status: "raw.base.UserStatus", is_bot: bool = False):
         if isinstance(user_status, raw.types.UserStatusOnline):
             status, date = enums.UserStatus.ONLINE, user_status.expires
         elif isinstance(user_status, raw.types.UserStatusOffline):
@@ -337,10 +337,10 @@ class User(Object, Update):
         }
 
     @staticmethod
-    def _parse_user_status(client, user_status: "raw.types.UpdateUserStatus"):
+    def from_raw_tl_user_status(client, user_status: "raw.types.UpdateUserStatus"):
         return User(
             id=user_status.user_id,
-            **User._parse_status(user_status.status),
+            **User.from_raw_tl_status(user_status.status),
             raw=user_status,
             client=client
         )

@@ -75,34 +75,33 @@ class ChatMemberUpdated(Object, Update):
         self.via_join_request = via_join_request
 
     @staticmethod
-    def _parse(
+    def from_raw_tl(
         client: "pyrogram.Client",
         update: Union["raw.types.UpdateChatParticipant", "raw.types.UpdateChannelParticipant"],
-        users: Dict[int, "raw.types.User"],
-        chats: Dict[int, "raw.types.Chat"]
     ) -> "ChatMemberUpdated":
-        chat_id = getattr(update, "chat_id", None) or getattr(update, "channel_id")
-
         old_chat_member = None
         new_chat_member = None
         invite_link = None
         via_join_request = None
 
         if update.prev_participant:
-            old_chat_member = types.ChatMember._parse(client, update.prev_participant, users, chats)
+            old_chat_member = types.ChatMember.from_raw_tl(client, update.prev_participant)
 
         if update.new_participant:
-            new_chat_member = types.ChatMember._parse(client, update.new_participant, users, chats)
+            new_chat_member = types.ChatMember.from_raw_tl(client, update.new_participant)
 
         if update.invite:
-            invite_link = types.ChatInviteLink._parse(client, update.invite, users)
+            invite_link = types.ChatInviteLink.from_raw_tl(client, update.invite)
 
             if isinstance(update.invite, raw.types.ChatInvitePublicJoinRequests):
                 via_join_request = True
 
         return ChatMemberUpdated(
-            chat=types.Chat._parse_chat(client, chats[chat_id]),
-            from_user=types.User._parse(client, users[update.actor_id]),
+            chat=types.Chat.from_raw_tl_chat(client, client.entity_cache.get(
+                chat_id=getattr(update, "chat_id", None),
+                channel_id=getattr(update, "channel_id", None)
+            )),
+            from_user=types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=update.actor_id)),
             date=utils.timestamp_to_datetime(update.date),
             old_chat_member=old_chat_member,
             new_chat_member=new_chat_member,

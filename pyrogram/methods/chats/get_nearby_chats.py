@@ -63,7 +63,7 @@ class GetNearbyChats:
         if not r.updates:
             return []
 
-        chats = types.List([types.Chat._parse_chat(self, chat) for chat in r.chats])
+        chats = types.List([types.Chat.from_raw_tl_chat(self, chat) for chat in r.chats])
         peers = r.updates[0].peers
 
         for peer in peers:

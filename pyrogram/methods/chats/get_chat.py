@@ -70,7 +70,7 @@ class GetChat:
             )
 
             if isinstance(r, raw.types.ChatInvite):
-                return types.ChatPreview._parse(self, r)
+                return types.ChatPreview.from_raw_tl(self, r)
 
             await self.fetch_peers([r.chat])
 
@@ -90,7 +90,7 @@ class GetChat:
             else:
                 r = await self.invoke(raw.functions.messages.GetFullChat(chat_id=peer.chat_id))
 
-            return await types.Chat._parse_full(self, r)
+            return await types.Chat.from_raw_tl_full(self, r)
         else:
             if isinstance(peer, raw.types.InputPeerChannel):
                 r = await self.invoke(raw.functions.channels.GetChannels(id=[peer]))
@@ -99,7 +99,7 @@ class GetChat:
             else:
                 r = await self.invoke(raw.functions.messages.GetChats(id=[peer.chat_id]))
 
-            return types.Chat._parse_chat(
+            return types.Chat.from_raw_tl_chat(
                 self,
                 r.chats[0] if isinstance(r, raw.types.messages.Chats) else r[0]
             )

@@ -292,8 +292,6 @@ class EditMessageMedia:
 
         for i in r.updates:
             if isinstance(i, (raw.types.UpdateEditMessage, raw.types.UpdateEditChannelMessage)):
-                return await types.Message._parse(
+                return await types.Message.from_raw_tl(
                     self, i.message,
-                    {i.id: i for i in r.users},
-                    {i.id: i for i in r.chats}
                 )

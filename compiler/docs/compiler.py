@@ -143,7 +143,6 @@ def pyrogram_api():
             remove_handler
             stop_transmission
             export_session_string
-            set_parse_mode
         """,
         messages="""
         Messages

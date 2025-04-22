@@ -63,15 +63,15 @@ class GiftCode(Object):
         self.boosted_chat = boosted_chat
 
     @staticmethod
-    def _parse(client, giftcode: "raw.types.MessageActionGiftCode", chats):
-        peer = chats.get(utils.get_raw_peer_id(getattr(giftcode, "boost_peer")))
+    def from_raw_tl(client, giftcode: "raw.types.MessageActionGiftCode"):
+        peer = client.entity_cache.get_peer(peer=getattr(giftcode, "boost_peer", None))
 
         return GiftCode(
             months=giftcode.months,
             slug=giftcode.slug,
             via_giveaway=getattr(giftcode, "via_giveaway"),
             is_unclaimed=getattr(giftcode, "unclaimed"),
-            boosted_chat=types.Chat._parse_chat(client, peer) if peer else None
+            boosted_chat=types.Chat.from_raw_tl_chat(client, peer) if peer else None
         )
 
     @property

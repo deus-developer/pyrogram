@@ -117,27 +117,27 @@ class Folder(Object):
         self.has_my_invites = has_my_invites
 
     @staticmethod
-    def _parse(client, folder: "raw.types.DialogFilter", users, chats) -> "Folder":
+    def from_raw_tl(client, folder: "raw.types.DialogFilter") -> "Folder":
         included_chats = []
         excluded_chats = []
         pinned_chats = []
 
         for peer in folder.include_peers:
             try:
-                included_chats.append(types.Chat._parse_dialog(client, peer, users, chats))
+                included_chats.append(types.Chat.from_raw_tl_dialog(client, peer))
             except KeyError:
                 pass
 
         if getattr(folder, "exclude_peers", None):
             for peer in folder.exclude_peers:
                 try:
-                    excluded_chats.append(types.Chat._parse_dialog(client, peer, users, chats))
+                    excluded_chats.append(types.Chat.from_raw_tl_dialog(client, peer))
                 except KeyError:
                     pass
 
         for peer in folder.pinned_peers:
             try:
-                pinned_chats.append(types.Chat._parse_dialog(client, peer, users, chats))
+                pinned_chats.append(types.Chat.from_raw_tl_dialog(client, peer))
             except KeyError:
                 pass
 

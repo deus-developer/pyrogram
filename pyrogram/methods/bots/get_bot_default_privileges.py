@@ -56,4 +56,4 @@ class GetBotDefaultPrivileges:
 
         admin_rights = getattr(bot_info.full_user, field)
 
-        return types.ChatPrivileges._parse(admin_rights) if admin_rights else None
+        return types.ChatPrivileges.from_raw_tl(admin_rights) if admin_rights else None

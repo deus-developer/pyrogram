@@ -48,9 +48,7 @@ class GetChatAdminsWithInviteLinks:
             )
         )
 
-        users = {i.id: i for i in r.users}
-
         return types.List(
-            types.ChatAdminWithInviteLinks._parse(self, admin, users)
+            types.ChatAdminWithInviteLinks.from_raw_tl(self, admin)
             for admin in r.admins
         )

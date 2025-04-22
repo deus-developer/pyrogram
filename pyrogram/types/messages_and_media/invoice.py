@@ -71,7 +71,7 @@ class Invoice(Object):
         self.is_test = is_test
 
     @staticmethod
-    def _parse(client, invoice: "raw.types.MessageMediaInvoice") -> "Invoice":
+    def from_raw_tl(client, invoice: "raw.types.MessageMediaInvoice") -> "Invoice":
         return Invoice(
             title=invoice.title,
             description=invoice.description,

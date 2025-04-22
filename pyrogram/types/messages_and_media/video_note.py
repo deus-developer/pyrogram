@@ -86,7 +86,7 @@ class VideoNote(Object):
         self.thumbs = thumbs
 
     @staticmethod
-    def _parse(
+    def from_raw_tl(
         client,
         video_note: "raw.types.Document",
         video_attributes: "raw.types.DocumentAttributeVideo",
@@ -110,6 +110,6 @@ class VideoNote(Object):
             mime_type=video_note.mime_type,
             date=utils.timestamp_to_datetime(video_note.date),
             ttl_seconds=ttl_seconds,
-            thumbs=types.Thumbnail._parse(client, video_note),
+            thumbs=types.Thumbnail.from_raw_tl(client, video_note),
             client=client
         )

@@ -76,7 +76,7 @@ class Document(Object):
         self.thumbs = thumbs
 
     @staticmethod
-    def _parse(client, document: "raw.types.Document", file_name: str) -> "Document":
+    def from_raw_tl(client, document: "raw.types.Document", file_name: str) -> "Document":
         return Document(
             file_id=FileId(
                 file_type=FileType.DOCUMENT,
@@ -93,6 +93,6 @@ class Document(Object):
             mime_type=document.mime_type,
             file_size=document.size,
             date=utils.timestamp_to_datetime(document.date),
-            thumbs=types.Thumbnail._parse(client, document),
+            thumbs=types.Thumbnail.from_raw_tl(client, document),
             client=client
         )

@@ -21,14 +21,12 @@ from typing import Optional
 import pyrogram
 from pyrogram import enums
 from .html import HTML
-from .markdown import Markdown
 
 
 class Parser:
     def __init__(self, client: Optional["pyrogram.Client"]):
         self.client = client
         self.html = HTML(client)
-        self.markdown = Markdown(client)
 
     async def parse(self, text: str, mode: Optional[enums.ParseMode] = None) -> dict:
         text = str(text or "").strip()
@@ -40,10 +38,10 @@ class Parser:
                 mode = enums.ParseMode.DEFAULT
 
         if mode == enums.ParseMode.DEFAULT:
-            return await self.markdown.parse(text)
+            return await self.html.parse(text)
 
         if mode == enums.ParseMode.MARKDOWN:
-            return await self.markdown.parse(text, True)
+            raise NotImplementedError
 
         if mode == enums.ParseMode.HTML:
             return await self.html.parse(text)
@@ -58,4 +56,4 @@ class Parser:
         if is_html:
             return HTML.unparse(text, entities)
         else:
-            return Markdown.unparse(text, entities)
+            raise NotImplementedError

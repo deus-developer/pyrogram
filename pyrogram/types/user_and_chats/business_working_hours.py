@@ -49,14 +49,14 @@ class BusinessWorkingHours(Object):
         self.working_hours = working_hours
 
     @staticmethod
-    def _parse(work_hours: "raw.types.BusinessWorkHours" = None) -> Optional["BusinessWorkingHours"]:
+    def from_raw_tl(work_hours: "raw.types.BusinessWorkHours" = None) -> Optional["BusinessWorkingHours"]:
         if not work_hours:
             return None
 
         return BusinessWorkingHours(
             timezone=work_hours.timezone_id,
             working_hours=types.List(
-                types.BusinessWeeklyOpen._parse(i) for i in work_hours.weekly_open
+                types.BusinessWeeklyOpen.from_raw_tl(i) for i in work_hours.weekly_open
             ),
             is_open_now=getattr(work_hours, "open_now", None),
         )

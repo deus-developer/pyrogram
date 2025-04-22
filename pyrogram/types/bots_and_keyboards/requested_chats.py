@@ -48,7 +48,7 @@ class RequestedChats(Object):
         self.chats = chats
 
     @staticmethod
-    def _parse(
+    def from_raw_tl(
         client,
         action: Union[
             "raw.types.MessageActionRequestedPeer",
@@ -75,7 +75,7 @@ class RequestedChats(Object):
                     first_name=getattr(requested_peer, "first_name", None),
                     last_name=getattr(requested_peer, "last_name", None),
                     username=getattr(requested_peer, "username", None),
-                    photo=types.ChatPhoto._parse(client, getattr(requested_peer, "photo", None), peer_id, 0),
+                    photo=types.ChatPhoto.from_raw_tl(client, getattr(requested_peer, "photo", None), peer_id, 0),
                     client=client
                 )
             )

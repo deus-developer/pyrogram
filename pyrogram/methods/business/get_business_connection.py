@@ -48,7 +48,4 @@ class GetBusinessConnection:
             )
         )
 
-        users = {i.id: i for i in r.users}
-        chats = {i.id: i for i in r.chats}
-
-        return types.BusinessConnection._parse(self, r.updates[0].connection, users)
+        return types.BusinessConnection.from_raw_tl(self, r.updates[0].connection)

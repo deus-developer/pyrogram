@@ -70,12 +70,9 @@ class GetForumTopicsByID:
             )
         )
 
-        users = {i.id: i for i in r.users}
-        chats = {i.id: i for i in r.chats}
-
         topics = types.List()
 
         for i in r.topics:
-            topics.append(types.ForumTopic._parse(self, i, users=users, chats=chats))
+            topics.append(types.ForumTopic.from_raw_tl(self, i))
 
         return topics if is_iterable else topics[0] if topics else None

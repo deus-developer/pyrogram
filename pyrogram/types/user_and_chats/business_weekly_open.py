@@ -42,7 +42,7 @@ class BusinessWeeklyOpen(Object):
         self.end_minute = end_minute
 
     @staticmethod
-    def _parse(weekly_open: "raw.types.BusinessWeeklyOpen" = None) -> "BusinessWeeklyOpen":
+    def from_raw_tl(weekly_open: "raw.types.BusinessWeeklyOpen" = None) -> "BusinessWeeklyOpen":
         return BusinessWeeklyOpen(
             start_minute=weekly_open.start_minute,
             end_minute=weekly_open.end_minute,

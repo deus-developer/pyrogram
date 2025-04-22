@@ -75,24 +75,13 @@ class GetPinnedStories:
             if not r.stories:
                 return
 
-            users = {i.id: i for i in r.users}
-            chats = {i.id: i for i in r.chats}
-
-            if isinstance(peer, raw.types.InputPeerChannel):
-                peer_id = utils.get_raw_peer_id(peer)
-                if peer_id not in r.chats:
-                    channel = await self.invoke(raw.functions.channels.GetChannels(id=[peer]))
-                    chats.update({peer_id: channel.chats[0]})
-
             last = r.stories[-1]
             offset_id = last.id
 
             for story in r.stories:
-                yield await types.Story._parse(
+                yield await types.Story.from_raw_tl(
                     self,
                     story,
-                    users,
-                    chats,
                     peer
                 )
 

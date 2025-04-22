@@ -50,7 +50,7 @@ class BusinessIntro(Object):
 
 
     @staticmethod
-    async def _parse(
+    async def from_raw_tl(
         client,
         business_intro: "raw.types.BusinessIntro"
     ) -> "BusinessIntro":
@@ -61,7 +61,7 @@ class BusinessIntro(Object):
         sticker = None
 
         if doc and isinstance(doc, raw.types.Document):
-            sticker = await types.Sticker._parse(
+            sticker = await types.Sticker.from_raw_tl(
                 client,
                 doc,
                 {type(i): i for i in doc.attributes}

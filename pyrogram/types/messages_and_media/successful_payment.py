@@ -85,7 +85,7 @@ class SuccessfulPayment(Object):
         self.invoice_slug = invoice_slug
 
     @staticmethod
-    def _parse(
+    def from_raw_tl(
         client: "pyrogram.Client",
         successful_payment: Union[
             "raw.types.MessageActionPaymentSent",

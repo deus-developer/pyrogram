@@ -44,7 +44,7 @@ class LabeledPrice(Object):
         self.amount = amount
 
     @staticmethod
-    def _parse(labeled_price: "raw.types.LabeledPrice") -> "LabeledPrice":
+    def from_raw_tl(labeled_price: "raw.types.LabeledPrice") -> "LabeledPrice":
         if isinstance(labeled_price, raw.types.LabeledPrice):
             return LabeledPrice(
                 label=labeled_price.label,

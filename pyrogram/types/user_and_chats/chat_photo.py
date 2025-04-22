@@ -63,7 +63,7 @@ class ChatPhoto(Object):
         self.big_photo_unique_id = big_photo_unique_id
 
     @staticmethod
-    def _parse(
+    def from_raw_tl(
         client,
         chat_photo: Union["raw.types.UserProfilePhoto", "raw.types.ChatPhoto"],
         peer_id: int,

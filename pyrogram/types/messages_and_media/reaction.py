@@ -58,7 +58,7 @@ class Reaction(Object):
         self.chosen_order = chosen_order
 
     @staticmethod
-    def _parse(
+    def from_raw_tl(
         client: "pyrogram.Client",
         reaction: "raw.base.Reaction"
     ) -> "Reaction":
@@ -75,11 +75,11 @@ class Reaction(Object):
             )
 
     @staticmethod
-    def _parse_count(
+    def from_raw_tl_count(
         client: "pyrogram.Client",
         reaction_count: "raw.base.ReactionCount"
     ) -> "Reaction":
-        reaction = Reaction._parse(client, reaction_count.reaction)
+        reaction = Reaction.from_raw_tl(client, reaction_count.reaction)
         reaction.count = reaction_count.count
         reaction.chosen_order = reaction_count.chosen_order
 

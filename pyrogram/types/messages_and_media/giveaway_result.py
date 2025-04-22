@@ -100,11 +100,9 @@ class GiveawayResult(Object):
         self.is_refunded = is_refunded
 
     @staticmethod
-    async def _parse(
+    async def from_raw_tl(
         client,
         giveaway_result: "raw.types.MessageMediaGiveawayResults",
-        users: dict,
-        chats: dict
     ) -> "GiveawayResult":
         launch_message = None
 
@@ -118,11 +116,11 @@ class GiveawayResult(Object):
             pass
 
         return GiveawayResult(
-            chat=types.Chat._parse_channel_chat(client, chats[giveaway_result.channel_id]),
+            chat=types.Chat.from_raw_tl_channel_chat(client, client.entity_cache.get_channel(channel_id=giveaway_result.channel_id)),
             quantity=giveaway_result.winners_count + giveaway_result.unclaimed_count,
             winners_count=giveaway_result.winners_count,
             unclaimed_count=giveaway_result.unclaimed_count,
-            winners=types.List(types.User._parse(client, users.get(i)) for i in giveaway_result.winners) or None,
+            winners=types.List(types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=i)) for i in giveaway_result.winners) or None,
             months=giveaway_result.months,
             until_date=utils.timestamp_to_datetime(giveaway_result.until_date),
             launch_message_id=giveaway_result.launch_msg_id,

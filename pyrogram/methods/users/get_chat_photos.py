@@ -60,7 +60,7 @@ class GetChatPhotos:
                 )
             )
 
-            current = types.Photo._parse(self, r.full_chat.chat_photo) or []
+            current = types.Photo.from_raw_tl(self, r.full_chat.chat_photo) or []
 
             r = await utils.parse_messages(
                 self,
@@ -119,7 +119,7 @@ class GetChatPhotos:
                     )
                 )
 
-                photos = [types.Photo._parse(self, photo) for photo in r.photos]
+                photos = [types.Photo.from_raw_tl(self, photo) for photo in r.photos]
 
                 if not photos:
                     return

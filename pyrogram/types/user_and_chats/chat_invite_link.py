@@ -100,19 +100,14 @@ class ChatInviteLink(Object):
         self.pending_join_request_count = pending_join_request_count
 
     @staticmethod
-    def _parse(
+    def from_raw_tl(
         client: "pyrogram.Client",
         invite: "raw.base.ExportedChatInvite",
-        users: Dict[int, "raw.types.User"] = None
     ) -> Optional["ChatInviteLink"]:
         if not isinstance(invite, raw.types.ChatInviteExported):
             return None
 
-        creator = (
-            types.User._parse(client, users[invite.admin_id])
-            if users is not None
-            else None
-        )
+        creator = types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=invite.admin_id))
 
         return ChatInviteLink(
             invite_link=invite.link,

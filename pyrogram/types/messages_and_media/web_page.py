@@ -154,7 +154,7 @@ class WebPage(Object):
         self.author = author
 
     @staticmethod
-    def _parse(
+    def from_raw_tl(
         client,
         webpage: "raw.types.WebPage",
         prefer_large_media: bool = None,
@@ -169,7 +169,7 @@ class WebPage(Object):
         video = None
 
         if isinstance(webpage.photo, raw.types.Photo):
-            photo = types.Photo._parse(client, webpage.photo)
+            photo = types.Photo.from_raw_tl(client, webpage.photo)
 
         doc = webpage.document
 
@@ -184,18 +184,18 @@ class WebPage(Object):
 
             if raw.types.DocumentAttributeAudio in attributes:
                 audio_attributes = attributes[raw.types.DocumentAttributeAudio]
-                audio = types.Audio._parse(client, doc, audio_attributes, file_name)
+                audio = types.Audio.from_raw_tl(client, doc, audio_attributes, file_name)
 
             elif raw.types.DocumentAttributeAnimated in attributes:
                 video_attributes = attributes.get(raw.types.DocumentAttributeVideo, None)
-                animation = types.Animation._parse(client, doc, video_attributes, file_name)
+                animation = types.Animation.from_raw_tl(client, doc, video_attributes, file_name)
 
             elif raw.types.DocumentAttributeVideo in attributes:
                 video_attributes = attributes[raw.types.DocumentAttributeVideo]
-                video = types.Video._parse(client, doc, video_attributes, file_name)
+                video = types.Video.from_raw_tl(client, doc, video_attributes, file_name)
 
             else:
-                document = types.Document._parse(client, doc, file_name)
+                document = types.Document.from_raw_tl(client, doc, file_name)
 
         return WebPage(
             id=str(webpage.id),

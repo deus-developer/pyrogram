@@ -64,17 +64,16 @@ class BusinessConnection(Object):
         self.disabled = disabled
 
     @staticmethod
-    def _parse(
+    def from_raw_tl(
         client,
         connection: "raw.types.BotBusinessConnection" = None,
-        users = {}
     ) -> Optional["BusinessConnection"]:
         if not connection:
             return None
 
         return BusinessConnection(
             id=connection.connection_id,
-            user=types.User._parse(client, users.get(connection.user_id)),
+            user=types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=connection.user_id)),
             dc_id=connection.dc_id,
             date=utils.timestamp_to_datetime(connection.date),
             can_reply=getattr(connection, "can_reply", None),

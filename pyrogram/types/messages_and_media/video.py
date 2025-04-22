@@ -101,7 +101,7 @@ class Video(Object):
         self.thumbs = thumbs
 
     @staticmethod
-    def _parse(
+    def from_raw_tl(
         client,
         video: "raw.types.Document",
         video_attributes: "raw.types.DocumentAttributeVideo",
@@ -129,6 +129,6 @@ class Video(Object):
             file_size=video.size,
             date=utils.timestamp_to_datetime(video.date),
             ttl_seconds=ttl_seconds,
-            thumbs=types.Thumbnail._parse(client, video),
+            thumbs=types.Thumbnail.from_raw_tl(client, video),
             client=client
         )

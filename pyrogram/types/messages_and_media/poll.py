@@ -118,7 +118,7 @@ class Poll(Object, Update):
         self.close_date = close_date
 
     @staticmethod
-    def _parse(client, media_poll: Union["raw.types.MessageMediaPoll", "raw.types.UpdateMessagePoll"]) -> "Poll":
+    def from_raw_tl(client, media_poll: Union["raw.types.MessageMediaPoll", "raw.types.UpdateMessagePoll"]) -> "Poll":
         poll: raw.types.Poll = media_poll.poll
         poll_results: raw.types.PollResults = media_poll.results
         results: List[raw.types.PollAnswerVoters] = poll_results.results
@@ -147,7 +147,7 @@ class Poll(Object, Update):
                             filter(
                                 lambda x: x is not None,
                                 [
-                                    types.MessageEntity._parse(client, entity, {})
+                                    types.MessageEntity.from_raw_tl(client, entity, {})
                                     for entity in (answer.text.entities or [])
                                 ]
                             )
@@ -166,7 +166,7 @@ class Poll(Object, Update):
                     filter(
                         lambda x: x is not None,
                         [
-                            types.MessageEntity._parse(client, entity, {})
+                            types.MessageEntity.from_raw_tl(client, entity, {})
                             for entity in (poll.question.entities or [])
                         ]
                     )
@@ -181,12 +181,12 @@ class Poll(Object, Update):
             chosen_option_id=chosen_option_id,
             correct_option_id=correct_option_id,
             question_entities=[
-                types.MessageEntity._parse(client, i, {})
+                types.MessageEntity.from_raw_tl(client, i, {})
                 for i in poll.question.entities
             ] if poll.question.entities else None,
             explanation=poll_results.solution,
             explanation_entities=[
-                types.MessageEntity._parse(client, i, {})
+                types.MessageEntity.from_raw_tl(client, i, {})
                 for i in poll_results.solution_entities
             ] if poll_results.solution_entities else None,
             open_period=poll.close_period,
@@ -195,9 +195,9 @@ class Poll(Object, Update):
         )
 
     @staticmethod
-    def _parse_update(client, update: "raw.types.UpdateMessagePoll"):
+    def from_raw_tl_update(client, update: "raw.types.UpdateMessagePoll"):
         if update.poll is not None:
-            return Poll._parse(client, update)
+            return Poll.from_raw_tl(client, update)
 
         results = update.results.results
         chosen_option_id = None

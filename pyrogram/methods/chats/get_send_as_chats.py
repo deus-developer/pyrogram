@@ -51,15 +51,12 @@ class GetSendAsChats:
             )
         )
 
-        users = {u.id: u for u in r.users}
-        chats = {c.id: c for c in r.chats}
-
         send_as_chats = types.List()
 
         for p in r.peers:
             if isinstance(p.peer, raw.types.PeerUser):
-                send_as_chats.append(types.Chat._parse_chat(self, users[p.peer.user_id]))
+                send_as_chats.append(types.Chat.from_raw_tl_chat(self, self.entity_cache.get_user(user_id=p.peer.user_id)))
             else:
-                send_as_chats.append(types.Chat._parse_chat(self, chats[p.peer.channel_id]))
+                send_as_chats.append(types.Chat.from_raw_tl_chat(self, self.entity_cache.get_channel(channel_id=p.peer.channel_id)))
 
         return send_as_chats

@@ -51,7 +51,7 @@ class ChatReactions(Object):
         self.reactions = reactions
 
     @staticmethod
-    def _parse(client, chat_reactions: "raw.base.ChatReactions") -> Optional["ChatReactions"]:
+    def from_raw_tl(client, chat_reactions: "raw.base.ChatReactions") -> Optional["ChatReactions"]:
         if isinstance(chat_reactions, raw.types.ChatReactionsAll):
             return ChatReactions(
                 client=client,
@@ -62,7 +62,7 @@ class ChatReactions(Object):
         if isinstance(chat_reactions, raw.types.ChatReactionsSome):
             return ChatReactions(
                 client=client,
-                reactions=[types.Reaction._parse(client, reaction)
+                reactions=[types.Reaction.from_raw_tl(client, reaction)
                            for reaction in chat_reactions.reactions]
             )
 

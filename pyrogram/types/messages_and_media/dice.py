@@ -39,7 +39,7 @@ class Dice(Object):
         self.value = value
 
     @staticmethod
-    def _parse(client, dice: "raw.types.MessageMediaDice") -> "Dice":
+    def from_raw_tl(client, dice: "raw.types.MessageMediaDice") -> "Dice":
         return Dice(
             emoji=dice.emoticon,
             value=dice.value,

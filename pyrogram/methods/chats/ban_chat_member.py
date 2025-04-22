@@ -102,10 +102,8 @@ class BanChatMember:
 
         for i in r.updates:
             if isinstance(i, (raw.types.UpdateNewMessage, raw.types.UpdateNewChannelMessage)):
-                return await types.Message._parse(
+                return await types.Message.from_raw_tl(
                     self, i.message,
-                    {i.id: i for i in r.users},
-                    {i.id: i for i in r.chats}
                 )
         else:
             return True

@@ -70,16 +70,16 @@ class CheckedGiftCode(Object):
         self.used_date = used_date
 
     @staticmethod
-    def _parse(client, checked_gift_code: "raw.types.payments.CheckedGiftCode", users, chats):
+    def from_raw_tl(client, checked_gift_code: "raw.types.payments.CheckedGiftCode"):
         from_chat = None
         winner = None
 
         if getattr(checked_gift_code, "from_id", None):
-            from_chat = types.Chat._parse_chat(
-                client, chats.get(utils.get_raw_peer_id(checked_gift_code.from_id))
+            from_chat = types.Chat.from_raw_tl_chat(
+                client, client.entity_cache.get_peer(peer=checked_gift_code.from_id)
             )
         if getattr(checked_gift_code, "to_id", None):
-            winner = types.User._parse(client, users.get(checked_gift_code.to_id))
+            winner = types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=checked_gift_code.to_id))
 
         return CheckedGiftCode(
             date=utils.timestamp_to_datetime(checked_gift_code.date),

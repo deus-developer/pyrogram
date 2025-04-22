@@ -149,7 +149,7 @@ class SaveFile:
                 )
                 await session.start()
 
-            workers = [self.loop.create_task(worker(session)) for _ in range(workers_count)]
+            workers = [asyncio.create_task(worker(session)) for _ in range(workers_count)]
             queue = asyncio.Queue(1)
 
             try:
@@ -195,10 +195,7 @@ class SaveFile:
                             *progress_args
                         )
 
-                        if inspect.iscoroutinefunction(progress):
-                            await func()
-                        else:
-                            await self.loop.run_in_executor(self.executor, func)
+                        await func()
             except StopTransmission:
                 raise
             except Exception as e:

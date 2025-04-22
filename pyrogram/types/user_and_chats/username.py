@@ -40,7 +40,7 @@ class Username(Object):
         self.active = active
 
     @staticmethod
-    def _parse(username: "raw.types.Username") -> "Username":
+    def from_raw_tl(username: "raw.types.Username") -> "Username":
         return Username(
             username=username.username,
             editable=username.editable,

@@ -42,7 +42,7 @@ class Restriction(Object):
         self.text = text
 
     @staticmethod
-    def _parse(restriction: "raw.types.RestrictionReason") -> "Restriction":
+    def from_raw_tl(restriction: "raw.types.RestrictionReason") -> "Restriction":
         return Restriction(
             platform=restriction.platform,
             reason=restriction.reason,

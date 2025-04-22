@@ -65,20 +65,16 @@ class ChatJoinRequest(Object, Update):
         self.invite_link = invite_link
 
     @staticmethod
-    def _parse(
+    def from_raw_tl(
         client: "pyrogram.Client",
         update: "raw.types.UpdateBotChatInviteRequester",
-        users: Dict[int, "raw.types.User"],
-        chats: Dict[int, "raw.types.Chat"]
     ) -> "ChatJoinRequest":
-        chat_id = utils.get_raw_peer_id(update.peer)
-
         return ChatJoinRequest(
-            chat=types.Chat._parse_chat(client, chats[chat_id]),
-            from_user=types.User._parse(client, users[update.user_id]),
+            chat=types.Chat.from_raw_tl_chat(client, client.entity_cache.get_peer(peer=update.peer)),
+            from_user=types.User.from_raw_tl(client, client.entity_cache.get_user(user=update.user_id)),
             date=utils.timestamp_to_datetime(update.date),
             bio=update.about,
-            invite_link=types.ChatInviteLink._parse(client, update.invite, users),
+            invite_link=types.ChatInviteLink.from_raw_tl(client, update.invite),
             client=client
         )
 

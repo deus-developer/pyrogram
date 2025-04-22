@@ -63,10 +63,9 @@ class BusinessRecipients(Object):
         self.users = users
 
     @staticmethod
-    def _parse(
+    def from_raw_tl(
         client,
         recipients: "raw.types.BusinessRecipients",
-        users: dict = None
     ) -> "BusinessRecipients":
         return BusinessRecipients(
             existing_chats=getattr(recipients, "existing_chats", None),
@@ -74,5 +73,5 @@ class BusinessRecipients(Object):
             contacts=getattr(recipients, "contacts", None),
             non_contacts=getattr(recipients, "non_contacts", None),
             exclude_selected=getattr(recipients, "exclude_selected", None),
-            users=types.List(types.User._parse(client, users[i]) for i in recipients.users) or None if getattr(recipients, "users", None) else None
+            users=types.List(types.User.from_raw_tl(client, client.entity_cache.get_user(user_id=i)) for i in recipients.users) or None if getattr(recipients, "users", None) else None
         )

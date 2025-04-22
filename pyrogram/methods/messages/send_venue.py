@@ -175,10 +175,8 @@ class SendVenue:
                               raw.types.UpdateNewChannelMessage,
                               raw.types.UpdateNewScheduledMessage,
                               raw.types.UpdateBotNewBusinessMessage)):
-                return await types.Message._parse(
+                return await types.Message.from_raw_tl(
                     self, i.message,
-                    {i.id: i for i in r.users},
-                    {i.id: i for i in r.chats},
                     is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
                     business_connection_id=getattr(i, "connection_id", None)
                 )

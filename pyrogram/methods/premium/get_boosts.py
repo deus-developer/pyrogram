@@ -44,14 +44,9 @@ class GetBoosts:
             raw.functions.premium.GetMyBoosts()
         )
 
-        users = {i.id: i for i in r.users}
-        chats = {i.id: i for i in r.chats}
-
         return types.List(
-            types.MyBoost._parse(
+            types.MyBoost.from_raw_tl(
                 self,
                 boost,
-                users,
-                chats,
             ) for boost in r.my_boosts
         )

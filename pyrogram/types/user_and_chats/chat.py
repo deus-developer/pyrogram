@@ -301,7 +301,7 @@ class Chat(Object):
         self.raw = raw
 
     @staticmethod
-    def _parse_user_chat(client, user: raw.types.User) -> "Chat":
+    def from_raw_tl_user_chat(client, user: raw.types.User) -> "Chat":
         peer_id = user.id
 
         return Chat(
@@ -316,20 +316,20 @@ class Chat(Object):
             is_stories_unavailable=getattr(user, "stories_unavailable", None),
             is_business_bot=getattr(user, "bot_business", None),
             username=user.username or (user.usernames[0].username if user.usernames else None),
-            usernames=types.List([types.Username._parse(r) for r in user.usernames]) or None,
+            usernames=types.List([types.Username.from_raw_tl(r) for r in user.usernames]) or None,
             first_name=user.first_name,
             last_name=user.last_name,
-            photo=types.ChatPhoto._parse(client, user.photo, peer_id, user.access_hash),
-            restrictions=types.List([types.Restriction._parse(r) for r in user.restriction_reason]) or None,
+            photo=types.ChatPhoto.from_raw_tl(client, user.photo, peer_id, user.access_hash),
+            restrictions=types.List([types.Restriction.from_raw_tl(r) for r in user.restriction_reason]) or None,
             dc_id=getattr(getattr(user, "photo", None), "dc_id", None),
-            reply_color=types.ChatColor._parse(getattr(user, "color", None)),
-            profile_color=types.ChatColor._parse_profile_color(getattr(user, "profile_color", None)),
+            reply_color=types.ChatColor.from_raw_tl(getattr(user, "color", None)),
+            profile_color=types.ChatColor.from_raw_tl_profile_color(getattr(user, "profile_color", None)),
             raw=user,
             client=client
         )
 
     @staticmethod
-    def _parse_chat_chat(client, chat: raw.types.Chat) -> "Chat":
+    def from_raw_tl_chat_chat(client, chat: raw.types.Chat) -> "Chat":
         peer_id = -chat.id
         usernames = getattr(chat, "usernames", [])
         admin_rights = getattr(chat, "admin_rights", None)
@@ -341,9 +341,9 @@ class Chat(Object):
             is_creator=getattr(chat, "creator", None),
             is_admin=True if admin_rights else None,
             is_deactivated=getattr(chat, "deactivated", None),
-            usernames=types.List([types.Username._parse(r) for r in usernames]) or None,
-            photo=types.ChatPhoto._parse(client, getattr(chat, "photo", None), peer_id, 0),
-            permissions=types.ChatPermissions._parse(getattr(chat, "default_banned_rights", None)),
+            usernames=types.List([types.Username.from_raw_tl(r) for r in usernames]) or None,
+            photo=types.ChatPhoto.from_raw_tl(client, getattr(chat, "photo", None), peer_id, 0),
+            permissions=types.ChatPermissions.from_raw_tl(getattr(chat, "default_banned_rights", None)),
             members_count=getattr(chat, "participants_count", None),
             dc_id=getattr(getattr(chat, "photo", None), "dc_id", None),
             has_protected_content=getattr(chat, "noforwards", None),
@@ -352,7 +352,7 @@ class Chat(Object):
         )
 
     @staticmethod
-    def _parse_channel_chat(client, channel: raw.types.Channel) -> "Chat":
+    def from_raw_tl_channel_chat(client, channel: raw.types.Channel) -> "Chat":
         peer_id = utils.get_channel_id(channel.id)
         restriction_reason = getattr(channel, "restriction_reason", [])
         usernames = getattr(channel, "usernames", [])
@@ -372,27 +372,25 @@ class Chat(Object):
             is_stories_unavailable=getattr(channel, "stories_unavailable", None),
             title=channel.title,
             username=getattr(channel, "username", None),
-            usernames=types.List([types.Username._parse(r) for r in usernames]) or None,
-            photo=types.ChatPhoto._parse(client, getattr(channel, "photo", None), peer_id,
+            usernames=types.List([types.Username.from_raw_tl(r) for r in usernames]) or None,
+            photo=types.ChatPhoto.from_raw_tl(client, getattr(channel, "photo", None), peer_id,
                                          getattr(channel, "access_hash", 0)),
-            restrictions=types.List([types.Restriction._parse(r) for r in restriction_reason]) or None,
-            permissions=types.ChatPermissions._parse(getattr(channel, "default_banned_rights", None)),
+            restrictions=types.List([types.Restriction.from_raw_tl(r) for r in restriction_reason]) or None,
+            permissions=types.ChatPermissions.from_raw_tl(getattr(channel, "default_banned_rights", None)),
             members_count=getattr(channel, "participants_count", None),
             dc_id=getattr(getattr(channel, "photo", None), "dc_id", None),
             has_protected_content=getattr(channel, "noforwards", None),
             level=getattr(channel, "level", None),
-            reply_color=types.ChatColor._parse(getattr(channel, "color", None)),
-            profile_color=types.ChatColor._parse(getattr(channel, "profile_color", None)),
+            reply_color=types.ChatColor.from_raw_tl(getattr(channel, "color", None)),
+            profile_color=types.ChatColor.from_raw_tl(getattr(channel, "profile_color", None)),
             raw=channel,
             client=client
         )
 
     @staticmethod
-    def _parse(
+    def from_raw_tl(
         client,
         message: Union[raw.types.Message, raw.types.MessageService, raw.types.MessageEmpty],
-        users: dict,
-        chats: dict,
         is_chat: bool
     ) -> "Chat":
         from_id: int | None = None
@@ -403,36 +401,36 @@ class Chat(Object):
         chat_id = (peer_id or from_id) if is_chat else (from_id or peer_id)
 
         if isinstance(message.peer_id, raw.types.PeerUser):
-            return Chat._parse_user_chat(client, users[chat_id])
+            return Chat.from_raw_tl_user_chat(client, client.entity_cache.get_user(user_id=chat_id))
 
         if isinstance(message.peer_id, raw.types.PeerChat):
-            return Chat._parse_chat_chat(client, chats[chat_id])
+            return Chat.from_raw_tl_chat_chat(client, client.entity_cache.get_chat(chat_id=chat_id))
 
-        return Chat._parse_channel_chat(client, chats[chat_id])
+        return Chat.from_raw_tl_channel_chat(client, client.entity_cache.get_channel(channel_id=chat_id))
 
     @staticmethod
-    def _parse_dialog(client, peer, users: dict, chats: dict):
+    def from_raw_tl_dialog(client, peer):
         if isinstance(peer, (raw.types.PeerUser, raw.types.InputPeerUser)):
-            return Chat._parse_user_chat(client, users[peer.user_id])
+            return Chat.from_raw_tl_user_chat(client, client.entity_cache.get_user(user_id=peer.user_id))
         elif isinstance(peer, (raw.types.PeerChat, raw.types.InputPeerChat)):
-            return Chat._parse_chat_chat(client, chats[peer.chat_id])
+            return Chat.from_raw_tl_chat_chat(client, client.entity_cache.get_chat(chat_id=peer.chat_id))
         else:
-            return Chat._parse_channel_chat(client, chats[peer.channel_id])
+            return Chat.from_raw_tl_channel_chat(client, client.entity_cache.get_channel(channel_id=peer.channel_id))
 
     @staticmethod
-    async def _parse_full(client, chat_full: Union[raw.types.messages.ChatFull, raw.types.users.UserFull]) -> "Chat":
-        users = {u.id: u for u in chat_full.users}
-        chats = {c.id: c for c in chat_full.chats}
+    async def from_raw_tl_full(client, chat_full: Union[raw.types.messages.ChatFull, raw.types.users.UserFull]) -> "Chat":
+        client.entity_cache.update(chat_full.users)
+        client.entity_cache.update(chat_full.chats)
 
         if isinstance(chat_full, raw.types.users.UserFull):
             full_user: "raw.types.UserFull" = chat_full.full_user
 
-            parsed_chat = Chat._parse_user_chat(client, users[full_user.id])
+            parsed_chat = Chat.from_raw_tl_user_chat(client, client.entity_cache.get_user(user_id=full_user.id))
             parsed_chat.bio = full_user.about
             parsed_chat.folder_id = getattr(full_user, "folder_id", None)
-            parsed_chat.business_info = types.BusinessInfo._parse(client, full_user, users)
-            parsed_chat.business_intro = await types.BusinessIntro._parse(client, getattr(full_user, "business_intro", None))
-            parsed_chat.birthday = types.Birthday._parse(getattr(full_user, "birthday", None))
+            parsed_chat.business_info = types.BusinessInfo.from_raw_tl(client, full_user)
+            parsed_chat.business_intro = await types.BusinessIntro.from_raw_tl(client, getattr(full_user, "business_intro", None))
+            parsed_chat.birthday = types.Birthday.from_raw_tl(getattr(full_user, "birthday", None))
             parsed_chat.raw = full_user
 
             if full_user.pinned_msg_id:
@@ -442,7 +440,7 @@ class Chat(Object):
                 )
 
             if full_user.personal_channel_id:
-                parsed_chat.personal_channel = Chat._parse_channel_chat(client, chats[full_user.personal_channel_id])
+                parsed_chat.personal_channel = Chat.from_raw_tl_channel_chat(client, client.entity_cache.get_channel(channel_id=full_user.personal_channel_id))
                 parsed_chat.personal_channel_message = await client.get_messages(
                     parsed_chat.personal_channel.id,
                     message_ids=full_user.personal_channel_message
@@ -452,27 +450,27 @@ class Chat(Object):
                 peer_stories: raw.types.PeerStories = full_user.stories
                 parsed_chat.stories = types.List(
                     [
-                        await types.Story._parse(
-                            client, story, users, chats, peer_stories.peer
+                        await types.Story.from_raw_tl(
+                            client, story, peer_stories.peer
                         )
                         for story in peer_stories.stories
                     ]
                 ) or None
 
             if getattr(full_user, "wallpaper") and isinstance(full_user.wallpaper, raw.types.WallPaper):
-                parsed_chat.wallpaper = types.Document._parse(client, full_user.wallpaper.document, "wallpaper.jpg")
+                parsed_chat.wallpaper = types.Document.from_raw_tl(client, full_user.wallpaper.document, "wallpaper.jpg")
         else:
             full_chat = chat_full.full_chat
-            chat_raw = chats[full_chat.id]
+            chat_raw = client.entity_cache.get_peer(peer=full_chat)
 
             if isinstance(full_chat, raw.types.ChatFull):
-                parsed_chat = Chat._parse_chat_chat(client, chat_raw)
+                parsed_chat = Chat.from_raw_tl_chat_chat(client, chat_raw)
                 parsed_chat.description = full_chat.about or None
 
                 if isinstance(full_chat.participants, raw.types.ChatParticipants):
                     parsed_chat.members_count = len(full_chat.participants.participants)
             else:
-                parsed_chat = Chat._parse_channel_chat(client, chat_raw)
+                parsed_chat = Chat.from_raw_tl_channel_chat(client, chat_raw)
                 parsed_chat.members_count = full_chat.participants_count
                 parsed_chat.description = full_chat.about or None
                 # TODO: Add StickerSet type
@@ -481,34 +479,31 @@ class Chat(Object):
                 parsed_chat.is_members_hidden = full_chat.participants_hidden
                 parsed_chat.folder_id = getattr(full_chat, "folder_id", None)
 
-                linked_chat_raw = chats.get(full_chat.linked_chat_id, None)
+                linked_chat_raw = client.entity_cache.get_channel(channel_id=full_chat.linked_chat_id)
 
                 if linked_chat_raw:
-                    parsed_chat.linked_chat = Chat._parse_channel_chat(client, linked_chat_raw)
+                    parsed_chat.linked_chat = Chat.from_raw_tl_channel_chat(client, linked_chat_raw)
 
                 default_send_as = full_chat.default_send_as
 
                 if default_send_as:
-                    if isinstance(default_send_as, raw.types.PeerUser):
-                        send_as_raw = users[default_send_as.user_id]
-                    else:
-                        send_as_raw = chats[default_send_as.channel_id]
+                    send_as_raw = client.entity_cache.get_peer(peer=default_send_as)
 
-                    parsed_chat.send_as_chat = Chat._parse_chat(client, send_as_raw)
+                    parsed_chat.send_as_chat = Chat.from_raw_tl_chat(client, send_as_raw)
 
                 if full_chat.stories:
                     peer_stories: raw.types.PeerStories = full_chat.stories
                     parsed_chat.stories = types.List(
                         [
-                            await types.Story._parse(
-                                client, story, users, chats, peer_stories.peer
+                            await types.Story.from_raw_tl(
+                                client, story, peer_stories.peer
                             )
                             for story in peer_stories.stories
                         ]
                     ) or None
 
                 if full_chat.wallpaper and isinstance(full_chat.wallpaper, raw.types.WallPaper):
-                    parsed_chat.wallpaper = types.Document._parse(client, full_chat.wallpaper.document, "wallpaper.jpg")
+                    parsed_chat.wallpaper = types.Document.from_raw_tl(client, full_chat.wallpaper.document, "wallpaper.jpg")
 
             if full_chat.pinned_msg_id:
                 parsed_chat.pinned_message = await client.get_messages(
@@ -519,19 +514,19 @@ class Chat(Object):
             if isinstance(full_chat.exported_invite, raw.types.ChatInviteExported):
                 parsed_chat.invite_link = full_chat.exported_invite.link
 
-            parsed_chat.available_reactions = types.ChatReactions._parse(client, full_chat.available_reactions)
+            parsed_chat.available_reactions = types.ChatReactions.from_raw_tl(client, full_chat.available_reactions)
             parsed_chat.raw = full_chat
 
         return parsed_chat
 
     @staticmethod
-    def _parse_chat(client, chat: Union[raw.types.Chat, raw.types.User, raw.types.Channel]) -> "Chat":
+    def from_raw_tl_chat(client, chat: Union[raw.types.Chat, raw.types.User, raw.types.Channel]) -> "Chat":
         if isinstance(chat, raw.types.Chat):
-            return Chat._parse_chat_chat(client, chat)
+            return Chat.from_raw_tl_chat_chat(client, chat)
         elif isinstance(chat, raw.types.User):
-            return Chat._parse_user_chat(client, chat)
+            return Chat.from_raw_tl_user_chat(client, chat)
         else:
-            return Chat._parse_channel_chat(client, chat)
+            return Chat.from_raw_tl_channel_chat(client, chat)
 
     @property
     def full_name(self) -> str:

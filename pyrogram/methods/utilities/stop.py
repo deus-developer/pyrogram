@@ -56,14 +56,10 @@ class Stop:
 
                 app.run(main())
         """
+        if not block:
+            raise RuntimeError("Not supported with block=False.")
 
-        async def do_it():
-            await self.terminate()
-            await self.disconnect()
-
-        if block:
-            await do_it()
-        else:
-            self.loop.create_task(do_it())
+        await self.terminate()
+        await self.disconnect()
 
         return self
