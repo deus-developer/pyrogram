@@ -36,3 +36,14 @@ from .sponsored_message_report_result_choose_option import (
 from .sponsored_message_report_result_reported import (
     SponsoredMessageReportResultReported,
 )
+
+__all__ = [
+    "AdminLogResults",
+    "ChannelParticipant",
+    "ChannelParticipants",
+    "ChannelParticipantsNotModified",
+    "SendAsPeers",
+    "SponsoredMessageReportResultAdsHidden",
+    "SponsoredMessageReportResultChooseOption",
+    "SponsoredMessageReportResultReported",
+]

@@ -47,3 +47,31 @@ from .get_user_info import GetUserInfo
 from .hide_promo_data import HidePromoData
 from .save_app_log import SaveAppLog
 from .set_bot_updates_status import SetBotUpdatesStatus
+
+__all__ = [
+    "AcceptTermsOfService",
+    "DismissSuggestion",
+    "EditUserInfo",
+    "GetAppConfig",
+    "GetAppUpdate",
+    "GetCdnConfig",
+    "GetConfig",
+    "GetCountriesList",
+    "GetDeepLinkInfo",
+    "GetInviteText",
+    "GetNearestDc",
+    "GetPassportConfig",
+    "GetPeerColors",
+    "GetPeerProfileColors",
+    "GetPremiumPromo",
+    "GetPromoData",
+    "GetRecentMeUrls",
+    "GetSupport",
+    "GetSupportName",
+    "GetTermsOfServiceUpdate",
+    "GetTimezonesList",
+    "GetUserInfo",
+    "HidePromoData",
+    "SaveAppLog",
+    "SetBotUpdatesStatus",
+]

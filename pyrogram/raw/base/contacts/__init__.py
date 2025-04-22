@@ -29,3 +29,13 @@ from .found import Found
 from .imported_contacts import ImportedContacts
 from .resolved_peer import ResolvedPeer
 from .top_peers import TopPeers
+
+__all__ = [
+    "Blocked",
+    "ContactBirthdays",
+    "Contacts",
+    "Found",
+    "ImportedContacts",
+    "ResolvedPeer",
+    "TopPeers",
+]

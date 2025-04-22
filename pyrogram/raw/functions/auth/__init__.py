@@ -45,3 +45,29 @@ from .reset_login_email import ResetLoginEmail
 from .send_code import SendCode
 from .sign_in import SignIn
 from .sign_up import SignUp
+
+__all__ = [
+    "AcceptLoginToken",
+    "BindTempAuthKey",
+    "CancelCode",
+    "CheckPassword",
+    "CheckRecoveryPassword",
+    "DropTempAuthKeys",
+    "ExportAuthorization",
+    "ExportLoginToken",
+    "ImportAuthorization",
+    "ImportBotAuthorization",
+    "ImportLoginToken",
+    "ImportWebTokenAuthorization",
+    "LogOut",
+    "RecoverPassword",
+    "ReportMissingCode",
+    "RequestFirebaseSms",
+    "RequestPasswordRecovery",
+    "ResendCode",
+    "ResetAuthorizations",
+    "ResetLoginEmail",
+    "SendCode",
+    "SignIn",
+    "SignUp",
+]

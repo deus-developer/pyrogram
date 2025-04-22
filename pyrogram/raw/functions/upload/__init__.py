@@ -30,3 +30,14 @@ from .get_web_file import GetWebFile
 from .reupload_cdn_file import ReuploadCdnFile
 from .save_big_file_part import SaveBigFilePart
 from .save_file_part import SaveFilePart
+
+__all__ = [
+    "GetCdnFile",
+    "GetCdnFileHashes",
+    "GetFile",
+    "GetFileHashes",
+    "GetWebFile",
+    "ReuploadCdnFile",
+    "SaveBigFilePart",
+    "SaveFilePart",
+]

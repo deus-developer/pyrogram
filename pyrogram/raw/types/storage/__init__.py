@@ -32,3 +32,16 @@ from .file_pdf import FilePdf
 from .file_png import FilePng
 from .file_unknown import FileUnknown
 from .file_webp import FileWebp
+
+__all__ = [
+    "FileGif",
+    "FileJpeg",
+    "FileMov",
+    "FileMp3",
+    "FileMp4",
+    "FilePartial",
+    "FilePdf",
+    "FilePng",
+    "FileUnknown",
+    "FileWebp",
+]

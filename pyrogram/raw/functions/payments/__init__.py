@@ -43,3 +43,27 @@ from .refund_stars_charge import RefundStarsCharge
 from .send_payment_form import SendPaymentForm
 from .send_stars_form import SendStarsForm
 from .validate_requested_info import ValidateRequestedInfo
+
+__all__ = [
+    "ApplyGiftCode",
+    "AssignAppStoreTransaction",
+    "AssignPlayMarketTransaction",
+    "CanPurchasePremium",
+    "CheckGiftCode",
+    "ClearSavedInfo",
+    "ExportInvoice",
+    "GetBankCardData",
+    "GetGiveawayInfo",
+    "GetPaymentForm",
+    "GetPaymentReceipt",
+    "GetPremiumGiftCodeOptions",
+    "GetSavedInfo",
+    "GetStarsStatus",
+    "GetStarsTopupOptions",
+    "GetStarsTransactions",
+    "LaunchPrepaidGiveaway",
+    "RefundStarsCharge",
+    "SendPaymentForm",
+    "SendStarsForm",
+    "ValidateRequestedInfo",
+]

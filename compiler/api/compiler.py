@@ -593,6 +593,8 @@ def start(format: bool = False):
             f.write(f"{notice}\n\n")
             f.write(f"{WARNING}\n\n")
 
+            var_all: list[str] = []
+
             for t in types:
                 module = t
 
@@ -600,15 +602,23 @@ def start(format: bool = False):
                     module = "UpdatesT"
 
                 f.write(f"from .{snake(module)} import {t}\n")
+                var_all.append(t)
 
             if not namespace:
-                f.write(f"from . import {', '.join(filter(bool, namespaces_to_types))}")
+                f.write(f"from . import {', '.join(filter(bool, namespaces_to_types))}\n")
+                var_all.extend(filter(bool, namespaces_to_types))
+
+            f.write(f"__all__ = [\n")
+            for t in var_all:
+                f.write(f'    "{t}",\n')
+            f.write("]\n")
 
     for namespace, types in namespaces_to_constructors.items():
         with open(DESTINATION_PATH / "types" / namespace / "__init__.py", "w") as f:
             f.write(f"{notice}\n\n")
             f.write(f"{WARNING}\n\n")
 
+            var_all: list[str] = []
             for t in types:
                 module = t
 
@@ -616,15 +626,23 @@ def start(format: bool = False):
                     module = "UpdatesT"
 
                 f.write(f"from .{snake(module)} import {t}\n")
+                var_all.append(t)
 
             if not namespace:
                 f.write(f"from . import {', '.join(filter(bool, namespaces_to_constructors))}\n")
+                var_all.extend(filter(bool, namespaces_to_constructors))
+
+            f.write(f"__all__ = [\n")
+            for t in var_all:
+                f.write(f'    "{t}",\n')
+            f.write("]\n")
 
     for namespace, types in namespaces_to_functions.items():
         with open(DESTINATION_PATH / "functions" / namespace / "__init__.py", "w") as f:
             f.write(f"{notice}\n\n")
             f.write(f"{WARNING}\n\n")
 
+            var_all: list[str] = []
             for t in types:
                 module = t
 
@@ -632,9 +650,16 @@ def start(format: bool = False):
                     module = "UpdatesT"
 
                 f.write(f"from .{snake(module)} import {t}\n")
+                var_all.append(t)
 
             if not namespace:
-                f.write(f"from . import {', '.join(filter(bool, namespaces_to_functions))}")
+                f.write(f"from . import {', '.join(filter(bool, namespaces_to_functions))}\n")
+                var_all.extend(filter(bool, namespaces_to_functions))
+
+            f.write(f"__all__ = [\n")
+            for t in var_all:
+                f.write(f'    "{t}",\n')
+            f.write("]\n")
 
     with open(DESTINATION_PATH / "all.py", "w", encoding="utf-8") as f:
         f.write(notice + "\n\n")

@@ -33,3 +33,17 @@ from .resolved_peer import ResolvedPeer
 from .top_peers import TopPeers
 from .top_peers_disabled import TopPeersDisabled
 from .top_peers_not_modified import TopPeersNotModified
+
+__all__ = [
+    "Blocked",
+    "BlockedSlice",
+    "ContactBirthdays",
+    "Contacts",
+    "ContactsNotModified",
+    "Found",
+    "ImportedContacts",
+    "ResolvedPeer",
+    "TopPeers",
+    "TopPeersDisabled",
+    "TopPeersNotModified",
+]

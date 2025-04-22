@@ -47,3 +47,31 @@ from .toggle_all_stories_hidden import ToggleAllStoriesHidden
 from .toggle_peer_stories_hidden import TogglePeerStoriesHidden
 from .toggle_pinned import TogglePinned
 from .toggle_pinned_to_top import TogglePinnedToTop
+
+__all__ = [
+    "ActivateStealthMode",
+    "CanSendStory",
+    "DeleteStories",
+    "EditStory",
+    "ExportStoryLink",
+    "GetAllReadPeerStories",
+    "GetAllStories",
+    "GetChatsToSend",
+    "GetPeerMaxIDs",
+    "GetPeerStories",
+    "GetPinnedStories",
+    "GetStoriesArchive",
+    "GetStoriesByID",
+    "GetStoriesViews",
+    "GetStoryReactionsList",
+    "GetStoryViewsList",
+    "IncrementStoryViews",
+    "ReadStories",
+    "Report",
+    "SendReaction",
+    "SendStory",
+    "ToggleAllStoriesHidden",
+    "TogglePeerStoriesHidden",
+    "TogglePinned",
+    "TogglePinnedToTop",
+]

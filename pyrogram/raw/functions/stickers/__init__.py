@@ -33,3 +33,17 @@ from .rename_sticker_set import RenameStickerSet
 from .replace_sticker import ReplaceSticker
 from .set_sticker_set_thumb import SetStickerSetThumb
 from .suggest_short_name import SuggestShortName
+
+__all__ = [
+    "AddStickerToSet",
+    "ChangeSticker",
+    "ChangeStickerPosition",
+    "CheckShortName",
+    "CreateStickerSet",
+    "DeleteStickerSet",
+    "RemoveStickerFromSet",
+    "RenameStickerSet",
+    "ReplaceSticker",
+    "SetStickerSetThumb",
+    "SuggestShortName",
+]

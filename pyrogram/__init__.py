@@ -35,8 +35,31 @@ class ContinuePropagation(StopAsyncIteration):
     pass
 
 
-from . import enums, filters, handlers, raw, types
+from . import enums, filters, handlers, raw, types, session, connection, crypto, errors, storage
 from .client import Client
 from .sync import compose, idle
 
 crypto_executor = ThreadPoolExecutor(4, thread_name_prefix="CryptoWorker")
+
+__all__ = [
+    "Client",
+    "ContinuePropagation",
+    "StopPropagation",
+    "StopTransmission",
+    "__copyright__",
+    "__license__",
+    "__version__",
+    "compose",
+    "connection",
+    "crypto",
+    "crypto_executor",
+    "enums",
+    "errors",
+    "filters",
+    "handlers",
+    "idle",
+    "raw",
+    "session",
+    "storage",
+    "types",
+]

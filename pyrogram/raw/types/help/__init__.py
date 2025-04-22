@@ -54,3 +54,38 @@ from .timezones_list import TimezonesList
 from .timezones_list_not_modified import TimezonesListNotModified
 from .user_info import UserInfo
 from .user_info_empty import UserInfoEmpty
+
+__all__ = [
+    "AppConfig",
+    "AppConfigNotModified",
+    "AppUpdate",
+    "ConfigSimple",
+    "CountriesList",
+    "CountriesListNotModified",
+    "Country",
+    "CountryCode",
+    "DeepLinkInfo",
+    "DeepLinkInfoEmpty",
+    "InviteText",
+    "NoAppUpdate",
+    "PassportConfig",
+    "PassportConfigNotModified",
+    "PeerColorOption",
+    "PeerColorProfileSet",
+    "PeerColorSet",
+    "PeerColors",
+    "PeerColorsNotModified",
+    "PremiumPromo",
+    "PromoData",
+    "PromoDataEmpty",
+    "RecentMeUrls",
+    "Support",
+    "SupportName",
+    "TermsOfService",
+    "TermsOfServiceUpdate",
+    "TermsOfServiceUpdateEmpty",
+    "TimezonesList",
+    "TimezonesListNotModified",
+    "UserInfo",
+    "UserInfoEmpty",
+]

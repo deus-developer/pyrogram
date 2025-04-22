@@ -27,3 +27,11 @@ from .get_user_photos import GetUserPhotos
 from .update_profile_photo import UpdateProfilePhoto
 from .upload_contact_profile_photo import UploadContactProfilePhoto
 from .upload_profile_photo import UploadProfilePhoto
+
+__all__ = [
+    "DeletePhotos",
+    "GetUserPhotos",
+    "UpdateProfilePhoto",
+    "UploadContactProfilePhoto",
+    "UploadProfilePhoto",
+]

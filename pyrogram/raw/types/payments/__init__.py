@@ -36,3 +36,20 @@ from .payment_verification_needed import PaymentVerificationNeeded
 from .saved_info import SavedInfo
 from .stars_status import StarsStatus
 from .validated_requested_info import ValidatedRequestedInfo
+
+__all__ = [
+    "BankCardData",
+    "CheckedGiftCode",
+    "ExportedInvoice",
+    "GiveawayInfo",
+    "GiveawayInfoResults",
+    "PaymentForm",
+    "PaymentFormStars",
+    "PaymentReceipt",
+    "PaymentReceiptStars",
+    "PaymentResult",
+    "PaymentVerificationNeeded",
+    "SavedInfo",
+    "StarsStatus",
+    "ValidatedRequestedInfo",
+]

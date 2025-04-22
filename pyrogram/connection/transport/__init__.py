@@ -16,4 +16,14 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from .tcp import *
+from .tcp import (
+    TCP,
+    Proxy,
+    TCPAbridged,
+    TCPAbridgedO,
+    TCPFull,
+TCPIntermediate,
+TCPIntermediateO
+)
+
+__all__ = ["TCP", "Proxy", "TCPAbridged", "TCPAbridgedO", "TCPFull", "TCPIntermediate", "TCPIntermediateO"]

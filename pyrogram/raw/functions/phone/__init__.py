@@ -53,3 +53,37 @@ from .start_scheduled_group_call import StartScheduledGroupCall
 from .toggle_group_call_record import ToggleGroupCallRecord
 from .toggle_group_call_settings import ToggleGroupCallSettings
 from .toggle_group_call_start_subscription import ToggleGroupCallStartSubscription
+
+__all__ = [
+    "AcceptCall",
+    "CheckGroupCall",
+    "ConfirmCall",
+    "CreateGroupCall",
+    "DiscardCall",
+    "DiscardGroupCall",
+    "EditGroupCallParticipant",
+    "EditGroupCallTitle",
+    "ExportGroupCallInvite",
+    "GetCallConfig",
+    "GetGroupCall",
+    "GetGroupCallJoinAs",
+    "GetGroupCallStreamChannels",
+    "GetGroupCallStreamRtmpUrl",
+    "GetGroupParticipants",
+    "InviteToGroupCall",
+    "JoinGroupCall",
+    "JoinGroupCallPresentation",
+    "LeaveGroupCall",
+    "LeaveGroupCallPresentation",
+    "ReceivedCall",
+    "RequestCall",
+    "SaveCallDebug",
+    "SaveCallLog",
+    "SaveDefaultGroupCallJoinAs",
+    "SendSignalingData",
+    "SetCallRating",
+    "StartScheduledGroupCall",
+    "ToggleGroupCallRecord",
+    "ToggleGroupCallSettings",
+    "ToggleGroupCallStartSubscription",
+]

@@ -27,3 +27,11 @@ from .cdn_file_reupload_needed import CdnFileReuploadNeeded
 from .file import File
 from .file_cdn_redirect import FileCdnRedirect
 from .web_file import WebFile
+
+__all__ = [
+    "CdnFile",
+    "CdnFileReuploadNeeded",
+    "File",
+    "FileCdnRedirect",
+    "WebFile",
+]

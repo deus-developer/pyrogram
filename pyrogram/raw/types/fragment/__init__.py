@@ -23,3 +23,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 from .collectible_info import CollectibleInfo
+
+__all__ = [
+    "CollectibleInfo",
+]

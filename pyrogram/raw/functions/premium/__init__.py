@@ -27,3 +27,11 @@ from .get_boosts_list import GetBoostsList
 from .get_boosts_status import GetBoostsStatus
 from .get_my_boosts import GetMyBoosts
 from .get_user_boosts import GetUserBoosts
+
+__all__ = [
+    "ApplyBoost",
+    "GetBoostsList",
+    "GetBoostsStatus",
+    "GetMyBoosts",
+    "GetUserBoosts",
+]

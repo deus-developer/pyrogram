@@ -38,3 +38,22 @@ from .set_bot_group_default_admin_rights import SetBotGroupDefaultAdminRights
 from .set_bot_info import SetBotInfo
 from .set_bot_menu_button import SetBotMenuButton
 from .toggle_username import ToggleUsername
+
+__all__ = [
+    "AllowSendMessage",
+    "AnswerWebhookJSONQuery",
+    "CanSendMessage",
+    "GetBotCommands",
+    "GetBotInfo",
+    "GetBotMenuButton",
+    "InvokeWebViewCustomMethod",
+    "ReorderUsernames",
+    "ResetBotCommands",
+    "SendCustomRequest",
+    "SetBotBroadcastDefaultAdminRights",
+    "SetBotCommands",
+    "SetBotGroupDefaultAdminRights",
+    "SetBotInfo",
+    "SetBotMenuButton",
+    "ToggleUsername",
+]

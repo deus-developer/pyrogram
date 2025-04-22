@@ -25,3 +25,9 @@
 from .photo import Photo
 from .photos import Photos
 from .photos_slice import PhotosSlice
+
+__all__ = [
+    "Photo",
+    "Photos",
+    "PhotosSlice",
+]

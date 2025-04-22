@@ -25,3 +25,9 @@
 from .boosts_list import BoostsList
 from .boosts_status import BoostsStatus
 from .my_boosts import MyBoosts
+
+__all__ = [
+    "BoostsList",
+    "BoostsStatus",
+    "MyBoosts",
+]

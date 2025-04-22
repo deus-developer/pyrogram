@@ -23,3 +23,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 from .user_full import UserFull
+
+__all__ = [
+    "UserFull",
+]

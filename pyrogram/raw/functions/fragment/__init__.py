@@ -23,3 +23,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 from .get_collectible_info import GetCollectibleInfo
+
+__all__ = [
+    "GetCollectibleInfo",
+]

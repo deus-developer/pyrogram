@@ -24,3 +24,8 @@
 
 from .photo import Photo
 from .photos import Photos
+
+__all__ = [
+    "Photo",
+    "Photos",
+]

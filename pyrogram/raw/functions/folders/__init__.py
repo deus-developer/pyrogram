@@ -23,3 +23,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 from .edit_peer_folders import EditPeerFolders
+
+__all__ = [
+    "EditPeerFolders",
+]

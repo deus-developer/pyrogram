@@ -30,3 +30,14 @@ from .megagroup_stats import MegagroupStats
 from .message_stats import MessageStats
 from .public_forwards import PublicForwards
 from .story_stats import StoryStats
+
+__all__ = [
+    "BroadcastRevenueStats",
+    "BroadcastRevenueTransactions",
+    "BroadcastRevenueWithdrawalUrl",
+    "BroadcastStats",
+    "MegagroupStats",
+    "MessageStats",
+    "PublicForwards",
+    "StoryStats",
+]

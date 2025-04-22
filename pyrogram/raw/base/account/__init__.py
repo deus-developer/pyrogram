@@ -45,3 +45,29 @@ from .themes import Themes
 from .tmp_password import TmpPassword
 from .wall_papers import WallPapers
 from .web_authorizations import WebAuthorizations
+
+__all__ = [
+    "AuthorizationForm",
+    "Authorizations",
+    "AutoDownloadSettings",
+    "AutoSaveSettings",
+    "BusinessChatLinks",
+    "ConnectedBots",
+    "ContentSettings",
+    "EmailVerified",
+    "EmojiStatuses",
+    "Password",
+    "PasswordInputSettings",
+    "PasswordSettings",
+    "PrivacyRules",
+    "ResetPasswordResult",
+    "ResolvedBusinessChatLinks",
+    "SavedRingtone",
+    "SavedRingtones",
+    "SentEmailCode",
+    "Takeout",
+    "Themes",
+    "TmpPassword",
+    "WallPapers",
+    "WebAuthorizations",
+]

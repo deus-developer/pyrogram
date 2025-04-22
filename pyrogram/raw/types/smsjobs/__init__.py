@@ -24,3 +24,8 @@
 
 from .eligible_to_join import EligibleToJoin
 from .status import Status
+
+__all__ = [
+    "EligibleToJoin",
+    "Status",
+]

@@ -53,3 +53,37 @@ from .tmp_password import TmpPassword
 from .wall_papers import WallPapers
 from .wall_papers_not_modified import WallPapersNotModified
 from .web_authorizations import WebAuthorizations
+
+__all__ = [
+    "AuthorizationForm",
+    "Authorizations",
+    "AutoDownloadSettings",
+    "AutoSaveSettings",
+    "BusinessChatLinks",
+    "ConnectedBots",
+    "ContentSettings",
+    "EmailVerified",
+    "EmailVerifiedLogin",
+    "EmojiStatuses",
+    "EmojiStatusesNotModified",
+    "Password",
+    "PasswordInputSettings",
+    "PasswordSettings",
+    "PrivacyRules",
+    "ResetPasswordFailedWait",
+    "ResetPasswordOk",
+    "ResetPasswordRequestedWait",
+    "ResolvedBusinessChatLinks",
+    "SavedRingtone",
+    "SavedRingtoneConverted",
+    "SavedRingtones",
+    "SavedRingtonesNotModified",
+    "SentEmailCode",
+    "Takeout",
+    "Themes",
+    "ThemesNotModified",
+    "TmpPassword",
+    "WallPapers",
+    "WallPapersNotModified",
+    "WebAuthorizations",
+]

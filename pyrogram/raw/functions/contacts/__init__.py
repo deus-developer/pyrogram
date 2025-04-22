@@ -48,3 +48,32 @@ from .search import Search
 from .set_blocked import SetBlocked
 from .toggle_top_peers import ToggleTopPeers
 from .unblock import Unblock
+
+__all__ = [
+    "AcceptContact",
+    "AddContact",
+    "Block",
+    "BlockFromReplies",
+    "DeleteByPhones",
+    "DeleteContacts",
+    "EditCloseFriends",
+    "ExportContactToken",
+    "GetBirthdays",
+    "GetBlocked",
+    "GetContactIDs",
+    "GetContacts",
+    "GetLocated",
+    "GetSaved",
+    "GetStatuses",
+    "GetTopPeers",
+    "ImportContactToken",
+    "ImportContacts",
+    "ResetSaved",
+    "ResetTopPeerRating",
+    "ResolvePhone",
+    "ResolveUsername",
+    "Search",
+    "SetBlocked",
+    "ToggleTopPeers",
+    "Unblock",
+]

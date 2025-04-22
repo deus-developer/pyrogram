@@ -43,3 +43,27 @@ from .terms_of_service import TermsOfService
 from .terms_of_service_update import TermsOfServiceUpdate
 from .timezones_list import TimezonesList
 from .user_info import UserInfo
+
+__all__ = [
+    "AppConfig",
+    "AppUpdate",
+    "ConfigSimple",
+    "CountriesList",
+    "Country",
+    "CountryCode",
+    "DeepLinkInfo",
+    "InviteText",
+    "PassportConfig",
+    "PeerColorOption",
+    "PeerColorSet",
+    "PeerColors",
+    "PremiumPromo",
+    "PromoData",
+    "RecentMeUrls",
+    "Support",
+    "SupportName",
+    "TermsOfService",
+    "TermsOfServiceUpdate",
+    "TimezonesList",
+    "UserInfo",
+]
