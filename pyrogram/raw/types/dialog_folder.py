@@ -107,7 +107,7 @@ class DialogFolder(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "DialogFolder":
         flags = Int.read(b)
 
-        pinned = True if flags & (1 << 2) else False
+        pinned = bool(flags & 1 << 2)
         folder = TLObject.read(b)
 
         peer = TLObject.read(b)

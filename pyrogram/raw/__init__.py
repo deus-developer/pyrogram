@@ -30,6 +30,6 @@ __all__ = [
     "base",
     "core",
     "functions",
+    "objects",
     "types",
-    "objects"
 ]

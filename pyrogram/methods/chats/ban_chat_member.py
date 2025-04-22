@@ -28,7 +28,7 @@ class BanChatMember:
         self: "pyrogram.Client",
         chat_id: int | str,
         user_id: int | str,
-        until_date: datetime = utils.zero_datetime(),
+        until_date: datetime | None = None,
     ) -> Union["types.Message", bool]:
         """Ban a user from a group, a supergroup or a channel.
         In the case of supergroups and channels, the user will not be able to return to the group on their own using
@@ -72,6 +72,9 @@ class BanChatMember:
                     chat_id, user_id, datetime.now() + timedelta(days=1)
                 )
         """
+        if until_date is None:
+            until_date = utils.zero_datetime()
+
         chat_peer = await self.resolve_peer(chat_id)
         user_peer = await self.resolve_peer(user_id)
 

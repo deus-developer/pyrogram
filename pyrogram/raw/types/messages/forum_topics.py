@@ -112,7 +112,7 @@ class ForumTopics(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ForumTopics":
         flags = Int.read(b)
 
-        order_by_create_date = True if flags & (1 << 0) else False
+        order_by_create_date = bool(flags & 1 << 0)
         count = Int.read(b)
 
         topics = TLObject.read(b)

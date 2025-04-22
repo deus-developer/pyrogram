@@ -58,7 +58,7 @@ class UserStatusLastMonth(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UserStatusLastMonth":
         flags = Int.read(b)
 
-        by_me = True if flags & (1 << 0) else False
+        by_me = bool(flags & 1 << 0)
         return UserStatusLastMonth(by_me=by_me)
 
     def write(self, *args) -> bytes:

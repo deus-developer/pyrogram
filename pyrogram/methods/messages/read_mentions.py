@@ -25,7 +25,7 @@ class ReadMentions:
     async def read_mentions(
         self: "pyrogram.Client",
         chat_id: int | str,
-        topic_id: int = None,
+        topic_id: int | None = None,
     ) -> bool:
         """Mark a mention in the chat as read.
 

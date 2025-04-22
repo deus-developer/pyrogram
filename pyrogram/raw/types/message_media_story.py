@@ -89,7 +89,7 @@ class MessageMediaStory(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "MessageMediaStory":
         flags = Int.read(b)
 
-        via_mention = True if flags & (1 << 1) else False
+        via_mention = bool(flags & 1 << 1)
         peer = TLObject.read(b)
 
         id = Int.read(b)

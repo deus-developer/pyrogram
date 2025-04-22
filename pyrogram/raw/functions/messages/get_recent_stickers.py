@@ -63,7 +63,7 @@ class GetRecentStickers(TLFunction["raw.base.messages.RecentStickers"]):  # type
     def read(b: BytesIO, *args: Any) -> "GetRecentStickers":
         flags = Int.read(b)
 
-        attached = True if flags & (1 << 0) else False
+        attached = bool(flags & 1 << 0)
         hash = Long.read(b)
 
         return GetRecentStickers(hash=hash, attached=attached)

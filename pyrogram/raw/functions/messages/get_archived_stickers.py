@@ -78,8 +78,8 @@ class GetArchivedStickers(TLFunction["raw.base.messages.ArchivedStickers"]):  # 
     def read(b: BytesIO, *args: Any) -> "GetArchivedStickers":
         flags = Int.read(b)
 
-        masks = True if flags & (1 << 0) else False
-        emojis = True if flags & (1 << 1) else False
+        masks = bool(flags & 1 << 0)
+        emojis = bool(flags & 1 << 1)
         offset_id = Long.read(b)
 
         limit = Int.read(b)

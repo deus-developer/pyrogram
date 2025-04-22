@@ -77,9 +77,9 @@ class BlockFromReplies(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "BlockFromReplies":
         flags = Int.read(b)
 
-        delete_message = True if flags & (1 << 0) else False
-        delete_history = True if flags & (1 << 1) else False
-        report_spam = True if flags & (1 << 2) else False
+        delete_message = bool(flags & 1 << 0)
+        delete_history = bool(flags & 1 << 1)
+        report_spam = bool(flags & 1 << 2)
         msg_id = Int.read(b)
 
         return BlockFromReplies(

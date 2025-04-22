@@ -79,7 +79,7 @@ class InputWebFileAudioAlbumThumbLocation(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "InputWebFileAudioAlbumThumbLocation":
         flags = Int.read(b)
 
-        small = True if flags & (1 << 2) else False
+        small = bool(flags & 1 << 2)
         document = TLObject.read(b) if flags & (1 << 0) else None
 
         title = String.read(b) if flags & (1 << 1) else None

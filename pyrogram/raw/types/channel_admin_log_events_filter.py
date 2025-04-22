@@ -166,24 +166,24 @@ class ChannelAdminLogEventsFilter(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ChannelAdminLogEventsFilter":
         flags = Int.read(b)
 
-        join = True if flags & (1 << 0) else False
-        leave = True if flags & (1 << 1) else False
-        invite = True if flags & (1 << 2) else False
-        ban = True if flags & (1 << 3) else False
-        unban = True if flags & (1 << 4) else False
-        kick = True if flags & (1 << 5) else False
-        unkick = True if flags & (1 << 6) else False
-        promote = True if flags & (1 << 7) else False
-        demote = True if flags & (1 << 8) else False
-        info = True if flags & (1 << 9) else False
-        settings = True if flags & (1 << 10) else False
-        pinned = True if flags & (1 << 11) else False
-        edit = True if flags & (1 << 12) else False
-        delete = True if flags & (1 << 13) else False
-        group_call = True if flags & (1 << 14) else False
-        invites = True if flags & (1 << 15) else False
-        send = True if flags & (1 << 16) else False
-        forums = True if flags & (1 << 17) else False
+        join = bool(flags & 1 << 0)
+        leave = bool(flags & 1 << 1)
+        invite = bool(flags & 1 << 2)
+        ban = bool(flags & 1 << 3)
+        unban = bool(flags & 1 << 4)
+        kick = bool(flags & 1 << 5)
+        unkick = bool(flags & 1 << 6)
+        promote = bool(flags & 1 << 7)
+        demote = bool(flags & 1 << 8)
+        info = bool(flags & 1 << 9)
+        settings = bool(flags & 1 << 10)
+        pinned = bool(flags & 1 << 11)
+        edit = bool(flags & 1 << 12)
+        delete = bool(flags & 1 << 13)
+        group_call = bool(flags & 1 << 14)
+        invites = bool(flags & 1 << 15)
+        send = bool(flags & 1 << 16)
+        forums = bool(flags & 1 << 17)
         return ChannelAdminLogEventsFilter(
             join=join,
             leave=leave,

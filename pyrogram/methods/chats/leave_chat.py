@@ -74,3 +74,4 @@ class LeaveChat:
                 )
 
             return r
+        return None

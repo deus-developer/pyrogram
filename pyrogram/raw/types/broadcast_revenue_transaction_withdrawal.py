@@ -102,8 +102,8 @@ class BroadcastRevenueTransactionWithdrawal(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "BroadcastRevenueTransactionWithdrawal":
         flags = Int.read(b)
 
-        pending = True if flags & (1 << 0) else False
-        failed = True if flags & (1 << 2) else False
+        pending = bool(flags & 1 << 0)
+        failed = bool(flags & 1 << 2)
         amount = Long.read(b)
 
         date = Int.read(b)

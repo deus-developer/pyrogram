@@ -103,8 +103,8 @@ class UpdateServiceNotification(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UpdateServiceNotification":
         flags = Int.read(b)
 
-        popup = True if flags & (1 << 0) else False
-        invert_media = True if flags & (1 << 2) else False
+        popup = bool(flags & 1 << 0)
+        invert_media = bool(flags & 1 << 2)
         inbox_date = Int.read(b) if flags & (1 << 1) else None
         type = String.read(b)
 

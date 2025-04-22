@@ -80,7 +80,7 @@ class SendEncrypted(TLFunction["raw.base.messages.SentEncryptedMessage"]):  # ty
     def read(b: BytesIO, *args: Any) -> "SendEncrypted":
         flags = Int.read(b)
 
-        silent = True if flags & (1 << 0) else False
+        silent = bool(flags & 1 << 0)
         peer = TLObject.read(b)
 
         random_id = Long.read(b)

@@ -108,8 +108,8 @@ class PremiumSubscriptionOption(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "PremiumSubscriptionOption":
         flags = Int.read(b)
 
-        current = True if flags & (1 << 1) else False
-        can_purchase_upgrade = True if flags & (1 << 2) else False
+        current = bool(flags & 1 << 1)
+        can_purchase_upgrade = bool(flags & 1 << 2)
         transaction = String.read(b) if flags & (1 << 3) else None
         months = Int.read(b)
 

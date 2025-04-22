@@ -47,7 +47,7 @@ class InlineQueryResultCachedSticker(InlineQueryResult):
     def __init__(
         self,
         sticker_file_id: str,
-        id: str = None,
+        id: str | None = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
         input_message_content: "types.InputMessageContent" = None,
     ):

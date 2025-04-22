@@ -79,7 +79,7 @@ class InstallTheme(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "InstallTheme":
         flags = Int.read(b)
 
-        dark = True if flags & (1 << 0) else False
+        dark = bool(flags & 1 << 0)
         theme = TLObject.read(b) if flags & (1 << 1) else None
 
         format = String.read(b) if flags & (1 << 2) else None

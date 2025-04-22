@@ -83,9 +83,9 @@ class UpdatePinnedMessage(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UpdatePinnedMessage":
         flags = Int.read(b)
 
-        silent = True if flags & (1 << 0) else False
-        unpin = True if flags & (1 << 1) else False
-        pm_oneside = True if flags & (1 << 2) else False
+        silent = bool(flags & 1 << 0)
+        unpin = bool(flags & 1 << 1)
+        pm_oneside = bool(flags & 1 << 2)
         peer = TLObject.read(b)
 
         id = Int.read(b)

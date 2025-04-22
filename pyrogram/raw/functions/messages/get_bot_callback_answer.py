@@ -84,7 +84,7 @@ class GetBotCallbackAnswer(TLFunction["raw.base.messages.BotCallbackAnswer"]):  
     def read(b: BytesIO, *args: Any) -> "GetBotCallbackAnswer":
         flags = Int.read(b)
 
-        game = True if flags & (1 << 1) else False
+        game = bool(flags & 1 << 1)
         peer = TLObject.read(b)
 
         msg_id = Int.read(b)

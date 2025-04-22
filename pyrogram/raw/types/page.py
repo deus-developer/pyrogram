@@ -109,9 +109,9 @@ class Page(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "Page":
         flags = Int.read(b)
 
-        part = True if flags & (1 << 0) else False
-        rtl = True if flags & (1 << 1) else False
-        v2 = True if flags & (1 << 2) else False
+        part = bool(flags & 1 << 0)
+        rtl = bool(flags & 1 << 1)
+        v2 = bool(flags & 1 << 2)
         url = String.read(b)
 
         blocks = TLObject.read(b)

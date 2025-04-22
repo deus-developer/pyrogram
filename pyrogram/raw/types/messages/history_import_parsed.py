@@ -82,8 +82,8 @@ class HistoryImportParsed(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "HistoryImportParsed":
         flags = Int.read(b)
 
-        pm = True if flags & (1 << 0) else False
-        group = True if flags & (1 << 1) else False
+        pm = bool(flags & 1 << 0)
+        group = bool(flags & 1 << 1)
         title = String.read(b) if flags & (1 << 2) else None
         return HistoryImportParsed(pm=pm, group=group, title=title)
 

@@ -97,7 +97,7 @@ class StoryViews(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "StoryViews":
         flags = Int.read(b)
 
-        has_viewers = True if flags & (1 << 1) else False
+        has_viewers = bool(flags & 1 << 1)
         views_count = Int.read(b)
 
         forwards_count = Int.read(b) if flags & (1 << 2) else None

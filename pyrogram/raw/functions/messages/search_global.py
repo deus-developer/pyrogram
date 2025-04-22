@@ -120,7 +120,7 @@ class SearchGlobal(TLFunction["raw.base.messages.Messages"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SearchGlobal":
         flags = Int.read(b)
 
-        broadcasts_only = True if flags & (1 << 1) else False
+        broadcasts_only = bool(flags & 1 << 1)
         folder_id = Int.read(b) if flags & (1 << 0) else None
         q = String.read(b)
 

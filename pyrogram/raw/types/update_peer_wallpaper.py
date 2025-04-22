@@ -73,7 +73,7 @@ class UpdatePeerWallpaper(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UpdatePeerWallpaper":
         flags = Int.read(b)
 
-        wallpaper_overridden = True if flags & (1 << 1) else False
+        wallpaper_overridden = bool(flags & 1 << 1)
         peer = TLObject.read(b)
 
         wallpaper = TLObject.read(b) if flags & (1 << 0) else None

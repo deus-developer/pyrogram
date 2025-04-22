@@ -69,7 +69,7 @@ class ReorderPinnedSavedDialogs(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ReorderPinnedSavedDialogs":
         flags = Int.read(b)
 
-        force = True if flags & (1 << 0) else False
+        force = bool(flags & 1 << 0)
         order = TLObject.read(b)
 
         return ReorderPinnedSavedDialogs(order=order, force=force)

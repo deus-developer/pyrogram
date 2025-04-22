@@ -79,8 +79,8 @@ class DocumentAttributeCustomEmoji(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "DocumentAttributeCustomEmoji":
         flags = Int.read(b)
 
-        free = True if flags & (1 << 0) else False
-        text_color = True if flags & (1 << 1) else False
+        free = bool(flags & 1 << 0)
+        text_color = bool(flags & 1 << 1)
         alt = String.read(b)
 
         stickerset = TLObject.read(b)

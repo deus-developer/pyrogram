@@ -74,7 +74,7 @@ class ConnectedBot(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ConnectedBot":
         flags = Int.read(b)
 
-        can_reply = True if flags & (1 << 0) else False
+        can_reply = bool(flags & 1 << 0)
         bot_id = Long.read(b)
 
         recipients = TLObject.read(b)

@@ -58,7 +58,7 @@ class SetContentSettings(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SetContentSettings":
         flags = Int.read(b)
 
-        sensitive_enabled = True if flags & (1 << 0) else False
+        sensitive_enabled = bool(flags & 1 << 0)
         return SetContentSettings(sensitive_enabled=sensitive_enabled)
 
     def write(self, *args) -> bytes:

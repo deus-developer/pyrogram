@@ -89,7 +89,7 @@ class FactCheck(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "FactCheck":
         flags = Int.read(b)
 
-        need_check = True if flags & (1 << 0) else False
+        need_check = bool(flags & 1 << 0)
         country = String.read(b) if flags & (1 << 1) else None
         text = TLObject.read(b) if flags & (1 << 1) else None
 

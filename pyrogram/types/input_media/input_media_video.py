@@ -75,16 +75,16 @@ class InputMediaVideo(InputMedia):
     def __init__(
         self,
         media: str | BinaryIO,
-        thumb: str = None,
+        thumb: str | None = None,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list[MessageEntity] = None,
+        caption_entities: list[MessageEntity] | None = None,
         width: int = 0,
         height: int = 0,
         duration: int = 0,
         supports_streaming: bool = True,
-        has_spoiler: bool = None,
-        no_sound: bool = None,
+        has_spoiler: bool | None = None,
+        no_sound: bool | None = None,
     ):
         super().__init__(media, caption, parse_mode, caption_entities)
 

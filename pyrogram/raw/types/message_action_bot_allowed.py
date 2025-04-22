@@ -79,8 +79,8 @@ class MessageActionBotAllowed(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "MessageActionBotAllowed":
         flags = Int.read(b)
 
-        attach_menu = True if flags & (1 << 1) else False
-        from_request = True if flags & (1 << 3) else False
+        attach_menu = bool(flags & 1 << 1)
+        from_request = bool(flags & 1 << 3)
         domain = String.read(b) if flags & (1 << 0) else None
         app = TLObject.read(b) if flags & (1 << 2) else None
 

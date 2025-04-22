@@ -86,7 +86,7 @@ class GetChatPhotos:
             if extra:
                 if current:
                     photos = (
-                        ([current] + extra)
+                        ([current, *extra])
                         if current.file_id != extra[0].file_id
                         else extra
                     )

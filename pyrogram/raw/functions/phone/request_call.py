@@ -84,7 +84,7 @@ class RequestCall(TLFunction["raw.base.phone.PhoneCall"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "RequestCall":
         flags = Int.read(b)
 
-        video = True if flags & (1 << 0) else False
+        video = bool(flags & 1 << 0)
         user_id = TLObject.read(b)
 
         random_id = Int.read(b)

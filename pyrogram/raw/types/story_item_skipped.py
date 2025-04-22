@@ -77,7 +77,7 @@ class StoryItemSkipped(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "StoryItemSkipped":
         flags = Int.read(b)
 
-        close_friends = True if flags & (1 << 8) else False
+        close_friends = bool(flags & 1 << 8)
         id = Int.read(b)
 
         date = Int.read(b)

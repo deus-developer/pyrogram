@@ -103,7 +103,7 @@ class MessageReplies(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "MessageReplies":
         flags = Int.read(b)
 
-        comments = True if flags & (1 << 0) else False
+        comments = bool(flags & 1 << 0)
         replies = Int.read(b)
 
         replies_pts = Int.read(b)

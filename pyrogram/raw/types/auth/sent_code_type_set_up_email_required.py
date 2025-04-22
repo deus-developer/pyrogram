@@ -67,8 +67,8 @@ class SentCodeTypeSetUpEmailRequired(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SentCodeTypeSetUpEmailRequired":
         flags = Int.read(b)
 
-        apple_signin_allowed = True if flags & (1 << 0) else False
-        google_signin_allowed = True if flags & (1 << 1) else False
+        apple_signin_allowed = bool(flags & 1 << 0)
+        google_signin_allowed = bool(flags & 1 << 1)
         return SentCodeTypeSetUpEmailRequired(
             apple_signin_allowed=apple_signin_allowed,
             google_signin_allowed=google_signin_allowed,

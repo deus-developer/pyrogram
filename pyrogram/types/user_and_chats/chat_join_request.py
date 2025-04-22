@@ -52,7 +52,7 @@ class ChatJoinRequest(Object, Update):
         chat: "types.Chat",
         from_user: "types.User",
         date: datetime,
-        bio: str = None,
+        bio: str | None = None,
         invite_link: "types.ChatInviteLink" = None,
     ):
         super().__init__(client)

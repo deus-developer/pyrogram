@@ -62,11 +62,11 @@ class JoinChat:
                 return types.Chat.from_raw_tl_chat_chat(self, chat.chats[0])
             if isinstance(chat.chats[0], raw.types.Channel):
                 return types.Chat.from_raw_tl_channel_chat(self, chat.chats[0])
-        else:
-            chat = await self.invoke(
-                raw.functions.channels.JoinChannel(
-                    channel=await self.resolve_peer(chat_id),
-                ),
-            )
+            return None
+        chat = await self.invoke(
+            raw.functions.channels.JoinChannel(
+                channel=await self.resolve_peer(chat_id),
+            ),
+        )
 
-            return types.Chat.from_raw_tl_channel_chat(self, chat.chats[0])
+        return types.Chat.from_raw_tl_channel_chat(self, chat.chats[0])

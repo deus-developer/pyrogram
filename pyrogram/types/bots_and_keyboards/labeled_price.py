@@ -50,6 +50,7 @@ class LabeledPrice(Object):
                 label=labeled_price.label,
                 amount=labeled_price.amount,
             )
+        return None
 
     def write(self):
         return raw.types.LabeledPrice(

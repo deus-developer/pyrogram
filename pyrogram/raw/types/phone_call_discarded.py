@@ -96,9 +96,9 @@ class PhoneCallDiscarded(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "PhoneCallDiscarded":
         flags = Int.read(b)
 
-        need_rating = True if flags & (1 << 2) else False
-        need_debug = True if flags & (1 << 3) else False
-        video = True if flags & (1 << 6) else False
+        need_rating = bool(flags & 1 << 2)
+        need_debug = bool(flags & 1 << 3)
+        video = bool(flags & 1 << 6)
         id = Long.read(b)
 
         reason = TLObject.read(b) if flags & (1 << 0) else None

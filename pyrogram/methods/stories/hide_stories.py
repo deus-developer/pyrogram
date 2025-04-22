@@ -25,7 +25,7 @@ class HideStories:
     async def hide_stories(
         self: "pyrogram.Client",
         chat_id: int | str,
-        hidden: bool = None,
+        hidden: bool | None = None,
     ) -> bool:
         """Toggle peer stories hidden
 
@@ -46,11 +46,9 @@ class HideStories:
                 # Export a story link
                 link = app.hide_stories("me")
         """
-        r = await self.invoke(
+        return await self.invoke(
             raw.functions.stories.TogglePeerStoriesHidden(
                 peer=await self.resolve_peer(chat_id),
                 hidden=hidden,
             ),
         )
-
-        return r

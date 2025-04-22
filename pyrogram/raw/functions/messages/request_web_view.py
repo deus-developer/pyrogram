@@ -120,8 +120,8 @@ class RequestWebView(TLFunction["raw.base.WebViewResult"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "RequestWebView":
         flags = Int.read(b)
 
-        from_bot_menu = True if flags & (1 << 4) else False
-        silent = True if flags & (1 << 5) else False
+        from_bot_menu = bool(flags & 1 << 4)
+        silent = bool(flags & 1 << 5)
         peer = TLObject.read(b)
 
         bot = TLObject.read(b)

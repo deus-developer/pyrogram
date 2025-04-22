@@ -76,8 +76,8 @@ class ContentSettings(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ContentSettings":
         flags = Int.read(b)
 
-        sensitive_enabled = True if flags & (1 << 0) else False
-        sensitive_can_change = True if flags & (1 << 1) else False
+        sensitive_enabled = bool(flags & 1 << 0)
+        sensitive_can_change = bool(flags & 1 << 1)
         return ContentSettings(
             sensitive_enabled=sensitive_enabled,
             sensitive_can_change=sensitive_can_change,

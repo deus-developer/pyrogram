@@ -31,14 +31,14 @@ class CopyStory:
         chat_id: int | str,
         from_chat_id: int | str,
         story_id: int,
-        caption: str = None,
+        caption: str | None = None,
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] = None,
-        period: int = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
+        period: int | None = None,
         privacy: "enums.StoriesPrivacyRules" = None,
-        allowed_users: list[int | str] = None,
-        disallowed_users: list[int | str] = None,
-        protect_content: bool = None,
+        allowed_users: list[int | str] | None = None,
+        disallowed_users: list[int | str] | None = None,
+        protect_content: bool | None = None,
     ) -> "types.Story":
         """Copy story.
 

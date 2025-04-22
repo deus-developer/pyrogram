@@ -141,12 +141,12 @@ class SendMultiMedia(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SendMultiMedia":
         flags = Int.read(b)
 
-        silent = True if flags & (1 << 5) else False
-        background = True if flags & (1 << 6) else False
-        clear_draft = True if flags & (1 << 7) else False
-        noforwards = True if flags & (1 << 14) else False
-        update_stickersets_order = True if flags & (1 << 15) else False
-        invert_media = True if flags & (1 << 16) else False
+        silent = bool(flags & 1 << 5)
+        background = bool(flags & 1 << 6)
+        clear_draft = bool(flags & 1 << 7)
+        noforwards = bool(flags & 1 << 14)
+        update_stickersets_order = bool(flags & 1 << 15)
+        invert_media = bool(flags & 1 << 16)
         peer = TLObject.read(b)
 
         reply_to = TLObject.read(b) if flags & (1 << 0) else None

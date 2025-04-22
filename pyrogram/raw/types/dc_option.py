@@ -120,12 +120,12 @@ class DcOption(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "DcOption":
         flags = Int.read(b)
 
-        ipv6 = True if flags & (1 << 0) else False
-        media_only = True if flags & (1 << 1) else False
-        tcpo_only = True if flags & (1 << 2) else False
-        cdn = True if flags & (1 << 3) else False
-        static = True if flags & (1 << 4) else False
-        this_port_only = True if flags & (1 << 5) else False
+        ipv6 = bool(flags & 1 << 0)
+        media_only = bool(flags & 1 << 1)
+        tcpo_only = bool(flags & 1 << 2)
+        cdn = bool(flags & 1 << 3)
+        static = bool(flags & 1 << 4)
+        this_port_only = bool(flags & 1 << 5)
         id = Int.read(b)
 
         ip_address = String.read(b)

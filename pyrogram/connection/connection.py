@@ -48,7 +48,7 @@ class Connection:
         self.protocol: TCP | None = None
 
     async def connect(self) -> None:
-        for i in range(Connection.MAX_CONNECTION_ATTEMPTS):
+        for _ in range(Connection.MAX_CONNECTION_ATTEMPTS):
             self.protocol = self.protocol_factory(ipv6=self.ipv6, proxy=self.proxy)
 
             try:

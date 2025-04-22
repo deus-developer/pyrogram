@@ -68,7 +68,7 @@ class SendAsPeer(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SendAsPeer":
         flags = Int.read(b)
 
-        premium_required = True if flags & (1 << 0) else False
+        premium_required = bool(flags & 1 << 0)
         peer = TLObject.read(b)
 
         return SendAsPeer(peer=peer, premium_required=premium_required)

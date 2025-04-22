@@ -74,7 +74,7 @@ class HideAllChatJoinRequests(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "HideAllChatJoinRequests":
         flags = Int.read(b)
 
-        approved = True if flags & (1 << 0) else False
+        approved = bool(flags & 1 << 0)
         peer = TLObject.read(b)
 
         link = String.read(b) if flags & (1 << 1) else None

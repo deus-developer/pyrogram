@@ -95,8 +95,8 @@ class DeleteHistory(TLFunction["raw.base.messages.AffectedHistory"]):  # type: i
     def read(b: BytesIO, *args: Any) -> "DeleteHistory":
         flags = Int.read(b)
 
-        just_clear = True if flags & (1 << 0) else False
-        revoke = True if flags & (1 << 1) else False
+        just_clear = bool(flags & 1 << 0)
+        revoke = bool(flags & 1 << 1)
         peer = TLObject.read(b)
 
         max_id = Int.read(b)

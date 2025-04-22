@@ -128,10 +128,10 @@ class WallPaper(TLObject):  # type: ignore
 
         flags = Int.read(b)
 
-        creator = True if flags & (1 << 0) else False
-        default = True if flags & (1 << 1) else False
-        pattern = True if flags & (1 << 3) else False
-        dark = True if flags & (1 << 4) else False
+        creator = bool(flags & 1 << 0)
+        default = bool(flags & 1 << 1)
+        pattern = bool(flags & 1 << 3)
+        dark = bool(flags & 1 << 4)
         access_hash = Long.read(b)
 
         slug = String.read(b)

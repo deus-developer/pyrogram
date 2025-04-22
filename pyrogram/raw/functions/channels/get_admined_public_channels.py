@@ -72,9 +72,9 @@ class GetAdminedPublicChannels(TLFunction["raw.base.messages.Chats"]):  # type: 
     def read(b: BytesIO, *args: Any) -> "GetAdminedPublicChannels":
         flags = Int.read(b)
 
-        by_location = True if flags & (1 << 0) else False
-        check_limit = True if flags & (1 << 1) else False
-        for_personal = True if flags & (1 << 2) else False
+        by_location = bool(flags & 1 << 0)
+        check_limit = bool(flags & 1 << 1)
+        for_personal = bool(flags & 1 << 2)
         return GetAdminedPublicChannels(
             by_location=by_location,
             check_limit=check_limit,

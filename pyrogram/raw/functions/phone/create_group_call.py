@@ -90,7 +90,7 @@ class CreateGroupCall(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "CreateGroupCall":
         flags = Int.read(b)
 
-        rtmp_stream = True if flags & (1 << 2) else False
+        rtmp_stream = bool(flags & 1 << 2)
         peer = TLObject.read(b)
 
         random_id = Int.read(b)

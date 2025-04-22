@@ -84,7 +84,7 @@ class UpdateNewAuthorization(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UpdateNewAuthorization":
         flags = Int.read(b)
 
-        unconfirmed = True if flags & (1 << 0) else False
+        unconfirmed = bool(flags & 1 << 0)
         hash = Long.read(b)
 
         date = Int.read(b) if flags & (1 << 0) else None

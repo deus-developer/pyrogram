@@ -109,8 +109,8 @@ class PageBlockEmbed(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "PageBlockEmbed":
         flags = Int.read(b)
 
-        full_width = True if flags & (1 << 0) else False
-        allow_scrolling = True if flags & (1 << 3) else False
+        full_width = bool(flags & 1 << 0)
+        allow_scrolling = bool(flags & 1 << 3)
         url = String.read(b) if flags & (1 << 1) else None
         html = String.read(b) if flags & (1 << 2) else None
         poster_photo_id = Long.read(b) if flags & (1 << 4) else None

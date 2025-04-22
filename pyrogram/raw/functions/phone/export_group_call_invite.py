@@ -68,7 +68,7 @@ class ExportGroupCallInvite(TLFunction["raw.base.phone.ExportedGroupCallInvite"]
     def read(b: BytesIO, *args: Any) -> "ExportGroupCallInvite":
         flags = Int.read(b)
 
-        can_self_unmute = True if flags & (1 << 0) else False
+        can_self_unmute = bool(flags & 1 << 0)
         call = TLObject.read(b)
 
         return ExportGroupCallInvite(call=call, can_self_unmute=can_self_unmute)

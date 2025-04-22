@@ -73,8 +73,8 @@ class Username(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "Username":
         flags = Int.read(b)
 
-        editable = True if flags & (1 << 0) else False
-        active = True if flags & (1 << 1) else False
+        editable = bool(flags & 1 << 0)
+        active = bool(flags & 1 << 1)
         username = String.read(b)
 
         return Username(username=username, editable=editable, active=active)

@@ -91,8 +91,8 @@ class BotInlineMessageText(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "BotInlineMessageText":
         flags = Int.read(b)
 
-        no_webpage = True if flags & (1 << 0) else False
-        invert_media = True if flags & (1 << 3) else False
+        no_webpage = bool(flags & 1 << 0)
+        invert_media = bool(flags & 1 << 3)
         message = String.read(b)
 
         entities = TLObject.read(b) if flags & (1 << 1) else []

@@ -35,7 +35,18 @@ class ContinuePropagation(StopAsyncIteration):
     pass
 
 
-from . import enums, filters, handlers, raw, types, session, connection, crypto, errors, storage
+from . import (
+    connection,
+    crypto,
+    enums,
+    errors,
+    filters,
+    handlers,
+    raw,
+    session,
+    storage,
+    types,
+)
 from .client import Client
 from .sync import compose, idle
 

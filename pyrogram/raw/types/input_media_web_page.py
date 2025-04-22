@@ -78,9 +78,9 @@ class InputMediaWebPage(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "InputMediaWebPage":
         flags = Int.read(b)
 
-        force_large_media = True if flags & (1 << 0) else False
-        force_small_media = True if flags & (1 << 1) else False
-        optional = True if flags & (1 << 2) else False
+        force_large_media = bool(flags & 1 << 0)
+        force_small_media = bool(flags & 1 << 1)
+        optional = bool(flags & 1 << 2)
         url = String.read(b)
 
         return InputMediaWebPage(

@@ -74,7 +74,7 @@ class ToggleGroupCallSettings(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ToggleGroupCallSettings":
         flags = Int.read(b)
 
-        reset_invite_hash = True if flags & (1 << 1) else False
+        reset_invite_hash = bool(flags & 1 << 1)
         call = TLObject.read(b)
 
         join_muted = Bool.read(b) if flags & (1 << 0) else None

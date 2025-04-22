@@ -73,8 +73,8 @@ class UpdateMoveStickerSetToTop(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UpdateMoveStickerSetToTop":
         flags = Int.read(b)
 
-        masks = True if flags & (1 << 0) else False
-        emojis = True if flags & (1 << 1) else False
+        masks = bool(flags & 1 << 0)
+        emojis = bool(flags & 1 << 1)
         stickerset = Long.read(b)
 
         return UpdateMoveStickerSetToTop(

@@ -74,8 +74,8 @@ class WebPageAttributeStickerSet(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "WebPageAttributeStickerSet":
         flags = Int.read(b)
 
-        emojis = True if flags & (1 << 0) else False
-        text_color = True if flags & (1 << 1) else False
+        emojis = bool(flags & 1 << 0)
+        text_color = bool(flags & 1 << 1)
         stickers = TLObject.read(b)
 
         return WebPageAttributeStickerSet(

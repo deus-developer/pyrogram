@@ -102,9 +102,9 @@ class InputKeyboardButtonRequestPeer(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "InputKeyboardButtonRequestPeer":
         flags = Int.read(b)
 
-        name_requested = True if flags & (1 << 0) else False
-        username_requested = True if flags & (1 << 1) else False
-        photo_requested = True if flags & (1 << 2) else False
+        name_requested = bool(flags & 1 << 0)
+        username_requested = bool(flags & 1 << 1)
+        photo_requested = bool(flags & 1 << 2)
         text = String.read(b)
 
         button_id = Int.read(b)

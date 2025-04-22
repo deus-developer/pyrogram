@@ -41,7 +41,7 @@ class ReplyKeyboardRemove(Object):
 
     def __init__(
         self,
-        selective: bool = None,
+        selective: bool | None = None,
     ):
         super().__init__()
 

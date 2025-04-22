@@ -73,7 +73,7 @@ class ValidateRequestedInfo(TLFunction["raw.base.payments.ValidatedRequestedInfo
     def read(b: BytesIO, *args: Any) -> "ValidateRequestedInfo":
         flags = Int.read(b)
 
-        save = True if flags & (1 << 0) else False
+        save = bool(flags & 1 << 0)
         invoice = TLObject.read(b)
 
         info = TLObject.read(b)

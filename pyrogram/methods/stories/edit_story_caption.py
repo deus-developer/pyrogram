@@ -28,7 +28,7 @@ class EditStoryCaption:
         story_id: int,
         caption: str,
         parse_mode: "enums.ParseMode" = None,
-        caption_entities: list["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
     ) -> "types.Story":
         """Edit the caption of story.
 
@@ -80,3 +80,4 @@ class EditStoryCaption:
                     i.story,
                     i.peer,
                 )
+        return None

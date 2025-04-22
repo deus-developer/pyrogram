@@ -73,8 +73,8 @@ class MessageActionSetChatWallPaper(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "MessageActionSetChatWallPaper":
         flags = Int.read(b)
 
-        same = True if flags & (1 << 0) else False
-        for_both = True if flags & (1 << 1) else False
+        same = bool(flags & 1 << 0)
+        for_both = bool(flags & 1 << 1)
         wallpaper = TLObject.read(b)
 
         return MessageActionSetChatWallPaper(

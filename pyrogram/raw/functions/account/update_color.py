@@ -73,7 +73,7 @@ class UpdateColor(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UpdateColor":
         flags = Int.read(b)
 
-        for_profile = True if flags & (1 << 1) else False
+        for_profile = bool(flags & 1 << 1)
         color = Int.read(b) if flags & (1 << 2) else None
         background_emoji_id = Long.read(b) if flags & (1 << 0) else None
         return UpdateColor(

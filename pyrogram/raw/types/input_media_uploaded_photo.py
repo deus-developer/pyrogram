@@ -79,7 +79,7 @@ class InputMediaUploadedPhoto(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "InputMediaUploadedPhoto":
         flags = Int.read(b)
 
-        spoiler = True if flags & (1 << 2) else False
+        spoiler = bool(flags & 1 << 2)
         file = TLObject.read(b)
 
         stickers = TLObject.read(b) if flags & (1 << 0) else []

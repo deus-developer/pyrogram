@@ -16,6 +16,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
+import contextlib
 from collections.abc import AsyncGenerator
 
 import pyrogram
@@ -74,10 +75,8 @@ class GetDialogs:
 
                 chat_id = utils.get_peer_id(message.peer_id)
 
-                try:
+                with contextlib.suppress(KeyError):
                     messages[chat_id] = await types.Message.from_raw_tl(self, message)
-                except KeyError:
-                    pass
 
             dialogs = []
 
@@ -85,10 +84,8 @@ class GetDialogs:
                 if not isinstance(dialog, raw.types.Dialog):
                     continue
 
-                try:
+                with contextlib.suppress(KeyError):
                     dialogs.append(types.Dialog.from_raw_tl(self, dialog, messages))
-                except KeyError:
-                    pass
 
             if not dialogs:
                 return

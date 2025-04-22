@@ -85,7 +85,7 @@ class TermsOfService(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "TermsOfService":
         flags = Int.read(b)
 
-        popup = True if flags & (1 << 0) else False
+        popup = bool(flags & 1 << 0)
         id = TLObject.read(b)
 
         text = String.read(b)

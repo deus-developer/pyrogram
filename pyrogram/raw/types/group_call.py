@@ -168,14 +168,14 @@ class GroupCall(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "GroupCall":
         flags = Int.read(b)
 
-        join_muted = True if flags & (1 << 1) else False
-        can_change_join_muted = True if flags & (1 << 2) else False
-        join_date_asc = True if flags & (1 << 6) else False
-        schedule_start_subscribed = True if flags & (1 << 8) else False
-        can_start_video = True if flags & (1 << 9) else False
-        record_video_active = True if flags & (1 << 11) else False
-        rtmp_stream = True if flags & (1 << 12) else False
-        listeners_hidden = True if flags & (1 << 13) else False
+        join_muted = bool(flags & 1 << 1)
+        can_change_join_muted = bool(flags & 1 << 2)
+        join_date_asc = bool(flags & 1 << 6)
+        schedule_start_subscribed = bool(flags & 1 << 8)
+        can_start_video = bool(flags & 1 << 9)
+        record_video_active = bool(flags & 1 << 11)
+        rtmp_stream = bool(flags & 1 << 12)
+        listeners_hidden = bool(flags & 1 << 13)
         id = Long.read(b)
 
         access_hash = Long.read(b)

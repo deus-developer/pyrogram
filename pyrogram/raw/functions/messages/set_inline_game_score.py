@@ -83,8 +83,8 @@ class SetInlineGameScore(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SetInlineGameScore":
         flags = Int.read(b)
 
-        edit_message = True if flags & (1 << 0) else False
-        force = True if flags & (1 << 1) else False
+        edit_message = bool(flags & 1 << 0)
+        force = bool(flags & 1 << 1)
         id = TLObject.read(b)
 
         user_id = TLObject.read(b)

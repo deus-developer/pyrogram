@@ -98,7 +98,7 @@ class ChannelDifferenceTooLong(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ChannelDifferenceTooLong":
         flags = Int.read(b)
 
-        final = True if flags & (1 << 0) else False
+        final = bool(flags & 1 << 0)
         timeout = Int.read(b) if flags & (1 << 1) else None
         dialog = TLObject.read(b)
 

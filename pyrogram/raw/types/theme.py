@@ -139,9 +139,9 @@ class Theme(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "Theme":
         flags = Int.read(b)
 
-        creator = True if flags & (1 << 0) else False
-        default = True if flags & (1 << 1) else False
-        for_chat = True if flags & (1 << 5) else False
+        creator = bool(flags & 1 << 0)
+        default = bool(flags & 1 << 1)
+        for_chat = bool(flags & 1 << 5)
         id = Long.read(b)
 
         access_hash = Long.read(b)

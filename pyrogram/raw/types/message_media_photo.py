@@ -84,7 +84,7 @@ class MessageMediaPhoto(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "MessageMediaPhoto":
         flags = Int.read(b)
 
-        spoiler = True if flags & (1 << 3) else False
+        spoiler = bool(flags & 1 << 3)
         photo = TLObject.read(b) if flags & (1 << 0) else None
 
         ttl_seconds = Int.read(b) if flags & (1 << 2) else None

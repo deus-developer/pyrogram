@@ -105,7 +105,7 @@ class Authorization(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "Authorization":
         flags = Int.read(b)
 
-        setup_password_required = True if flags & (1 << 1) else False
+        setup_password_required = bool(flags & 1 << 1)
         otherwise_relogin_days = Int.read(b) if flags & (1 << 1) else None
         tmp_sessions = Int.read(b) if flags & (1 << 0) else None
         future_auth_token = Bytes.read(b) if flags & (1 << 2) else None

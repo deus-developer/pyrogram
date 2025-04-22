@@ -26,10 +26,10 @@ class EditForumTopic:
         self: "pyrogram.Client",
         chat_id: int | str,
         topic_id: int,
-        title: str = None,
-        icon_emoji_id: int = None,
-        closed: bool = None,
-        hidden: bool = None,
+        title: str | None = None,
+        icon_emoji_id: int | None = None,
+        closed: bool | None = None,
+        hidden: bool | None = None,
     ) -> bool:
         """Edit a forum topic.
 

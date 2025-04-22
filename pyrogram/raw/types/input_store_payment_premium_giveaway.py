@@ -122,8 +122,8 @@ class InputStorePaymentPremiumGiveaway(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "InputStorePaymentPremiumGiveaway":
         flags = Int.read(b)
 
-        only_new_subscribers = True if flags & (1 << 0) else False
-        winners_are_visible = True if flags & (1 << 3) else False
+        only_new_subscribers = bool(flags & 1 << 0)
+        winners_are_visible = bool(flags & 1 << 3)
         boost_peer = TLObject.read(b)
 
         additional_peers = TLObject.read(b) if flags & (1 << 1) else []

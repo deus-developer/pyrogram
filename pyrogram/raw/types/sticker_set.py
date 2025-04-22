@@ -170,13 +170,13 @@ class StickerSet(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "StickerSet":
         flags = Int.read(b)
 
-        archived = True if flags & (1 << 1) else False
-        official = True if flags & (1 << 2) else False
-        masks = True if flags & (1 << 3) else False
-        emojis = True if flags & (1 << 7) else False
-        text_color = True if flags & (1 << 9) else False
-        channel_emoji_status = True if flags & (1 << 10) else False
-        creator = True if flags & (1 << 11) else False
+        archived = bool(flags & 1 << 1)
+        official = bool(flags & 1 << 2)
+        masks = bool(flags & 1 << 3)
+        emojis = bool(flags & 1 << 7)
+        text_color = bool(flags & 1 << 9)
+        channel_emoji_status = bool(flags & 1 << 10)
+        creator = bool(flags & 1 << 11)
         installed_date = Int.read(b) if flags & (1 << 0) else None
         id = Long.read(b)
 

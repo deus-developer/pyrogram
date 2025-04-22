@@ -171,8 +171,8 @@ class PaymentForm(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "PaymentForm":
         flags = Int.read(b)
 
-        can_save_credentials = True if flags & (1 << 2) else False
-        password_missing = True if flags & (1 << 3) else False
+        can_save_credentials = bool(flags & 1 << 2)
+        password_missing = bool(flags & 1 << 3)
         form_id = Long.read(b)
 
         bot_id = Long.read(b)

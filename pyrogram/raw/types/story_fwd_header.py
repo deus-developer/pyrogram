@@ -79,7 +79,7 @@ class StoryFwdHeader(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "StoryFwdHeader":
         flags = Int.read(b)
 
-        modified = True if flags & (1 << 3) else False
+        modified = bool(flags & 1 << 3)
         from_peer = TLObject.read(b) if flags & (1 << 0) else None
 
         from_name = String.read(b) if flags & (1 << 1) else None

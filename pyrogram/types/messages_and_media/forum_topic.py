@@ -81,21 +81,21 @@ class ForumTopic(Object):
         self,
         *,
         id: int,
-        title: str = None,
-        date: datetime = None,
-        icon_color: str = None,
-        icon_emoji_id: int = None,
+        title: str | None = None,
+        date: datetime | None = None,
+        icon_color: str | None = None,
+        icon_emoji_id: int | None = None,
         creator: "types.Chat" = None,
         top_message: "types.Message" = None,
-        unread_count: int = None,
-        unread_mentions_count: int = None,
-        unread_reactions_count: int = None,
-        is_my: bool = None,
-        is_closed: bool = None,
-        is_pinned: bool = None,
-        is_short: bool = None,
-        is_hidden: bool = None,
-        is_deleted: bool = None,
+        unread_count: int | None = None,
+        unread_mentions_count: int | None = None,
+        unread_reactions_count: int | None = None,
+        is_my: bool | None = None,
+        is_closed: bool | None = None,
+        is_pinned: bool | None = None,
+        is_short: bool | None = None,
+        is_hidden: bool | None = None,
+        is_deleted: bool | None = None,
     ):
         super().__init__()
 
@@ -120,7 +120,7 @@ class ForumTopic(Object):
     def from_raw_tl(
         client: "pyrogram.Client",
         forum_topic: "raw.types.ForumTopic",
-        messages: dict = None,
+        messages: dict | None = None,
     ) -> "ForumTopic":
         if messages is None:
             messages = {}

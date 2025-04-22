@@ -78,8 +78,8 @@ class ExportMessageLink(TLFunction["raw.base.ExportedMessageLink"]):  # type: ig
     def read(b: BytesIO, *args: Any) -> "ExportMessageLink":
         flags = Int.read(b)
 
-        grouped = True if flags & (1 << 0) else False
-        thread = True if flags & (1 << 1) else False
+        grouped = bool(flags & 1 << 0)
+        thread = bool(flags & 1 << 1)
         channel = TLObject.read(b)
 
         id = Int.read(b)

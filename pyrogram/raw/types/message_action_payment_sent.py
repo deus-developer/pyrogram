@@ -90,8 +90,8 @@ class MessageActionPaymentSent(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "MessageActionPaymentSent":
         flags = Int.read(b)
 
-        recurring_init = True if flags & (1 << 2) else False
-        recurring_used = True if flags & (1 << 3) else False
+        recurring_init = bool(flags & 1 << 2)
+        recurring_used = bool(flags & 1 << 3)
         currency = String.read(b)
 
         total_amount = Long.read(b)

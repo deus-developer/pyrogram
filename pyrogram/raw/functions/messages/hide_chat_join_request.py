@@ -73,7 +73,7 @@ class HideChatJoinRequest(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "HideChatJoinRequest":
         flags = Int.read(b)
 
-        approved = True if flags & (1 << 0) else False
+        approved = bool(flags & 1 << 0)
         peer = TLObject.read(b)
 
         user_id = TLObject.read(b)

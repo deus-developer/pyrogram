@@ -116,12 +116,12 @@ class CodeSettings(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "CodeSettings":
         flags = Int.read(b)
 
-        allow_flashcall = True if flags & (1 << 0) else False
-        current_number = True if flags & (1 << 1) else False
-        allow_app_hash = True if flags & (1 << 4) else False
-        allow_missed_call = True if flags & (1 << 5) else False
-        allow_firebase = True if flags & (1 << 7) else False
-        unknown_number = True if flags & (1 << 9) else False
+        allow_flashcall = bool(flags & 1 << 0)
+        current_number = bool(flags & 1 << 1)
+        allow_app_hash = bool(flags & 1 << 4)
+        allow_missed_call = bool(flags & 1 << 5)
+        allow_firebase = bool(flags & 1 << 7)
+        unknown_number = bool(flags & 1 << 9)
         logout_tokens = TLObject.read(b, Bytes) if flags & (1 << 6) else []
 
         token = String.read(b) if flags & (1 << 8) else None

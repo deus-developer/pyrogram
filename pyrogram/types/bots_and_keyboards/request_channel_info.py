@@ -48,8 +48,8 @@ class RequestChannelInfo(Object):
         self,
         *,
         button_id: int,
-        is_creator: bool = None,
-        has_username: bool = None,
+        is_creator: bool | None = None,
+        has_username: bool | None = None,
         user_privileges: "types.ChatPrivileges" = None,
         bot_privileges: "types.ChatPrivileges" = None,
     ):

@@ -96,7 +96,7 @@ class GetStoryReactionsList(TLFunction["raw.base.stories.StoryReactionsList"]): 
     def read(b: BytesIO, *args: Any) -> "GetStoryReactionsList":
         flags = Int.read(b)
 
-        forwards_first = True if flags & (1 << 2) else False
+        forwards_first = bool(flags & 1 << 2)
         peer = TLObject.read(b)
 
         id = Int.read(b)

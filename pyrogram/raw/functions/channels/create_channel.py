@@ -114,10 +114,10 @@ class CreateChannel(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "CreateChannel":
         flags = Int.read(b)
 
-        broadcast = True if flags & (1 << 0) else False
-        megagroup = True if flags & (1 << 1) else False
-        for_import = True if flags & (1 << 3) else False
-        forum = True if flags & (1 << 5) else False
+        broadcast = bool(flags & 1 << 0)
+        megagroup = bool(flags & 1 << 1)
+        for_import = bool(flags & 1 << 3)
+        forum = bool(flags & 1 << 5)
         title = String.read(b)
 
         about = String.read(b)

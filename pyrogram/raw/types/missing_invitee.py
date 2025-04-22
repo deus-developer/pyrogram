@@ -77,8 +77,8 @@ class MissingInvitee(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "MissingInvitee":
         flags = Int.read(b)
 
-        premium_would_allow_invite = True if flags & (1 << 0) else False
-        premium_required_for_pm = True if flags & (1 << 1) else False
+        premium_would_allow_invite = bool(flags & 1 << 0)
+        premium_required_for_pm = bool(flags & 1 << 1)
         user_id = Long.read(b)
 
         return MissingInvitee(

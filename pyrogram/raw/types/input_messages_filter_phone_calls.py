@@ -58,7 +58,7 @@ class InputMessagesFilterPhoneCalls(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "InputMessagesFilterPhoneCalls":
         flags = Int.read(b)
 
-        missed = True if flags & (1 << 0) else False
+        missed = bool(flags & 1 << 0)
         return InputMessagesFilterPhoneCalls(missed=missed)
 
     def write(self, *args) -> bytes:

@@ -84,7 +84,7 @@ class RequestPeerTypeBroadcast(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "RequestPeerTypeBroadcast":
         flags = Int.read(b)
 
-        creator = True if flags & (1 << 0) else False
+        creator = bool(flags & 1 << 0)
         has_username = Bool.read(b) if flags & (1 << 3) else None
         user_admin_rights = TLObject.read(b) if flags & (1 << 1) else None
 

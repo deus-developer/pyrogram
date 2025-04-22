@@ -128,7 +128,7 @@ class TCP:
         except (
             TimeoutError
         ):  # Re-raise as TimeoutError. asyncio.TimeoutError is deprecated in 3.11
-            raise TimeoutError("Connection timed out")
+            raise TimeoutError("Connection timed out") from None
 
     async def close(self) -> None:
         if self.writer is None:
@@ -150,7 +150,7 @@ class TCP:
                 await self.writer.drain()
             except Exception as e:
                 log.info("Send exception: %s %s", type(e).__name__, e)
-                raise OSError(e)
+                raise OSError(e) from e
 
     async def recv(self, length: int = 0) -> bytes | None:
         data = b""

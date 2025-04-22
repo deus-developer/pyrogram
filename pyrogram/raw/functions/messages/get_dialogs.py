@@ -102,7 +102,7 @@ class GetDialogs(TLFunction["raw.base.messages.Dialogs"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "GetDialogs":
         flags = Int.read(b)
 
-        exclude_pinned = True if flags & (1 << 0) else False
+        exclude_pinned = bool(flags & 1 << 0)
         folder_id = Int.read(b) if flags & (1 << 1) else None
         offset_date = Int.read(b)
 

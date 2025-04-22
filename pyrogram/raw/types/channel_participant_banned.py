@@ -84,7 +84,7 @@ class ChannelParticipantBanned(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ChannelParticipantBanned":
         flags = Int.read(b)
 
-        left = True if flags & (1 << 0) else False
+        left = bool(flags & 1 << 0)
         peer = TLObject.read(b)
 
         kicked_by = Long.read(b)

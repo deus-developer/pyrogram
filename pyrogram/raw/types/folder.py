@@ -96,9 +96,9 @@ class Folder(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "Folder":
         flags = Int.read(b)
 
-        autofill_new_broadcasts = True if flags & (1 << 0) else False
-        autofill_public_groups = True if flags & (1 << 1) else False
-        autofill_new_correspondents = True if flags & (1 << 2) else False
+        autofill_new_broadcasts = bool(flags & 1 << 0)
+        autofill_public_groups = bool(flags & 1 << 1)
+        autofill_new_correspondents = bool(flags & 1 << 2)
         id = Int.read(b)
 
         title = String.read(b)

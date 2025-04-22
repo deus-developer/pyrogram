@@ -31,7 +31,7 @@ def ctr256_encrypt(
     data: bytes,
     key: bytes,
     iv: bytearray,
-    state: bytearray = None,
+    state: bytearray | None = None,
 ) -> bytes:
     return tgcrypto.ctr256_encrypt(data, key, iv, state or bytearray(1))
 
@@ -40,7 +40,7 @@ def ctr256_decrypt(
     data: bytes,
     key: bytes,
     iv: bytearray,
-    state: bytearray = None,
+    state: bytearray | None = None,
 ) -> bytes:
     return tgcrypto.ctr256_decrypt(data, key, iv, state or bytearray(1))
 

@@ -39,8 +39,8 @@ class BusinessIntro(Object):
     def __init__(
         self,
         *,
-        title: str = None,
-        text: str = None,
+        title: str | None = None,
+        text: str | None = None,
         sticker: "types.Sticker" = None,
     ):
         super().__init__()

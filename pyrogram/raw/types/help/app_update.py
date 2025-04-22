@@ -118,7 +118,7 @@ class AppUpdate(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "AppUpdate":
         flags = Int.read(b)
 
-        can_not_skip = True if flags & (1 << 0) else False
+        can_not_skip = bool(flags & 1 << 0)
         id = Int.read(b)
 
         version = String.read(b)

@@ -67,8 +67,8 @@ class UpdateStickerSets(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UpdateStickerSets":
         flags = Int.read(b)
 
-        masks = True if flags & (1 << 0) else False
-        emojis = True if flags & (1 << 1) else False
+        masks = bool(flags & 1 << 0)
+        emojis = bool(flags & 1 << 1)
         return UpdateStickerSets(masks=masks, emojis=emojis)
 
     def write(self, *args) -> bytes:

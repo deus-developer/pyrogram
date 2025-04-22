@@ -38,9 +38,9 @@ class ForumTopicEdited(Object):
     def __init__(
         self,
         *,
-        title: str = None,
-        icon_color: int = None,
-        icon_emoji_id: str = None,
+        title: str | None = None,
+        icon_color: int | None = None,
+        icon_emoji_id: str | None = None,
     ):
         super().__init__()
 

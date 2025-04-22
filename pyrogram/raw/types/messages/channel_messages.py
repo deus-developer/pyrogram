@@ -131,7 +131,7 @@ class ChannelMessages(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ChannelMessages":
         flags = Int.read(b)
 
-        inexact = True if flags & (1 << 1) else False
+        inexact = bool(flags & 1 << 1)
         pts = Int.read(b)
 
         count = Int.read(b)

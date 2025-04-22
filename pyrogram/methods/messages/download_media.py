@@ -36,7 +36,7 @@ class DownloadMedia:
         file_name: str = DEFAULT_DOWNLOAD_DIR,
         in_memory: bool = False,
         block: bool = True,
-        progress: Callable = None,
+        progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> str | BinaryIO | None:
         """Download the media from a message.
@@ -159,10 +159,7 @@ class DownloadMedia:
         if not media:
             raise ValueError("This message doesn't contain any downloadable media")
 
-        if isinstance(media, str):
-            file_id_str = media
-        else:
-            file_id_str = media.file_id
+        file_id_str = media if isinstance(media, str) else media.file_id
 
         file_id_obj = FileId.decode(file_id_str)
 
@@ -218,3 +215,4 @@ class DownloadMedia:
         if block:
             return await downloader
         asyncio.get_event_loop().create_task(downloader)
+        return None

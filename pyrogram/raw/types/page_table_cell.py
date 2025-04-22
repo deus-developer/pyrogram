@@ -107,11 +107,11 @@ class PageTableCell(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "PageTableCell":
         flags = Int.read(b)
 
-        header = True if flags & (1 << 0) else False
-        align_center = True if flags & (1 << 3) else False
-        align_right = True if flags & (1 << 4) else False
-        valign_middle = True if flags & (1 << 5) else False
-        valign_bottom = True if flags & (1 << 6) else False
+        header = bool(flags & 1 << 0)
+        align_center = bool(flags & 1 << 3)
+        align_right = bool(flags & 1 << 4)
+        valign_middle = bool(flags & 1 << 5)
+        valign_bottom = bool(flags & 1 << 6)
         text = TLObject.read(b) if flags & (1 << 7) else None
 
         colspan = Int.read(b) if flags & (1 << 1) else None

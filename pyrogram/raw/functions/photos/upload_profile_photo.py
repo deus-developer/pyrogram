@@ -96,7 +96,7 @@ class UploadProfilePhoto(TLFunction["raw.base.photos.Photo"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UploadProfilePhoto":
         flags = Int.read(b)
 
-        fallback = True if flags & (1 << 3) else False
+        fallback = bool(flags & 1 << 3)
         bot = TLObject.read(b) if flags & (1 << 5) else None
 
         file = TLObject.read(b) if flags & (1 << 0) else None

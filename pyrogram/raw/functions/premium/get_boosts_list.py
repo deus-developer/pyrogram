@@ -79,7 +79,7 @@ class GetBoostsList(TLFunction["raw.base.premium.BoostsList"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "GetBoostsList":
         flags = Int.read(b)
 
-        gifts = True if flags & (1 << 0) else False
+        gifts = bool(flags & 1 << 0)
         peer = TLObject.read(b)
 
         offset = String.read(b)

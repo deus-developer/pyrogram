@@ -79,7 +79,7 @@ class ChatPhoto(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ChatPhoto":
         flags = Int.read(b)
 
-        has_video = True if flags & (1 << 0) else False
+        has_video = bool(flags & 1 << 0)
         photo_id = Long.read(b)
 
         stripped_thumb = Bytes.read(b) if flags & (1 << 1) else None

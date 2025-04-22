@@ -31,7 +31,6 @@ from .raw_update_handler import RawUpdateHandler
 from .story_handler import StoryHandler
 from .user_status_handler import UserStatusHandler
 
-
 __all__ = [
     "CallbackQueryHandler",
     "ChatJoinRequestHandler",
@@ -46,5 +45,5 @@ __all__ = [
     "PreCheckoutQueryHandler",
     "RawUpdateHandler",
     "StoryHandler",
-    "UserStatusHandler"
+    "UserStatusHandler",
 ]

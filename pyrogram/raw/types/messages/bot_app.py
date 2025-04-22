@@ -87,9 +87,9 @@ class BotApp(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "BotApp":
         flags = Int.read(b)
 
-        inactive = True if flags & (1 << 0) else False
-        request_write_access = True if flags & (1 << 1) else False
-        has_settings = True if flags & (1 << 2) else False
+        inactive = bool(flags & 1 << 0)
+        request_write_access = bool(flags & 1 << 1)
+        has_settings = bool(flags & 1 << 2)
         app = TLObject.read(b)
 
         return BotApp(

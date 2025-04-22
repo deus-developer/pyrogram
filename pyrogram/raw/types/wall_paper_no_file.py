@@ -92,8 +92,8 @@ class WallPaperNoFile(TLObject):  # type: ignore
 
         flags = Int.read(b)
 
-        default = True if flags & (1 << 1) else False
-        dark = True if flags & (1 << 4) else False
+        default = bool(flags & 1 << 1)
+        dark = bool(flags & 1 << 4)
         settings = TLObject.read(b) if flags & (1 << 2) else None
 
         return WallPaperNoFile(id=id, default=default, dark=dark, settings=settings)

@@ -71,8 +71,8 @@ class Photo(Object):
         height: int,
         file_size: int,
         date: datetime,
-        ttl_seconds: int = None,
-        thumbs: list["types.Thumbnail"] = None,
+        ttl_seconds: int | None = None,
+        thumbs: list["types.Thumbnail"] | None = None,
     ):
         super().__init__(client)
 
@@ -89,7 +89,7 @@ class Photo(Object):
     def from_raw_tl(
         client,
         photo: "raw.types.Photo",
-        ttl_seconds: int = None,
+        ttl_seconds: int | None = None,
     ) -> "Photo":
         if isinstance(photo, raw.types.Photo):
             photos: list[raw.types.PhotoSize] = []
@@ -137,3 +137,4 @@ class Photo(Object):
                 thumbs=types.Thumbnail.from_raw_tl(client, photo),
                 client=client,
             )
+        return None

@@ -79,3 +79,4 @@ class PinChatMessage:
                 (raw.types.UpdateNewMessage, raw.types.UpdateNewChannelMessage),
             ):
                 return await types.Message.from_raw_tl(self, i.message)
+        return None

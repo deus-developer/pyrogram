@@ -17,6 +17,8 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import contextlib
+
 import pyrogram
 from pyrogram import enums, raw, types, utils
 
@@ -79,20 +81,20 @@ class Folder(Object):
         client: "pyrogram.Client" = None,
         id: int,
         title: str,
-        included_chats: list["types.Chat"] = None,
-        excluded_chats: list["types.Chat"] = None,
-        pinned_chats: list["types.Chat"] = None,
-        contacts: bool = None,
-        non_contacts: bool = None,
-        groups: bool = None,
-        channels: bool = None,
-        bots: bool = None,
-        exclude_muted: bool = None,
-        exclude_read: bool = None,
-        exclude_archived: bool = None,
-        emoji: str = None,
+        included_chats: list["types.Chat"] | None = None,
+        excluded_chats: list["types.Chat"] | None = None,
+        pinned_chats: list["types.Chat"] | None = None,
+        contacts: bool | None = None,
+        non_contacts: bool | None = None,
+        groups: bool | None = None,
+        channels: bool | None = None,
+        bots: bool | None = None,
+        exclude_muted: bool | None = None,
+        exclude_read: bool | None = None,
+        exclude_archived: bool | None = None,
+        emoji: str | None = None,
         color: "enums.FolderColor" = None,
-        has_my_invites: bool = None,
+        has_my_invites: bool | None = None,
     ):
         super().__init__(client)
 
@@ -120,23 +122,17 @@ class Folder(Object):
         pinned_chats = []
 
         for peer in folder.include_peers:
-            try:
+            with contextlib.suppress(KeyError):
                 included_chats.append(types.Chat.from_raw_tl_dialog(client, peer))
-            except KeyError:
-                pass
 
         if getattr(folder, "exclude_peers", None):
             for peer in folder.exclude_peers:
-                try:
+                with contextlib.suppress(KeyError):
                     excluded_chats.append(types.Chat.from_raw_tl_dialog(client, peer))
-                except KeyError:
-                    pass
 
         for peer in folder.pinned_peers:
-            try:
+            with contextlib.suppress(KeyError):
                 pinned_chats.append(types.Chat.from_raw_tl_dialog(client, peer))
-            except KeyError:
-                pass
 
         return Folder(
             id=folder.id,
@@ -179,19 +175,19 @@ class Folder(Object):
 
     async def update(
         self,
-        included_chats: list[int | str] = None,
-        excluded_chats: list[int | str] = None,
-        pinned_chats: list[int | str] = None,
-        title: str = None,
-        contacts: bool = None,
-        non_contacts: bool = None,
-        groups: bool = None,
-        channels: bool = None,
-        bots: bool = None,
-        exclude_muted: bool = None,
-        exclude_read: bool = None,
-        exclude_archived: bool = None,
-        emoji: str = None,
+        included_chats: list[int | str] | None = None,
+        excluded_chats: list[int | str] | None = None,
+        pinned_chats: list[int | str] | None = None,
+        title: str | None = None,
+        contacts: bool | None = None,
+        non_contacts: bool | None = None,
+        groups: bool | None = None,
+        channels: bool | None = None,
+        bots: bool | None = None,
+        exclude_muted: bool | None = None,
+        exclude_read: bool | None = None,
+        exclude_archived: bool | None = None,
+        emoji: str | None = None,
         color: "enums.FolderColor" = None,
     ):
         """Bound method *update_peers* of :obj:`~pyrogram.types.Folder`.

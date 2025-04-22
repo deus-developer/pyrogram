@@ -74,7 +74,7 @@ class DeleteChatUser(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "DeleteChatUser":
         flags = Int.read(b)
 
-        revoke_history = True if flags & (1 << 0) else False
+        revoke_history = bool(flags & 1 << 0)
         chat_id = Long.read(b)
 
         user_id = TLObject.read(b)

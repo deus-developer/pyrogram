@@ -73,7 +73,7 @@ class UpdateDialogPinned(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UpdateDialogPinned":
         flags = Int.read(b)
 
-        pinned = True if flags & (1 << 0) else False
+        pinned = bool(flags & 1 << 0)
         folder_id = Int.read(b) if flags & (1 << 1) else None
         peer = TLObject.read(b)
 

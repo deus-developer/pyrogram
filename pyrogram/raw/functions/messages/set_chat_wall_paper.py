@@ -88,8 +88,8 @@ class SetChatWallPaper(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SetChatWallPaper":
         flags = Int.read(b)
 
-        for_both = True if flags & (1 << 3) else False
-        revert = True if flags & (1 << 4) else False
+        for_both = bool(flags & 1 << 3)
+        revert = bool(flags & 1 << 4)
         peer = TLObject.read(b)
 
         wallpaper = TLObject.read(b) if flags & (1 << 0) else None

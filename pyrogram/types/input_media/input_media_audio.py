@@ -66,10 +66,10 @@ class InputMediaAudio(InputMedia):
     def __init__(
         self,
         media: str | BinaryIO,
-        thumb: str = None,
+        thumb: str | None = None,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list[MessageEntity] = None,
+        caption_entities: list[MessageEntity] | None = None,
         duration: int = 0,
         performer: str = "",
         title: str = "",

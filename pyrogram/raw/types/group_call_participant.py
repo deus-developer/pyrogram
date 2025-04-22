@@ -175,16 +175,16 @@ class GroupCallParticipant(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "GroupCallParticipant":
         flags = Int.read(b)
 
-        muted = True if flags & (1 << 0) else False
-        left = True if flags & (1 << 1) else False
-        can_self_unmute = True if flags & (1 << 2) else False
-        just_joined = True if flags & (1 << 4) else False
-        versioned = True if flags & (1 << 5) else False
-        min = True if flags & (1 << 8) else False
-        muted_by_you = True if flags & (1 << 9) else False
-        volume_by_admin = True if flags & (1 << 10) else False
-        is_self = True if flags & (1 << 12) else False
-        video_joined = True if flags & (1 << 15) else False
+        muted = bool(flags & 1 << 0)
+        left = bool(flags & 1 << 1)
+        can_self_unmute = bool(flags & 1 << 2)
+        just_joined = bool(flags & 1 << 4)
+        versioned = bool(flags & 1 << 5)
+        min = bool(flags & 1 << 8)
+        muted_by_you = bool(flags & 1 << 9)
+        volume_by_admin = bool(flags & 1 << 10)
+        is_self = bool(flags & 1 << 12)
+        video_joined = bool(flags & 1 << 15)
         peer = TLObject.read(b)
 
         date = Int.read(b)

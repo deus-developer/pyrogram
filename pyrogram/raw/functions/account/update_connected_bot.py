@@ -78,8 +78,8 @@ class UpdateConnectedBot(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UpdateConnectedBot":
         flags = Int.read(b)
 
-        can_reply = True if flags & (1 << 0) else False
-        deleted = True if flags & (1 << 1) else False
+        can_reply = bool(flags & 1 << 0)
+        deleted = bool(flags & 1 << 1)
         bot = TLObject.read(b)
 
         recipients = TLObject.read(b)

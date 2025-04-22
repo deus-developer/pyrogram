@@ -113,8 +113,8 @@ class WallPaperSettings(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "WallPaperSettings":
         flags = Int.read(b)
 
-        blur = True if flags & (1 << 1) else False
-        motion = True if flags & (1 << 2) else False
+        blur = bool(flags & 1 << 1)
+        motion = bool(flags & 1 << 2)
         background_color = Int.read(b) if flags & (1 << 0) else None
         second_background_color = Int.read(b) if flags & (1 << 4) else None
         third_background_color = Int.read(b) if flags & (1 << 5) else None

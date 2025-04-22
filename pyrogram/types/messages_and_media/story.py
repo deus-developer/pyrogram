@@ -138,33 +138,33 @@ class Story(Object, Update):
         id: int,
         from_user: "types.User" = None,
         sender_chat: "types.Chat" = None,
-        date: datetime = None,
+        date: datetime | None = None,
         chat: "types.Chat" = None,
         forward_from: "types.User" = None,
-        forward_sender_name: str = None,
+        forward_sender_name: str | None = None,
         forward_from_chat: "types.Chat" = None,
-        forward_from_story_id: int = None,
-        expire_date: datetime = None,
+        forward_from_story_id: int | None = None,
+        expire_date: datetime | None = None,
         media: "enums.MessageMediaType" = None,
-        has_protected_content: bool = None,
+        has_protected_content: bool | None = None,
         photo: "types.Photo" = None,
         video: "types.Video" = None,
-        edited: bool = None,
-        pinned: bool = None,
-        public: bool = None,
-        close_friends: bool = None,
-        contacts: bool = None,
-        selected_contacts: bool = None,
-        caption: str = None,
-        caption_entities: list["types.MessageEntity"] = None,
-        views: int = None,
-        forwards: int = None,
+        edited: bool | None = None,
+        pinned: bool | None = None,
+        public: bool | None = None,
+        close_friends: bool | None = None,
+        contacts: bool | None = None,
+        selected_contacts: bool | None = None,
+        caption: str | None = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
+        views: int | None = None,
+        forwards: int | None = None,
         privacy: "enums.StoryPrivacyRules" = None,
-        allowed_users: list[int | str] = None,
-        disallowed_users: list[int | str] = None,
-        reactions: list["types.Reaction"] = None,
-        skipped: bool = None,
-        deleted: bool = None,
+        allowed_users: list[int | str] | None = None,
+        disallowed_users: list[int | str] | None = None,
+        reactions: list["types.Reaction"] | None = None,
+        skipped: bool | None = None,
+        deleted: bool | None = None,
         raw: "raw.types.StoryItem" = None,
     ):
         super().__init__(client)
@@ -405,11 +405,11 @@ class Story(Object, Update):
         self,
         text: str,
         parse_mode: Optional["enums.ParseMode"] = None,
-        entities: list["types.MessageEntity"] = None,
-        disable_web_page_preview: bool = None,
-        disable_notification: bool = None,
-        schedule_date: datetime = None,
-        protect_content: bool = None,
+        entities: list["types.MessageEntity"] | None = None,
+        disable_web_page_preview: bool | None = None,
+        disable_notification: bool | None = None,
+        schedule_date: datetime | None = None,
+        protect_content: bool | None = None,
         reply_markup=None,
     ) -> "types.Message":
         """Bound method *reply_text* of :obj:`~pyrogram.types.Story`.
@@ -481,21 +481,21 @@ class Story(Object, Update):
         animation: str | BinaryIO,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] = None,
-        has_spoiler: bool = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
+        has_spoiler: bool | None = None,
         duration: int = 0,
         width: int = 0,
         height: int = 0,
-        thumb: str | BinaryIO = None,
-        file_name: str = None,
-        disable_notification: bool = None,
+        thumb: str | BinaryIO | None = None,
+        file_name: str | None = None,
+        disable_notification: bool | None = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
             "types.ForceReply",
         ] = None,
-        progress: Callable = None,
+        progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> "types.Message":
         """Bound method *reply_animation* :obj:`~pyrogram.types.Story`.
@@ -616,20 +616,20 @@ class Story(Object, Update):
         audio: str | BinaryIO,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
         duration: int = 0,
-        performer: str = None,
-        title: str = None,
-        thumb: str | BinaryIO = None,
-        file_name: str = None,
-        disable_notification: bool = None,
+        performer: str | None = None,
+        title: str | None = None,
+        thumb: str | BinaryIO | None = None,
+        file_name: str | None = None,
+        disable_notification: bool | None = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
             "types.ForceReply",
         ] = None,
-        progress: Callable = None,
+        progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> "types.Message":
         """Bound method *reply_audio* of :obj:`~pyrogram.types.Story`.
@@ -744,8 +744,8 @@ class Story(Object, Update):
         file_id: str,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] = None,
-        disable_notification: bool = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
+        disable_notification: bool | None = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -818,7 +818,7 @@ class Story(Object, Update):
                 "types.InputMediaDocument",
             ]
         ],
-        disable_notification: bool = None,
+        disable_notification: bool | None = None,
     ) -> list["types.Message"]:
         """Bound method *reply_media_group* of :obj:`~pyrogram.types.Story`.
 
@@ -866,18 +866,18 @@ class Story(Object, Update):
         photo: str | BinaryIO,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] = None,
-        has_spoiler: bool = None,
-        ttl_seconds: int = None,
-        view_once: bool = None,
-        disable_notification: bool = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
+        has_spoiler: bool | None = None,
+        ttl_seconds: int | None = None,
+        view_once: bool | None = None,
+        disable_notification: bool | None = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
             "types.ForceReply",
         ] = None,
-        progress: Callable = None,
+        progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> "types.Message":
         """Bound method *reply_photo* of :obj:`~pyrogram.types.Story`.
@@ -981,14 +981,14 @@ class Story(Object, Update):
     async def reply_sticker(
         self,
         sticker: str | BinaryIO,
-        disable_notification: bool = None,
+        disable_notification: bool | None = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
             "types.ForceReply",
         ] = None,
-        progress: Callable = None,
+        progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> "types.Message":
         """Bound method *reply_sticker* of :obj:`~pyrogram.types.Story`.
@@ -1069,24 +1069,24 @@ class Story(Object, Update):
         video: str | BinaryIO,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] = None,
-        has_spoiler: bool = None,
-        ttl_seconds: int = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
+        has_spoiler: bool | None = None,
+        ttl_seconds: int | None = None,
         duration: int = 0,
         width: int = 0,
         height: int = 0,
-        thumb: str | BinaryIO = None,
-        file_name: str = None,
+        thumb: str | BinaryIO | None = None,
+        file_name: str | None = None,
         supports_streaming: bool = True,
-        disable_notification: bool = None,
-        no_sound: bool = None,
+        disable_notification: bool | None = None,
+        no_sound: bool | None = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
             "types.ForceReply",
         ] = None,
-        progress: Callable = None,
+        progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> "types.Message":
         """Bound method *reply_video* of :obj:`~pyrogram.types.Story`.
@@ -1220,16 +1220,16 @@ class Story(Object, Update):
         video_note: str | BinaryIO,
         duration: int = 0,
         length: int = 1,
-        thumb: str | BinaryIO = None,
-        disable_notification: bool = None,
-        view_once: bool = None,
+        thumb: str | BinaryIO | None = None,
+        disable_notification: bool | None = None,
+        view_once: bool | None = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
             "types.ForceReply",
         ] = None,
-        progress: Callable = None,
+        progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> "types.Message":
         """Bound method *reply_video_note* of :obj:`~pyrogram.types.Story`.
@@ -1329,17 +1329,17 @@ class Story(Object, Update):
         voice: str | BinaryIO,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
         duration: int = 0,
-        disable_notification: bool = None,
-        view_once: bool = None,
+        disable_notification: bool | None = None,
+        view_once: bool | None = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
             "types.ReplyKeyboardRemove",
             "types.ForceReply",
         ] = None,
-        progress: Callable = None,
+        progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> "types.Message":
         """Bound method *reply_voice* of :obj:`~pyrogram.types.Story`.
@@ -1437,14 +1437,14 @@ class Story(Object, Update):
     async def copy(
         self,
         chat_id: int | str,
-        caption: str = None,
+        caption: str | None = None,
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] = None,
-        period: int = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
+        period: int | None = None,
         privacy: "enums.StoriesPrivacyRules" = None,
-        allowed_users: list[int] = None,
-        disallowed_users: list[int] = None,
-        protect_content: bool = None,
+        allowed_users: list[int] | None = None,
+        disallowed_users: list[int] | None = None,
+        protect_content: bool | None = None,
     ) -> "types.Story":
         """Bound method *copy* of :obj:`~pyrogram.types.Story`.
 
@@ -1550,7 +1550,7 @@ class Story(Object, Update):
 
     async def edit_media(
         self,
-        media: str | BinaryIO = None,
+        media: str | BinaryIO | None = None,
     ) -> "types.Story":
         """Bound method *edit* of :obj:`~pyrogram.types.Story`.
 
@@ -1589,7 +1589,7 @@ class Story(Object, Update):
         self,
         caption: str,
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] | None = None,
     ) -> "types.Story":
         """Bound method *edit_caption* of :obj:`~pyrogram.types.Story`.
 
@@ -1632,8 +1632,8 @@ class Story(Object, Update):
     async def edit_privacy(
         self,
         privacy: "enums.StoriesPrivacyRules" = None,
-        allowed_users: list[int | str] = None,
-        disallowed_users: list[int | str] = None,
+        allowed_users: list[int | str] | None = None,
+        disallowed_users: list[int | str] | None = None,
     ) -> "types.Story":
         """Bound method *edit_privacy* of :obj:`~pyrogram.types.Story`.
 
@@ -1679,7 +1679,7 @@ class Story(Object, Update):
             disallowed_users=disallowed_users,
         )
 
-    async def react(self, emoji: int | str = None) -> bool:
+    async def react(self, emoji: int | str | None = None) -> bool:
         """Bound method *react* of :obj:`~pyrogram.types.Story`.
 
         Use as a shortcut for:
@@ -1715,9 +1715,9 @@ class Story(Object, Update):
     async def forward(
         self,
         chat_id: int | str,
-        message_thread_id: int = None,
-        disable_notification: bool = None,
-        schedule_date: datetime = None,
+        message_thread_id: int | None = None,
+        disable_notification: bool | None = None,
+        schedule_date: datetime | None = None,
     ) -> Union["types.Message", list["types.Message"]]:
         """Bound method *forward* of :obj:`~pyrogram.types.Story`.
 
@@ -1771,7 +1771,7 @@ class Story(Object, Update):
         file_name: str = "",
         in_memory: bool = False,
         block: bool = True,
-        progress: Callable = None,
+        progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> str:
         """Bound method *download* of :obj:`~pyrogram.types.Story`.

@@ -83,7 +83,7 @@ class GetChannelDifference(TLFunction["raw.base.updates.ChannelDifference"]):  #
     def read(b: BytesIO, *args: Any) -> "GetChannelDifference":
         flags = Int.read(b)
 
-        force = True if flags & (1 << 0) else False
+        force = bool(flags & 1 << 0)
         channel = TLObject.read(b)
 
         filter = TLObject.read(b)

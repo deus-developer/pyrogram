@@ -109,8 +109,8 @@ class ChannelParticipantAdmin(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ChannelParticipantAdmin":
         flags = Int.read(b)
 
-        can_edit = True if flags & (1 << 0) else False
-        is_self = True if flags & (1 << 1) else False
+        can_edit = bool(flags & 1 << 0)
+        is_self = bool(flags & 1 << 1)
         user_id = Long.read(b)
 
         inviter_id = Long.read(b) if flags & (1 << 1) else None

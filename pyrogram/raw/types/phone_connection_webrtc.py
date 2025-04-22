@@ -108,8 +108,8 @@ class PhoneConnectionWebrtc(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "PhoneConnectionWebrtc":
         flags = Int.read(b)
 
-        turn = True if flags & (1 << 0) else False
-        stun = True if flags & (1 << 1) else False
+        turn = bool(flags & 1 << 0)
+        stun = bool(flags & 1 << 1)
         id = Long.read(b)
 
         ip = String.read(b)

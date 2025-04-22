@@ -88,8 +88,8 @@ class SetGameScore(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SetGameScore":
         flags = Int.read(b)
 
-        edit_message = True if flags & (1 << 0) else False
-        force = True if flags & (1 << 1) else False
+        edit_message = bool(flags & 1 << 0)
+        force = bool(flags & 1 << 1)
         peer = TLObject.read(b)
 
         id = Int.read(b)

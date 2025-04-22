@@ -105,8 +105,8 @@ class GiveawayInfo(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "GiveawayInfo":
         flags = Int.read(b)
 
-        participating = True if flags & (1 << 0) else False
-        preparing_results = True if flags & (1 << 3) else False
+        participating = bool(flags & 1 << 0)
+        preparing_results = bool(flags & 1 << 3)
         start_date = Int.read(b)
 
         joined_too_early_date = Int.read(b) if flags & (1 << 1) else None

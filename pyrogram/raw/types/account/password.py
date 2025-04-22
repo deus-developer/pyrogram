@@ -149,9 +149,9 @@ class Password(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "Password":
         flags = Int.read(b)
 
-        has_recovery = True if flags & (1 << 0) else False
-        has_secure_values = True if flags & (1 << 1) else False
-        has_password = True if flags & (1 << 2) else False
+        has_recovery = bool(flags & 1 << 0)
+        has_secure_values = bool(flags & 1 << 1)
+        has_password = bool(flags & 1 << 2)
         current_algo = TLObject.read(b) if flags & (1 << 2) else None
 
         srp_B = Bytes.read(b) if flags & (1 << 2) else None

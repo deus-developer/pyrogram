@@ -68,7 +68,7 @@ class ToggleSavedDialogPin(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ToggleSavedDialogPin":
         flags = Int.read(b)
 
-        pinned = True if flags & (1 << 0) else False
+        pinned = bool(flags & 1 << 0)
         peer = TLObject.read(b)
 
         return ToggleSavedDialogPin(peer=peer, pinned=pinned)

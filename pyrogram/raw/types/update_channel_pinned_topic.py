@@ -73,7 +73,7 @@ class UpdateChannelPinnedTopic(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UpdateChannelPinnedTopic":
         flags = Int.read(b)
 
-        pinned = True if flags & (1 << 0) else False
+        pinned = bool(flags & 1 << 0)
         channel_id = Long.read(b)
 
         topic_id = Int.read(b)

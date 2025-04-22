@@ -78,7 +78,7 @@ class InputBusinessAwayMessage(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "InputBusinessAwayMessage":
         flags = Int.read(b)
 
-        offline_only = True if flags & (1 << 0) else False
+        offline_only = bool(flags & 1 << 0)
         shortcut_id = Int.read(b)
 
         schedule = TLObject.read(b)

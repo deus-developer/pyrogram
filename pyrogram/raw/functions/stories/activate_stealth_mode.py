@@ -67,8 +67,8 @@ class ActivateStealthMode(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ActivateStealthMode":
         flags = Int.read(b)
 
-        past = True if flags & (1 << 0) else False
-        future = True if flags & (1 << 1) else False
+        past = bool(flags & 1 << 0)
+        future = bool(flags & 1 << 1)
         return ActivateStealthMode(past=past, future=future)
 
     def write(self, *args) -> bytes:

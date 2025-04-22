@@ -73,8 +73,8 @@ class AutoSaveSettings(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "AutoSaveSettings":
         flags = Int.read(b)
 
-        photos = True if flags & (1 << 0) else False
-        videos = True if flags & (1 << 1) else False
+        photos = bool(flags & 1 << 0)
+        videos = bool(flags & 1 << 1)
         video_max_size = Long.read(b) if flags & (1 << 2) else None
         return AutoSaveSettings(
             photos=photos,

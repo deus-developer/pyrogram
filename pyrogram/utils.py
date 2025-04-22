@@ -43,16 +43,16 @@ async def ainput(prompt: str = "", *, hide: bool = False):
 def get_input_media_from_file_id(
     file_id: str,
     expected_file_type: FileType = None,
-    ttl_seconds: int = None,
-    has_spoiler: bool = None,
+    ttl_seconds: int | None = None,
+    has_spoiler: bool | None = None,
 ) -> Union["raw.types.InputMediaPhoto", "raw.types.InputMediaDocument"]:
     try:
         decoded = FileId.decode(file_id)
-    except Exception:
+    except Exception as exc:
         raise ValueError(
             f'Failed to decode "{file_id}". The value does not represent an existing local file, '
             f"HTTP URL, or valid file id.",
-        )
+        ) from exc
 
     file_type = decoded.file_type
 
@@ -93,7 +93,7 @@ async def parse_messages(
     client,
     messages: "raw.types.messages.Messages",
     replies: int = 1,
-    business_connection_id: str = None,
+    business_connection_id: str | None = None,
 ) -> list["types.Message"]:
     topics = {i.id: i for i in messages.topics} if hasattr(messages, "topics") else None
 
@@ -513,7 +513,7 @@ async def parse_text_entities(
     if entities:
         # Inject the client instance because parsing user mentions requires it
         for entity in entities:
-            entity._client = client
+            entity.bind(client)
 
         text, entities = text, [await entity.write() for entity in entities] or None
     else:

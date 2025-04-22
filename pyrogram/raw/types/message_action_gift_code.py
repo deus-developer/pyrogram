@@ -115,8 +115,8 @@ class MessageActionGiftCode(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "MessageActionGiftCode":
         flags = Int.read(b)
 
-        via_giveaway = True if flags & (1 << 0) else False
-        unclaimed = True if flags & (1 << 2) else False
+        via_giveaway = bool(flags & 1 << 0)
+        unclaimed = bool(flags & 1 << 2)
         boost_peer = TLObject.read(b) if flags & (1 << 1) else None
 
         months = Int.read(b)

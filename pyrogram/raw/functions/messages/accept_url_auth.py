@@ -84,7 +84,7 @@ class AcceptUrlAuth(TLFunction["raw.base.UrlAuthResult"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "AcceptUrlAuth":
         flags = Int.read(b)
 
-        write_allowed = True if flags & (1 << 0) else False
+        write_allowed = bool(flags & 1 << 0)
         peer = TLObject.read(b) if flags & (1 << 1) else None
 
         msg_id = Int.read(b) if flags & (1 << 1) else None

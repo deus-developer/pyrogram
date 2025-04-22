@@ -68,7 +68,7 @@ class UpdateGroupCallConnection(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UpdateGroupCallConnection":
         flags = Int.read(b)
 
-        presentation = True if flags & (1 << 0) else False
+        presentation = bool(flags & 1 << 0)
         params = TLObject.read(b)
 
         return UpdateGroupCallConnection(params=params, presentation=presentation)

@@ -42,7 +42,7 @@ class Birthday(Object):
         *,
         day: int,
         month: int,
-        year: int = None,
+        year: int | None = None,
     ):
         self.day = day
         self.month = month

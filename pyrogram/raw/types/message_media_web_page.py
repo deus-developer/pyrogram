@@ -100,10 +100,10 @@ class MessageMediaWebPage(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "MessageMediaWebPage":
         flags = Int.read(b)
 
-        force_large_media = True if flags & (1 << 0) else False
-        force_small_media = True if flags & (1 << 1) else False
-        manual = True if flags & (1 << 3) else False
-        safe = True if flags & (1 << 4) else False
+        force_large_media = bool(flags & 1 << 0)
+        force_small_media = bool(flags & 1 << 1)
+        manual = bool(flags & 1 << 3)
+        safe = bool(flags & 1 << 4)
         webpage = TLObject.read(b)
 
         return MessageMediaWebPage(

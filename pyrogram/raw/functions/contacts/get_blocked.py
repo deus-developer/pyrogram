@@ -72,7 +72,7 @@ class GetBlocked(TLFunction["raw.base.contacts.Blocked"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "GetBlocked":
         flags = Int.read(b)
 
-        my_stories_from = True if flags & (1 << 0) else False
+        my_stories_from = bool(flags & 1 << 0)
         offset = Int.read(b)
 
         limit = Int.read(b)

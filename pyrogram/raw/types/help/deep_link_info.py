@@ -84,7 +84,7 @@ class DeepLinkInfo(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "DeepLinkInfo":
         flags = Int.read(b)
 
-        update_app = True if flags & (1 << 0) else False
+        update_app = bool(flags & 1 << 0)
         message = String.read(b)
 
         entities = TLObject.read(b) if flags & (1 << 1) else []

@@ -73,7 +73,7 @@ class GetMessageStats(TLFunction["raw.base.stats.MessageStats"]):  # type: ignor
     def read(b: BytesIO, *args: Any) -> "GetMessageStats":
         flags = Int.read(b)
 
-        dark = True if flags & (1 << 0) else False
+        dark = bool(flags & 1 << 0)
         channel = TLObject.read(b)
 
         msg_id = Int.read(b)

@@ -62,7 +62,7 @@ class DiscardEncryption(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "DiscardEncryption":
         flags = Int.read(b)
 
-        delete_history = True if flags & (1 << 0) else False
+        delete_history = bool(flags & 1 << 0)
         chat_id = Int.read(b)
 
         return DiscardEncryption(chat_id=chat_id, delete_history=delete_history)

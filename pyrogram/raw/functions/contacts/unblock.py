@@ -68,7 +68,7 @@ class Unblock(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "Unblock":
         flags = Int.read(b)
 
-        my_stories_from = True if flags & (1 << 0) else False
+        my_stories_from = bool(flags & 1 << 0)
         id = TLObject.read(b)
 
         return Unblock(id=id, my_stories_from=my_stories_from)

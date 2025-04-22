@@ -87,13 +87,13 @@ class Sticker(Object):
         is_animated: bool,
         is_video: bool,
         is_premium: bool,
-        file_name: str = None,
-        mime_type: str = None,
-        file_size: int = None,
-        date: datetime = None,
-        emoji: str = None,
-        set_name: str = None,
-        thumbs: list["types.Thumbnail"] = None,
+        file_name: str | None = None,
+        mime_type: str | None = None,
+        file_size: int | None = None,
+        date: datetime | None = None,
+        emoji: str | None = None,
+        set_name: str | None = None,
+        thumbs: list["types.Thumbnail"] | None = None,
     ):
         super().__init__(client)
 
@@ -111,7 +111,6 @@ class Sticker(Object):
         self.emoji = emoji
         self.set_name = set_name
         self.thumbs = thumbs
-        # self.mask_position = mask_position
 
     cache = {}
 
@@ -141,7 +140,7 @@ class Sticker(Object):
             Sticker.cache[(set_id, set_access_hash)] = name
 
             if len(Sticker.cache) > 250:
-                for i in range(50):
+                for _ in range(50):
                     Sticker.cache.pop(next(iter(Sticker.cache)))
 
             return name

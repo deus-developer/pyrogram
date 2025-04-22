@@ -110,8 +110,8 @@ class GiveawayInfoResults(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "GiveawayInfoResults":
         flags = Int.read(b)
 
-        winner = True if flags & (1 << 0) else False
-        refunded = True if flags & (1 << 1) else False
+        winner = bool(flags & 1 << 0)
+        refunded = bool(flags & 1 << 1)
         start_date = Int.read(b)
 
         gift_code_slug = String.read(b) if flags & (1 << 0) else None

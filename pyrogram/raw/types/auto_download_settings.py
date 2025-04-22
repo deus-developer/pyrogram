@@ -129,11 +129,11 @@ class AutoDownloadSettings(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "AutoDownloadSettings":
         flags = Int.read(b)
 
-        disabled = True if flags & (1 << 0) else False
-        video_preload_large = True if flags & (1 << 1) else False
-        audio_preload_next = True if flags & (1 << 2) else False
-        phonecalls_less_data = True if flags & (1 << 3) else False
-        stories_preload = True if flags & (1 << 4) else False
+        disabled = bool(flags & 1 << 0)
+        video_preload_large = bool(flags & 1 << 1)
+        audio_preload_next = bool(flags & 1 << 2)
+        phonecalls_less_data = bool(flags & 1 << 3)
+        stories_preload = bool(flags & 1 << 4)
         photo_size_max = Int.read(b)
 
         video_size_max = Long.read(b)

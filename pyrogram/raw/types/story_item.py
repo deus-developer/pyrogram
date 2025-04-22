@@ -187,15 +187,15 @@ class StoryItem(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "StoryItem":
         flags = Int.read(b)
 
-        pinned = True if flags & (1 << 5) else False
-        public = True if flags & (1 << 7) else False
-        close_friends = True if flags & (1 << 8) else False
-        min = True if flags & (1 << 9) else False
-        noforwards = True if flags & (1 << 10) else False
-        edited = True if flags & (1 << 11) else False
-        contacts = True if flags & (1 << 12) else False
-        selected_contacts = True if flags & (1 << 13) else False
-        out = True if flags & (1 << 16) else False
+        pinned = bool(flags & 1 << 5)
+        public = bool(flags & 1 << 7)
+        close_friends = bool(flags & 1 << 8)
+        min = bool(flags & 1 << 9)
+        noforwards = bool(flags & 1 << 10)
+        edited = bool(flags & 1 << 11)
+        contacts = bool(flags & 1 << 12)
+        selected_contacts = bool(flags & 1 << 13)
+        out = bool(flags & 1 << 16)
         id = Int.read(b)
 
         date = Int.read(b)

@@ -96,7 +96,7 @@ class FeaturedStickers(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "FeaturedStickers":
         flags = Int.read(b)
 
-        premium = True if flags & (1 << 0) else False
+        premium = bool(flags & 1 << 0)
         hash = Long.read(b)
 
         count = Int.read(b)

@@ -102,7 +102,7 @@ class InputThemeSettings(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "InputThemeSettings":
         flags = Int.read(b)
 
-        message_colors_animated = True if flags & (1 << 2) else False
+        message_colors_animated = bool(flags & 1 << 2)
         base_theme = TLObject.read(b)
 
         accent_color = Int.read(b)

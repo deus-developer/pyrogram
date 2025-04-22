@@ -26,11 +26,11 @@ class UpdateChatNotifications:
     async def update_chat_notifications(
         self: "pyrogram.Client",
         chat_id: int | str,
-        mute: bool = None,
-        mute_until: datetime = None,
-        stories_muted: bool = None,
-        stories_hide_sender: bool = None,
-        show_previews: bool = None,
+        mute: bool | None = None,
+        mute_until: datetime | None = None,
+        stories_muted: bool | None = None,
+        stories_hide_sender: bool | None = None,
+        show_previews: bool | None = None,
     ) -> "types.Chat":
         """Update the notification settings for the selected chat
 
@@ -75,7 +75,7 @@ class UpdateChatNotifications:
         if not mute_until:
             mute_until = utils.max_datetime() if mute else utils.zero_datetime()
 
-        r = await self.invoke(
+        return await self.invoke(
             raw.functions.account.UpdateNotifySettings(
                 peer=raw.types.InputNotifyPeer(peer=await self.resolve_peer(chat_id)),
                 settings=raw.types.InputPeerNotifySettings(
@@ -87,5 +87,3 @@ class UpdateChatNotifications:
                 ),
             ),
         )
-
-        return r

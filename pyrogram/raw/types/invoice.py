@@ -146,15 +146,15 @@ class Invoice(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "Invoice":
         flags = Int.read(b)
 
-        test = True if flags & (1 << 0) else False
-        name_requested = True if flags & (1 << 1) else False
-        phone_requested = True if flags & (1 << 2) else False
-        email_requested = True if flags & (1 << 3) else False
-        shipping_address_requested = True if flags & (1 << 4) else False
-        flexible = True if flags & (1 << 5) else False
-        phone_to_provider = True if flags & (1 << 6) else False
-        email_to_provider = True if flags & (1 << 7) else False
-        recurring = True if flags & (1 << 9) else False
+        test = bool(flags & 1 << 0)
+        name_requested = bool(flags & 1 << 1)
+        phone_requested = bool(flags & 1 << 2)
+        email_requested = bool(flags & 1 << 3)
+        shipping_address_requested = bool(flags & 1 << 4)
+        flexible = bool(flags & 1 << 5)
+        phone_to_provider = bool(flags & 1 << 6)
+        email_to_provider = bool(flags & 1 << 7)
+        recurring = bool(flags & 1 << 9)
         currency = String.read(b)
 
         prices = TLObject.read(b)

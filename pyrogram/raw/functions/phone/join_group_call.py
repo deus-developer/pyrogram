@@ -96,8 +96,8 @@ class JoinGroupCall(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "JoinGroupCall":
         flags = Int.read(b)
 
-        muted = True if flags & (1 << 0) else False
-        video_stopped = True if flags & (1 << 2) else False
+        muted = bool(flags & 1 << 0)
+        video_stopped = bool(flags & 1 << 2)
         call = TLObject.read(b)
 
         join_as = TLObject.read(b)

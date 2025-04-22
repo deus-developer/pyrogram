@@ -103,7 +103,7 @@ class DialogFilterChatlist(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "DialogFilterChatlist":
         flags = Int.read(b)
 
-        has_my_invites = True if flags & (1 << 26) else False
+        has_my_invites = bool(flags & 1 << 26)
         id = Int.read(b)
 
         title = String.read(b)

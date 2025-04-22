@@ -74,7 +74,7 @@ class KeyboardButtonCallback(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "KeyboardButtonCallback":
         flags = Int.read(b)
 
-        requires_password = True if flags & (1 << 0) else False
+        requires_password = bool(flags & 1 << 0)
         text = String.read(b)
 
         data = Bytes.read(b)

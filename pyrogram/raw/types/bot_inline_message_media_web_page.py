@@ -115,11 +115,11 @@ class BotInlineMessageMediaWebPage(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "BotInlineMessageMediaWebPage":
         flags = Int.read(b)
 
-        invert_media = True if flags & (1 << 3) else False
-        force_large_media = True if flags & (1 << 4) else False
-        force_small_media = True if flags & (1 << 5) else False
-        manual = True if flags & (1 << 7) else False
-        safe = True if flags & (1 << 8) else False
+        invert_media = bool(flags & 1 << 3)
+        force_large_media = bool(flags & 1 << 4)
+        force_small_media = bool(flags & 1 << 5)
+        manual = bool(flags & 1 << 7)
+        safe = bool(flags & 1 << 8)
         message = String.read(b)
 
         entities = TLObject.read(b) if flags & (1 << 1) else []

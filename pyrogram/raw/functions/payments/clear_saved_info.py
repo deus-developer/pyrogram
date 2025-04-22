@@ -67,8 +67,8 @@ class ClearSavedInfo(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ClearSavedInfo":
         flags = Int.read(b)
 
-        credentials = True if flags & (1 << 0) else False
-        info = True if flags & (1 << 1) else False
+        credentials = bool(flags & 1 << 0)
+        info = bool(flags & 1 << 1)
         return ClearSavedInfo(credentials=credentials, info=info)
 
     def write(self, *args) -> bytes:

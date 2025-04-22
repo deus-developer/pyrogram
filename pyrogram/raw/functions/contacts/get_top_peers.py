@@ -125,14 +125,14 @@ class GetTopPeers(TLFunction["raw.base.contacts.TopPeers"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "GetTopPeers":
         flags = Int.read(b)
 
-        correspondents = True if flags & (1 << 0) else False
-        bots_pm = True if flags & (1 << 1) else False
-        bots_inline = True if flags & (1 << 2) else False
-        phone_calls = True if flags & (1 << 3) else False
-        forward_users = True if flags & (1 << 4) else False
-        forward_chats = True if flags & (1 << 5) else False
-        groups = True if flags & (1 << 10) else False
-        channels = True if flags & (1 << 15) else False
+        correspondents = bool(flags & 1 << 0)
+        bots_pm = bool(flags & 1 << 1)
+        bots_inline = bool(flags & 1 << 2)
+        phone_calls = bool(flags & 1 << 3)
+        forward_users = bool(flags & 1 << 4)
+        forward_chats = bool(flags & 1 << 5)
+        groups = bool(flags & 1 << 10)
+        channels = bool(flags & 1 << 15)
         offset = Int.read(b)
 
         limit = Int.read(b)

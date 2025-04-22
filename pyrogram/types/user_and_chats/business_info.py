@@ -46,7 +46,7 @@ class BusinessInfo(Object):
     def __init__(
         self,
         *,
-        address: str = None,
+        address: str | None = None,
         location: "types.Location" = None,
         greeting_message: "types.BusinessMessage" = None,
         away_message: "types.BusinessMessage" = None,

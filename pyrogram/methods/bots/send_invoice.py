@@ -247,3 +247,4 @@ class SendInvoice:
                     is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
                     business_connection_id=getattr(i, "connection_id", None),
                 )
+        return None

@@ -63,11 +63,11 @@ class MessageEntity(Object):
         type: "enums.MessageEntityType",
         offset: int,
         length: int,
-        url: str = None,
+        url: str | None = None,
         user: "types.User" = None,
-        language: str = None,
-        custom_emoji_id: int = None,
-        expandable: bool = None,
+        language: str | None = None,
+        custom_emoji_id: int | None = None,
+        expandable: bool | None = None,
     ):
         super().__init__(client)
 

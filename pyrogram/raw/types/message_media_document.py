@@ -118,11 +118,11 @@ class MessageMediaDocument(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "MessageMediaDocument":
         flags = Int.read(b)
 
-        nopremium = True if flags & (1 << 3) else False
-        spoiler = True if flags & (1 << 4) else False
-        video = True if flags & (1 << 6) else False
-        round = True if flags & (1 << 7) else False
-        voice = True if flags & (1 << 8) else False
+        nopremium = bool(flags & 1 << 3)
+        spoiler = bool(flags & 1 << 4)
+        video = bool(flags & 1 << 6)
+        round = bool(flags & 1 << 7)
+        voice = bool(flags & 1 << 8)
         document = TLObject.read(b) if flags & (1 << 0) else None
 
         alt_document = TLObject.read(b) if flags & (1 << 5) else None

@@ -84,7 +84,7 @@ class UpdatePinnedChannelMessages(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UpdatePinnedChannelMessages":
         flags = Int.read(b)
 
-        pinned = True if flags & (1 << 0) else False
+        pinned = bool(flags & 1 << 0)
         channel_id = Long.read(b)
 
         messages = TLObject.read(b, Int)

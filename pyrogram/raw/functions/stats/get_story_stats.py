@@ -73,7 +73,7 @@ class GetStoryStats(TLFunction["raw.base.stats.StoryStats"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "GetStoryStats":
         flags = Int.read(b)
 
-        dark = True if flags & (1 << 0) else False
+        dark = bool(flags & 1 << 0)
         peer = TLObject.read(b)
 
         id = Int.read(b)

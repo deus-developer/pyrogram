@@ -103,7 +103,7 @@ class EditExportedChatInvite(TLFunction["raw.base.messages.ExportedChatInvite"])
     def read(b: BytesIO, *args: Any) -> "EditExportedChatInvite":
         flags = Int.read(b)
 
-        revoked = True if flags & (1 << 2) else False
+        revoked = bool(flags & 1 << 2)
         peer = TLObject.read(b)
 
         link = String.read(b)

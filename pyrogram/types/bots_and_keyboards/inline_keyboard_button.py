@@ -99,7 +99,6 @@ class InlineKeyboardButton(Object):
         self.switch_inline_query_current_chat = switch_inline_query_current_chat
         self.callback_game = callback_game
         self.requires_password = requires_password
-        # self.pay = pay
 
     @staticmethod
     def read(b: "raw.base.KeyboardButton"):
@@ -164,6 +163,7 @@ class InlineKeyboardButton(Object):
             return InlineKeyboardButton(
                 text=b.text,
             )
+        return None
 
     async def write(self, client: "pyrogram.Client"):
         if self.callback_data is not None:
@@ -221,3 +221,4 @@ class InlineKeyboardButton(Object):
                 text=self.text,
                 url=self.web_app.url,
             )
+        return None

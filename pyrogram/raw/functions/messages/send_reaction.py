@@ -84,8 +84,8 @@ class SendReaction(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SendReaction":
         flags = Int.read(b)
 
-        big = True if flags & (1 << 1) else False
-        add_to_recent = True if flags & (1 << 2) else False
+        big = bool(flags & 1 << 1)
+        add_to_recent = bool(flags & 1 << 2)
         peer = TLObject.read(b)
 
         msg_id = Int.read(b)

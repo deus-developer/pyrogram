@@ -64,7 +64,7 @@ class InlineQuery(Object, Update):
         offset: str,
         chat_type: "enums.ChatType",
         location: "types.Location" = None,
-        matches: list[Match] = None,
+        matches: list[Match] | None = None,
     ):
         super().__init__(client)
 

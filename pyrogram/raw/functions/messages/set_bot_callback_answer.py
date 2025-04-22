@@ -84,7 +84,7 @@ class SetBotCallbackAnswer(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SetBotCallbackAnswer":
         flags = Int.read(b)
 
-        alert = True if flags & (1 << 1) else False
+        alert = bool(flags & 1 << 1)
         query_id = Long.read(b)
 
         message = String.read(b) if flags & (1 << 0) else None

@@ -73,7 +73,7 @@ class InputMediaPhotoExternal(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "InputMediaPhotoExternal":
         flags = Int.read(b)
 
-        spoiler = True if flags & (1 << 1) else False
+        spoiler = bool(flags & 1 << 1)
         url = String.read(b)
 
         ttl_seconds = Int.read(b) if flags & (1 << 0) else None

@@ -72,7 +72,7 @@ class EncryptedChatDiscarded(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "EncryptedChatDiscarded":
         flags = Int.read(b)
 
-        history_deleted = True if flags & (1 << 0) else False
+        history_deleted = bool(flags & 1 << 0)
         id = Int.read(b)
 
         return EncryptedChatDiscarded(id=id, history_deleted=history_deleted)

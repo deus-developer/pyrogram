@@ -27,12 +27,12 @@ class SendGame:
         self: "pyrogram.Client",
         chat_id: int | str,
         game_short_name: str,
-        disable_notification: bool = None,
-        message_thread_id: int = None,
-        effect_id: int = None,
-        reply_to_message_id: int = None,
-        reply_to_chat_id: int | str = None,
-        protect_content: bool = None,
+        disable_notification: bool | None = None,
+        message_thread_id: int | None = None,
+        effect_id: int | None = None,
+        reply_to_message_id: int | None = None,
+        reply_to_chat_id: int | str | None = None,
+        protect_content: bool | None = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
             "types.ReplyKeyboardMarkup",
@@ -120,3 +120,4 @@ class SendGame:
                     self,
                     i.message,
                 )
+        return None

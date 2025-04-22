@@ -140,8 +140,8 @@ class PhoneCall(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "PhoneCall":
         flags = Int.read(b)
 
-        p2p_allowed = True if flags & (1 << 5) else False
-        video = True if flags & (1 << 6) else False
+        p2p_allowed = bool(flags & 1 << 5)
+        video = bool(flags & 1 << 6)
         id = Long.read(b)
 
         access_hash = Long.read(b)

@@ -73,6 +73,7 @@ class Reaction(Object):
                 client=client,
                 custom_emoji_id=reaction.document_id,
             )
+        return None
 
     @staticmethod
     def from_raw_tl_count(

@@ -102,8 +102,8 @@ class UploadContactProfilePhoto(TLFunction["raw.base.photos.Photo"]):  # type: i
     def read(b: BytesIO, *args: Any) -> "UploadContactProfilePhoto":
         flags = Int.read(b)
 
-        suggest = True if flags & (1 << 3) else False
-        save = True if flags & (1 << 4) else False
+        suggest = bool(flags & 1 << 3)
+        save = bool(flags & 1 << 4)
         user_id = TLObject.read(b)
 
         file = TLObject.read(b) if flags & (1 << 0) else None

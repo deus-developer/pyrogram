@@ -81,7 +81,7 @@ class ChannelDifferenceEmpty(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ChannelDifferenceEmpty":
         flags = Int.read(b)
 
-        final = True if flags & (1 << 0) else False
+        final = bool(flags & 1 << 0)
         pts = Int.read(b)
 
         timeout = Int.read(b) if flags & (1 << 1) else None

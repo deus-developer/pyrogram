@@ -90,7 +90,7 @@ class PhoneConnection(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "PhoneConnection":
         flags = Int.read(b)
 
-        tcp = True if flags & (1 << 0) else False
+        tcp = bool(flags & 1 << 0)
         id = Long.read(b)
 
         ip = String.read(b)

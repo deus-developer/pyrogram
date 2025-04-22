@@ -80,7 +80,7 @@ class KeyboardButtonSwitchInline(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "KeyboardButtonSwitchInline":
         flags = Int.read(b)
 
-        same_peer = True if flags & (1 << 0) else False
+        same_peer = bool(flags & 1 << 0)
         text = String.read(b)
 
         query = String.read(b)

@@ -68,3 +68,4 @@ class SetChatTTL:
                     self,
                     i.message,
                 )
+        return None

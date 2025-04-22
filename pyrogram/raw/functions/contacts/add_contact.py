@@ -90,7 +90,7 @@ class AddContact(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "AddContact":
         flags = Int.read(b)
 
-        add_phone_privacy_exception = True if flags & (1 << 0) else False
+        add_phone_privacy_exception = bool(flags & 1 << 0)
         id = TLObject.read(b)
 
         first_name = String.read(b)

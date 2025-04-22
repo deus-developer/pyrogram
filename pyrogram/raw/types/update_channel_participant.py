@@ -114,7 +114,7 @@ class UpdateChannelParticipant(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UpdateChannelParticipant":
         flags = Int.read(b)
 
-        via_chatlist = True if flags & (1 << 3) else False
+        via_chatlist = bool(flags & 1 << 3)
         channel_id = Long.read(b)
 
         date = Int.read(b)

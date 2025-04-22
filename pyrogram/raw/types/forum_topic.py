@@ -175,11 +175,11 @@ class ForumTopic(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ForumTopic":
         flags = Int.read(b)
 
-        my = True if flags & (1 << 1) else False
-        closed = True if flags & (1 << 2) else False
-        pinned = True if flags & (1 << 3) else False
-        short = True if flags & (1 << 5) else False
-        hidden = True if flags & (1 << 6) else False
+        my = bool(flags & 1 << 1)
+        closed = bool(flags & 1 << 2)
+        pinned = bool(flags & 1 << 3)
+        short = bool(flags & 1 << 5)
+        hidden = bool(flags & 1 << 6)
         id = Int.read(b)
 
         date = Int.read(b)

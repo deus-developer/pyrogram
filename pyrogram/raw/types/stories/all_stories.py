@@ -112,7 +112,7 @@ class AllStories(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "AllStories":
         flags = Int.read(b)
 
-        has_more = True if flags & (1 << 0) else False
+        has_more = bool(flags & 1 << 0)
         count = Int.read(b)
 
         state = String.read(b)

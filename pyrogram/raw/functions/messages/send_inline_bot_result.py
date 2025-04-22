@@ -135,10 +135,10 @@ class SendInlineBotResult(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SendInlineBotResult":
         flags = Int.read(b)
 
-        silent = True if flags & (1 << 5) else False
-        background = True if flags & (1 << 6) else False
-        clear_draft = True if flags & (1 << 7) else False
-        hide_via = True if flags & (1 << 11) else False
+        silent = bool(flags & 1 << 5)
+        background = bool(flags & 1 << 6)
+        clear_draft = bool(flags & 1 << 7)
+        hide_via = bool(flags & 1 << 11)
         peer = TLObject.read(b)
 
         reply_to = TLObject.read(b) if flags & (1 << 0) else None

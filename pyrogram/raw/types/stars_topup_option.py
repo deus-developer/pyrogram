@@ -93,7 +93,7 @@ class StarsTopupOption(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "StarsTopupOption":
         flags = Int.read(b)
 
-        extended = True if flags & (1 << 1) else False
+        extended = bool(flags & 1 << 1)
         stars = Long.read(b)
 
         store_product = String.read(b) if flags & (1 << 0) else None

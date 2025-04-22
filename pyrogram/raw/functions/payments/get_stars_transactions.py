@@ -79,8 +79,8 @@ class GetStarsTransactions(TLFunction["raw.base.payments.StarsStatus"]):  # type
     def read(b: BytesIO, *args: Any) -> "GetStarsTransactions":
         flags = Int.read(b)
 
-        inbound = True if flags & (1 << 0) else False
-        outbound = True if flags & (1 << 1) else False
+        inbound = bool(flags & 1 << 0)
+        outbound = bool(flags & 1 << 1)
         peer = TLObject.read(b)
 
         offset = String.read(b)

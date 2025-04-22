@@ -184,26 +184,26 @@ class ChatBannedRights(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ChatBannedRights":
         flags = Int.read(b)
 
-        view_messages = True if flags & (1 << 0) else False
-        send_messages = True if flags & (1 << 1) else False
-        send_media = True if flags & (1 << 2) else False
-        send_stickers = True if flags & (1 << 3) else False
-        send_gifs = True if flags & (1 << 4) else False
-        send_games = True if flags & (1 << 5) else False
-        send_inline = True if flags & (1 << 6) else False
-        embed_links = True if flags & (1 << 7) else False
-        send_polls = True if flags & (1 << 8) else False
-        change_info = True if flags & (1 << 10) else False
-        invite_users = True if flags & (1 << 15) else False
-        pin_messages = True if flags & (1 << 17) else False
-        manage_topics = True if flags & (1 << 18) else False
-        send_photos = True if flags & (1 << 19) else False
-        send_videos = True if flags & (1 << 20) else False
-        send_roundvideos = True if flags & (1 << 21) else False
-        send_audios = True if flags & (1 << 22) else False
-        send_voices = True if flags & (1 << 23) else False
-        send_docs = True if flags & (1 << 24) else False
-        send_plain = True if flags & (1 << 25) else False
+        view_messages = bool(flags & 1 << 0)
+        send_messages = bool(flags & 1 << 1)
+        send_media = bool(flags & 1 << 2)
+        send_stickers = bool(flags & 1 << 3)
+        send_gifs = bool(flags & 1 << 4)
+        send_games = bool(flags & 1 << 5)
+        send_inline = bool(flags & 1 << 6)
+        embed_links = bool(flags & 1 << 7)
+        send_polls = bool(flags & 1 << 8)
+        change_info = bool(flags & 1 << 10)
+        invite_users = bool(flags & 1 << 15)
+        pin_messages = bool(flags & 1 << 17)
+        manage_topics = bool(flags & 1 << 18)
+        send_photos = bool(flags & 1 << 19)
+        send_videos = bool(flags & 1 << 20)
+        send_roundvideos = bool(flags & 1 << 21)
+        send_audios = bool(flags & 1 << 22)
+        send_voices = bool(flags & 1 << 23)
+        send_docs = bool(flags & 1 << 24)
+        send_plain = bool(flags & 1 << 25)
         until_date = Int.read(b)
 
         return ChatBannedRights(

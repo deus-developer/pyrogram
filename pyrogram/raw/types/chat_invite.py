@@ -154,14 +154,14 @@ class ChatInvite(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ChatInvite":
         flags = Int.read(b)
 
-        channel = True if flags & (1 << 0) else False
-        broadcast = True if flags & (1 << 1) else False
-        public = True if flags & (1 << 2) else False
-        megagroup = True if flags & (1 << 3) else False
-        request_needed = True if flags & (1 << 6) else False
-        verified = True if flags & (1 << 7) else False
-        scam = True if flags & (1 << 8) else False
-        fake = True if flags & (1 << 9) else False
+        channel = bool(flags & 1 << 0)
+        broadcast = bool(flags & 1 << 1)
+        public = bool(flags & 1 << 2)
+        megagroup = bool(flags & 1 << 3)
+        request_needed = bool(flags & 1 << 6)
+        verified = bool(flags & 1 << 7)
+        scam = bool(flags & 1 << 8)
+        fake = bool(flags & 1 << 9)
         title = String.read(b)
 
         about = String.read(b) if flags & (1 << 5) else None

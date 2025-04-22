@@ -115,9 +115,9 @@ class CreateStickerSet(TLFunction["raw.base.messages.StickerSet"]):  # type: ign
     def read(b: BytesIO, *args: Any) -> "CreateStickerSet":
         flags = Int.read(b)
 
-        masks = True if flags & (1 << 0) else False
-        emojis = True if flags & (1 << 5) else False
-        text_color = True if flags & (1 << 6) else False
+        masks = bool(flags & 1 << 0)
+        emojis = bool(flags & 1 << 5)
+        text_color = bool(flags & 1 << 6)
         user_id = TLObject.read(b)
 
         title = String.read(b)

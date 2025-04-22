@@ -182,9 +182,9 @@ class ChatFull(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ChatFull":
         flags = Int.read(b)
 
-        can_set_username = True if flags & (1 << 7) else False
-        has_scheduled = True if flags & (1 << 8) else False
-        translations_disabled = True if flags & (1 << 19) else False
+        can_set_username = bool(flags & 1 << 7)
+        has_scheduled = bool(flags & 1 << 8)
+        translations_disabled = bool(flags & 1 << 19)
         id = Long.read(b)
 
         about = String.read(b)

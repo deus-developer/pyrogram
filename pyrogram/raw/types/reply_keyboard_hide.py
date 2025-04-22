@@ -58,7 +58,7 @@ class ReplyKeyboardHide(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ReplyKeyboardHide":
         flags = Int.read(b)
 
-        selective = True if flags & (1 << 2) else False
+        selective = bool(flags & 1 << 2)
         return ReplyKeyboardHide(selective=selective)
 
     def write(self, *args) -> bytes:

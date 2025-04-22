@@ -78,7 +78,7 @@ class DialogFilters(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "DialogFilters":
         flags = Int.read(b)
 
-        tags_enabled = True if flags & (1 << 0) else False
+        tags_enabled = bool(flags & 1 << 0)
         filters = TLObject.read(b)
 
         return DialogFilters(filters=filters, tags_enabled=tags_enabled)

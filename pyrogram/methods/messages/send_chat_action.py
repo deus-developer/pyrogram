@@ -26,7 +26,7 @@ class SendChatAction:
         self: "pyrogram.Client",
         chat_id: int | str,
         action: "enums.ChatAction",
-        business_connection_id: str = None,
+        business_connection_id: str | None = None,
     ) -> bool:
         """Tell the other party that something is happening on your side.
 

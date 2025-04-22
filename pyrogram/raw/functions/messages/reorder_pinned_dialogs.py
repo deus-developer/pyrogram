@@ -74,7 +74,7 @@ class ReorderPinnedDialogs(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ReorderPinnedDialogs":
         flags = Int.read(b)
 
-        force = True if flags & (1 << 0) else False
+        force = bool(flags & 1 << 0)
         folder_id = Int.read(b)
 
         order = TLObject.read(b)

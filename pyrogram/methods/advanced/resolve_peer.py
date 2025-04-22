@@ -82,7 +82,7 @@ class ResolvePeer:
                     try:
                         return await self.storage.get_peer_by_phone_number(peer_id)
                     except KeyError:
-                        raise PeerIdInvalid
+                        raise PeerIdInvalid from None
 
             peer_type = utils.get_peer_type(peer_id)
 
@@ -120,4 +120,4 @@ class ResolvePeer:
             try:
                 return await self.storage.get_peer_by_id(peer_id)
             except KeyError:
-                raise PeerIdInvalid
+                raise PeerIdInvalid from None

@@ -24,7 +24,7 @@ from pyrogram import raw
 class UpdatePersonalChannel:
     async def update_personal_channel(
         self: "pyrogram.Client",
-        chat_id: int | str = None,
+        chat_id: int | str | None = None,
     ) -> bool:
         """Update your personal channel.
 

@@ -73,8 +73,8 @@ class GetAllStories(TLFunction["raw.base.stories.AllStories"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "GetAllStories":
         flags = Int.read(b)
 
-        next = True if flags & (1 << 1) else False
-        hidden = True if flags & (1 << 2) else False
+        next = bool(flags & 1 << 1)
+        hidden = bool(flags & 1 << 2)
         state = String.read(b) if flags & (1 << 0) else None
         return GetAllStories(next=next, hidden=hidden, state=state)
 

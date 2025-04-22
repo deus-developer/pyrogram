@@ -47,9 +47,9 @@ class RequestUserInfo(Object):
         self,
         *,
         button_id: int,
-        is_bot: bool = None,
-        is_premium: bool = None,
-        max_quantity: int = None,
+        is_bot: bool | None = None,
+        is_premium: bool | None = None,
+        max_quantity: int | None = None,
     ):
         super().__init__()
 

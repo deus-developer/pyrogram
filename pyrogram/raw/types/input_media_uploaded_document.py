@@ -115,9 +115,9 @@ class InputMediaUploadedDocument(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "InputMediaUploadedDocument":
         flags = Int.read(b)
 
-        nosound_video = True if flags & (1 << 3) else False
-        force_file = True if flags & (1 << 4) else False
-        spoiler = True if flags & (1 << 5) else False
+        nosound_video = bool(flags & 1 << 3)
+        force_file = bool(flags & 1 << 4)
+        spoiler = bool(flags & 1 << 5)
         file = TLObject.read(b)
 
         thumb = TLObject.read(b) if flags & (1 << 2) else None

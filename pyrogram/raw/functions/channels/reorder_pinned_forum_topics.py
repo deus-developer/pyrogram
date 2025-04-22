@@ -74,7 +74,7 @@ class ReorderPinnedForumTopics(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ReorderPinnedForumTopics":
         flags = Int.read(b)
 
-        force = True if flags & (1 << 0) else False
+        force = bool(flags & 1 << 0)
         channel = TLObject.read(b)
 
         order = TLObject.read(b, Int)

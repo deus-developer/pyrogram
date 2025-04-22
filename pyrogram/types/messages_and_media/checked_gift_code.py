@@ -54,11 +54,11 @@ class CheckedGiftCode(Object):
         *,
         date: datetime,
         months: int,
-        via_giveaway: bool = None,
+        via_giveaway: bool | None = None,
         from_chat: "types.Chat" = None,
         winner: "types.User" = None,
-        giveaway_message_id: int = None,
-        used_date: datetime = None,
+        giveaway_message_id: int | None = None,
+        used_date: datetime | None = None,
     ):
         super().__init__()
 

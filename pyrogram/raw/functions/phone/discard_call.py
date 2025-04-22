@@ -84,7 +84,7 @@ class DiscardCall(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "DiscardCall":
         flags = Int.read(b)
 
-        video = True if flags & (1 << 0) else False
+        video = bool(flags & 1 << 0)
         peer = TLObject.read(b)
 
         duration = Int.read(b)

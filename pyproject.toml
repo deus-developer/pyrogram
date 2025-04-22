@@ -67,7 +67,23 @@ include = [
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = []
+ignore = [
+    "ASYNC109",
+    "FBT",
+    "DTZ",
+    "EM",
+    "FIX",
+    "T20",
+    "TID",
+    "TD",
+    "TC001",
+    "TC002",
+    "TC003",
+    "TC004",
+    "PTH",
+    "C90",
+    "PERF401",
+]
 
 
 [tool.ruff.lint.per-file-ignores]

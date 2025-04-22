@@ -90,8 +90,8 @@ class StoryView(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "StoryView":
         flags = Int.read(b)
 
-        blocked = True if flags & (1 << 0) else False
-        blocked_my_stories_from = True if flags & (1 << 1) else False
+        blocked = bool(flags & 1 << 0)
+        blocked_my_stories_from = bool(flags & 1 << 1)
         user_id = Long.read(b)
 
         date = Int.read(b)

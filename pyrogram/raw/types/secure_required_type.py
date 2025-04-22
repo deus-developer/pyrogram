@@ -83,9 +83,9 @@ class SecureRequiredType(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SecureRequiredType":
         flags = Int.read(b)
 
-        native_names = True if flags & (1 << 0) else False
-        selfie_required = True if flags & (1 << 1) else False
-        translation_required = True if flags & (1 << 2) else False
+        native_names = bool(flags & 1 << 0)
+        selfie_required = bool(flags & 1 << 1)
+        translation_required = bool(flags & 1 << 2)
         type = TLObject.read(b)
 
         return SecureRequiredType(

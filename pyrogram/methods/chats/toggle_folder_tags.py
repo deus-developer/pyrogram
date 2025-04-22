@@ -41,10 +41,8 @@ class ToggleFolderTags:
 
                 await app.toggle_folder_tags(True)
         """
-        r = await self.invoke(
+        return await self.invoke(
             raw.functions.messages.ToggleDialogFilterTags(
                 enabled=enabled,
             ),
         )
-
-        return r

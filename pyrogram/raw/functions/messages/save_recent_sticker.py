@@ -74,7 +74,7 @@ class SaveRecentSticker(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SaveRecentSticker":
         flags = Int.read(b)
 
-        attached = True if flags & (1 << 0) else False
+        attached = bool(flags & 1 << 0)
         id = TLObject.read(b)
 
         unsave = Bool.read(b)

@@ -51,8 +51,8 @@ class GiftCode(Object):
         *,
         months: int,
         slug: str,
-        via_giveaway: bool = None,
-        is_unclaimed: bool = None,
+        via_giveaway: bool | None = None,
+        is_unclaimed: bool | None = None,
         boosted_chat: "types.Chat" = None,
     ):
         super().__init__()

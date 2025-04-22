@@ -79,8 +79,8 @@ class PageBlockTable(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "PageBlockTable":
         flags = Int.read(b)
 
-        bordered = True if flags & (1 << 0) else False
-        striped = True if flags & (1 << 1) else False
+        bordered = bool(flags & 1 << 0)
+        striped = bool(flags & 1 << 1)
         title = TLObject.read(b)
 
         rows = TLObject.read(b)

@@ -79,8 +79,8 @@ class PageBlockVideo(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "PageBlockVideo":
         flags = Int.read(b)
 
-        autoplay = True if flags & (1 << 0) else False
-        loop = True if flags & (1 << 1) else False
+        autoplay = bool(flags & 1 << 0)
+        loop = bool(flags & 1 << 1)
         video_id = Long.read(b)
 
         caption = TLObject.read(b)

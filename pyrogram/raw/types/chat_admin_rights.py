@@ -148,21 +148,21 @@ class ChatAdminRights(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ChatAdminRights":
         flags = Int.read(b)
 
-        change_info = True if flags & (1 << 0) else False
-        post_messages = True if flags & (1 << 1) else False
-        edit_messages = True if flags & (1 << 2) else False
-        delete_messages = True if flags & (1 << 3) else False
-        ban_users = True if flags & (1 << 4) else False
-        invite_users = True if flags & (1 << 5) else False
-        pin_messages = True if flags & (1 << 7) else False
-        add_admins = True if flags & (1 << 9) else False
-        anonymous = True if flags & (1 << 10) else False
-        manage_call = True if flags & (1 << 11) else False
-        other = True if flags & (1 << 12) else False
-        manage_topics = True if flags & (1 << 13) else False
-        post_stories = True if flags & (1 << 14) else False
-        edit_stories = True if flags & (1 << 15) else False
-        delete_stories = True if flags & (1 << 16) else False
+        change_info = bool(flags & 1 << 0)
+        post_messages = bool(flags & 1 << 1)
+        edit_messages = bool(flags & 1 << 2)
+        delete_messages = bool(flags & 1 << 3)
+        ban_users = bool(flags & 1 << 4)
+        invite_users = bool(flags & 1 << 5)
+        pin_messages = bool(flags & 1 << 7)
+        add_admins = bool(flags & 1 << 9)
+        anonymous = bool(flags & 1 << 10)
+        manage_call = bool(flags & 1 << 11)
+        other = bool(flags & 1 << 12)
+        manage_topics = bool(flags & 1 << 13)
+        post_stories = bool(flags & 1 << 14)
+        edit_stories = bool(flags & 1 << 15)
+        delete_stories = bool(flags & 1 << 16)
         return ChatAdminRights(
             change_info=change_info,
             post_messages=post_messages,

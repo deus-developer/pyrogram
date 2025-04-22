@@ -97,7 +97,7 @@ class PollResults(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "PollResults":
         flags = Int.read(b)
 
-        min = True if flags & (1 << 0) else False
+        min = bool(flags & 1 << 0)
         results = TLObject.read(b) if flags & (1 << 1) else []
 
         total_voters = Int.read(b) if flags & (1 << 2) else None

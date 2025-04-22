@@ -74,7 +74,7 @@ class SetBotPrecheckoutResults(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SetBotPrecheckoutResults":
         flags = Int.read(b)
 
-        success = True if flags & (1 << 1) else False
+        success = bool(flags & 1 << 1)
         query_id = Long.read(b)
 
         error = String.read(b) if flags & (1 << 0) else None

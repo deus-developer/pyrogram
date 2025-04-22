@@ -151,12 +151,12 @@ class Chat(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "Chat":
         flags = Int.read(b)
 
-        creator = True if flags & (1 << 0) else False
-        left = True if flags & (1 << 2) else False
-        deactivated = True if flags & (1 << 5) else False
-        call_active = True if flags & (1 << 23) else False
-        call_not_empty = True if flags & (1 << 24) else False
-        noforwards = True if flags & (1 << 25) else False
+        creator = bool(flags & 1 << 0)
+        left = bool(flags & 1 << 2)
+        deactivated = bool(flags & 1 << 5)
+        call_active = bool(flags & 1 << 23)
+        call_not_empty = bool(flags & 1 << 24)
+        noforwards = bool(flags & 1 << 25)
         id = Long.read(b)
 
         title = String.read(b)

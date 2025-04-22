@@ -18,6 +18,7 @@
 
 import asyncio
 import bisect
+import contextlib
 import logging
 import os
 from hashlib import sha1
@@ -161,14 +162,14 @@ class Session:
                     self.client.system_version,
                     self.client.lang_code,
                 )
-            except AuthKeyDuplicated as e:
+            except AuthKeyDuplicated:
                 await self.stop()
-                raise e
+                raise
             except (OSError, RPCError):
                 await self.stop()
-            except Exception as e:
+            except Exception:
                 await self.stop()
-                raise e
+                raise
             else:
                 break
 
@@ -385,15 +386,13 @@ class Session:
 
         try:
             await self.connection.send(payload)
-        except OSError as e:
+        except OSError:
             self.results.pop(msg_id, None)
-            raise e
+            raise
 
         if wait_response:
-            try:
+            with contextlib.suppress(TimeoutError):
                 await asyncio.wait_for(self.results[msg_id].event.wait(), timeout)
-            except TimeoutError:
-                pass
 
             result = self.results.pop(msg_id).value
 
@@ -424,6 +423,7 @@ class Session:
                 return await self.send(data, wait_response, timeout)
 
             return result
+        return None
 
     async def invoke(
         self,
@@ -432,10 +432,8 @@ class Session:
         timeout: float = WAIT_TIMEOUT,
         sleep_threshold: float = SLEEP_THRESHOLD,
     ):
-        try:
+        with contextlib.suppress(TimeoutError):
             await asyncio.wait_for(self.is_started.wait(), self.WAIT_TIMEOUT)
-        except TimeoutError:
-            pass
 
         if isinstance(
             query,

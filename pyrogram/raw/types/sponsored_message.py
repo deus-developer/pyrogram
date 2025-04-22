@@ -134,8 +134,8 @@ class SponsoredMessage(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SponsoredMessage":
         flags = Int.read(b)
 
-        recommended = True if flags & (1 << 5) else False
-        can_report = True if flags & (1 << 12) else False
+        recommended = bool(flags & 1 << 5)
+        can_report = bool(flags & 1 << 12)
         random_id = Bytes.read(b)
 
         url = String.read(b)

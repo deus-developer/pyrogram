@@ -96,8 +96,8 @@ class RequestPeerTypeChat(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "RequestPeerTypeChat":
         flags = Int.read(b)
 
-        creator = True if flags & (1 << 0) else False
-        bot_participant = True if flags & (1 << 5) else False
+        creator = bool(flags & 1 << 0)
+        bot_participant = bool(flags & 1 << 5)
         has_username = Bool.read(b) if flags & (1 << 3) else None
         forum = Bool.read(b) if flags & (1 << 4) else None
         user_admin_rights = TLObject.read(b) if flags & (1 << 1) else None

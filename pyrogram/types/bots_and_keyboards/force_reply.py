@@ -43,8 +43,8 @@ class ForceReply(Object):
 
     def __init__(
         self,
-        selective: bool = None,
-        placeholder: str = None,
+        selective: bool | None = None,
+        placeholder: str | None = None,
     ):
         super().__init__()
 

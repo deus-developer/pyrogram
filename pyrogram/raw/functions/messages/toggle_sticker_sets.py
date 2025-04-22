@@ -79,9 +79,9 @@ class ToggleStickerSets(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ToggleStickerSets":
         flags = Int.read(b)
 
-        uninstall = True if flags & (1 << 0) else False
-        archive = True if flags & (1 << 1) else False
-        unarchive = True if flags & (1 << 2) else False
+        uninstall = bool(flags & 1 << 0)
+        archive = bool(flags & 1 << 1)
+        unarchive = bool(flags & 1 << 2)
         stickersets = TLObject.read(b)
 
         return ToggleStickerSets(

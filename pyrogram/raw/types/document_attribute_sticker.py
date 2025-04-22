@@ -79,7 +79,7 @@ class DocumentAttributeSticker(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "DocumentAttributeSticker":
         flags = Int.read(b)
 
-        mask = True if flags & (1 << 1) else False
+        mask = bool(flags & 1 << 1)
         alt = String.read(b)
 
         stickerset = TLObject.read(b)

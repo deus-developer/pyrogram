@@ -79,7 +79,7 @@ class UploadWallPaper(TLFunction["raw.base.WallPaper"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UploadWallPaper":
         flags = Int.read(b)
 
-        for_chat = True if flags & (1 << 0) else False
+        for_chat = bool(flags & 1 << 0)
         file = TLObject.read(b)
 
         mime_type = String.read(b)

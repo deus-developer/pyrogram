@@ -58,7 +58,7 @@ class UpdateSettings(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UpdateSettings":
         flags = Int.read(b)
 
-        allow_international = True if flags & (1 << 0) else False
+        allow_international = bool(flags & 1 << 0)
         return UpdateSettings(allow_international=allow_international)
 
     def write(self, *args) -> bytes:

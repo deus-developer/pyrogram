@@ -135,9 +135,9 @@ class LangPackLanguage(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "LangPackLanguage":
         flags = Int.read(b)
 
-        official = True if flags & (1 << 0) else False
-        rtl = True if flags & (1 << 2) else False
-        beta = True if flags & (1 << 3) else False
+        official = bool(flags & 1 << 0)
+        rtl = bool(flags & 1 << 2)
+        beta = bool(flags & 1 << 3)
         name = String.read(b)
 
         native_name = String.read(b)

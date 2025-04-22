@@ -89,7 +89,7 @@ class SignUp(TLFunction["raw.base.auth.Authorization"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SignUp":
         flags = Int.read(b)
 
-        no_joined_notifications = True if flags & (1 << 0) else False
+        no_joined_notifications = bool(flags & 1 << 0)
         phone_number = String.read(b)
 
         phone_code_hash = String.read(b)

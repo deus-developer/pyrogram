@@ -75,7 +75,7 @@ class BusinessWorkHours(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "BusinessWorkHours":
         flags = Int.read(b)
 
-        open_now = True if flags & (1 << 0) else False
+        open_now = bool(flags & 1 << 0)
         timezone_id = String.read(b)
 
         weekly_open = TLObject.read(b)

@@ -79,7 +79,7 @@ class MessageActionPhoneCall(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "MessageActionPhoneCall":
         flags = Int.read(b)
 
-        video = True if flags & (1 << 2) else False
+        video = bool(flags & 1 << 2)
         call_id = Long.read(b)
 
         reason = TLObject.read(b) if flags & (1 << 0) else None

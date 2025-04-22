@@ -109,7 +109,7 @@ class PhoneCallRequested(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "PhoneCallRequested":
         flags = Int.read(b)
 
-        video = True if flags & (1 << 6) else False
+        video = bool(flags & 1 << 6)
         id = Long.read(b)
 
         access_hash = Long.read(b)

@@ -127,9 +127,9 @@ class MessageReplyHeader(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "MessageReplyHeader":
         flags = Int.read(b)
 
-        reply_to_scheduled = True if flags & (1 << 2) else False
-        forum_topic = True if flags & (1 << 3) else False
-        quote = True if flags & (1 << 9) else False
+        reply_to_scheduled = bool(flags & 1 << 2)
+        forum_topic = bool(flags & 1 << 3)
+        quote = bool(flags & 1 << 9)
         reply_to_msg_id = Int.read(b) if flags & (1 << 4) else None
         reply_to_peer_id = TLObject.read(b) if flags & (1 << 0) else None
 

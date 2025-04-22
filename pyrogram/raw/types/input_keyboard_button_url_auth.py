@@ -84,7 +84,7 @@ class InputKeyboardButtonUrlAuth(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "InputKeyboardButtonUrlAuth":
         flags = Int.read(b)
 
-        request_write_access = True if flags & (1 << 0) else False
+        request_write_access = bool(flags & 1 << 0)
         text = String.read(b)
 
         fwd_text = String.read(b) if flags & (1 << 1) else None

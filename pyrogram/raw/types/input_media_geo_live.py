@@ -91,7 +91,7 @@ class InputMediaGeoLive(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "InputMediaGeoLive":
         flags = Int.read(b)
 
-        stopped = True if flags & (1 << 0) else False
+        stopped = bool(flags & 1 << 0)
         geo_point = TLObject.read(b)
 
         heading = Int.read(b) if flags & (1 << 2) else None

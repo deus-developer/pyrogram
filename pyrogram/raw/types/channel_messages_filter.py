@@ -69,7 +69,7 @@ class ChannelMessagesFilter(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ChannelMessagesFilter":
         flags = Int.read(b)
 
-        exclude_new_messages = True if flags & (1 << 1) else False
+        exclude_new_messages = bool(flags & 1 << 1)
         ranges = TLObject.read(b)
 
         return ChannelMessagesFilter(

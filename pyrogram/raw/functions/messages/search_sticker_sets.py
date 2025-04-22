@@ -74,7 +74,7 @@ class SearchStickerSets(TLFunction["raw.base.messages.FoundStickerSets"]):  # ty
     def read(b: BytesIO, *args: Any) -> "SearchStickerSets":
         flags = Int.read(b)
 
-        exclude_featured = True if flags & (1 << 0) else False
+        exclude_featured = bool(flags & 1 << 0)
         q = String.read(b)
 
         hash = Long.read(b)

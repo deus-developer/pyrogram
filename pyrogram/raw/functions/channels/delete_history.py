@@ -73,7 +73,7 @@ class DeleteHistory(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "DeleteHistory":
         flags = Int.read(b)
 
-        for_everyone = True if flags & (1 << 0) else False
+        for_everyone = bool(flags & 1 << 0)
         channel = TLObject.read(b)
 
         max_id = Int.read(b)

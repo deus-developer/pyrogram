@@ -32,10 +32,10 @@ class EditMessageMedia:
         chat_id: int | str,
         message_id: int,
         media: "types.InputMedia",
-        show_above_text: bool = None,
-        schedule_date: datetime = None,
+        show_above_text: bool | None = None,
+        schedule_date: datetime | None = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
-        file_name: str = None,
+        file_name: str | None = None,
     ) -> "types.Message":
         """Edit animation, audio, document, photo or video messages.
 
@@ -323,3 +323,4 @@ class EditMessageMedia:
                     self,
                     i.message,
                 )
+        return None

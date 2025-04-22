@@ -104,9 +104,9 @@ class BotCallbackAnswer(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "BotCallbackAnswer":
         flags = Int.read(b)
 
-        alert = True if flags & (1 << 1) else False
-        has_url = True if flags & (1 << 3) else False
-        native_ui = True if flags & (1 << 4) else False
+        alert = bool(flags & 1 << 1)
+        has_url = bool(flags & 1 << 3)
+        native_ui = bool(flags & 1 << 4)
         message = String.read(b) if flags & (1 << 0) else None
         url = String.read(b) if flags & (1 << 2) else None
         cache_time = Int.read(b)

@@ -130,7 +130,7 @@ class BoostsStatus(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "BoostsStatus":
         flags = Int.read(b)
 
-        my_boost = True if flags & (1 << 2) else False
+        my_boost = bool(flags & 1 << 2)
         level = Int.read(b)
 
         current_level_boosts = Int.read(b)

@@ -96,7 +96,7 @@ class RequestAppWebView(TLFunction["raw.base.AppWebViewResult"]):  # type: ignor
     def read(b: BytesIO, *args: Any) -> "RequestAppWebView":
         flags = Int.read(b)
 
-        write_allowed = True if flags & (1 << 0) else False
+        write_allowed = bool(flags & 1 << 0)
         peer = TLObject.read(b)
 
         app = TLObject.read(b)

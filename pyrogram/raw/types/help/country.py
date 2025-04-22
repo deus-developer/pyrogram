@@ -85,7 +85,7 @@ class Country(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "Country":
         flags = Int.read(b)
 
-        hidden = True if flags & (1 << 0) else False
+        hidden = bool(flags & 1 << 0)
         iso2 = String.read(b)
 
         default_name = String.read(b)

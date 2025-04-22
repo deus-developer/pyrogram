@@ -85,7 +85,7 @@ class UpdateTranscribedAudio(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UpdateTranscribedAudio":
         flags = Int.read(b)
 
-        pending = True if flags & (1 << 0) else False
+        pending = bool(flags & 1 << 0)
         peer = TLObject.read(b)
 
         msg_id = Int.read(b)

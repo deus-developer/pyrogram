@@ -88,9 +88,9 @@ class MessagePeerReaction(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "MessagePeerReaction":
         flags = Int.read(b)
 
-        big = True if flags & (1 << 0) else False
-        unread = True if flags & (1 << 1) else False
-        my = True if flags & (1 << 2) else False
+        big = bool(flags & 1 << 0)
+        unread = bool(flags & 1 << 1)
+        my = bool(flags & 1 << 2)
         peer_id = TLObject.read(b)
 
         date = Int.read(b)

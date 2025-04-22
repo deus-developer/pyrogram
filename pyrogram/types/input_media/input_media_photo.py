@@ -55,8 +55,8 @@ class InputMediaPhoto(InputMedia):
         media: str | BinaryIO,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list[MessageEntity] = None,
-        has_spoiler: bool = None,
+        caption_entities: list[MessageEntity] | None = None,
+        has_spoiler: bool | None = None,
     ):
         super().__init__(media, caption, parse_mode, caption_entities)
 

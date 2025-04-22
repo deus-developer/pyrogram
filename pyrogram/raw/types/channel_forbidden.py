@@ -96,8 +96,8 @@ class ChannelForbidden(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ChannelForbidden":
         flags = Int.read(b)
 
-        broadcast = True if flags & (1 << 5) else False
-        megagroup = True if flags & (1 << 8) else False
+        broadcast = bool(flags & 1 << 5)
+        megagroup = bool(flags & 1 << 8)
         id = Long.read(b)
 
         access_hash = Long.read(b)

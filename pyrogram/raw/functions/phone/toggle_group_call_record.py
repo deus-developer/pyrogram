@@ -85,8 +85,8 @@ class ToggleGroupCallRecord(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ToggleGroupCallRecord":
         flags = Int.read(b)
 
-        start = True if flags & (1 << 0) else False
-        video = True if flags & (1 << 2) else False
+        start = bool(flags & 1 << 0)
+        video = bool(flags & 1 << 2)
         call = TLObject.read(b)
 
         title = String.read(b) if flags & (1 << 1) else None

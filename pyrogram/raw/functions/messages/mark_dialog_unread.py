@@ -68,7 +68,7 @@ class MarkDialogUnread(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "MarkDialogUnread":
         flags = Int.read(b)
 
-        unread = True if flags & (1 << 0) else False
+        unread = bool(flags & 1 << 0)
         peer = TLObject.read(b)
 
         return MarkDialogUnread(peer=peer, unread=unread)

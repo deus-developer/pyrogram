@@ -108,9 +108,9 @@ class GetStoryViewsList(TLFunction["raw.base.stories.StoryViewsList"]):  # type:
     def read(b: BytesIO, *args: Any) -> "GetStoryViewsList":
         flags = Int.read(b)
 
-        just_contacts = True if flags & (1 << 0) else False
-        reactions_first = True if flags & (1 << 2) else False
-        forwards_first = True if flags & (1 << 3) else False
+        just_contacts = bool(flags & 1 << 0)
+        reactions_first = bool(flags & 1 << 2)
+        forwards_first = bool(flags & 1 << 3)
         peer = TLObject.read(b)
 
         q = String.read(b) if flags & (1 << 1) else None

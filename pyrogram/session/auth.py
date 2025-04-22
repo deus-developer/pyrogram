@@ -317,7 +317,7 @@ class Auth:
                 if retries_left:
                     retries_left -= 1
                 else:
-                    raise e
+                    raise
 
                 await asyncio.sleep(1)
                 continue

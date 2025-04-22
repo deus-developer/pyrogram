@@ -50,10 +50,8 @@ class ImportContacts:
                     ]
                 )
         """
-        imported_contacts = await self.invoke(
+        return await self.invoke(
             raw.functions.contacts.ImportContacts(
                 contacts=contacts,
             ),
         )
-
-        return imported_contacts

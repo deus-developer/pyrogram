@@ -110,7 +110,7 @@ class Photo(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "Photo":
         flags = Int.read(b)
 
-        has_stickers = True if flags & (1 << 0) else False
+        has_stickers = bool(flags & 1 << 0)
         id = Long.read(b)
 
         access_hash = Long.read(b)

@@ -90,8 +90,8 @@ class PhoneCallProtocol(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "PhoneCallProtocol":
         flags = Int.read(b)
 
-        udp_p2p = True if flags & (1 << 0) else False
-        udp_reflector = True if flags & (1 << 1) else False
+        udp_p2p = bool(flags & 1 << 0)
+        udp_reflector = bool(flags & 1 << 1)
         min_layer = Int.read(b)
 
         max_layer = Int.read(b)

@@ -125,7 +125,7 @@ class MessagesSlice(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "MessagesSlice":
         flags = Int.read(b)
 
-        inexact = True if flags & (1 << 1) else False
+        inexact = bool(flags & 1 << 1)
         count = Int.read(b)
 
         next_rate = Int.read(b) if flags & (1 << 0) else None

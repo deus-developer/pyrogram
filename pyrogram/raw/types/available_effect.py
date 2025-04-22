@@ -96,7 +96,7 @@ class AvailableEffect(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "AvailableEffect":
         flags = Int.read(b)
 
-        premium_required = True if flags & (1 << 2) else False
+        premium_required = bool(flags & 1 << 2)
         id = Long.read(b)
 
         emoticon = String.read(b)

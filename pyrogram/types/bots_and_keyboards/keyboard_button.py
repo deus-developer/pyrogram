@@ -57,8 +57,8 @@ class KeyboardButton(Object):
     def __init__(
         self,
         text: str,
-        request_contact: bool = None,
-        request_location: bool = None,
+        request_contact: bool | None = None,
+        request_location: bool | None = None,
         request_poll: "types.RequestPollInfo" = None,
         request_peer: Union[
             "types.RequestChannelInfo",
@@ -166,6 +166,7 @@ class KeyboardButton(Object):
                     url=b.url,
                 ),
             )
+        return None
 
     def write(self):
         if self.request_contact:
@@ -306,11 +307,11 @@ class KeyboardButton(Object):
                     ),
                     max_quantity=self.request_peer.max_quantity,
                 )
+            return None
 
-        elif self.web_app:
+        if self.web_app:
             return raw.types.KeyboardButtonSimpleWebView(
                 text=self.text,
                 url=self.web_app.url,
             )
-        else:
-            return raw.types.KeyboardButton(text=self.text)
+        return raw.types.KeyboardButton(text=self.text)

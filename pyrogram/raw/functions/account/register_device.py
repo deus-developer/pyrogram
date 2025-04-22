@@ -99,7 +99,7 @@ class RegisterDevice(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "RegisterDevice":
         flags = Int.read(b)
 
-        no_muted = True if flags & (1 << 0) else False
+        no_muted = bool(flags & 1 << 0)
         token_type = Int.read(b)
 
         token = String.read(b)

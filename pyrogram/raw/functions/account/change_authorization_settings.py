@@ -84,7 +84,7 @@ class ChangeAuthorizationSettings(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ChangeAuthorizationSettings":
         flags = Int.read(b)
 
-        confirmed = True if flags & (1 << 3) else False
+        confirmed = bool(flags & 1 << 3)
         hash = Long.read(b)
 
         encrypted_requests_disabled = Bool.read(b) if flags & (1 << 0) else None

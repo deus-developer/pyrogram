@@ -120,9 +120,9 @@ class Boost(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "Boost":
         flags = Int.read(b)
 
-        gift = True if flags & (1 << 1) else False
-        giveaway = True if flags & (1 << 2) else False
-        unclaimed = True if flags & (1 << 3) else False
+        gift = bool(flags & 1 << 1)
+        giveaway = bool(flags & 1 << 2)
+        unclaimed = bool(flags & 1 << 3)
         id = String.read(b)
 
         user_id = Long.read(b) if flags & (1 << 0) else None

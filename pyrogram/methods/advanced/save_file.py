@@ -38,9 +38,9 @@ class SaveFile:
     async def save_file(
         self: "pyrogram.Client",
         path: str | BinaryIO,
-        file_id: int = None,
+        file_id: int | None = None,
         file_part: int = 0,
-        progress: Callable = None,
+        progress: Callable | None = None,
         progress_args: tuple = (),
     ):
         """Upload a file onto Telegram servers, without actually sending the message to anyone.
@@ -136,7 +136,7 @@ class SaveFile:
                     f"Can't upload files bigger than {file_size_limit_mib} MiB",
                 )
 
-            file_total_parts = int(math.ceil(file_size / part_size))
+            file_total_parts = math.ceil(file_size / part_size)
             is_big = file_size > 10 * 1024 * 1024
             workers_count = 4 if is_big else 1
             is_missing_part = file_id is not None

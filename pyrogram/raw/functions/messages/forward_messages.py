@@ -147,12 +147,12 @@ class ForwardMessages(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ForwardMessages":
         flags = Int.read(b)
 
-        silent = True if flags & (1 << 5) else False
-        background = True if flags & (1 << 6) else False
-        with_my_score = True if flags & (1 << 8) else False
-        drop_author = True if flags & (1 << 11) else False
-        drop_media_captions = True if flags & (1 << 12) else False
-        noforwards = True if flags & (1 << 14) else False
+        silent = bool(flags & 1 << 5)
+        background = bool(flags & 1 << 6)
+        with_my_score = bool(flags & 1 << 8)
+        drop_author = bool(flags & 1 << 11)
+        drop_media_captions = bool(flags & 1 << 12)
+        noforwards = bool(flags & 1 << 14)
         from_peer = TLObject.read(b)
 
         id = TLObject.read(b, Int)

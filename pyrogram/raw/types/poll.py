@@ -117,10 +117,10 @@ class Poll(TLObject):  # type: ignore
 
         flags = Int.read(b)
 
-        closed = True if flags & (1 << 0) else False
-        public_voters = True if flags & (1 << 1) else False
-        multiple_choice = True if flags & (1 << 2) else False
-        quiz = True if flags & (1 << 3) else False
+        closed = bool(flags & 1 << 0)
+        public_voters = bool(flags & 1 << 1)
+        multiple_choice = bool(flags & 1 << 2)
+        quiz = bool(flags & 1 << 3)
         question = TLObject.read(b)
 
         answers = TLObject.read(b)

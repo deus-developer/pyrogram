@@ -61,7 +61,7 @@ class ChosenInlineResult(Object, Update):
         from_user: "types.User",
         query: str,
         location: "types.Location" = None,
-        inline_message_id: str = None,
+        inline_message_id: str | None = None,
     ):
         super().__init__(client)
 

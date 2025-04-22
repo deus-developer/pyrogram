@@ -74,7 +74,7 @@ class ToggleBotInAttachMenu(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ToggleBotInAttachMenu":
         flags = Int.read(b)
 
-        write_allowed = True if flags & (1 << 0) else False
+        write_allowed = bool(flags & 1 << 0)
         bot = TLObject.read(b)
 
         enabled = Bool.read(b)

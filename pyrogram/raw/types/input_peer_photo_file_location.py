@@ -74,7 +74,7 @@ class InputPeerPhotoFileLocation(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "InputPeerPhotoFileLocation":
         flags = Int.read(b)
 
-        big = True if flags & (1 << 0) else False
+        big = bool(flags & 1 << 0)
         peer = TLObject.read(b)
 
         photo_id = Long.read(b)

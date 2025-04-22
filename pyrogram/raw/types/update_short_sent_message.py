@@ -219,7 +219,7 @@ class UpdateShortSentMessage(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UpdateShortSentMessage":
         flags = Int.read(b)
 
-        out = True if flags & (1 << 1) else False
+        out = bool(flags & 1 << 1)
         id = Int.read(b)
 
         pts = Int.read(b)

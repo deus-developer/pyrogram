@@ -30,10 +30,10 @@ class EditMessageText:
         message_id: int,
         text: str,
         parse_mode: Optional["enums.ParseMode"] = None,
-        entities: list["types.MessageEntity"] = None,
-        disable_web_page_preview: bool = None,
-        show_above_text: bool = None,
-        schedule_date: datetime = None,
+        entities: list["types.MessageEntity"] | None = None,
+        disable_web_page_preview: bool | None = None,
+        show_above_text: bool | None = None,
+        schedule_date: datetime | None = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
     ) -> "types.Message":
         """Edit the text of messages.
@@ -107,3 +107,4 @@ class EditMessageText:
                     self,
                     i.message,
                 )
+        return None

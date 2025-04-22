@@ -95,7 +95,7 @@ class PeerColorOption(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "PeerColorOption":
         flags = Int.read(b)
 
-        hidden = True if flags & (1 << 0) else False
+        hidden = bool(flags & 1 << 0)
         color_id = Int.read(b)
 
         colors = TLObject.read(b) if flags & (1 << 1) else None

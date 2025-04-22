@@ -141,9 +141,9 @@ class ChatInviteExported(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ChatInviteExported":
         flags = Int.read(b)
 
-        revoked = True if flags & (1 << 0) else False
-        permanent = True if flags & (1 << 5) else False
-        request_needed = True if flags & (1 << 6) else False
+        revoked = bool(flags & 1 << 0)
+        permanent = bool(flags & 1 << 5)
+        request_needed = bool(flags & 1 << 6)
         link = String.read(b)
 
         admin_id = Long.read(b)

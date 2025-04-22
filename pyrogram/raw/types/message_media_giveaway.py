@@ -120,8 +120,8 @@ class MessageMediaGiveaway(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "MessageMediaGiveaway":
         flags = Int.read(b)
 
-        only_new_subscribers = True if flags & (1 << 0) else False
-        winners_are_visible = True if flags & (1 << 2) else False
+        only_new_subscribers = bool(flags & 1 << 0)
+        winners_are_visible = bool(flags & 1 << 2)
         channels = TLObject.read(b, Long)
 
         countries_iso2 = TLObject.read(b, String) if flags & (1 << 1) else []

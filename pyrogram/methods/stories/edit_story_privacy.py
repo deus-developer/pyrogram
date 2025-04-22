@@ -27,8 +27,8 @@ class EditStoryPrivacy:
         chat_id: int | str,
         story_id: int,
         privacy: "enums.StoriesPrivacyRules" = None,
-        allowed_users: list[int | str] = None,
-        disallowed_users: list[int | str] = None,
+        allowed_users: list[int | str] | None = None,
+        disallowed_users: list[int | str] | None = None,
     ) -> "types.Story":
         """Edit the privacy of story.
 
@@ -148,3 +148,4 @@ class EditStoryPrivacy:
                     i.story,
                     i.peer,
                 )
+        return None

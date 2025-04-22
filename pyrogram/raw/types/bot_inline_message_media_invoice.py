@@ -109,8 +109,8 @@ class BotInlineMessageMediaInvoice(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "BotInlineMessageMediaInvoice":
         flags = Int.read(b)
 
-        shipping_address_requested = True if flags & (1 << 1) else False
-        test = True if flags & (1 << 3) else False
+        shipping_address_requested = bool(flags & 1 << 1)
+        test = bool(flags & 1 << 3)
         title = String.read(b)
 
         description = String.read(b)

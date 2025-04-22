@@ -58,7 +58,7 @@ class FinishTakeoutSession(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "FinishTakeoutSession":
         flags = Int.read(b)
 
-        success = True if flags & (1 << 0) else False
+        success = bool(flags & 1 << 0)
         return FinishTakeoutSession(success=success)
 
     def write(self, *args) -> bytes:

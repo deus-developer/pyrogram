@@ -58,7 +58,7 @@ class ClearRecentStickers(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ClearRecentStickers":
         flags = Int.read(b)
 
-        attached = True if flags & (1 << 0) else False
+        attached = bool(flags & 1 << 0)
         return ClearRecentStickers(attached=attached)
 
     def write(self, *args) -> bytes:

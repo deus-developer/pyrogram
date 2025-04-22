@@ -30,7 +30,7 @@ class RequestPollInfo(Object):
     def __init__(
         self,
         *,
-        is_quiz: bool = None,
+        is_quiz: bool | None = None,
     ):
         super().__init__()
 

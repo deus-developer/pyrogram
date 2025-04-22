@@ -68,7 +68,7 @@ class GetMegagroupStats(TLFunction["raw.base.stats.MegagroupStats"]):  # type: i
     def read(b: BytesIO, *args: Any) -> "GetMegagroupStats":
         flags = Int.read(b)
 
-        dark = True if flags & (1 << 0) else False
+        dark = bool(flags & 1 << 0)
         channel = TLObject.read(b)
 
         return GetMegagroupStats(channel=channel, dark=dark)

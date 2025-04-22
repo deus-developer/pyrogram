@@ -138,8 +138,8 @@ class MessageMediaGiveawayResults(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "MessageMediaGiveawayResults":
         flags = Int.read(b)
 
-        only_new_subscribers = True if flags & (1 << 0) else False
-        refunded = True if flags & (1 << 2) else False
+        only_new_subscribers = bool(flags & 1 << 0)
+        refunded = bool(flags & 1 << 2)
         channel_id = Long.read(b)
 
         additional_peers_count = Int.read(b) if flags & (1 << 3) else None

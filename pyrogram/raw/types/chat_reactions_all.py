@@ -58,7 +58,7 @@ class ChatReactionsAll(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ChatReactionsAll":
         flags = Int.read(b)
 
-        allow_custom = True if flags & (1 << 0) else False
+        allow_custom = bool(flags & 1 << 0)
         return ChatReactionsAll(allow_custom=allow_custom)
 
     def write(self, *args) -> bytes:

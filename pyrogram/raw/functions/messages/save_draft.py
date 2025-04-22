@@ -103,8 +103,8 @@ class SaveDraft(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SaveDraft":
         flags = Int.read(b)
 
-        no_webpage = True if flags & (1 << 1) else False
-        invert_media = True if flags & (1 << 6) else False
+        no_webpage = bool(flags & 1 << 1)
+        invert_media = bool(flags & 1 << 6)
         reply_to = TLObject.read(b) if flags & (1 << 4) else None
 
         peer = TLObject.read(b)

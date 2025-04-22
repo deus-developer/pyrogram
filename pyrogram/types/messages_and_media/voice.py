@@ -62,11 +62,11 @@ class Voice(Object):
         file_id: str,
         file_unique_id: str,
         duration: int,
-        waveform: bytes = None,
-        mime_type: str = None,
-        file_size: int = None,
-        date: datetime = None,
-        ttl_seconds: int = None,
+        waveform: bytes | None = None,
+        mime_type: str | None = None,
+        file_size: int | None = None,
+        date: datetime | None = None,
+        ttl_seconds: int | None = None,
     ):
         super().__init__(client)
 
@@ -84,7 +84,7 @@ class Voice(Object):
         client,
         voice: "raw.types.Document",
         attributes: "raw.types.DocumentAttributeAudio",
-        ttl_seconds: int = None,
+        ttl_seconds: int | None = None,
     ) -> "Voice":
         return Voice(
             file_id=FileId(

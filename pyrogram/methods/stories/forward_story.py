@@ -29,9 +29,9 @@ class ForwardStory:
         chat_id: int | str,
         from_chat_id: int | str,
         story_id: int,
-        disable_notification: bool = None,
-        message_thread_id: int = None,
-        schedule_date: datetime = None,
+        disable_notification: bool | None = None,
+        message_thread_id: int | None = None,
+        schedule_date: datetime | None = None,
     ) -> Optional["types.Message"]:
         """Send story.
 
@@ -102,3 +102,4 @@ class ForwardStory:
                     i.message,
                     is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
                 )
+        return None

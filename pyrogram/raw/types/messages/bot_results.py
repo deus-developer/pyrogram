@@ -119,7 +119,7 @@ class BotResults(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "BotResults":
         flags = Int.read(b)
 
-        gallery = True if flags & (1 << 0) else False
+        gallery = bool(flags & 1 << 0)
         query_id = Long.read(b)
 
         next_offset = String.read(b) if flags & (1 << 1) else None

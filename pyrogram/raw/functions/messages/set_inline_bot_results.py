@@ -110,8 +110,8 @@ class SetInlineBotResults(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SetInlineBotResults":
         flags = Int.read(b)
 
-        gallery = True if flags & (1 << 0) else False
-        private = True if flags & (1 << 1) else False
+        gallery = bool(flags & 1 << 0)
+        private = bool(flags & 1 << 1)
         query_id = Long.read(b)
 
         results = TLObject.read(b)

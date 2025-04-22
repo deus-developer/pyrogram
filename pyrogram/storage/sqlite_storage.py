@@ -180,12 +180,13 @@ class SQLiteStorage(Storage):
                     "DELETE FROM update_state WHERE id = ?",
                     (value,),
                 )
-            else:
-                self.conn.execute(
-                    "REPLACE INTO update_state (id, pts, qts, date, seq)"
-                    "VALUES (?, ?, ?, ?, ?)",
-                    value,
-                )
+                return None
+            self.conn.execute(
+                "REPLACE INTO update_state (id, pts, qts, date, seq)"
+                "VALUES (?, ?, ?, ?, ?)",
+                value,
+            )
+            return None
 
     async def get_peer_by_id(self, peer_id: int):
         r = self.conn.execute(
@@ -276,3 +277,4 @@ class SQLiteStorage(Storage):
                 "UPDATE version SET number = ?",
                 (value,),
             )
+            return None

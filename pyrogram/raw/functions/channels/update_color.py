@@ -79,7 +79,7 @@ class UpdateColor(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UpdateColor":
         flags = Int.read(b)
 
-        for_profile = True if flags & (1 << 1) else False
+        for_profile = bool(flags & 1 << 1)
         channel = TLObject.read(b)
 
         color = Int.read(b) if flags & (1 << 2) else None

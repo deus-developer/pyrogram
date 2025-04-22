@@ -71,7 +71,7 @@ class ChannelAdminLogEventActionParticipantJoinByInvite(TLObject):  # type: igno
     ) -> "ChannelAdminLogEventActionParticipantJoinByInvite":
         flags = Int.read(b)
 
-        via_chatlist = True if flags & (1 << 0) else False
+        via_chatlist = bool(flags & 1 << 0)
         invite = TLObject.read(b)
 
         return ChannelAdminLogEventActionParticipantJoinByInvite(

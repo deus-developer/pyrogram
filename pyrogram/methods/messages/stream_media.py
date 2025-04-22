@@ -96,10 +96,7 @@ class StreamMedia:
         else:
             media = message
 
-        if isinstance(media, str):
-            file_id_str = media
-        else:
-            file_id_str = media.file_id
+        file_id_str = media if isinstance(media, str) else media.file_id
 
         file_id_obj = FileId.decode(file_id_str)
         file_size = getattr(media, "file_size", 0)

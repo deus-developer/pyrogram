@@ -79,7 +79,7 @@ class SetCallRating(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SetCallRating":
         flags = Int.read(b)
 
-        user_initiative = True if flags & (1 << 0) else False
+        user_initiative = bool(flags & 1 << 0)
         peer = TLObject.read(b)
 
         rating = Int.read(b)

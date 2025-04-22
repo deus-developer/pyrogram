@@ -25,9 +25,9 @@ class SendReaction:
     async def send_reaction(
         self: "pyrogram.Client",
         chat_id: int | str,
-        message_id: int = None,
-        emoji: int | str | list[int | str] = None,
-        story_id: int = None,
+        message_id: int | None = None,
+        emoji: int | str | list[int | str] | None = None,
+        story_id: int | None = None,
         big: bool = False,
     ) -> bool:
         """Send a reaction to a message or story.

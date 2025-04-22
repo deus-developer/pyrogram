@@ -101,9 +101,9 @@ class DocumentAttributeVideo(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "DocumentAttributeVideo":
         flags = Int.read(b)
 
-        round_message = True if flags & (1 << 0) else False
-        supports_streaming = True if flags & (1 << 1) else False
-        nosound = True if flags & (1 << 3) else False
+        round_message = bool(flags & 1 << 0)
+        supports_streaming = bool(flags & 1 << 1)
+        nosound = bool(flags & 1 << 3)
         duration = Double.read(b)
 
         w = Int.read(b)

@@ -202,46 +202,46 @@ class Chat(Object):
         client: "pyrogram.Client" = None,
         id: int,
         type: "enums.ChatType",
-        is_forum: bool = None,
-        is_verified: bool = None,
-        is_members_hidden: bool = None,
-        is_restricted: bool = None,
-        is_creator: bool = None,
-        is_admin: bool = None,
-        is_scam: bool = None,
-        is_fake: bool = None,
-        is_deactivated: bool = None,
-        is_support: bool = None,
-        is_stories_hidden: bool = None,
-        is_stories_unavailable: bool = None,
-        is_business_bot: bool = None,
-        title: str = None,
-        username: str = None,
-        usernames: list["types.Username"] = None,
-        first_name: str = None,
-        last_name: str = None,
+        is_forum: bool | None = None,
+        is_verified: bool | None = None,
+        is_members_hidden: bool | None = None,
+        is_restricted: bool | None = None,
+        is_creator: bool | None = None,
+        is_admin: bool | None = None,
+        is_scam: bool | None = None,
+        is_fake: bool | None = None,
+        is_deactivated: bool | None = None,
+        is_support: bool | None = None,
+        is_stories_hidden: bool | None = None,
+        is_stories_unavailable: bool | None = None,
+        is_business_bot: bool | None = None,
+        title: str | None = None,
+        username: str | None = None,
+        usernames: list["types.Username"] | None = None,
+        first_name: str | None = None,
+        last_name: str | None = None,
         photo: "types.ChatPhoto" = None,
-        stories: list["types.Story"] = None,
+        stories: list["types.Story"] | None = None,
         wallpaper: "types.Document" = None,
-        bio: str = None,
-        description: str = None,
-        dc_id: int = None,
-        folder_id: int = None,
-        has_protected_content: bool = None,
-        invite_link: str = None,
+        bio: str | None = None,
+        description: str | None = None,
+        dc_id: int | None = None,
+        folder_id: int | None = None,
+        has_protected_content: bool | None = None,
+        invite_link: str | None = None,
         pinned_message=None,
-        sticker_set_name: str = None,
-        can_set_sticker_set: bool = None,
-        members_count: int = None,
-        restrictions: list["types.Restriction"] = None,
+        sticker_set_name: str | None = None,
+        can_set_sticker_set: bool | None = None,
+        members_count: int | None = None,
+        restrictions: list["types.Restriction"] | None = None,
         permissions: "types.ChatPermissions" = None,
-        distance: int = None,
+        distance: int | None = None,
         personal_channel: "types.Chat" = None,
         personal_channel_message: "types.Message" = None,
         linked_chat: "types.Chat" = None,
         send_as_chat: "types.Chat" = None,
         available_reactions: Optional["types.ChatReactions"] = None,
-        level: int = None,
+        level: int | None = None,
         reply_color: "types.ChatColor" = None,
         profile_color: "types.ChatColor" = None,
         business_info: "types.BusinessInfo" = None,
@@ -768,9 +768,9 @@ class Chat(Object):
     async def set_photo(
         self,
         *,
-        photo: str | BinaryIO = None,
-        video: str | BinaryIO = None,
-        video_start_ts: float = None,
+        photo: str | BinaryIO | None = None,
+        video: str | BinaryIO | None = None,
+        video_start_ts: float | None = None,
     ) -> bool:
         """Bound method *set_photo* of :obj:`~pyrogram.types.Chat`.
 
@@ -849,7 +849,7 @@ class Chat(Object):
     async def ban_member(
         self,
         user_id: int | str,
-        until_date: datetime = utils.zero_datetime(),
+        until_date: datetime | None = None,
     ) -> Union["types.Message", bool]:
         """Bound method *ban_member* of :obj:`~pyrogram.types.Chat`.
 
@@ -886,6 +886,9 @@ class Chat(Object):
         Raises:
             RPCError: In case of a Telegram RPC error.
         """
+        if until_date is None:
+            until_date = utils.zero_datetime()
+
         return await self._client.ban_chat_member(
             chat_id=self.id,
             user_id=user_id,
@@ -929,7 +932,7 @@ class Chat(Object):
         self,
         user_id: int | str,
         permissions: "types.ChatPermissions",
-        until_date: datetime = utils.zero_datetime(),
+        until_date: datetime | None = None,
     ) -> "types.Chat":
         """Bound method *unban_member* of :obj:`~pyrogram.types.Chat`.
 
@@ -965,6 +968,9 @@ class Chat(Object):
         Raises:
             RPCError: In case of a Telegram RPC error.
         """
+        if until_date is None:
+            until_date = utils.zero_datetime()
+
         return await self._client.restrict_chat_member(
             chat_id=self.id,
             user_id=user_id,
@@ -1241,7 +1247,7 @@ class Chat(Object):
         """
         return await self._client.unpin_all_chat_messages(self.id)
 
-    async def mute(self, mute_until: datetime = None) -> bool:
+    async def mute(self, mute_until: datetime | None = None) -> bool:
         """Bound method *mute* of :obj:`~pyrogram.types.Chat`.
 
         Use as a shortcut for:

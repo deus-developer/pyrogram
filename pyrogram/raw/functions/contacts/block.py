@@ -68,7 +68,7 @@ class Block(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "Block":
         flags = Int.read(b)
 
-        my_stories_from = True if flags & (1 << 0) else False
+        my_stories_from = bool(flags & 1 << 0)
         id = TLObject.read(b)
 
         return Block(id=id, my_stories_from=my_stories_from)

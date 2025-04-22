@@ -82,7 +82,7 @@ class GroupCallParticipantVideo(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "GroupCallParticipantVideo":
         flags = Int.read(b)
 
-        paused = True if flags & (1 << 0) else False
+        paused = bool(flags & 1 << 0)
         endpoint = String.read(b)
 
         source_groups = TLObject.read(b)

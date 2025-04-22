@@ -96,11 +96,11 @@ class InputBusinessRecipients(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "InputBusinessRecipients":
         flags = Int.read(b)
 
-        existing_chats = True if flags & (1 << 0) else False
-        new_chats = True if flags & (1 << 1) else False
-        contacts = True if flags & (1 << 2) else False
-        non_contacts = True if flags & (1 << 3) else False
-        exclude_selected = True if flags & (1 << 5) else False
+        existing_chats = bool(flags & 1 << 0)
+        new_chats = bool(flags & 1 << 1)
+        contacts = bool(flags & 1 << 2)
+        non_contacts = bool(flags & 1 << 3)
+        exclude_selected = bool(flags & 1 << 5)
         users = TLObject.read(b) if flags & (1 << 4) else []
 
         return InputBusinessRecipients(

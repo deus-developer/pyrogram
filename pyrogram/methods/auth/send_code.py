@@ -30,14 +30,14 @@ class SendCode:
     async def send_code(
         self: "pyrogram.Client",
         phone_number: str,
-        current_number: bool = None,
-        allow_flashcall: bool = None,
-        allow_app_hash: bool = None,
-        allow_missed_call: bool = None,
-        allow_firebase: bool = None,
-        logout_tokens: list[bytes] = None,
-        token: str = None,
-        app_sandbox: bool = None,
+        current_number: bool | None = None,
+        allow_flashcall: bool | None = None,
+        allow_app_hash: bool | None = None,
+        allow_missed_call: bool | None = None,
+        allow_firebase: bool | None = None,
+        logout_tokens: list[bytes] | None = None,
+        token: str | None = None,
+        app_sandbox: bool | None = None,
     ) -> "types.SentCode":
         """Send the confirmation code to the given phone number.
 

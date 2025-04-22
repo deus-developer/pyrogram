@@ -73,7 +73,7 @@ class UpdateProfilePhoto(TLFunction["raw.base.photos.Photo"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UpdateProfilePhoto":
         flags = Int.read(b)
 
-        fallback = True if flags & (1 << 0) else False
+        fallback = bool(flags & 1 << 0)
         bot = TLObject.read(b) if flags & (1 << 1) else None
 
         id = TLObject.read(b)

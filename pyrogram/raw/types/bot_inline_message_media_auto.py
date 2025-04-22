@@ -80,7 +80,7 @@ class BotInlineMessageMediaAuto(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "BotInlineMessageMediaAuto":
         flags = Int.read(b)
 
-        invert_media = True if flags & (1 << 3) else False
+        invert_media = bool(flags & 1 << 3)
         message = String.read(b)
 
         entities = TLObject.read(b) if flags & (1 << 1) else []

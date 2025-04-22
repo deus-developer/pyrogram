@@ -60,14 +60,14 @@ class BusinessMessage(Object):
         self,
         *,
         shortcut_id: int,
-        is_greeting: bool = None,
-        is_away: bool = None,
-        no_activity_days: int = None,
-        offline_only: bool = None,
-        recipients: list["types.User"] = None,
+        is_greeting: bool | None = None,
+        is_away: bool | None = None,
+        no_activity_days: int | None = None,
+        offline_only: bool | None = None,
+        recipients: list["types.User"] | None = None,
         schedule: "enums.BusinessSchedule" = None,
-        start_date: datetime = None,
-        end_date: datetime = None,
+        start_date: datetime | None = None,
+        end_date: datetime | None = None,
     ):
         self.shortcut_id = shortcut_id
         self.is_greeting = is_greeting

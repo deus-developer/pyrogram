@@ -109,7 +109,7 @@ class StarsTransaction(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "StarsTransaction":
         flags = Int.read(b)
 
-        refund = True if flags & (1 << 3) else False
+        refund = bool(flags & 1 << 3)
         id = String.read(b)
 
         stars = Long.read(b)

@@ -140,9 +140,9 @@ class SendStory(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SendStory":
         flags = Int.read(b)
 
-        pinned = True if flags & (1 << 2) else False
-        noforwards = True if flags & (1 << 4) else False
-        fwd_modified = True if flags & (1 << 7) else False
+        pinned = bool(flags & 1 << 2)
+        noforwards = bool(flags & 1 << 4)
+        fwd_modified = bool(flags & 1 << 7)
         peer = TLObject.read(b)
 
         media = TLObject.read(b)

@@ -73,8 +73,8 @@ class SaveAutoDownloadSettings(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SaveAutoDownloadSettings":
         flags = Int.read(b)
 
-        low = True if flags & (1 << 0) else False
-        high = True if flags & (1 << 1) else False
+        low = bool(flags & 1 << 0)
+        high = bool(flags & 1 << 1)
         settings = TLObject.read(b)
 
         return SaveAutoDownloadSettings(settings=settings, low=low, high=high)

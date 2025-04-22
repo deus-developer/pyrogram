@@ -177,12 +177,12 @@ class Authorization(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "Authorization":
         flags = Int.read(b)
 
-        current = True if flags & (1 << 0) else False
-        official_app = True if flags & (1 << 1) else False
-        password_pending = True if flags & (1 << 2) else False
-        encrypted_requests_disabled = True if flags & (1 << 3) else False
-        call_requests_disabled = True if flags & (1 << 4) else False
-        unconfirmed = True if flags & (1 << 5) else False
+        current = bool(flags & 1 << 0)
+        official_app = bool(flags & 1 << 1)
+        password_pending = bool(flags & 1 << 2)
+        encrypted_requests_disabled = bool(flags & 1 << 3)
+        call_requests_disabled = bool(flags & 1 << 4)
+        unconfirmed = bool(flags & 1 << 5)
         hash = Long.read(b)
 
         device_model = String.read(b)

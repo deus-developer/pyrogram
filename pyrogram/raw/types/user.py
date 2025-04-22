@@ -323,32 +323,32 @@ class User(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "User":
         flags = Int.read(b)
 
-        is_self = True if flags & (1 << 10) else False
-        contact = True if flags & (1 << 11) else False
-        mutual_contact = True if flags & (1 << 12) else False
-        deleted = True if flags & (1 << 13) else False
-        bot = True if flags & (1 << 14) else False
-        bot_chat_history = True if flags & (1 << 15) else False
-        bot_nochats = True if flags & (1 << 16) else False
-        verified = True if flags & (1 << 17) else False
-        restricted = True if flags & (1 << 18) else False
-        min = True if flags & (1 << 20) else False
-        bot_inline_geo = True if flags & (1 << 21) else False
-        support = True if flags & (1 << 23) else False
-        scam = True if flags & (1 << 24) else False
-        apply_min_photo = True if flags & (1 << 25) else False
-        fake = True if flags & (1 << 26) else False
-        bot_attach_menu = True if flags & (1 << 27) else False
-        premium = True if flags & (1 << 28) else False
-        attach_menu_enabled = True if flags & (1 << 29) else False
+        is_self = bool(flags & 1 << 10)
+        contact = bool(flags & 1 << 11)
+        mutual_contact = bool(flags & 1 << 12)
+        deleted = bool(flags & 1 << 13)
+        bot = bool(flags & 1 << 14)
+        bot_chat_history = bool(flags & 1 << 15)
+        bot_nochats = bool(flags & 1 << 16)
+        verified = bool(flags & 1 << 17)
+        restricted = bool(flags & 1 << 18)
+        min = bool(flags & 1 << 20)
+        bot_inline_geo = bool(flags & 1 << 21)
+        support = bool(flags & 1 << 23)
+        scam = bool(flags & 1 << 24)
+        apply_min_photo = bool(flags & 1 << 25)
+        fake = bool(flags & 1 << 26)
+        bot_attach_menu = bool(flags & 1 << 27)
+        premium = bool(flags & 1 << 28)
+        attach_menu_enabled = bool(flags & 1 << 29)
         flags2 = Int.read(b)
 
-        bot_can_edit = True if flags2 & (1 << 1) else False
-        close_friend = True if flags2 & (1 << 2) else False
-        stories_hidden = True if flags2 & (1 << 3) else False
-        stories_unavailable = True if flags2 & (1 << 4) else False
-        contact_require_premium = True if flags2 & (1 << 10) else False
-        bot_business = True if flags2 & (1 << 11) else False
+        bot_can_edit = bool(flags2 & 1 << 1)
+        close_friend = bool(flags2 & 1 << 2)
+        stories_hidden = bool(flags2 & 1 << 3)
+        stories_unavailable = bool(flags2 & 1 << 4)
+        contact_require_premium = bool(flags2 & 1 << 10)
+        bot_business = bool(flags2 & 1 << 11)
         id = Long.read(b)
 
         access_hash = Long.read(b) if flags & (1 << 0) else None

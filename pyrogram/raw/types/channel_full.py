@@ -404,24 +404,24 @@ class ChannelFull(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ChannelFull":
         flags = Int.read(b)
 
-        can_view_participants = True if flags & (1 << 3) else False
-        can_set_username = True if flags & (1 << 6) else False
-        can_set_stickers = True if flags & (1 << 7) else False
-        hidden_prehistory = True if flags & (1 << 10) else False
-        can_set_location = True if flags & (1 << 16) else False
-        has_scheduled = True if flags & (1 << 19) else False
-        can_view_stats = True if flags & (1 << 20) else False
-        blocked = True if flags & (1 << 22) else False
+        can_view_participants = bool(flags & 1 << 3)
+        can_set_username = bool(flags & 1 << 6)
+        can_set_stickers = bool(flags & 1 << 7)
+        hidden_prehistory = bool(flags & 1 << 10)
+        can_set_location = bool(flags & 1 << 16)
+        has_scheduled = bool(flags & 1 << 19)
+        can_view_stats = bool(flags & 1 << 20)
+        blocked = bool(flags & 1 << 22)
         flags2 = Int.read(b)
 
-        can_delete_channel = True if flags2 & (1 << 0) else False
-        antispam = True if flags2 & (1 << 1) else False
-        participants_hidden = True if flags2 & (1 << 2) else False
-        translations_disabled = True if flags2 & (1 << 3) else False
-        stories_pinned_available = True if flags2 & (1 << 5) else False
-        view_forum_as_messages = True if flags2 & (1 << 6) else False
-        restricted_sponsored = True if flags2 & (1 << 11) else False
-        can_view_revenue = True if flags2 & (1 << 12) else False
+        can_delete_channel = bool(flags2 & 1 << 0)
+        antispam = bool(flags2 & 1 << 1)
+        participants_hidden = bool(flags2 & 1 << 2)
+        translations_disabled = bool(flags2 & 1 << 3)
+        stories_pinned_available = bool(flags2 & 1 << 5)
+        view_forum_as_messages = bool(flags2 & 1 << 6)
+        restricted_sponsored = bool(flags2 & 1 << 11)
+        can_view_revenue = bool(flags2 & 1 << 12)
         id = Long.read(b)
 
         about = String.read(b)

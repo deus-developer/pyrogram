@@ -30,12 +30,12 @@ class ForwardMessages:
         chat_id: int | str,
         from_chat_id: int | str,
         message_ids: int | Iterable[int],
-        message_thread_id: int = None,
-        disable_notification: bool = None,
-        schedule_date: datetime = None,
-        hide_sender_name: bool = None,
-        hide_captions: bool = None,
-        protect_content: bool = None,
+        message_thread_id: int | None = None,
+        disable_notification: bool | None = None,
+        schedule_date: datetime | None = None,
+        hide_sender_name: bool | None = None,
+        hide_captions: bool | None = None,
+        protect_content: bool | None = None,
     ) -> Union["types.Message", list["types.Message"]]:
         """Forward messages of any kind.
 

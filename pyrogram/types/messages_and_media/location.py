@@ -53,3 +53,4 @@ class Location(Object):
                 latitude=geo_point.lat,
                 client=client,
             )
+        return None

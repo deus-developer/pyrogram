@@ -96,8 +96,8 @@ class ExportChatInvite(TLFunction["raw.base.ExportedChatInvite"]):  # type: igno
     def read(b: BytesIO, *args: Any) -> "ExportChatInvite":
         flags = Int.read(b)
 
-        legacy_revoke_permanent = True if flags & (1 << 2) else False
-        request_needed = True if flags & (1 << 3) else False
+        legacy_revoke_permanent = bool(flags & 1 << 2)
+        request_needed = bool(flags & 1 << 3)
         peer = TLObject.read(b)
 
         expire_date = Int.read(b) if flags & (1 << 0) else None

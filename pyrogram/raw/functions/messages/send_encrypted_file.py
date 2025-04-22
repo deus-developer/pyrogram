@@ -85,7 +85,7 @@ class SendEncryptedFile(TLFunction["raw.base.messages.SentEncryptedMessage"]):  
     def read(b: BytesIO, *args: Any) -> "SendEncryptedFile":
         flags = Int.read(b)
 
-        silent = True if flags & (1 << 0) else False
+        silent = bool(flags & 1 << 0)
         peer = TLObject.read(b)
 
         random_id = Long.read(b)

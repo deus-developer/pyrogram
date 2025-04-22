@@ -96,7 +96,7 @@ class GetExportedChatInvites(TLFunction["raw.base.messages.ExportedChatInvites"]
     def read(b: BytesIO, *args: Any) -> "GetExportedChatInvites":
         flags = Int.read(b)
 
-        revoked = True if flags & (1 << 3) else False
+        revoked = bool(flags & 1 << 3)
         peer = TLObject.read(b)
 
         admin_id = TLObject.read(b)

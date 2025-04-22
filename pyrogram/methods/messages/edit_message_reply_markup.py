@@ -27,7 +27,7 @@ class EditMessageReplyMarkup:
         self: "pyrogram.Client",
         chat_id: int | str,
         message_id: int,
-        schedule_date: datetime = None,
+        schedule_date: datetime | None = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
     ) -> "types.Message":
         """Edit only the reply markup of messages sent by the bot.
@@ -84,3 +84,4 @@ class EditMessageReplyMarkup:
                     self,
                     i.message,
                 )
+        return None

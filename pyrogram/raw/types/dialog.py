@@ -149,9 +149,9 @@ class Dialog(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "Dialog":
         flags = Int.read(b)
 
-        pinned = True if flags & (1 << 2) else False
-        unread_mark = True if flags & (1 << 3) else False
-        view_forum_as_messages = True if flags & (1 << 6) else False
+        pinned = bool(flags & 1 << 2)
+        unread_mark = bool(flags & 1 << 3)
+        view_forum_as_messages = bool(flags & 1 << 6)
         peer = TLObject.read(b)
 
         top_message = Int.read(b)

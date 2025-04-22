@@ -68,7 +68,7 @@ class TogglePeerTranslations(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "TogglePeerTranslations":
         flags = Int.read(b)
 
-        disabled = True if flags & (1 << 0) else False
+        disabled = bool(flags & 1 << 0)
         peer = TLObject.read(b)
 
         return TogglePeerTranslations(peer=peer, disabled=disabled)

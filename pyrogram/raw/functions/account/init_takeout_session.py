@@ -101,12 +101,12 @@ class InitTakeoutSession(TLFunction["raw.base.account.Takeout"]):  # type: ignor
     def read(b: BytesIO, *args: Any) -> "InitTakeoutSession":
         flags = Int.read(b)
 
-        contacts = True if flags & (1 << 0) else False
-        message_users = True if flags & (1 << 1) else False
-        message_chats = True if flags & (1 << 2) else False
-        message_megagroups = True if flags & (1 << 3) else False
-        message_channels = True if flags & (1 << 4) else False
-        files = True if flags & (1 << 5) else False
+        contacts = bool(flags & 1 << 0)
+        message_users = bool(flags & 1 << 1)
+        message_chats = bool(flags & 1 << 2)
+        message_megagroups = bool(flags & 1 << 3)
+        message_channels = bool(flags & 1 << 4)
+        files = bool(flags & 1 << 5)
         file_max_size = Long.read(b) if flags & (1 << 5) else None
         return InitTakeoutSession(
             contacts=contacts,

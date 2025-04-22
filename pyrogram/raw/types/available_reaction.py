@@ -126,8 +126,8 @@ class AvailableReaction(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "AvailableReaction":
         flags = Int.read(b)
 
-        inactive = True if flags & (1 << 0) else False
-        premium = True if flags & (1 << 2) else False
+        inactive = bool(flags & 1 << 0)
+        premium = bool(flags & 1 << 2)
         reaction = String.read(b)
 
         title = String.read(b)

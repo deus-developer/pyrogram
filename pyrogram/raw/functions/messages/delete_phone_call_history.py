@@ -58,7 +58,7 @@ class DeletePhoneCallHistory(TLFunction["raw.base.messages.AffectedFoundMessages
     def read(b: BytesIO, *args: Any) -> "DeletePhoneCallHistory":
         flags = Int.read(b)
 
-        revoke = True if flags & (1 << 0) else False
+        revoke = bool(flags & 1 << 0)
         return DeletePhoneCallHistory(revoke=revoke)
 
     def write(self, *args) -> bytes:

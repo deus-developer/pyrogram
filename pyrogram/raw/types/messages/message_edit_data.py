@@ -67,7 +67,7 @@ class MessageEditData(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "MessageEditData":
         flags = Int.read(b)
 
-        caption = True if flags & (1 << 0) else False
+        caption = bool(flags & 1 << 0)
         return MessageEditData(caption=caption)
 
     def write(self, *args) -> bytes:

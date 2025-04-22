@@ -48,12 +48,12 @@ class BusinessRecipients(Object):
     def __init__(
         self,
         *,
-        existing_chats: bool = None,
-        new_chats: bool = None,
-        contacts: bool = None,
-        non_contacts: bool = None,
-        exclude_selected: bool = None,
-        users: list[int] = None,
+        existing_chats: bool | None = None,
+        new_chats: bool | None = None,
+        contacts: bool | None = None,
+        non_contacts: bool | None = None,
+        exclude_selected: bool | None = None,
+        users: list[int] | None = None,
     ):
         self.existing_chats = existing_chats
         self.new_chats = new_chats

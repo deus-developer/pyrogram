@@ -73,7 +73,7 @@ class InputMediaPhoto(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "InputMediaPhoto":
         flags = Int.read(b)
 
-        spoiler = True if flags & (1 << 1) else False
+        spoiler = bool(flags & 1 << 1)
         id = TLObject.read(b)
 
         ttl_seconds = Int.read(b) if flags & (1 << 0) else None

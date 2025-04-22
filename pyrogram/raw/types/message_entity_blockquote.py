@@ -72,7 +72,7 @@ class MessageEntityBlockquote(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "MessageEntityBlockquote":
         flags = Int.read(b)
 
-        collapsed = True if flags & (1 << 0) else False
+        collapsed = bool(flags & 1 << 0)
         offset = Int.read(b)
 
         length = Int.read(b)

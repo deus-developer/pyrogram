@@ -102,7 +102,7 @@ class GetChatInviteImporters(TLFunction["raw.base.messages.ChatInviteImporters"]
     def read(b: BytesIO, *args: Any) -> "GetChatInviteImporters":
         flags = Int.read(b)
 
-        requested = True if flags & (1 << 0) else False
+        requested = bool(flags & 1 << 0)
         peer = TLObject.read(b)
 
         link = String.read(b) if flags & (1 << 1) else None

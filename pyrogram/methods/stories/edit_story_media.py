@@ -30,14 +30,14 @@ class EditStoryMedia:
         self: "pyrogram.Client",
         chat_id: int | str,
         story_id: int,
-        media: str | BinaryIO = None,
+        media: str | BinaryIO | None = None,
         duration: int = 0,
         width: int = 0,
         height: int = 0,
-        thumb: str | BinaryIO = None,
+        thumb: str | BinaryIO | None = None,
         supports_streaming: bool = True,
-        file_name: str = None,
-        progress: Callable = None,
+        file_name: str | None = None,
+        progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> "types.Story":
         """Edit story media.

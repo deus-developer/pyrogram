@@ -122,12 +122,12 @@ class AttachMenuBot(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "AttachMenuBot":
         flags = Int.read(b)
 
-        inactive = True if flags & (1 << 0) else False
-        has_settings = True if flags & (1 << 1) else False
-        request_write_access = True if flags & (1 << 2) else False
-        show_in_attach_menu = True if flags & (1 << 3) else False
-        show_in_side_menu = True if flags & (1 << 4) else False
-        side_menu_disclaimer_needed = True if flags & (1 << 5) else False
+        inactive = bool(flags & 1 << 0)
+        has_settings = bool(flags & 1 << 1)
+        request_write_access = bool(flags & 1 << 2)
+        show_in_attach_menu = bool(flags & 1 << 3)
+        show_in_side_menu = bool(flags & 1 << 4)
+        side_menu_disclaimer_needed = bool(flags & 1 << 5)
         bot_id = Long.read(b)
 
         short_name = String.read(b)

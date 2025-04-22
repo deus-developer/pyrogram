@@ -99,7 +99,7 @@ class TranscribedAudio(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "TranscribedAudio":
         flags = Int.read(b)
 
-        pending = True if flags & (1 << 0) else False
+        pending = bool(flags & 1 << 0)
         transcription_id = Long.read(b)
 
         text = String.read(b)

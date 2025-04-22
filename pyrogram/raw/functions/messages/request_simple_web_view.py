@@ -102,8 +102,8 @@ class RequestSimpleWebView(TLFunction["raw.base.SimpleWebViewResult"]):  # type:
     def read(b: BytesIO, *args: Any) -> "RequestSimpleWebView":
         flags = Int.read(b)
 
-        from_switch_webview = True if flags & (1 << 1) else False
-        from_side_menu = True if flags & (1 << 2) else False
+        from_switch_webview = bool(flags & 1 << 1)
+        from_side_menu = bool(flags & 1 << 2)
         bot = TLObject.read(b)
 
         url = String.read(b) if flags & (1 << 3) else None

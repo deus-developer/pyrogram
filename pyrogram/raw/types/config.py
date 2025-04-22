@@ -353,11 +353,11 @@ class Config(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "Config":
         flags = Int.read(b)
 
-        default_p2p_contacts = True if flags & (1 << 3) else False
-        preload_featured_stickers = True if flags & (1 << 4) else False
-        revoke_pm_inbox = True if flags & (1 << 6) else False
-        blocked_mode = True if flags & (1 << 8) else False
-        force_try_ipv6 = True if flags & (1 << 14) else False
+        default_p2p_contacts = bool(flags & 1 << 3)
+        preload_featured_stickers = bool(flags & 1 << 4)
+        revoke_pm_inbox = bool(flags & 1 << 6)
+        blocked_mode = bool(flags & 1 << 8)
+        force_try_ipv6 = bool(flags & 1 << 14)
         date = Int.read(b)
 
         expires = Int.read(b)

@@ -97,10 +97,10 @@ class ReplyKeyboardMarkup(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ReplyKeyboardMarkup":
         flags = Int.read(b)
 
-        resize = True if flags & (1 << 0) else False
-        single_use = True if flags & (1 << 1) else False
-        selective = True if flags & (1 << 2) else False
-        persistent = True if flags & (1 << 4) else False
+        resize = bool(flags & 1 << 0)
+        single_use = bool(flags & 1 << 1)
+        selective = bool(flags & 1 << 2)
+        persistent = bool(flags & 1 << 4)
         rows = TLObject.read(b)
 
         placeholder = String.read(b) if flags & (1 << 3) else None

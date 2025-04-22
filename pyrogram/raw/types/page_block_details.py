@@ -74,7 +74,7 @@ class PageBlockDetails(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "PageBlockDetails":
         flags = Int.read(b)
 
-        open = True if flags & (1 << 0) else False
+        open = bool(flags & 1 << 0)
         blocks = TLObject.read(b)
 
         title = TLObject.read(b)

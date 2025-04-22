@@ -269,10 +269,10 @@ class UpdateShortChatMessage(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UpdateShortChatMessage":
         flags = Int.read(b)
 
-        out = True if flags & (1 << 1) else False
-        mentioned = True if flags & (1 << 4) else False
-        media_unread = True if flags & (1 << 5) else False
-        silent = True if flags & (1 << 13) else False
+        out = bool(flags & 1 << 1)
+        mentioned = bool(flags & 1 << 4)
+        media_unread = bool(flags & 1 << 5)
+        silent = bool(flags & 1 << 13)
         id = Int.read(b)
 
         from_id = Long.read(b)

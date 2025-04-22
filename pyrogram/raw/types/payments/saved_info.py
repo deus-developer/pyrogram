@@ -77,7 +77,7 @@ class SavedInfo(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SavedInfo":
         flags = Int.read(b)
 
-        has_saved_credentials = True if flags & (1 << 1) else False
+        has_saved_credentials = bool(flags & 1 << 1)
         saved_info = TLObject.read(b) if flags & (1 << 0) else None
 
         return SavedInfo(

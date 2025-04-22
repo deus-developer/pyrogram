@@ -38,8 +38,8 @@ class InputMedia(Object):
         self,
         media: str | BinaryIO,
         caption: str = "",
-        parse_mode: str = None,
-        caption_entities: list[MessageEntity] = None,
+        parse_mode: str | None = None,
+        caption_entities: list[MessageEntity] | None = None,
     ):
         super().__init__()
 

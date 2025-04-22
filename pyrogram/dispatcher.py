@@ -211,20 +211,19 @@ class Dispatcher:
         if self.client.no_updates:
             return
 
-        for i in range(self.client.workers):
+        for _ in range(self.client.workers):
             self.locks_list.append(asyncio.Lock())
 
             self.handler_worker_tasks.append(
                 asyncio.create_task(self.handler_worker(self.locks_list[-1])),
             )
-
         log.info("Started %s HandlerTasks", self.client.workers)
 
     async def stop(self):
         if self.client.no_updates:
             return
 
-        for i in range(self.client.workers):
+        for _ in range(self.client.workers):
             self.updates_queue.put_nowait(None)
 
         for i in self.handler_worker_tasks:

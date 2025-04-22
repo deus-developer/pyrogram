@@ -123,7 +123,7 @@ class SearchResultsCalendar(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SearchResultsCalendar":
         flags = Int.read(b)
 
-        inexact = True if flags & (1 << 0) else False
+        inexact = bool(flags & 1 << 0)
         count = Int.read(b)
 
         min_date = Int.read(b)

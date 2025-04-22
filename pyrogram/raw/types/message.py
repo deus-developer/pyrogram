@@ -292,20 +292,20 @@ class Message(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "Message":
         flags = Int.read(b)
 
-        out = True if flags & (1 << 1) else False
-        mentioned = True if flags & (1 << 4) else False
-        media_unread = True if flags & (1 << 5) else False
-        silent = True if flags & (1 << 13) else False
-        post = True if flags & (1 << 14) else False
-        from_scheduled = True if flags & (1 << 18) else False
-        legacy = True if flags & (1 << 19) else False
-        edit_hide = True if flags & (1 << 21) else False
-        pinned = True if flags & (1 << 24) else False
-        noforwards = True if flags & (1 << 26) else False
-        invert_media = True if flags & (1 << 27) else False
+        out = bool(flags & 1 << 1)
+        mentioned = bool(flags & 1 << 4)
+        media_unread = bool(flags & 1 << 5)
+        silent = bool(flags & 1 << 13)
+        post = bool(flags & 1 << 14)
+        from_scheduled = bool(flags & 1 << 18)
+        legacy = bool(flags & 1 << 19)
+        edit_hide = bool(flags & 1 << 21)
+        pinned = bool(flags & 1 << 24)
+        noforwards = bool(flags & 1 << 26)
+        invert_media = bool(flags & 1 << 27)
         flags2 = Int.read(b)
 
-        offline = True if flags2 & (1 << 1) else False
+        offline = bool(flags2 & 1 << 1)
         id = Int.read(b)
 
         from_id = TLObject.read(b) if flags & (1 << 8) else None

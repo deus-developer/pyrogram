@@ -54,8 +54,8 @@ class BusinessConnection(Object):
         user: "types.User",
         dc_id: int,
         date: datetime,
-        can_reply: bool = None,
-        disabled: bool = None,
+        can_reply: bool | None = None,
+        disabled: bool | None = None,
     ):
         self.id = id
         self.user = user

@@ -78,7 +78,7 @@ class ChannelParticipantSelf(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ChannelParticipantSelf":
         flags = Int.read(b)
 
-        via_request = True if flags & (1 << 0) else False
+        via_request = bool(flags & 1 << 0)
         user_id = Long.read(b)
 
         inviter_id = Long.read(b)

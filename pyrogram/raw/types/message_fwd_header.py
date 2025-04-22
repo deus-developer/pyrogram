@@ -138,8 +138,8 @@ class MessageFwdHeader(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "MessageFwdHeader":
         flags = Int.read(b)
 
-        imported = True if flags & (1 << 7) else False
-        saved_out = True if flags & (1 << 11) else False
+        imported = bool(flags & 1 << 7)
+        saved_out = bool(flags & 1 << 11)
         from_id = TLObject.read(b) if flags & (1 << 0) else None
 
         from_name = String.read(b) if flags & (1 << 5) else None

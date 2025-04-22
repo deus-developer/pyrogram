@@ -124,7 +124,7 @@ class CheckedGiftCode(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "CheckedGiftCode":
         flags = Int.read(b)
 
-        via_giveaway = True if flags & (1 << 2) else False
+        via_giveaway = bool(flags & 1 << 2)
         from_id = TLObject.read(b) if flags & (1 << 4) else None
 
         giveaway_msg_id = Int.read(b) if flags & (1 << 3) else None

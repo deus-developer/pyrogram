@@ -67,8 +67,8 @@ class InputStorePaymentPremiumSubscription(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "InputStorePaymentPremiumSubscription":
         flags = Int.read(b)
 
-        restore = True if flags & (1 << 0) else False
-        upgrade = True if flags & (1 << 1) else False
+        restore = bool(flags & 1 << 0)
+        upgrade = bool(flags & 1 << 1)
         return InputStorePaymentPremiumSubscription(restore=restore, upgrade=upgrade)
 
     def write(self, *args) -> bytes:

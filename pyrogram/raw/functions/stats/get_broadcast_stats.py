@@ -68,7 +68,7 @@ class GetBroadcastStats(TLFunction["raw.base.stats.BroadcastStats"]):  # type: i
     def read(b: BytesIO, *args: Any) -> "GetBroadcastStats":
         flags = Int.read(b)
 
-        dark = True if flags & (1 << 0) else False
+        dark = bool(flags & 1 << 0)
         channel = TLObject.read(b)
 
         return GetBroadcastStats(channel=channel, dark=dark)

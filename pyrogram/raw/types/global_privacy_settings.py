@@ -102,11 +102,11 @@ class GlobalPrivacySettings(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "GlobalPrivacySettings":
         flags = Int.read(b)
 
-        archive_and_mute_new_noncontact_peers = True if flags & (1 << 0) else False
-        keep_archived_unmuted = True if flags & (1 << 1) else False
-        keep_archived_folders = True if flags & (1 << 2) else False
-        hide_read_marks = True if flags & (1 << 3) else False
-        new_noncontact_peers_require_premium = True if flags & (1 << 4) else False
+        archive_and_mute_new_noncontact_peers = bool(flags & 1 << 0)
+        keep_archived_unmuted = bool(flags & 1 << 1)
+        keep_archived_folders = bool(flags & 1 << 2)
+        hide_read_marks = bool(flags & 1 << 3)
+        new_noncontact_peers_require_premium = bool(flags & 1 << 4)
         return GlobalPrivacySettings(
             archive_and_mute_new_noncontact_peers=archive_and_mute_new_noncontact_peers,
             keep_archived_unmuted=keep_archived_unmuted,

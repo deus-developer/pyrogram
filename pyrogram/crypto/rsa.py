@@ -16,9 +16,13 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from collections import namedtuple
+from typing import NamedTuple
 
-PublicKey = namedtuple("PublicKey", ["m", "e"])
+
+class PublicKey(NamedTuple):
+    m: int
+    e: int
+
 
 # To get modulus and exponent:
 #

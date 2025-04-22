@@ -156,17 +156,17 @@ class PeerSettings(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "PeerSettings":
         flags = Int.read(b)
 
-        report_spam = True if flags & (1 << 0) else False
-        add_contact = True if flags & (1 << 1) else False
-        block_contact = True if flags & (1 << 2) else False
-        share_contact = True if flags & (1 << 3) else False
-        need_contacts_exception = True if flags & (1 << 4) else False
-        report_geo = True if flags & (1 << 5) else False
-        autoarchived = True if flags & (1 << 7) else False
-        invite_members = True if flags & (1 << 8) else False
-        request_chat_broadcast = True if flags & (1 << 10) else False
-        business_bot_paused = True if flags & (1 << 11) else False
-        business_bot_can_reply = True if flags & (1 << 12) else False
+        report_spam = bool(flags & 1 << 0)
+        add_contact = bool(flags & 1 << 1)
+        block_contact = bool(flags & 1 << 2)
+        share_contact = bool(flags & 1 << 3)
+        need_contacts_exception = bool(flags & 1 << 4)
+        report_geo = bool(flags & 1 << 5)
+        autoarchived = bool(flags & 1 << 7)
+        invite_members = bool(flags & 1 << 8)
+        request_chat_broadcast = bool(flags & 1 << 10)
+        business_bot_paused = bool(flags & 1 << 11)
+        business_bot_can_reply = bool(flags & 1 << 12)
         geo_distance = Int.read(b) if flags & (1 << 6) else None
         request_chat_title = String.read(b) if flags & (1 << 9) else None
         request_chat_date = Int.read(b) if flags & (1 << 9) else None

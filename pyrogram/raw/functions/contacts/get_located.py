@@ -73,7 +73,7 @@ class GetLocated(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "GetLocated":
         flags = Int.read(b)
 
-        background = True if flags & (1 << 1) else False
+        background = bool(flags & 1 << 1)
         geo_point = TLObject.read(b)
 
         self_expires = Int.read(b) if flags & (1 << 0) else None

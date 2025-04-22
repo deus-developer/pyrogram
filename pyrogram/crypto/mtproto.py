@@ -82,7 +82,7 @@ def unpack(
         if e.args[0] == 0:
             raise ConnectionError(
                 "Received empty data. Check your internet connection.",
-            )
+            ) from None
 
         left = data.read().hex()
 
@@ -92,7 +92,7 @@ def unpack(
 
         raise ValueError(
             f"The server sent an unknown constructor: {hex(e.args[0])}\n{left}",
-        )
+        ) from None
 
     # https://core.telegram.org/mtproto/security_guidelines#checking-sha256-hash-value-of-msg-key
     # 96 = 88 + 8 (incoming message)

@@ -17,6 +17,7 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import asyncio
+import contextlib
 import functools
 import logging
 import os
@@ -425,25 +426,22 @@ class Client(Methods):
             "Setting the loop is not supported. "
             "The loop will be set automatically when the client is created.",
             RuntimeWarning,
+            stacklevel=2,
         )
 
     def __enter__(self):
         return self.start()
 
     def __exit__(self, *args):
-        try:
+        with contextlib.suppress(ConnectionError):
             self.stop()
-        except ConnectionError:
-            pass
 
     async def __aenter__(self):
         return await self.start()
 
     async def __aexit__(self, *args):
-        try:
+        with contextlib.suppress(ConnectionError):
             await self.stop()
-        except ConnectionError:
-            pass
 
     async def updates_watchdog(self):
         while True:
@@ -465,8 +463,8 @@ class Client(Methods):
         query: TLFunction[R],
         retries: int = Session.MAX_RETRIES,
         timeout: float = Session.WAIT_TIMEOUT,
-        sleep_threshold: float = None,
-        business_connection_id: str = None,
+        sleep_threshold: float | None = None,
+        business_connection_id: str | None = None,
     ) -> R:
         """Invoke raw Telegram functions.
 
@@ -947,10 +945,10 @@ class Client(Methods):
 
             if not include:
                 for path in sorted(Path(root.replace(".", "/")).rglob("*.py")):
-                    module_path = ".".join(path.parent.parts + (path.stem,))
+                    module_path = ".".join((*path.parent.parts, path.stem))
                     module = import_module(module_path)
 
-                    for name in vars(module).keys():
+                    for name in vars(module):
                         # noinspection PyBroadException
                         try:
                             for handler, group in getattr(module, name).handlers:
@@ -1103,10 +1101,10 @@ class Client(Methods):
                 os.remove(temp_file_path)
 
             if isinstance(e, asyncio.CancelledError):
-                raise e
+                raise
 
             if isinstance(e, (FloodWait, FloodPremiumWait)):
-                raise e
+                raise
 
             return None
         else:
@@ -1124,7 +1122,7 @@ class Client(Methods):
         file_size: int = 0,
         limit: int = 0,
         offset: int = 0,
-        progress: Callable = None,
+        progress: Callable | None = None,
         progress_args: tuple = (),
     ) -> AsyncGenerator[bytes, None]:
         async with self.get_file_semaphore:
@@ -1338,8 +1336,8 @@ class Client(Methods):
 
                             if len(chunk) < chunk_size or current >= total:
                                 break
-                    except Exception as e:
-                        raise e
+                    except Exception:
+                        raise
                     finally:
                         await cdn_session.stop()
             except pyrogram.StopTransmission:

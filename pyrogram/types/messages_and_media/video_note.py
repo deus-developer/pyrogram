@@ -66,11 +66,11 @@ class VideoNote(Object):
         file_unique_id: str,
         length: int,
         duration: int,
-        thumbs: list["types.Thumbnail"] = None,
-        mime_type: str = None,
-        file_size: int = None,
-        date: datetime = None,
-        ttl_seconds: int = None,
+        thumbs: list["types.Thumbnail"] | None = None,
+        mime_type: str | None = None,
+        file_size: int | None = None,
+        date: datetime | None = None,
+        ttl_seconds: int | None = None,
     ):
         super().__init__(client)
 
@@ -89,7 +89,7 @@ class VideoNote(Object):
         client,
         video_note: "raw.types.Document",
         video_attributes: "raw.types.DocumentAttributeVideo",
-        ttl_seconds: int = None,
+        ttl_seconds: int | None = None,
     ) -> "VideoNote":
         return VideoNote(
             file_id=FileId(

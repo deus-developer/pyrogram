@@ -116,7 +116,7 @@ class Status(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "Status":
         flags = Int.read(b)
 
-        allow_international = True if flags & (1 << 0) else False
+        allow_international = bool(flags & 1 << 0)
         recent_sent = Int.read(b)
 
         recent_since = Int.read(b)

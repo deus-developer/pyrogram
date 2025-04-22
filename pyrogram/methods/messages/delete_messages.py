@@ -28,7 +28,7 @@ class DeleteMessages:
         chat_id: int | str,
         message_ids: int | Iterable[int],
         revoke: bool = True,
-        is_scheduled: bool = None,
+        is_scheduled: bool | None = None,
     ) -> int:
         """Delete messages, including service messages.
 

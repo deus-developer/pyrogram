@@ -90,9 +90,9 @@ class MessageReactions(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "MessageReactions":
         flags = Int.read(b)
 
-        min = True if flags & (1 << 0) else False
-        can_see_list = True if flags & (1 << 2) else False
-        reactions_as_tags = True if flags & (1 << 3) else False
+        min = bool(flags & 1 << 0)
+        can_see_list = bool(flags & 1 << 2)
+        reactions_as_tags = bool(flags & 1 << 3)
         results = TLObject.read(b)
 
         recent_reactions = TLObject.read(b) if flags & (1 << 1) else []

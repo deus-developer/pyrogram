@@ -72,3 +72,4 @@ class StartBot:
                     self,
                     i.message,
                 )
+        return None

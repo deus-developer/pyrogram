@@ -141,8 +141,8 @@ class EditInlineMedia:
                             w=media.width,
                             h=media.height,
                         ),
-                    ]
-                    + filename_attribute,
+                        *filename_attribute,
+                    ],
                 )
             elif is_external_url:
                 media = raw.types.InputMediaDocumentExternal(
@@ -170,8 +170,8 @@ class EditInlineMedia:
                             performer=media.performer,
                             title=media.title,
                         ),
-                    ]
-                    + filename_attribute,
+                        *filename_attribute,
+                    ],
                 )
             elif is_external_url:
                 media = raw.types.InputMediaDocumentExternal(
@@ -197,8 +197,8 @@ class EditInlineMedia:
                             h=media.height,
                         ),
                         raw.types.DocumentAttributeAnimated(),
-                    ]
-                    + filename_attribute,
+                        *filename_attribute,
+                    ],
                     nosound_video=True,
                 )
             elif is_external_url:
@@ -289,3 +289,4 @@ class EditInlineMedia:
                 if isinstance(e, MediaEmpty):
                     # Must wait due to a server race condition
                     await asyncio.sleep(1)
+        return None

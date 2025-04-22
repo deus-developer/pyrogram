@@ -96,8 +96,8 @@ class BotBusinessConnection(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "BotBusinessConnection":
         flags = Int.read(b)
 
-        can_reply = True if flags & (1 << 0) else False
-        disabled = True if flags & (1 << 1) else False
+        can_reply = bool(flags & 1 << 0)
+        disabled = bool(flags & 1 << 1)
         connection_id = String.read(b)
 
         user_id = Long.read(b)

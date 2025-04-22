@@ -103,8 +103,8 @@ class EditInlineBotMessage(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "EditInlineBotMessage":
         flags = Int.read(b)
 
-        no_webpage = True if flags & (1 << 1) else False
-        invert_media = True if flags & (1 << 16) else False
+        no_webpage = bool(flags & 1 << 1)
+        invert_media = bool(flags & 1 << 16)
         id = TLObject.read(b)
 
         message = String.read(b) if flags & (1 << 11) else None

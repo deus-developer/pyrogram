@@ -55,10 +55,10 @@ class InputMediaDocument(InputMedia):
     def __init__(
         self,
         media: str | BinaryIO,
-        thumb: str = None,
+        thumb: str | None = None,
         caption: str = "",
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: list[MessageEntity] = None,
+        caption_entities: list[MessageEntity] | None = None,
     ):
         super().__init__(media, caption, parse_mode, caption_entities)
 

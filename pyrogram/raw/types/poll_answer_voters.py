@@ -78,8 +78,8 @@ class PollAnswerVoters(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "PollAnswerVoters":
         flags = Int.read(b)
 
-        chosen = True if flags & (1 << 0) else False
-        correct = True if flags & (1 << 1) else False
+        chosen = bool(flags & 1 << 0)
+        correct = bool(flags & 1 << 1)
         option = Bytes.read(b)
 
         voters = Int.read(b)

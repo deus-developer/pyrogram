@@ -84,8 +84,8 @@ class GetFile(TLFunction["raw.base.upload.File"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "GetFile":
         flags = Int.read(b)
 
-        precise = True if flags & (1 << 0) else False
-        cdn_supported = True if flags & (1 << 1) else False
+        precise = bool(flags & 1 << 0)
+        cdn_supported = bool(flags & 1 << 1)
         location = TLObject.read(b)
 
         offset = Long.read(b)

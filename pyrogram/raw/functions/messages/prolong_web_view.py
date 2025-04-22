@@ -89,7 +89,7 @@ class ProlongWebView(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ProlongWebView":
         flags = Int.read(b)
 
-        silent = True if flags & (1 << 5) else False
+        silent = bool(flags & 1 << 5)
         peer = TLObject.read(b)
 
         bot = TLObject.read(b)

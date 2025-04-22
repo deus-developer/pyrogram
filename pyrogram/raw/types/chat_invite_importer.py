@@ -96,8 +96,8 @@ class ChatInviteImporter(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "ChatInviteImporter":
         flags = Int.read(b)
 
-        requested = True if flags & (1 << 0) else False
-        via_chatlist = True if flags & (1 << 3) else False
+        requested = bool(flags & 1 << 0)
+        via_chatlist = bool(flags & 1 << 3)
         user_id = Long.read(b)
 
         date = Int.read(b)

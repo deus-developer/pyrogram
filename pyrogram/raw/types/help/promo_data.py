@@ -112,7 +112,7 @@ class PromoData(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "PromoData":
         flags = Int.read(b)
 
-        proxy = True if flags & (1 << 0) else False
+        proxy = bool(flags & 1 << 0)
         expires = Int.read(b)
 
         peer = TLObject.read(b)

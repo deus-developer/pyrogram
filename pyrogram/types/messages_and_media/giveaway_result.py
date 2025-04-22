@@ -16,6 +16,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
+import contextlib
 from datetime import datetime
 
 import pyrogram
@@ -79,9 +80,9 @@ class GiveawayResult(Object):
         until_date: datetime,
         launch_message_id: int,
         launch_message: "types.Message" = None,
-        description: str = None,
-        only_new_subscribers: bool = None,
-        is_refunded: bool = None,
+        description: str | None = None,
+        only_new_subscribers: bool | None = None,
+        is_refunded: bool | None = None,
     ):
         super().__init__(client)
 
@@ -105,14 +106,12 @@ class GiveawayResult(Object):
     ) -> "GiveawayResult":
         launch_message = None
 
-        try:
+        with contextlib.suppress(errors.ChannelPrivate, errors.ChannelInvalid):
             launch_message = await client.get_messages(
                 utils.get_channel_id(giveaway_result.channel_id),
                 giveaway_result.launch_msg_id,
                 replies=0,
             )
-        except (errors.ChannelPrivate, errors.ChannelInvalid):
-            pass
 
         return GiveawayResult(
             chat=types.Chat.from_raw_tl_channel_chat(

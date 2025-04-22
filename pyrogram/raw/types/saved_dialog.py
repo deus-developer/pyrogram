@@ -73,7 +73,7 @@ class SavedDialog(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SavedDialog":
         flags = Int.read(b)
 
-        pinned = True if flags & (1 << 2) else False
+        pinned = bool(flags & 1 << 2)
         peer = TLObject.read(b)
 
         top_message = Int.read(b)

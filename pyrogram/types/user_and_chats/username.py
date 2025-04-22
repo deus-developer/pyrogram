@@ -33,7 +33,13 @@ class Username(Object):
             True, if the collectible username is active.
     """
 
-    def __init__(self, *, username: str, editable: bool = None, active: bool = None):
+    def __init__(
+        self,
+        *,
+        username: str,
+        editable: bool | None = None,
+        active: bool | None = None,
+    ):
         super().__init__(None)
 
         self.username = username

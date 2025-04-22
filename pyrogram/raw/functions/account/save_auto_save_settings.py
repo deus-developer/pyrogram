@@ -83,9 +83,9 @@ class SaveAutoSaveSettings(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SaveAutoSaveSettings":
         flags = Int.read(b)
 
-        users = True if flags & (1 << 0) else False
-        chats = True if flags & (1 << 1) else False
-        broadcasts = True if flags & (1 << 2) else False
+        users = bool(flags & 1 << 0)
+        chats = bool(flags & 1 << 1)
+        broadcasts = bool(flags & 1 << 2)
         peer = TLObject.read(b) if flags & (1 << 3) else None
 
         settings = TLObject.read(b)

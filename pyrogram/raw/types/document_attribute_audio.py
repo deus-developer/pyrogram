@@ -84,7 +84,7 @@ class DocumentAttributeAudio(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "DocumentAttributeAudio":
         flags = Int.read(b)
 
-        voice = True if flags & (1 << 10) else False
+        voice = bool(flags & 1 << 10)
         duration = Int.read(b)
 
         title = String.read(b) if flags & (1 << 0) else None

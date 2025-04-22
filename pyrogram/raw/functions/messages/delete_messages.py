@@ -63,7 +63,7 @@ class DeleteMessages(TLFunction["raw.base.messages.AffectedMessages"]):  # type:
     def read(b: BytesIO, *args: Any) -> "DeleteMessages":
         flags = Int.read(b)
 
-        revoke = True if flags & (1 << 0) else False
+        revoke = bool(flags & 1 << 0)
         id = TLObject.read(b, Int)
 
         return DeleteMessages(id=id, revoke=revoke)

@@ -109,10 +109,10 @@ class InputBotInlineMessageMediaWebPage(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "InputBotInlineMessageMediaWebPage":
         flags = Int.read(b)
 
-        invert_media = True if flags & (1 << 3) else False
-        force_large_media = True if flags & (1 << 4) else False
-        force_small_media = True if flags & (1 << 5) else False
-        optional = True if flags & (1 << 6) else False
+        invert_media = bool(flags & 1 << 3)
+        force_large_media = bool(flags & 1 << 4)
+        force_small_media = bool(flags & 1 << 5)
+        optional = bool(flags & 1 << 6)
         message = String.read(b)
 
         entities = TLObject.read(b) if flags & (1 << 1) else []

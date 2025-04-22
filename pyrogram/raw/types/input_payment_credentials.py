@@ -68,7 +68,7 @@ class InputPaymentCredentials(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "InputPaymentCredentials":
         flags = Int.read(b)
 
-        save = True if flags & (1 << 0) else False
+        save = bool(flags & 1 << 0)
         data = TLObject.read(b)
 
         return InputPaymentCredentials(data=data, save=save)

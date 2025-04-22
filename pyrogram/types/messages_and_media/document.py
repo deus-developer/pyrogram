@@ -58,11 +58,11 @@ class Document(Object):
         client: "pyrogram.Client" = None,
         file_id: str,
         file_unique_id: str,
-        file_name: str = None,
-        mime_type: str = None,
-        file_size: int = None,
-        date: datetime = None,
-        thumbs: list["types.Thumbnail"] = None,
+        file_name: str | None = None,
+        mime_type: str | None = None,
+        file_size: int | None = None,
+        date: datetime | None = None,
+        thumbs: list["types.Thumbnail"] | None = None,
     ):
         super().__init__(client)
 

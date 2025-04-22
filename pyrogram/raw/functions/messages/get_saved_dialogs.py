@@ -96,7 +96,7 @@ class GetSavedDialogs(TLFunction["raw.base.messages.SavedDialogs"]):  # type: ig
     def read(b: BytesIO, *args: Any) -> "GetSavedDialogs":
         flags = Int.read(b)
 
-        exclude_pinned = True if flags & (1 << 0) else False
+        exclude_pinned = bool(flags & 1 << 0)
         offset_date = Int.read(b)
 
         offset_id = Int.read(b)

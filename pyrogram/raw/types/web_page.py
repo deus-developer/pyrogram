@@ -176,7 +176,7 @@ class WebPage(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "WebPage":
         flags = Int.read(b)
 
-        has_large_media = True if flags & (1 << 13) else False
+        has_large_media = bool(flags & 1 << 13)
         id = Long.read(b)
 
         url = String.read(b)

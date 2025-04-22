@@ -304,31 +304,31 @@ class Channel(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "Channel":
         flags = Int.read(b)
 
-        creator = True if flags & (1 << 0) else False
-        left = True if flags & (1 << 2) else False
-        broadcast = True if flags & (1 << 5) else False
-        verified = True if flags & (1 << 7) else False
-        megagroup = True if flags & (1 << 8) else False
-        restricted = True if flags & (1 << 9) else False
-        signatures = True if flags & (1 << 11) else False
-        min = True if flags & (1 << 12) else False
-        scam = True if flags & (1 << 19) else False
-        has_link = True if flags & (1 << 20) else False
-        has_geo = True if flags & (1 << 21) else False
-        slowmode_enabled = True if flags & (1 << 22) else False
-        call_active = True if flags & (1 << 23) else False
-        call_not_empty = True if flags & (1 << 24) else False
-        fake = True if flags & (1 << 25) else False
-        gigagroup = True if flags & (1 << 26) else False
-        noforwards = True if flags & (1 << 27) else False
-        join_to_send = True if flags & (1 << 28) else False
-        join_request = True if flags & (1 << 29) else False
-        forum = True if flags & (1 << 30) else False
+        creator = bool(flags & 1 << 0)
+        left = bool(flags & 1 << 2)
+        broadcast = bool(flags & 1 << 5)
+        verified = bool(flags & 1 << 7)
+        megagroup = bool(flags & 1 << 8)
+        restricted = bool(flags & 1 << 9)
+        signatures = bool(flags & 1 << 11)
+        min = bool(flags & 1 << 12)
+        scam = bool(flags & 1 << 19)
+        has_link = bool(flags & 1 << 20)
+        has_geo = bool(flags & 1 << 21)
+        slowmode_enabled = bool(flags & 1 << 22)
+        call_active = bool(flags & 1 << 23)
+        call_not_empty = bool(flags & 1 << 24)
+        fake = bool(flags & 1 << 25)
+        gigagroup = bool(flags & 1 << 26)
+        noforwards = bool(flags & 1 << 27)
+        join_to_send = bool(flags & 1 << 28)
+        join_request = bool(flags & 1 << 29)
+        forum = bool(flags & 1 << 30)
         flags2 = Int.read(b)
 
-        stories_hidden = True if flags2 & (1 << 1) else False
-        stories_hidden_min = True if flags2 & (1 << 2) else False
-        stories_unavailable = True if flags2 & (1 << 3) else False
+        stories_hidden = bool(flags2 & 1 << 1)
+        stories_hidden_min = bool(flags2 & 1 << 2)
+        stories_unavailable = bool(flags2 & 1 << 3)
         id = Long.read(b)
 
         access_hash = Long.read(b) if flags & (1 << 13) else None

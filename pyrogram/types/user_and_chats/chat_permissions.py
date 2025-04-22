@@ -63,15 +63,17 @@ class ChatPermissions(Object):
     def __init__(
         self,
         *,
-        can_send_messages: bool = None,  # Text, contacts, locations and venues
-        can_send_media_messages: bool = None,  # Audio files, documents, photos, videos, video notes and voice notes
-        can_send_other_messages: bool = None,  # Stickers, animations, games, inline bots
-        can_send_polls: bool = None,
-        can_add_web_page_previews: bool = None,
-        can_change_info: bool = None,
-        can_invite_users: bool = None,
-        can_pin_messages: bool = None,
-        can_manage_topics: bool = None,
+        can_send_messages: bool | None = None,  # Text, contacts, locations and venues
+        can_send_media_messages: bool
+        | None = None,  # Audio files, documents, photos, videos, video notes and voice notes
+        can_send_other_messages: bool
+        | None = None,  # Stickers, animations, games, inline bots
+        can_send_polls: bool | None = None,
+        can_add_web_page_previews: bool | None = None,
+        can_change_info: bool | None = None,
+        can_invite_users: bool | None = None,
+        can_pin_messages: bool | None = None,
+        can_manage_topics: bool | None = None,
     ):
         super().__init__(None)
 
@@ -108,3 +110,4 @@ class ChatPermissions(Object):
                 can_pin_messages=not denied_permissions.pin_messages,
                 can_manage_topics=not denied_permissions.manage_topics,
             )
+        return None

@@ -78,8 +78,8 @@ class MediaAreaSuggestedReaction(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "MediaAreaSuggestedReaction":
         flags = Int.read(b)
 
-        dark = True if flags & (1 << 0) else False
-        flipped = True if flags & (1 << 1) else False
+        dark = bool(flags & 1 << 0)
+        flipped = bool(flags & 1 << 1)
         coordinates = TLObject.read(b)
 
         reaction = TLObject.read(b)

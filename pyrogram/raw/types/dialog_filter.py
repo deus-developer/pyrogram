@@ -151,14 +151,14 @@ class DialogFilter(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "DialogFilter":
         flags = Int.read(b)
 
-        contacts = True if flags & (1 << 0) else False
-        non_contacts = True if flags & (1 << 1) else False
-        groups = True if flags & (1 << 2) else False
-        broadcasts = True if flags & (1 << 3) else False
-        bots = True if flags & (1 << 4) else False
-        exclude_muted = True if flags & (1 << 11) else False
-        exclude_read = True if flags & (1 << 12) else False
-        exclude_archived = True if flags & (1 << 13) else False
+        contacts = bool(flags & 1 << 0)
+        non_contacts = bool(flags & 1 << 1)
+        groups = bool(flags & 1 << 2)
+        broadcasts = bool(flags & 1 << 3)
+        bots = bool(flags & 1 << 4)
+        exclude_muted = bool(flags & 1 << 11)
+        exclude_read = bool(flags & 1 << 12)
+        exclude_archived = bool(flags & 1 << 13)
         id = Int.read(b)
 
         title = String.read(b)

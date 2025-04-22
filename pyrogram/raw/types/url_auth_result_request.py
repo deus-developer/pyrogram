@@ -84,7 +84,7 @@ class UrlAuthResultRequest(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UrlAuthResultRequest":
         flags = Int.read(b)
 
-        request_write_access = True if flags & (1 << 0) else False
+        request_write_access = bool(flags & 1 << 0)
         bot = TLObject.read(b)
 
         domain = String.read(b)

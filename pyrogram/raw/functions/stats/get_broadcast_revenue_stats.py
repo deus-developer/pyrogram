@@ -68,7 +68,7 @@ class GetBroadcastRevenueStats(TLFunction["raw.base.stats.BroadcastRevenueStats"
     def read(b: BytesIO, *args: Any) -> "GetBroadcastRevenueStats":
         flags = Int.read(b)
 
-        dark = True if flags & (1 << 0) else False
+        dark = bool(flags & 1 << 0)
         channel = TLObject.read(b)
 
         return GetBroadcastRevenueStats(channel=channel, dark=dark)

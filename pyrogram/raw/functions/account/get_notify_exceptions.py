@@ -73,8 +73,8 @@ class GetNotifyExceptions(TLFunction["raw.base.Updates"]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "GetNotifyExceptions":
         flags = Int.read(b)
 
-        compare_sound = True if flags & (1 << 1) else False
-        compare_stories = True if flags & (1 << 2) else False
+        compare_sound = bool(flags & 1 << 1)
+        compare_stories = bool(flags & 1 << 2)
         peer = TLObject.read(b) if flags & (1 << 0) else None
 
         return GetNotifyExceptions(

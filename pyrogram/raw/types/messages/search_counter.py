@@ -82,7 +82,7 @@ class SearchCounter(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SearchCounter":
         flags = Int.read(b)
 
-        inexact = True if flags & (1 << 1) else False
+        inexact = bool(flags & 1 << 1)
         filter = TLObject.read(b)
 
         count = Int.read(b)

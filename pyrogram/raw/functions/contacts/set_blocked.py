@@ -74,7 +74,7 @@ class SetBlocked(TLFunction[bool]):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "SetBlocked":
         flags = Int.read(b)
 
-        my_stories_from = True if flags & (1 << 0) else False
+        my_stories_from = bool(flags & 1 << 0)
         id = TLObject.read(b)
 
         limit = Int.read(b)

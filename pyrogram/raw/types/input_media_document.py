@@ -79,7 +79,7 @@ class InputMediaDocument(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "InputMediaDocument":
         flags = Int.read(b)
 
-        spoiler = True if flags & (1 << 2) else False
+        spoiler = bool(flags & 1 << 2)
         id = TLObject.read(b)
 
         ttl_seconds = Int.read(b) if flags & (1 << 0) else None

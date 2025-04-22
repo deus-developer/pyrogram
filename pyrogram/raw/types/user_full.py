@@ -314,22 +314,22 @@ class UserFull(TLObject):  # type: ignore
     def read(b: BytesIO, *args: Any) -> "UserFull":
         flags = Int.read(b)
 
-        blocked = True if flags & (1 << 0) else False
-        phone_calls_available = True if flags & (1 << 4) else False
-        phone_calls_private = True if flags & (1 << 5) else False
-        can_pin_message = True if flags & (1 << 7) else False
-        has_scheduled = True if flags & (1 << 12) else False
-        video_calls_available = True if flags & (1 << 13) else False
-        voice_messages_forbidden = True if flags & (1 << 20) else False
-        translations_disabled = True if flags & (1 << 23) else False
-        stories_pinned_available = True if flags & (1 << 26) else False
-        blocked_my_stories_from = True if flags & (1 << 27) else False
-        wallpaper_overridden = True if flags & (1 << 28) else False
-        contact_require_premium = True if flags & (1 << 29) else False
-        read_dates_private = True if flags & (1 << 30) else False
+        blocked = bool(flags & 1 << 0)
+        phone_calls_available = bool(flags & 1 << 4)
+        phone_calls_private = bool(flags & 1 << 5)
+        can_pin_message = bool(flags & 1 << 7)
+        has_scheduled = bool(flags & 1 << 12)
+        video_calls_available = bool(flags & 1 << 13)
+        voice_messages_forbidden = bool(flags & 1 << 20)
+        translations_disabled = bool(flags & 1 << 23)
+        stories_pinned_available = bool(flags & 1 << 26)
+        blocked_my_stories_from = bool(flags & 1 << 27)
+        wallpaper_overridden = bool(flags & 1 << 28)
+        contact_require_premium = bool(flags & 1 << 29)
+        read_dates_private = bool(flags & 1 << 30)
         flags2 = Int.read(b)
 
-        sponsored_enabled = True if flags2 & (1 << 7) else False
+        sponsored_enabled = bool(flags2 & 1 << 7)
         id = Long.read(b)
 
         about = String.read(b) if flags & (1 << 1) else None
