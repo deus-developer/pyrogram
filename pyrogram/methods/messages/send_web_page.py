@@ -222,7 +222,7 @@ class SendWebPage:
                 outgoing=r.out,
                 reply_markup=reply_markup,
                 entities=[
-                    types.MessageEntity._parse(None, entity, {}) for entity in entities
+                    types.MessageEntity._parse(None, entity) for entity in entities
                 ]
                 if entities
                 else None,
@@ -242,8 +242,6 @@ class SendWebPage:
                 return await types.Message._parse(
                     self,
                     i.message,
-                    {i.id: i for i in r.users},
-                    {i.id: i for i in r.chats},
                     is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
                     business_connection_id=getattr(i, "connection_id", None),
                 )

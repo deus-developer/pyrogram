@@ -16,7 +16,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from pyrogram import raw, types, utils
+from pyrogram import raw, types
 
 from ..object import Object
 
@@ -64,15 +64,18 @@ class GiftCode(Object):
         self.boosted_chat = boosted_chat
 
     @staticmethod
-    def _parse(client, giftcode: "raw.types.MessageActionGiftCode", chats):
-        peer = chats.get(utils.get_raw_peer_id(giftcode.boost_peer))
+    def _parse(client, giftcode: "raw.types.MessageActionGiftCode"):
+        boosted_chat = types.Chat._parse_chat(
+            client,
+            client.entity_cache.get_by_peer_id(peer=giftcode.boost_peer),
+        )
 
         return GiftCode(
             months=giftcode.months,
             slug=giftcode.slug,
             via_giveaway=giftcode.via_giveaway,
             is_unclaimed=giftcode.unclaimed,
-            boosted_chat=types.Chat._parse_chat(client, peer) if peer else None,
+            boosted_chat=boosted_chat,
         )
 
     @property

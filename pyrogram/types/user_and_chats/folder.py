@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-
 import pyrogram
 from pyrogram import enums, raw, types, utils
 
@@ -114,7 +113,7 @@ class Folder(Object):
         self.has_my_invites = has_my_invites
 
     @staticmethod
-    def _parse(client, folder: "raw.types.DialogFilter", users, chats) -> "Folder":
+    def _parse(client, folder: "raw.types.DialogFilter") -> "Folder":
         included_chats = []
         excluded_chats = []
         pinned_chats = []
@@ -122,7 +121,7 @@ class Folder(Object):
         for peer in folder.include_peers:
             try:
                 included_chats.append(
-                    types.Chat._parse_dialog(client, peer, users, chats),
+                    types.Chat._parse_dialog(client, peer),
                 )
             except KeyError:
                 pass
@@ -131,7 +130,7 @@ class Folder(Object):
             for peer in folder.exclude_peers:
                 try:
                     excluded_chats.append(
-                        types.Chat._parse_dialog(client, peer, users, chats),
+                        types.Chat._parse_dialog(client, peer),
                     )
                 except KeyError:
                     pass
@@ -139,7 +138,7 @@ class Folder(Object):
         for peer in folder.pinned_peers:
             try:
                 pinned_chats.append(
-                    types.Chat._parse_dialog(client, peer, users, chats),
+                    types.Chat._parse_dialog(client, peer),
                 )
             except KeyError:
                 pass

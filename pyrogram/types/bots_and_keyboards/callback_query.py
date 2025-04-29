@@ -17,7 +17,10 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from re import Match
-from typing import Optional, Union
+from typing import (
+    Optional,
+    Union,
+)
 
 import pyrogram
 from pyrogram import enums, raw, types
@@ -91,7 +94,6 @@ class CallbackQuery(Object, Update):
     async def _parse(
         client: "pyrogram.Client",
         callback_query,
-        users,
     ) -> "CallbackQuery":
         message = None
         inline_message_id = None
@@ -121,7 +123,10 @@ class CallbackQuery(Object, Update):
 
         return CallbackQuery(
             id=str(callback_query.query_id),
-            from_user=types.User._parse(client, users[callback_query.user_id]),
+            from_user=types.User._parse(
+                client,
+                client.entity_cache.get_by_user_id(user_id=callback_query.user_id),
+            ),
             message=message,
             inline_message_id=inline_message_id,
             chat_instance=str(callback_query.chat_instance),

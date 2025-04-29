@@ -17,6 +17,7 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
+from typing import Any
 
 import pyrogram
 from pyrogram import raw, types, utils
@@ -120,24 +121,20 @@ class ForumTopic(Object):
     def _parse(
         client: "pyrogram.Client",
         forum_topic: "raw.types.ForumTopic",
-        messages: dict = {},
-        users: dict = {},
-        chats: dict = {},
+        messages: dict[int, Any] | None = None,
     ) -> "ForumTopic":
+        if messages is None:
+            messages = {}
+
         if isinstance(forum_topic, raw.types.ForumTopicDeleted):
             return ForumTopic(id=forum_topic.id, is_deleted=True)
 
-        creator = None
-
         peer = getattr(forum_topic, "from_id", None)
 
-        if peer:
-            peer_id = utils.get_raw_peer_id(peer)
-
-            if isinstance(peer, raw.types.PeerUser):
-                creator = types.Chat._parse_user_chat(client, users[peer_id])
-            else:
-                creator = types.Chat._parse_channel_chat(client, chats[peer_id])
+        creator = types.Chat._parse_chat(
+            client,
+            client.entity_cache.get_by_peer_id(peer=peer),
+        )
 
         return ForumTopic(
             id=forum_topic.id,

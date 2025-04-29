@@ -85,13 +85,11 @@ class GetChatAdminInviteLinks:
             if not r.invites:
                 break
 
-            users = {i.id: i for i in r.users}
-
             offset_date = r.invites[-1].date
             offset_link = r.invites[-1].link
 
             for i in r.invites:
-                yield types.ChatInviteLink._parse(self, i, users)
+                yield types.ChatInviteLink._parse(self, i)
 
                 current += 1
 

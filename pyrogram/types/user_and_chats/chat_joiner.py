@@ -66,17 +66,20 @@ class ChatJoiner(Object):
     def _parse(
         client: "pyrogram.Client",
         joiner: "raw.base.ChatInviteImporter",
-        users: dict[int, "raw.base.User"],
     ) -> "ChatJoiner":
         return ChatJoiner(
-            user=types.User._parse(client, users[joiner.user_id]),
+            user=types.User._parse(
+                client,
+                client.entity_cache.get_by_user_id(user_id=joiner.user_id),
+            ),
             date=utils.timestamp_to_datetime(joiner.date),
             pending=joiner.requested,
             bio=joiner.about,
             approved_by=(
-                types.User._parse(client, users[joiner.approved_by])
-                if joiner.approved_by
-                else None
+                types.User._parse(
+                    client,
+                    client.entity_cache.get_by_user_id(user_id=joiner.approved_by),
+                )
             ),
             client=client,
         )

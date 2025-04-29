@@ -73,9 +73,8 @@ class ChosenInlineResult(Object, Update):
 
     @staticmethod
     def _parse(
-        client,
+        client: "pyrogram.Client",
         chosen_inline_result: raw.types.UpdateBotInlineSend,
-        users,
     ) -> "ChosenInlineResult":
         inline_message_id = None
 
@@ -96,7 +95,12 @@ class ChosenInlineResult(Object, Update):
 
         return ChosenInlineResult(
             result_id=str(chosen_inline_result.id),
-            from_user=types.User._parse(client, users[chosen_inline_result.user_id]),
+            from_user=types.User._parse(
+                client,
+                client.entity_cache.get_by_user_id(
+                    user_id=chosen_inline_result.user_id,
+                ),
+            ),
             query=chosen_inline_result.query,
             location=types.Location(
                 longitude=chosen_inline_result.geo.long,

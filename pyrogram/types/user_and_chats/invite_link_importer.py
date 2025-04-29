@@ -18,6 +18,7 @@
 
 from datetime import datetime
 
+import pyrogram
 from pyrogram import raw, types, utils
 
 from ..object import Object
@@ -41,16 +42,20 @@ class InviteLinkImporter(Object):
         self.user = user
 
     @staticmethod
-    def _parse(client, invite_importers: "raw.types.messages.ChatInviteImporters"):
+    def _parse(
+        client: "pyrogram.Client",
+        invite_importers: "raw.types.messages.ChatInviteImporters",
+    ):
         importers = types.List()
-
-        d = {i.id: i for i in invite_importers.users}
 
         for j in invite_importers.importers:
             importers.append(
                 InviteLinkImporter(
                     date=utils.timestamp_to_datetime(j.date),
-                    user=types.User._parse(client=None, user=d[j.user_id]),
+                    user=types.User._parse(
+                        client=None,
+                        user=client.entity_cache.get_by_user_id(user_id=j.user_id),
+                    ),
                 ),
             )
 

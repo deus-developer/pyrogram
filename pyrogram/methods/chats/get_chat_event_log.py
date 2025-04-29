@@ -100,7 +100,7 @@ class GetChatEventLog:
             offset_id = last.id
 
             for event in r.events:
-                yield await types.ChatEvent._parse(self, event, r.users, r.chats)
+                yield await types.ChatEvent._parse(self, event)
 
                 current += 1
 

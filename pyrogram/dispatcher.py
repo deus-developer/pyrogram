@@ -107,11 +107,8 @@ class Dispatcher:
                 await pyrogram.types.Message._parse(
                     self.client,
                     update.message,
-                    users,
-                    chats,
                     is_scheduled=isinstance(update, UpdateNewScheduledMessage),
                     business_connection_id=getattr(update, "connection_id", None),
-                    reply_to_message=getattr(update, "reply_to_message", None),
                 ),
                 MessageHandler,
             )
@@ -130,7 +127,7 @@ class Dispatcher:
 
         async def callback_query_parser(update, users, chats):
             return (
-                await pyrogram.types.CallbackQuery._parse(self.client, update, users),
+                await pyrogram.types.CallbackQuery._parse(self.client, update),
                 CallbackQueryHandler,
             )
 
@@ -142,7 +139,7 @@ class Dispatcher:
 
         async def inline_query_parser(update, users, chats):
             return (
-                pyrogram.types.InlineQuery._parse(self.client, update, users),
+                pyrogram.types.InlineQuery._parse(self.client, update),
                 InlineQueryHandler,
             )
 
@@ -151,29 +148,19 @@ class Dispatcher:
 
         async def chosen_inline_result_parser(update, users, chats):
             return (
-                pyrogram.types.ChosenInlineResult._parse(self.client, update, users),
+                pyrogram.types.ChosenInlineResult._parse(self.client, update),
                 ChosenInlineResultHandler,
             )
 
         async def chat_member_updated_parser(update, users, chats):
             return (
-                pyrogram.types.ChatMemberUpdated._parse(
-                    self.client,
-                    update,
-                    users,
-                    chats,
-                ),
+                pyrogram.types.ChatMemberUpdated._parse(self.client, update),
                 ChatMemberUpdatedHandler,
             )
 
         async def chat_join_request_parser(update, users, chats):
             return (
-                pyrogram.types.ChatJoinRequest._parse(
-                    self.client,
-                    update,
-                    users,
-                    chats,
-                ),
+                pyrogram.types.ChatJoinRequest._parse(self.client, update),
                 ChatJoinRequestHandler,
             )
 
@@ -182,8 +169,6 @@ class Dispatcher:
                 await pyrogram.types.Story._parse(
                     self.client,
                     update.story,
-                    users,
-                    chats,
                     update.peer,
                 ),
                 StoryHandler,
@@ -194,7 +179,6 @@ class Dispatcher:
                 await pyrogram.types.PreCheckoutQuery._parse(
                     self.client,
                     update,
-                    users,
                 ),
                 PreCheckoutQueryHandler,
             )

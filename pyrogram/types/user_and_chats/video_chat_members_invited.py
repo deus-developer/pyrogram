@@ -16,7 +16,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-
+import pyrogram
 from pyrogram import raw, types
 
 from ..object import Object
@@ -37,10 +37,12 @@ class VideoChatMembersInvited(Object):
 
     @staticmethod
     def _parse(
-        client,
+        client: "pyrogram.Client",
         action: "raw.types.MessageActionInviteToGroupCall",
-        users: dict[int, "raw.types.User"],
     ) -> "VideoChatMembersInvited":
-        users = [types.User._parse(client, users[i]) for i in action.users]
-
-        return VideoChatMembersInvited(users=users)
+        return VideoChatMembersInvited(
+            users=[
+                types.User._parse(client, client.entity_cache.get_by_user_id(user_id=i))
+                for i in action.users
+            ],
+        )

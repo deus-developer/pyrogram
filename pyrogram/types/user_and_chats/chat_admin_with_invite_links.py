@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-
 import pyrogram
 from pyrogram import raw, types
 
@@ -54,11 +53,12 @@ class ChatAdminWithInviteLinks(Object):
     def _parse(
         client: "pyrogram.Client",
         admin: "raw.types.ChatAdminWithInvites",
-        users: dict[int, "raw.types.User"] = None,
     ) -> "ChatAdminWithInviteLinks":
-        del users
         return ChatAdminWithInviteLinks(
-            admin=types.User._parse(client, client.entity_cache.get_by_user_id(user_id=admin.admin_id)),
+            admin=types.User._parse(
+                client,
+                client.entity_cache.get_by_user_id(user_id=admin.admin_id),
+            ),
             chat_invite_links_count=admin.invites_count,
             revoked_chat_invite_links_count=admin.revoked_invites_count,
         )

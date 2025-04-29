@@ -22,7 +22,6 @@ from typing import BinaryIO, Optional, Union
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
-from pyrogram.errors import PeerIdInvalid
 
 from ..object import Object
 from ..update import Update
@@ -206,40 +205,9 @@ class Story(Object, Update):
     async def _parse(
         client: "pyrogram.Client",
         story: raw.types.StoryItem,
-        users: dict,
-        chats: dict,
         peer: Union["raw.types.PeerChannel", "raw.types.PeerUser"],
     ) -> "Story":
-        if isinstance(peer, raw.types.InputPeerSelf):
-            r = await client.invoke(
-                raw.functions.users.GetUsers(id=[raw.types.InputPeerSelf()]),
-            )
-            peer_id = r[0].id
-            users.update({i.id: i for i in r})
-        elif isinstance(peer, raw.types.InputPeerUser):
-            peer_id = utils.get_raw_peer_id(peer)
-        elif isinstance(peer, raw.types.InputPeerChannel):
-            peer_id = utils.get_raw_peer_id(peer)
-            if peer_id not in chats:
-                r = await client.invoke(raw.functions.channels.GetChannels(id=[peer]))
-                chats.update({peer_id: r.chats[0]})
-        else:
-            peer_id = utils.get_raw_peer_id(peer)
-
-        if (
-            isinstance(peer, (raw.types.PeerUser, raw.types.InputPeerUser))
-            and peer_id not in users
-        ):
-            try:
-                r = await client.invoke(
-                    raw.functions.users.GetUsers(
-                        id=[await client.resolve_peer(peer_id)],
-                    ),
-                )
-            except PeerIdInvalid:
-                pass
-            else:
-                users.update({i.id: i for i in r})
+        (peer_entity,) = await client.gather_resolve_peers_cached(peer)
 
         photo = None
         video = None
@@ -254,16 +222,16 @@ class Story(Object, Update):
         forwards = None
         reactions = None
 
-        from_user = types.User._parse(client, users.get(peer_id))
+        from_user = types.User._parse(client, peer_entity)
         sender_chat = (
-            types.Chat._parse_channel_chat(client, chats[peer_id])
+            types.Chat._parse_channel_chat(client, peer_entity)
             if not from_user
             else None
         )
         chat = (
             sender_chat
             if not from_user
-            else types.Chat._parse_user_chat(client, users.get(peer_id))
+            else types.Chat._parse_user_chat(client, peer_entity)
         )
 
         if isinstance(story, raw.types.StoryItemDeleted):
@@ -301,15 +269,17 @@ class Story(Object, Update):
         forward_header = story.fwd_from  # type: raw.types.StoryFwdHeader
 
         if forward_header:
-            fwd_raw_peer_id = utils.get_raw_peer_id(forward_header.from_peer)
             fwd_peer_id = utils.get_peer_id(forward_header.from_peer)
 
             if fwd_peer_id > 0:
-                forward_from = types.User._parse(client, users[fwd_raw_peer_id])
-            else:
-                forward_from_chat = types.Chat._parse_channel_chat(
+                forward_from = types.User._parse(
                     client,
-                    chats[fwd_raw_peer_id],
+                    client.entity_cache.get_by_user_id(user_id=fwd_peer_id),
+                )
+            else:
+                forward_from_chat = types.Chat._parse_chat(
+                    client,
+                    client.entity_cache.get_by_peer_id(peer=forward_header.from_peer),
                 )
                 forward_from_story_id = forward_header.story_id
 
@@ -347,30 +317,41 @@ class Story(Object, Update):
 
             if isinstance(priv, raw.types.PrivacyValueAllowUsers):
                 allowed_users = types.List(
-                    types.User._parse(client, users.get(user_id))
+                    types.User._parse(
+                        client,
+                        client.entity_cache.get_by_user_id(user_id=user_id),
+                    )
                     for user_id in priv.users
                 )
             elif isinstance(priv, raw.types.PrivacyValueAllowChatParticipants):
                 allowed_users = types.List(
-                    types.Chat._parse_chat_chat(client, chats.get(chat_id))
+                    types.Chat._parse_chat_chat(
+                        client,
+                        client.entity_cache.get_by_chat_id(chat_id=chat_id),
+                    )
                     for chat_id in priv.chats
                 )
             elif isinstance(priv, raw.types.PrivacyValueDisallowUsers):
                 disallowed_users = types.List(
-                    types.User._parse(client, users.get(user_id))
+                    types.User._parse(
+                        client,
+                        client.entity_cache.get_by_user_id(user_id=user_id),
+                    )
                     for user_id in priv.users
                 )
             elif isinstance(priv, raw.types.PrivacyValueDisallowChatParticipants):
                 disallowed_users = types.List(
-                    types.Chat._parse_chat_chat(client, chats.get(chat_id))
+                    types.Chat._parse_chat_chat(
+                        client,
+                        client.entity_cache.get_by_chat_id(chat_id=chat_id),
+                    )
                     for chat_id in priv.chats
                 )
 
         entities = [
             e
             for e in (
-                types.MessageEntity._parse(client, entity, {})
-                for entity in story.entities
+                types.MessageEntity._parse(client, entity) for entity in story.entities
             )
             if e
         ]

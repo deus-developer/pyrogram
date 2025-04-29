@@ -67,17 +67,19 @@ class ChatJoinRequest(Object, Update):
     def _parse(
         client: "pyrogram.Client",
         update: "raw.types.UpdateBotChatInviteRequester",
-        users: dict[int, "raw.types.User"],
-        chats: dict[int, "raw.types.Chat"],
     ) -> "ChatJoinRequest":
-        chat_id = utils.get_raw_peer_id(update.peer)
-
         return ChatJoinRequest(
-            chat=types.Chat._parse_chat(client, chats[chat_id]),
-            from_user=types.User._parse(client, users[update.user_id]),
+            chat=types.Chat._parse_chat(
+                client,
+                client.entity_cache.get_by_peer_id(peer=update.peer),
+            ),
+            from_user=types.User._parse(
+                client,
+                client.entity_cache.get_by_user_id(user_id=update.user_id),
+            ),
             date=utils.timestamp_to_datetime(update.date),
             bio=update.about,
-            invite_link=types.ChatInviteLink._parse(client, update.invite, users),
+            invite_link=types.ChatInviteLink._parse(client, update.invite),
             client=client,
         )
 

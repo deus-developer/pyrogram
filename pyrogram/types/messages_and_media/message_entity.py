@@ -16,7 +16,9 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional
+from typing import (
+    Optional,
+)
 
 import pyrogram
 from pyrogram import enums, raw, types
@@ -82,9 +84,8 @@ class MessageEntity(Object):
 
     @staticmethod
     def _parse(
-        client,
+        client: "pyrogram.Client",
         entity: "raw.base.MessageEntity",
-        users: dict,
     ) -> Optional["MessageEntity"]:
         # Special case for InputMessageEntityMentionName -> MessageEntityType.TEXT_MENTION
         # This happens in case of UpdateShortSentMessage inside send_message() where entities are parsed from the input
@@ -100,7 +101,10 @@ class MessageEntity(Object):
             offset=entity.offset,
             length=entity.length,
             url=getattr(entity, "url", None),
-            user=types.User._parse(client, users.get(user_id)),
+            user=types.User._parse(
+                client,
+                client.entity_cache.get_by_user_id(user_id=user_id),
+            ),
             language=getattr(entity, "language", None),
             custom_emoji_id=getattr(entity, "document_id", None),
             expandable=getattr(entity, "collapsed", None),

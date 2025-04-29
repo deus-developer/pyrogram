@@ -50,15 +50,6 @@ class GetAllStories:
             raw.functions.stories.GetAllStories(next=next, hidden=hidden, state=state),
         )
 
-        users = {i.id: i for i in r.users}
-        chats = {i.id: i for i in r.chats}
-
         for peer_story in r.peer_stories:
             for story in peer_story.stories:
-                yield await types.Story._parse(
-                    self,
-                    story,
-                    users,
-                    chats,
-                    peer_story.peer,
-                )
+                yield await types.Story._parse(self, story, peer_story.peer)

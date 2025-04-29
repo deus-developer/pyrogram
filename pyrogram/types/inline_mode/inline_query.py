@@ -78,12 +78,11 @@ class InlineQuery(Object, Update):
 
     @staticmethod
     def _parse(
-        client,
+        client: "pyrogram.Client",
         inline_query: raw.types.UpdateBotInlineQuery,
-        users: dict,
     ) -> "InlineQuery":
         peer_type = inline_query.peer_type
-        chat_type = None
+        chat_type: enums.ChatType | None = None
 
         if isinstance(peer_type, raw.types.InlineQueryPeerTypeSameBotPM):
             chat_type = enums.ChatType.BOT
@@ -98,7 +97,10 @@ class InlineQuery(Object, Update):
 
         return InlineQuery(
             id=str(inline_query.query_id),
-            from_user=types.User._parse(client, users[inline_query.user_id]),
+            from_user=types.User._parse(
+                client,
+                client.entity_cache.get_by_user_id(user_id=inline_query.user_id),
+            ),
             query=inline_query.query,
             offset=inline_query.offset,
             chat_type=chat_type,

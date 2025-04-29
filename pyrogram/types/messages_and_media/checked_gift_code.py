@@ -18,6 +18,7 @@
 
 from datetime import datetime
 
+import pyrogram
 from pyrogram import raw, types, utils
 
 from ..object import Object
@@ -72,10 +73,8 @@ class CheckedGiftCode(Object):
 
     @staticmethod
     def _parse(
-        client,
+        client: "pyrogram.Client",
         checked_gift_code: "raw.types.payments.CheckedGiftCode",
-        users,
-        chats,
     ):
         from_chat = None
         winner = None
@@ -83,10 +82,13 @@ class CheckedGiftCode(Object):
         if getattr(checked_gift_code, "from_id", None):
             from_chat = types.Chat._parse_chat(
                 client,
-                chats.get(utils.get_raw_peer_id(checked_gift_code.from_id)),
+                client.entity_cache.get_by_peer_id(peer=checked_gift_code.from_id),
             )
         if getattr(checked_gift_code, "to_id", None):
-            winner = types.User._parse(client, users.get(checked_gift_code.to_id))
+            winner = types.User._parse(
+                client,
+                client.entity_cache.get_by_user_id(user_id=checked_gift_code.to_id),
+            )
 
         return CheckedGiftCode(
             date=utils.timestamp_to_datetime(checked_gift_code.date),

@@ -18,7 +18,11 @@
 
 from collections.abc import AsyncGenerator
 from datetime import datetime
-from typing import BinaryIO, Optional, Union
+from typing import (
+    BinaryIO,
+    Optional,
+    Union,
+)
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
@@ -423,53 +427,41 @@ class Chat(Object):
 
     @staticmethod
     def _parse(
-        client,
+        client: "pyrogram.Client",
         message: raw.types.Message | raw.types.MessageService | raw.types.MessageEmpty,
-        users: dict,
-        chats: dict,
-        is_chat: bool,
+        is_chat: bool = True,
     ) -> "Chat":
-        from_id: int | None = None
+        from_id: raw.base.Peer | None = None
         if not isinstance(message, raw.types.MessageEmpty):
-            from_id = utils.get_raw_peer_id(message.from_id)
+            from_id = message.from_id
 
-        peer_id = utils.get_raw_peer_id(message.peer_id)
+        peer_id = message.peer_id
         chat_id = (peer_id or from_id) if is_chat else (from_id or peer_id)
-
-        if isinstance(message.peer_id, raw.types.PeerUser):
-            return Chat._parse_user_chat(client, users[chat_id])
-
-        if isinstance(message.peer_id, raw.types.PeerChat):
-            return Chat._parse_chat_chat(client, chats[chat_id])
-
-        return Chat._parse_channel_chat(client, chats[chat_id])
+        entity = client.entity_cache.get_by_peer_id(peer=chat_id)
+        return Chat._parse_chat(client, entity)
 
     @staticmethod
-    def _parse_dialog(client, peer, users: dict, chats: dict):
-        if isinstance(peer, (raw.types.PeerUser, raw.types.InputPeerUser)):
-            return Chat._parse_user_chat(client, users[peer.user_id])
-        if isinstance(peer, (raw.types.PeerChat, raw.types.InputPeerChat)):
-            return Chat._parse_chat_chat(client, chats[peer.chat_id])
-        return Chat._parse_channel_chat(client, chats[peer.channel_id])
+    def _parse_dialog(client: "pyrogram.Client", peer):
+        entity = client.entity_cache.get_by_peer_id(peer=peer)
+        return Chat._parse_chat(client, entity)
 
     @staticmethod
     async def _parse_full(
-        client,
+        client: "pyrogram.Client",
         chat_full: raw.types.messages.ChatFull | raw.types.users.UserFull,
     ) -> "Chat":
-        users = {u.id: u for u in chat_full.users}
-        chats = {c.id: c for c in chat_full.chats}
-
         if isinstance(chat_full, raw.types.users.UserFull):
             full_user: raw.types.UserFull = chat_full.full_user
 
-            parsed_chat = Chat._parse_user_chat(client, users[full_user.id])
+            parsed_chat = Chat._parse_user_chat(
+                client,
+                client.entity_cache.get_by_user_id(user_id=full_user.id),
+            )
             parsed_chat.bio = full_user.about
             parsed_chat.folder_id = getattr(full_user, "folder_id", None)
             parsed_chat.business_info = types.BusinessInfo._parse(
                 client,
                 full_user,
-                users,
             )
             parsed_chat.business_intro = await types.BusinessIntro._parse(
                 client,
@@ -489,7 +481,9 @@ class Chat(Object):
             if full_user.personal_channel_id:
                 parsed_chat.personal_channel = Chat._parse_channel_chat(
                     client,
-                    chats[full_user.personal_channel_id],
+                    client.entity_cache.get_by_channel_id(
+                        channel_id=full_user.personal_channel_id,
+                    ),
                 )
                 parsed_chat.personal_channel_message = await client.get_messages(
                     parsed_chat.personal_channel.id,
@@ -501,13 +495,7 @@ class Chat(Object):
                 parsed_chat.stories = (
                     types.List(
                         [
-                            await types.Story._parse(
-                                client,
-                                story,
-                                users,
-                                chats,
-                                peer_stories.peer,
-                            )
+                            await types.Story._parse(client, story, peer_stories.peer)
                             for story in peer_stories.stories
                         ],
                     )
@@ -525,16 +513,21 @@ class Chat(Object):
                 )
         else:
             full_chat = chat_full.full_chat
-            chat_raw = chats[full_chat.id]
 
             if isinstance(full_chat, raw.types.ChatFull):
-                parsed_chat = Chat._parse_chat_chat(client, chat_raw)
+                parsed_chat = Chat._parse_chat_chat(
+                    client,
+                    client.entity_cache.get_by_chat_id(chat_id=full_chat.id),
+                )
                 parsed_chat.description = full_chat.about or None
 
                 if isinstance(full_chat.participants, raw.types.ChatParticipants):
                     parsed_chat.members_count = len(full_chat.participants.participants)
             else:
-                parsed_chat = Chat._parse_channel_chat(client, chat_raw)
+                parsed_chat = Chat._parse_channel_chat(
+                    client,
+                    client.entity_cache.get_by_channel_id(channel_id=full_chat.id),
+                )
                 parsed_chat.members_count = full_chat.participants_count
                 parsed_chat.description = full_chat.about or None
                 # TODO: Add StickerSet type
@@ -547,7 +540,9 @@ class Chat(Object):
                 parsed_chat.is_members_hidden = full_chat.participants_hidden
                 parsed_chat.folder_id = getattr(full_chat, "folder_id", None)
 
-                linked_chat_raw = chats.get(full_chat.linked_chat_id, None)
+                linked_chat_raw = client.entity_cache.get_by_channel_id(
+                    channel_id=full_chat.linked_chat_id,
+                )
 
                 if linked_chat_raw:
                     parsed_chat.linked_chat = Chat._parse_channel_chat(
@@ -558,12 +553,10 @@ class Chat(Object):
                 default_send_as = full_chat.default_send_as
 
                 if default_send_as:
-                    if isinstance(default_send_as, raw.types.PeerUser):
-                        send_as_raw = users[default_send_as.user_id]
-                    else:
-                        send_as_raw = chats[default_send_as.channel_id]
-
-                    parsed_chat.send_as_chat = Chat._parse_chat(client, send_as_raw)
+                    parsed_chat.send_as_chat = Chat._parse_chat(
+                        client,
+                        client.entity_cache.get_by_peer_id(peer=default_send_as),
+                    )
 
                 if full_chat.stories:
                     peer_stories: raw.types.PeerStories = full_chat.stories
@@ -573,8 +566,6 @@ class Chat(Object):
                                 await types.Story._parse(
                                     client,
                                     story,
-                                    users,
-                                    chats,
                                     peer_stories.peer,
                                 )
                                 for story in peer_stories.stories
@@ -613,8 +604,10 @@ class Chat(Object):
     @staticmethod
     def _parse_chat(
         client,
-        chat: raw.types.Chat | raw.types.User | raw.types.Channel,
-    ) -> "Chat":
+        chat: raw.types.Chat | raw.types.User | raw.types.Channel | None,
+    ) -> "Chat | None":
+        if chat is None:
+            return None
         if isinstance(chat, raw.types.Chat):
             return Chat._parse_chat_chat(client, chat)
         if isinstance(chat, raw.types.User):

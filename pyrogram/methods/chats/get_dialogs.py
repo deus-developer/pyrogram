@@ -66,9 +66,6 @@ class GetDialogs:
                 sleep_threshold=60,
             )
 
-            users = {i.id: i for i in r.users}
-            chats = {i.id: i for i in r.chats}
-
             messages = {}
 
             for message in r.messages:
@@ -78,12 +75,7 @@ class GetDialogs:
                 chat_id = utils.get_peer_id(message.peer_id)
 
                 try:
-                    messages[chat_id] = await types.Message._parse(
-                        self,
-                        message,
-                        users,
-                        chats,
-                    )
+                    messages[chat_id] = await types.Message._parse(self, message)
                 except KeyError:
                     pass
 
@@ -95,7 +87,7 @@ class GetDialogs:
 
                 try:
                     dialogs.append(
-                        types.Dialog._parse(self, dialog, messages, users, chats),
+                        types.Dialog._parse(self, dialog, messages),
                     )
                 except KeyError:
                     pass

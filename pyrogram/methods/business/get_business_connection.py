@@ -43,7 +43,4 @@ class GetBusinessConnection:
             raw.functions.account.GetBotBusinessConnection(connection_id=connection_id),
         )
 
-        users = {i.id: i for i in r.users}
-        chats = {i.id: i for i in r.chats}
-
-        return types.BusinessConnection._parse(self, r.updates[0].connection, users)
+        return types.BusinessConnection._parse(self, r.updates[0].connection)

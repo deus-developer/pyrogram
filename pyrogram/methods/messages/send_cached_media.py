@@ -187,9 +187,6 @@ class SendCachedMedia:
                 return await types.Message._parse(
                     self,
                     i.message,
-                    {i.id: i for i in r.users},
-                    {i.id: i for i in r.chats},
                     is_scheduled=isinstance(i, raw.types.UpdateNewScheduledMessage),
                     business_connection_id=getattr(i, "connection_id", None),
-                    reply_to_message=getattr(i, "reply_to_message", None),
                 )

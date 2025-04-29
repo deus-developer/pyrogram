@@ -116,15 +116,10 @@ class GroupCallMember(Object):
     def _parse(
         client: "pyrogram.Client",
         member: "raw.types.GroupCallParticipant",
-        users: dict[int, "raw.base.User"],
-        chats: dict[int, "raw.base.Chat"],
     ) -> "GroupCallMember":
-        peer = member.peer
-        peer_id = utils.get_raw_peer_id(peer)
-
         parsed_chat = types.Chat._parse_chat(
             client,
-            users[peer_id] if isinstance(peer, raw.types.PeerUser) else chats[peer_id],
+            client.entity_cache.get_by_peer_id(peer=member.peer),
         )
 
         parsed_chat.bio = getattr(member, "about", None)

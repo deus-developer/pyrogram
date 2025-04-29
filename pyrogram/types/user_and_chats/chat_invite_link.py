@@ -17,7 +17,9 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Optional
+from typing import (
+    Optional,
+)
 
 import pyrogram
 from pyrogram import raw, types, utils
@@ -103,15 +105,13 @@ class ChatInviteLink(Object):
     def _parse(
         client: "pyrogram.Client",
         invite: "raw.base.ExportedChatInvite",
-        users: dict[int, "raw.types.User"] = None,
     ) -> Optional["ChatInviteLink"]:
         if not isinstance(invite, raw.types.ChatInviteExported):
             return None
 
-        creator = (
-            types.User._parse(client, users[invite.admin_id])
-            if users is not None
-            else None
+        creator = types.User._parse(
+            client,
+            client.entity_cache.get_by_user_id(user_id=invite.admin_id),
         )
 
         return ChatInviteLink(

@@ -109,8 +109,6 @@ async def parse_messages(
             await types.Message._parse(
                 client,
                 message,
-                users,
-                chats,
                 topics,
                 replies=0,
                 business_connection_id=business_connection_id,

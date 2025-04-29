@@ -66,16 +66,11 @@ class MyBoost(Object):
     def _parse(
         client: "pyrogram.Client",
         my_boost: "raw.types.MyBoost",
-        users,
-        chats,
     ) -> "MyBoost":
-        peer_id = utils.get_raw_peer_id(my_boost.peer)
-
-        if isinstance(my_boost.peer, raw.types.PeerChannel):
-            chat = types.Chat._parse_channel_chat(client, chats.get(peer_id, None))
-        else:
-            chat = types.Chat._parse_user_chat(client, users.get(peer_id, None))
-
+        chat = types.Chat._parse_chat(
+            client,
+            client.entity_cache.get_by_peer_id(peer_id=my_boost.peer),
+        )
         return MyBoost(
             slot=my_boost.slot,
             chat=chat,

@@ -16,7 +16,9 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional
+from typing import (
+    Optional,
+)
 
 import pyrogram
 from pyrogram import raw, types
@@ -77,7 +79,6 @@ class PreCheckoutQuery(Object, Update):
     async def _parse(
         client: "pyrogram.Client",
         pre_checkout_query: "raw.types.UpdateBotPrecheckoutQuery",
-        users: dict,
     ) -> "PreCheckoutQuery":
         # Try to decode pre-checkout query payload into string. If that fails, fallback to bytes instead of decoding by
         # ignoring/replacing errors, this way, button clicks will still work.
@@ -88,7 +89,10 @@ class PreCheckoutQuery(Object, Update):
 
         return PreCheckoutQuery(
             id=str(pre_checkout_query.query_id),
-            from_user=types.User._parse(client, users[pre_checkout_query.user_id]),
+            from_user=types.User._parse(
+                client,
+                client.entity_cache.get_by_user_id(user_id=pre_checkout_query.user_id),
+            ),
             currency=pre_checkout_query.currency,
             total_amount=pre_checkout_query.total_amount,
             invoice_payload=invoice_payload,

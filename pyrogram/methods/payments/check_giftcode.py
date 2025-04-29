@@ -60,7 +60,4 @@ class CheckGiftCode:
 
         r = await self.invoke(raw.functions.payments.CheckGiftCode(slug=slug))
 
-        users = {i.id: i for i in r.users}
-        chats = {i.id: i for i in r.chats}
-
-        return types.CheckedGiftCode._parse(self, r, users, chats)
+        return types.CheckedGiftCode._parse(self, r)

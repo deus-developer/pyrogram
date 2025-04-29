@@ -75,20 +75,16 @@ class GetFolders:
             ):
                 raw_peers[utils.get_peer_id(peer)] = peer
 
-        users = {}
-        chats = {}
         for i in range(0, len(raw_peers), 100):
             chunk = list(raw_peers.values())[i : i + 100]
-            r = await self.invoke(
+            await self.invoke(
                 raw.functions.messages.GetPeerDialogs(
                     peers=[raw.types.InputDialogPeer(peer=peer) for peer in chunk],
                 ),
             )
-            users.update({i.id: i for i in r.users})
-            chats.update({i.id: i for i in r.chats})
 
         folders = types.List(
-            types.Folder._parse(self, folder, users, chats) for folder in raw_folders
+            types.Folder._parse(self, folder) for folder in raw_folders
         )
 
         if not folders:

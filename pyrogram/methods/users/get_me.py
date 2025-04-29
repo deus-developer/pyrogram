@@ -39,6 +39,7 @@ class GetMe:
             raw.functions.users.GetFullUser(id=raw.types.InputUserSelf()),
         )
 
-        users = {u.id: u for u in r.users}
-
-        return types.User._parse(self, users[r.full_user.id])
+        return types.User._parse(
+            self,
+            self.entity_cache.get_by_user_id(user_id=r.full_user.id),
+        )

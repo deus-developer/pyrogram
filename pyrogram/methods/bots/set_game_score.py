@@ -92,11 +92,6 @@ class SetGameScore:
                 i,
                 (raw.types.UpdateEditMessage, raw.types.UpdateEditChannelMessage),
             ):
-                return await types.Message._parse(
-                    self,
-                    i.message,
-                    {i.id: i for i in r.users},
-                    {i.id: i for i in r.chats},
-                )
+                return await types.Message._parse(self, i.message)
 
         return True

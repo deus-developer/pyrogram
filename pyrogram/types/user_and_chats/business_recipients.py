@@ -16,7 +16,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-
+import pyrogram
 from pyrogram import raw, types
 
 from ..object import Object
@@ -64,9 +64,8 @@ class BusinessRecipients(Object):
 
     @staticmethod
     def _parse(
-        client,
+        client: "pyrogram.Client",
         recipients: "raw.types.BusinessRecipients",
-        users: dict = None,
     ) -> "BusinessRecipients":
         return BusinessRecipients(
             existing_chats=getattr(recipients, "existing_chats", None),
@@ -75,7 +74,8 @@ class BusinessRecipients(Object):
             non_contacts=getattr(recipients, "non_contacts", None),
             exclude_selected=getattr(recipients, "exclude_selected", None),
             users=types.List(
-                types.User._parse(client, users[i]) for i in recipients.users
+                types.User._parse(client, client.entity_cache.get_by_user_id(user_id=i))
+                for i in recipients.users
             )
             or None
             if getattr(recipients, "users", None)

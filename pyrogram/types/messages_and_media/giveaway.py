@@ -84,12 +84,13 @@ class Giveaway(Object):
     def _parse(
         client: "pyrogram.Client",
         giveaway: "raw.types.MessageMediaGiveaway",
-        chats: dict,
     ) -> "Giveaway":
-        del chats
         return Giveaway(
             chats=types.List(
-                types.Chat._parse_channel_chat(client, client.entity_cache.get_by_channel_id(channel_id=i))
+                types.Chat._parse_channel_chat(
+                    client,
+                    client.entity_cache.get_by_channel_id(channel_id=i),
+                )
                 for i in giveaway.channels
             ),
             quantity=giveaway.quantity,

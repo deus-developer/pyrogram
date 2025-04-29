@@ -69,27 +69,19 @@ class GetForumTopics:
                 ),
             )
 
-            users = {i.id: i for i in r.users}
-            chats = {i.id: i for i in r.chats}
-
             messages = {}
 
             for message in r.messages:
                 if isinstance(message, raw.types.MessageEmpty):
                     continue
 
-                messages[message.id] = await types.Message._parse(
-                    self,
-                    message,
-                    users,
-                    chats,
-                )
+                messages[message.id] = await types.Message._parse(self, message)
 
             topics = []
 
             for topic in r.topics:
                 topics.append(
-                    types.ForumTopic._parse(self, topic, messages, users, chats),
+                    types.ForumTopic._parse(self, topic, messages),
                 )
 
             if not topics:

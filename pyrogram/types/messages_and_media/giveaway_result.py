@@ -102,11 +102,7 @@ class GiveawayResult(Object):
     async def _parse(
         client: "pyrogram.Client",
         giveaway_result: "raw.types.MessageMediaGiveawayResults",
-        users: dict,
-        chats: dict,
     ) -> "GiveawayResult":
-        del users
-        del chats
         launch_message = None
 
         try:
@@ -121,13 +117,16 @@ class GiveawayResult(Object):
         return GiveawayResult(
             chat=types.Chat._parse_channel_chat(
                 client,
-                client.entity_cache.get_by_channel_id(channel_id=giveaway_result.channel_id),
+                client.entity_cache.get_by_channel_id(
+                    channel_id=giveaway_result.channel_id,
+                ),
             ),
             quantity=giveaway_result.winners_count + giveaway_result.unclaimed_count,
             winners_count=giveaway_result.winners_count,
             unclaimed_count=giveaway_result.unclaimed_count,
             winners=types.List(
-                types.User._parse(client, client.entity_cache.get_by_user_id(user_id=i)) for i in giveaway_result.winners
+                types.User._parse(client, client.entity_cache.get_by_user_id(user_id=i))
+                for i in giveaway_result.winners
             )
             or None,
             months=giveaway_result.months,

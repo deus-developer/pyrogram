@@ -33,7 +33,9 @@ from importlib import import_module
 from io import BytesIO, StringIO
 from mimetypes import MimeTypes
 from pathlib import Path
-from typing import Optional
+from typing import (
+    Optional,
+)
 
 import pyrogram
 from pyrogram import __license__, __version__, enums, raw, utils
@@ -58,6 +60,7 @@ from pyrogram.utils import ainput
 from .connection import Connection
 from .connection.transport import TCP, TCPAbridged
 from .dispatcher import Dispatcher
+from .entity_cache import EntityCache
 from .file_id import FileId, FileType, ThumbnailSource
 from .mime_types import mime_types
 from .parser import Parser
@@ -350,8 +353,10 @@ class Client(Methods):
         self.disconnect_handler = None
 
         self.me: User | None = None
+        self._self_user_id: int | None = None
 
         self.message_cache = Cache(self.max_message_cache_size)
+        self.entity_cache = EntityCache()
 
         # Sometimes, for some reason, the server will stop sending updates and will only respond to pings.
         # This watchdog will invoke updates.GetState in order to wake up the server and enable it sending updates again
@@ -371,7 +376,7 @@ class Client(Methods):
         except ConnectionError:
             pass
 
-    async def __aenter__(self):
+    async def __aenter__(self) -> "Client":
         return await self.start()
 
     async def __aexit__(self, *args):
@@ -379,6 +384,16 @@ class Client(Methods):
             await self.stop()
         except ConnectionError:
             pass
+
+    @property
+    def self_user_id(self) -> int | None:
+        if self._self_user_id:
+            return self._self_user_id
+
+        if self.me:
+            return self.me.id
+
+        return None
 
     async def updates_watchdog(self):
         while True:
@@ -574,6 +589,8 @@ class Client(Methods):
         self,
         peers: list[raw.types.User | raw.types.Chat | raw.types.Channel],
     ) -> bool:
+        self.entity_cache.update(peers)
+
         is_min = False
         parsed_peers = []
 
@@ -796,17 +813,15 @@ class Client(Methods):
                         print(e)
 
     def load_plugins(self):
-        if self.plugins:
-            plugins = self.plugins.copy()
-
-            for option in ["include", "exclude"]:
-                if plugins.get(option, []):
-                    plugins[option] = [
-                        (i.split()[0], i.split()[1:] or None)
-                        for i in self.plugins[option]
-                    ]
-        else:
+        if not self.plugins:
             return
+        plugins = self.plugins.copy()
+
+        for option in ["include", "exclude"]:
+            if plugins.get(option, []):
+                plugins[option] = [
+                    (i.split()[0], i.split()[1:] or None) for i in self.plugins[option]
+                ]
 
         if plugins.get("enabled", True):
             root = plugins["root"]
@@ -942,8 +957,10 @@ class Client(Methods):
                         root,
                     ),
                 )
-            else:
-                log.warning('[%s] No plugin loaded from "%s"', self.name, root)
+                return
+            log.warning('[%s] No plugin loaded from "%s"', self.name, root)
+            return
+        return
 
     async def handle_download(self, packet):
         file_id, directory, file_name, in_memory, file_size, progress, progress_args = (
@@ -1226,6 +1243,24 @@ class Client(Methods):
 
     def guess_extension(self, mime_type: str) -> str | None:
         return self.mimetypes.guess_extension(mime_type)
+
+    async def gather_resolve_peers_cached(
+        self,
+        *peers: raw.base.Peer | raw.base.InputPeer | None,
+    ) -> list[raw.base.User | raw.base.Chat | None]:
+        result: list[raw.base.User | raw.base.Chat | None] = [None] * len(peers)
+
+        for idx, peer in enumerate(peers):
+            if peer is None:
+                result[idx] = None
+                continue
+
+            entity = self.entity_cache.get_by_peer_id(peer=peer)
+            if entity:
+                result[idx] = entity
+                continue
+
+        return result
 
 
 class Cache:

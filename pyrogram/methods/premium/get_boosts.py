@@ -40,15 +40,10 @@ class GetBoosts:
         """
         r = await self.invoke(raw.functions.premium.GetMyBoosts())
 
-        users = {i.id: i for i in r.users}
-        chats = {i.id: i for i in r.chats}
-
         return types.List(
             types.MyBoost._parse(
                 self,
                 boost,
-                users,
-                chats,
             )
             for boost in r.my_boosts
         )

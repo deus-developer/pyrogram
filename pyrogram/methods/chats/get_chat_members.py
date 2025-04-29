@@ -53,10 +53,8 @@ async def get_chunk(
     )
 
     members = r.participants
-    users = {u.id: u for u in r.users}
-    chats = {c.id: c for c in r.chats}
 
-    return [types.ChatMember._parse(client, member, users, chats) for member in members]
+    return [types.ChatMember._parse(client, member) for member in members]
 
 
 class GetChatMembers:
@@ -126,10 +124,9 @@ class GetChatMembers:
             )
 
             members = getattr(r.full_chat.participants, "participants", [])
-            users = {i.id: i for i in r.users}
 
             for member in members:
-                yield types.ChatMember._parse(self, member, users, {})
+                yield types.ChatMember._parse(self, member)
 
             return
 

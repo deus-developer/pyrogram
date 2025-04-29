@@ -17,8 +17,11 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Optional
+from typing import (
+    Optional,
+)
 
+import pyrogram
 from pyrogram import raw, types, utils
 
 from ..object import Object
@@ -66,16 +69,18 @@ class BusinessConnection(Object):
 
     @staticmethod
     def _parse(
-        client,
+        client: "pyrogram.Client",
         connection: "raw.types.BotBusinessConnection" = None,
-        users={},
     ) -> Optional["BusinessConnection"]:
         if not connection:
             return None
 
         return BusinessConnection(
             id=connection.connection_id,
-            user=types.User._parse(client, users.get(connection.user_id)),
+            user=types.User._parse(
+                client,
+                client.entity_cache.get_by_user_id(user_id=connection.user_id),
+            ),
             dc_id=connection.dc_id,
             date=utils.timestamp_to_datetime(connection.date),
             can_reply=getattr(connection, "can_reply", None),

@@ -63,10 +63,7 @@ class GetStories:
 
         stories = []
 
-        users = {i.id: i for i in r.users}
-        chats = {i.id: i for i in r.chats}
-
         for story in r.stories:
-            stories.append(await types.Story._parse(self, story, users, chats, peer))
+            stories.append(await types.Story._parse(self, story, peer))
 
         return types.List(stories) if is_iterable else stories[0] if stories else None

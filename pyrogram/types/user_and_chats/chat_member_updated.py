@@ -17,7 +17,10 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Union
+from typing import (
+    Union,
+    assert_never,
+)
 
 import pyrogram
 from pyrogram import raw, types, utils
@@ -81,10 +84,15 @@ class ChatMemberUpdated(Object, Update):
             "raw.types.UpdateChatParticipant",
             "raw.types.UpdateChannelParticipant",
         ],
-        users: dict[int, "raw.types.User"],
-        chats: dict[int, "raw.types.Chat"],
     ) -> "ChatMemberUpdated":
-        chat_id = getattr(update, "chat_id", None) or update.channel_id
+        if update is None:
+            return None
+        if isinstance(update, raw.types.UpdateChatParticipant):
+            entity = client.entity_cache.get_by_chat_id(chat_id=update.chat_id)
+        elif isinstance(update, raw.types.UpdateChannelParticipant):
+            entity = client.entity_cache.get_by_channel_id(channel_id=update.channel_id)
+        else:
+            assert_never(update)
 
         old_chat_member = None
         new_chat_member = None
@@ -92,30 +100,23 @@ class ChatMemberUpdated(Object, Update):
         via_join_request = None
 
         if update.prev_participant:
-            old_chat_member = types.ChatMember._parse(
-                client,
-                update.prev_participant,
-                users,
-                chats,
-            )
+            old_chat_member = types.ChatMember._parse(client, update.prev_participant)
 
         if update.new_participant:
-            new_chat_member = types.ChatMember._parse(
-                client,
-                update.new_participant,
-                users,
-                chats,
-            )
+            new_chat_member = types.ChatMember._parse(client, update.new_participant)
 
         if update.invite:
-            invite_link = types.ChatInviteLink._parse(client, update.invite, users)
+            invite_link = types.ChatInviteLink._parse(client, update.invite)
 
             if isinstance(update.invite, raw.types.ChatInvitePublicJoinRequests):
                 via_join_request = True
 
         return ChatMemberUpdated(
-            chat=types.Chat._parse_chat(client, chats[chat_id]),
-            from_user=types.User._parse(client, users[update.actor_id]),
+            chat=types.Chat._parse_chat(client, entity),
+            from_user=types.User._parse(
+                client,
+                client.entity_cache.get_by_user_id(user_id=update.actor_id),
+            ),
             date=utils.timestamp_to_datetime(update.date),
             old_chat_member=old_chat_member,
             new_chat_member=new_chat_member,
