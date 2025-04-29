@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -25,7 +24,7 @@ from pyrogram import raw
 class DeleteChatPhoto:
     async def delete_chat_photo(
         self: "pyrogram.Client",
-        chat_id: Union[int, str]
+        chat_id: int | str,
     ) -> bool:
         """Delete a chat photo.
 
@@ -54,15 +53,15 @@ class DeleteChatPhoto:
             await self.invoke(
                 raw.functions.messages.EditChatPhoto(
                     chat_id=peer.chat_id,
-                    photo=raw.types.InputChatPhotoEmpty()
-                )
+                    photo=raw.types.InputChatPhotoEmpty(),
+                ),
             )
         elif isinstance(peer, raw.types.InputPeerChannel):
             await self.invoke(
                 raw.functions.channels.EditPhoto(
                     channel=peer,
-                    photo=raw.types.InputChatPhotoEmpty()
-                )
+                    photo=raw.types.InputChatPhotoEmpty(),
+                ),
             )
         else:
             raise ValueError(f'The chat_id "{chat_id}" belongs to a user')

@@ -17,7 +17,7 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import inspect
-from typing import Callable
+from collections.abc import Callable
 
 import pyrogram
 from pyrogram.filters import Filter
@@ -33,11 +33,11 @@ class Handler:
         if callable(self.filters):
             if inspect.iscoroutinefunction(self.filters.__call__):
                 return await self.filters(client, update)
-            else:
-                return await client.loop.run_in_executor(
-                    client.executor,
-                    self.filters,
-                    client, update
-                )
+            return await client.loop.run_in_executor(
+                client.executor,
+                self.filters,
+                client,
+                update,
+            )
 
         return True

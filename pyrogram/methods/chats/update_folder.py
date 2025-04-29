@@ -16,11 +16,9 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import List, Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import enums
+from pyrogram import enums, raw
 
 
 class UpdateFolder:
@@ -28,9 +26,9 @@ class UpdateFolder:
         self: "pyrogram.Client",
         folder_id: int,
         title: str,
-        included_chats: Union[Union[int, str], List[Union[int, str]]] = None,
-        excluded_chats: Union[Union[int, str], List[Union[int, str]]] = None,
-        pinned_chats: Union[Union[int, str], List[Union[int, str]]] = None,
+        included_chats: int | str | list[int | str] = None,
+        excluded_chats: int | str | list[int | str] = None,
+        pinned_chats: int | str | list[int | str] = None,
         contacts: bool = None,
         non_contacts: bool = None,
         groups: bool = None,
@@ -40,7 +38,7 @@ class UpdateFolder:
         exclude_read: bool = None,
         exclude_archived: bool = None,
         color: "enums.FolderColor" = None,
-        emoji: str = None
+        emoji: str = None,
     ) -> bool:
         """Create or update a user's folder.
 
@@ -120,16 +118,13 @@ class UpdateFolder:
                     id=folder_id,
                     title=title,
                     pinned_peers=[
-                        await self.resolve_peer(user_id)
-                        for user_id in pinned_chats
+                        await self.resolve_peer(user_id) for user_id in pinned_chats
                     ],
                     include_peers=[
-                        await self.resolve_peer(user_id)
-                        for user_id in included_chats
+                        await self.resolve_peer(user_id) for user_id in included_chats
                     ],
                     exclude_peers=[
-                        await self.resolve_peer(user_id)
-                        for user_id in excluded_chats
+                        await self.resolve_peer(user_id) for user_id in excluded_chats
                     ],
                     contacts=contacts,
                     non_contacts=non_contacts,
@@ -140,9 +135,9 @@ class UpdateFolder:
                     exclude_read=exclude_read,
                     exclude_archived=exclude_archived,
                     emoticon=emoji,
-                    color=color.value if color else None
-                )
-            )
+                    color=color.value if color else None,
+                ),
+            ),
         )
 
         return r

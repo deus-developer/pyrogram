@@ -26,6 +26,7 @@ import pyrogram
 from pyrogram import raw
 from pyrogram.enums import MessageEntityType
 from pyrogram.errors import PeerIdInvalid
+
 from . import utils
 
 log = logging.getLogger(__name__)
@@ -151,15 +152,13 @@ class HTML:
 
         return {
             "message": utils.remove_surrogates(parser.text),
-            "entities": sorted(entities, key=lambda e: e.offset) or None
+            "entities": sorted(entities, key=lambda e: e.offset) or None,
         }
 
     @staticmethod
     def unparse(text: str, entities: list) -> str:
         def parse_one(entity):
-            """
-            Parses a single entity and returns (start_tag, start), (end_tag, end)
-            """
+            """Parses a single entity and returns (start_tag, start), (end_tag, end)"""
             entity_type = entity.type
             start = entity.offset
             end = start + entity.length
@@ -176,12 +175,14 @@ class HTML:
             elif entity_type == MessageEntityType.PRE:
                 name = entity_type.name.lower()
                 language = getattr(entity, "language", "") or ""
-                start_tag = f'<{name} language="{language}">' if language else f"<{name}>"
+                start_tag = (
+                    f'<{name} language="{language}">' if language else f"<{name}>"
+                )
                 end_tag = f"</{name}>"
             elif entity_type == MessageEntityType.BLOCKQUOTE:
                 name = entity_type.name.lower()
                 expandable = getattr(entity, "expandable", False)
-                start_tag = f'<{name}{" expandable" if expandable else ""}>'
+                start_tag = f"<{name}{' expandable' if expandable else ''}>"
                 end_tag = f"</{name}>"
             elif entity_type in (
                 MessageEntityType.CODE,
@@ -203,13 +204,12 @@ class HTML:
                 start_tag = f'<emoji id="{custom_emoji_id}">'
                 end_tag = "</emoji>"
             else:
-                return
+                return None
 
             return (start_tag, start), (end_tag, end)
 
         def recursive(entity_i: int) -> int:
-            """
-            Takes the index of the entity to start parsing from, returns the number of parsed entities inside it.
+            """Takes the index of the entity to start parsing from, returns the number of parsed entities inside it.
             Uses entities_offsets as a stack, pushing (start_tag, start) first, then parsing nested entities,
             and finally pushing (end_tag, end) to the stack.
             No need to sort at the end.
@@ -242,7 +242,12 @@ class HTML:
             last_offset = entities_offsets[-1][1]
             # no need to sort, but still add entities starting from the end
             for entity, offset in reversed(entities_offsets):
-                text = text[:offset] + entity + html.escape(text[offset:last_offset]) + text[last_offset:]
+                text = (
+                    text[:offset]
+                    + entity
+                    + html.escape(text[offset:last_offset])
+                    + text[last_offset:]
+                )
                 last_offset = offset
 
         return utils.remove_surrogates(text)

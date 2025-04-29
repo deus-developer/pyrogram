@@ -16,16 +16,16 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, Optional, AsyncGenerator
+from collections.abc import AsyncGenerator
 
 import pyrogram
-from pyrogram import types, raw
+from pyrogram import raw, types
 
 
 class GetDiscussionReplies:
     async def get_discussion_replies(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         message_id: int,
         limit: int = 0,
     ) -> AsyncGenerator["types.Message", None]:
@@ -50,7 +50,6 @@ class GetDiscussionReplies:
                 async for message in app.get_discussion_replies(chat_id, message_id):
                     print(message)
         """
-
         current = 0
         total = limit or (1 << 31) - 1
         limit = min(100, total)
@@ -66,8 +65,8 @@ class GetDiscussionReplies:
                     limit=limit,
                     max_id=0,
                     min_id=0,
-                    hash=0
-                )
+                    hash=0,
+                ),
             )
 
             users = {u.id: u for u in r.users}

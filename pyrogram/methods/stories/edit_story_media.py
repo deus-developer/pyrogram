@@ -17,26 +17,28 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from typing import Union, BinaryIO, Callable
+from collections.abc import Callable
+from typing import BinaryIO
 
 import pyrogram
-from pyrogram import raw, types, utils, StopTransmission
+from pyrogram import StopTransmission, raw, types, utils
 from pyrogram.errors import FilePartMissing
+
 
 class EditStoryMedia:
     async def edit_story_media(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         story_id: int,
-        media: Union[str, BinaryIO] = None,
+        media: str | BinaryIO = None,
         duration: int = 0,
         width: int = 0,
         height: int = 0,
-        thumb: Union[str, BinaryIO] = None,
+        thumb: str | BinaryIO = None,
         supports_streaming: bool = True,
         file_name: str = None,
         progress: Callable = None,
-        progress_args: tuple = ()
+        progress_args: tuple = (),
     ) -> "types.Story":
         """Edit story media.
 
@@ -100,7 +102,11 @@ class EditStoryMedia:
             if isinstance(media, str):
                 if os.path.isfile(media):
                     thumb = await self.save_file(thumb)
-                    file = await self.save_file(media, progress=progress, progress_args=progress_args)
+                    file = await self.save_file(
+                        media,
+                        progress=progress,
+                        progress_args=progress_args,
+                    )
                     mime_type = self.guess_mime_type(file.name)
                     if mime_type == "video/mp4":
                         media = raw.types.InputMediaUploadedDocument(
@@ -113,8 +119,10 @@ class EditStoryMedia:
                                     w=width,
                                     h=height,
                                 ),
-                                raw.types.DocumentAttributeFilename(file_name=file_name or os.path.basename(media))
-                            ]
+                                raw.types.DocumentAttributeFilename(
+                                    file_name=file_name or os.path.basename(media),
+                                ),
+                            ],
                         )
                     else:
                         media = raw.types.InputMediaUploadedPhoto(
@@ -124,7 +132,11 @@ class EditStoryMedia:
                     media = utils.get_input_media_from_file_id(media)
             else:
                 thumb = await self.save_file(thumb)
-                file = await self.save_file(media, progress=progress, progress_args=progress_args)
+                file = await self.save_file(
+                    media,
+                    progress=progress,
+                    progress_args=progress_args,
+                )
                 mime_type = self.guess_mime_type(file.name)
                 if mime_type == "video/mp4":
                     media = raw.types.InputMediaUploadedDocument(
@@ -138,8 +150,10 @@ class EditStoryMedia:
                                 w=width,
                                 h=height,
                             ),
-                            raw.types.DocumentAttributeFilename(file_name=file_name or media.name)
-                        ]
+                            raw.types.DocumentAttributeFilename(
+                                file_name=file_name or media.name,
+                            ),
+                        ],
                     )
                 else:
                     media = raw.types.InputMediaUploadedPhoto(
@@ -153,7 +167,7 @@ class EditStoryMedia:
                             peer=await self.resolve_peer(chat_id),
                             id=story_id,
                             media=media,
-                        )
+                        ),
                     )
                 except FilePartMissing as e:
                     await self.save_file(media, file_id=file.id, file_part=e.value)
@@ -165,7 +179,7 @@ class EditStoryMedia:
                                 i.story,
                                 {i.id: i for i in r.users},
                                 {i.id: i for i in r.chats},
-                                i.peer
+                                i.peer,
                             )
         except StopTransmission:
             return None

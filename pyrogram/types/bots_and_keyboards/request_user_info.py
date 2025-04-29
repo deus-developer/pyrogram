@@ -44,7 +44,8 @@ class RequestUserInfo(Object):
     """
 
     def __init__(
-        self, *,
+        self,
+        *,
         button_id: int,
         is_bot: bool = None,
         is_premium: bool = None,

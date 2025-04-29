@@ -17,22 +17,20 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Union
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
+from pyrogram import raw, types, utils
 
 
 class EditChatInviteLink:
     async def edit_chat_invite_link(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         invite_link: str,
         name: str = None,
         expire_date: datetime = None,
         member_limit: int = None,
-        creates_join_request: bool = None
+        creates_join_request: bool = None,
     ) -> "types.ChatInviteLink":
         """Edit a non-primary invite link.
 
@@ -71,10 +69,14 @@ class EditChatInviteLink:
             .. code-block:: python
 
                 # Edit the member limit of a link
-                link = await app.edit_chat_invite_link(chat_id, invite_link, member_limit=5)
+                link = await app.edit_chat_invite_link(
+                    chat_id, invite_link, member_limit=5
+                )
 
                 # Set no expiration date of a link
-                link = await app.edit_chat_invite_link(chat_id, invite_link, expire_date=0)
+                link = await app.edit_chat_invite_link(
+                    chat_id, invite_link, expire_date=0
+                )
         """
         r = await self.invoke(
             raw.functions.messages.EditExportedChatInvite(
@@ -83,8 +85,8 @@ class EditChatInviteLink:
                 expire_date=utils.datetime_to_timestamp(expire_date),
                 usage_limit=member_limit,
                 title=name,
-                request_needed=creates_join_request
-            )
+                request_needed=creates_join_request,
+            ),
         )
 
         users = {i.id: i for i in r.users}

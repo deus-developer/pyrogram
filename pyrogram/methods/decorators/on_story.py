@@ -16,7 +16,8 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Callable, Optional, Union
+from collections.abc import Callable
+from typing import Union
 
 import pyrogram
 from pyrogram.filters import Filter
@@ -25,7 +26,7 @@ from pyrogram.filters import Filter
 class OnStory:
     def on_story(
         self: Union["OnStory", Filter, None] = None,
-        filters: Optional[Filter] = None,
+        filters: Filter | None = None,
         group: int = 0,
     ) -> Callable:
         """Decorator for handling new stories.
@@ -52,8 +53,8 @@ class OnStory:
                 func.handlers.append(
                     (
                         pyrogram.handlers.StoryHandler(func, self),
-                        group if filters is None else filters
-                    )
+                        group if filters is None else filters,
+                    ),
                 )
 
             return func

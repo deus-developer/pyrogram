@@ -28,6 +28,6 @@ class Contacts(
     DeleteContacts,
     ImportContacts,
     GetContactsCount,
-    AddContact
+    AddContact,
 ):
     pass

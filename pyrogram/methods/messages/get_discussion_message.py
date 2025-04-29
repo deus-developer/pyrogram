@@ -16,17 +16,15 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class GetDiscussionMessage:
     async def get_discussion_message(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         message_id: int,
     ) -> "types.Message":
         """Get the first discussion message of a channel post or a discussion thread in a group.
@@ -55,8 +53,8 @@ class GetDiscussionMessage:
         r = await self.invoke(
             raw.functions.messages.GetDiscussionMessage(
                 peer=await self.resolve_peer(chat_id),
-                msg_id=message_id
-            )
+                msg_id=message_id,
+            ),
         )
 
         users = {u.id: u for u in r.users}

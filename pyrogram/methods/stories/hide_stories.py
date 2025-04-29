@@ -16,7 +16,6 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
 from pyrogram import raw
@@ -25,8 +24,8 @@ from pyrogram import raw
 class HideStories:
     async def hide_stories(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        hidden: bool = None
+        chat_id: int | str,
+        hidden: bool = None,
     ) -> bool:
         """Toggle peer stories hidden
 
@@ -50,8 +49,8 @@ class HideStories:
         r = await self.invoke(
             raw.functions.stories.TogglePeerStoriesHidden(
                 peer=await self.resolve_peer(chat_id),
-                hidden=hidden
-            )
+                hidden=hidden,
+            ),
         )
 
         return r

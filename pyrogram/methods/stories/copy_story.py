@@ -17,10 +17,10 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from typing import Union, List, Optional
+from typing import Optional
 
 import pyrogram
-from pyrogram import types, enums
+from pyrogram import enums, types
 
 log = logging.getLogger(__name__)
 
@@ -28,17 +28,17 @@ log = logging.getLogger(__name__)
 class CopyStory:
     async def copy_story(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        from_chat_id: Union[int, str],
+        chat_id: int | str,
+        from_chat_id: int | str,
         story_id: int,
         caption: str = None,
         parse_mode: Optional["enums.ParseMode"] = None,
-        caption_entities: List["types.MessageEntity"] = None,
+        caption_entities: list["types.MessageEntity"] = None,
         period: int = None,
         privacy: "enums.StoriesPrivacyRules" = None,
-        allowed_users: List[Union[int, str]] = None,
-        disallowed_users: List[Union[int, str]] = None,
-        protect_content: bool = None
+        allowed_users: list[int | str] = None,
+        disallowed_users: list[int | str] = None,
+        protect_content: bool = None,
     ) -> "types.Story":
         """Copy story.
 
@@ -112,5 +112,5 @@ class CopyStory:
             caption_entities=caption_entities,
             privacy=privacy,
             allowed_users=allowed_users,
-            disallowed_users=disallowed_users
+            disallowed_users=disallowed_users,
         )

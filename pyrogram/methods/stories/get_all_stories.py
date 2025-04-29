@@ -16,19 +16,18 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import AsyncGenerator, Optional
+from collections.abc import AsyncGenerator
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class GetAllStories:
     async def get_all_stories(
         self: "pyrogram.Client",
-        next: Optional[bool] = None,
-        hidden: Optional[bool] = None,
-        state: Optional[str] = None,
+        next: bool | None = None,
+        hidden: bool | None = None,
+        state: str | None = None,
     ) -> AsyncGenerator["types.Story", None]:
         """Get all active stories.
 
@@ -47,13 +46,8 @@ class GetAllStories:
         Raises:
             ValueError: In case of invalid arguments.
         """
-
         r = await self.invoke(
-            raw.functions.stories.GetAllStories(
-                next=next,
-                hidden=hidden,
-                state=state
-            )
+            raw.functions.stories.GetAllStories(next=next, hidden=hidden, state=state),
         )
 
         users = {i.id: i for i in r.users}
@@ -66,5 +60,5 @@ class GetAllStories:
                     story,
                     users,
                     chats,
-                    peer_story.peer
+                    peer_story.peer,
                 )

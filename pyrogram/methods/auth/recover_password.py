@@ -19,8 +19,7 @@
 import logging
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 log = logging.getLogger(__name__)
 
@@ -28,7 +27,7 @@ log = logging.getLogger(__name__)
 class RecoverPassword:
     async def recover_password(
         self: "pyrogram.Client",
-        recovery_code: str
+        recovery_code: str,
     ) -> "types.User":
         """Recover your password with a recovery code and log in.
 
@@ -45,11 +44,7 @@ class RecoverPassword:
         Raises:
             BadRequest: In case the recovery code is invalid.
         """
-        r = await self.invoke(
-            raw.functions.auth.RecoverPassword(
-                code=recovery_code
-            )
-        )
+        r = await self.invoke(raw.functions.auth.RecoverPassword(code=recovery_code))
 
         await self.storage.user_id(r.user.id)
         await self.storage.is_bot(False)

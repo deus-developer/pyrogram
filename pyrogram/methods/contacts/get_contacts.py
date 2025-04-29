@@ -17,19 +17,15 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from typing import List
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 log = logging.getLogger(__name__)
 
 
 class GetContacts:
-    async def get_contacts(
-        self: "pyrogram.Client"
-    ) -> List["types.User"]:
+    async def get_contacts(self: "pyrogram.Client") -> list["types.User"]:
         """Get contacts from your Telegram address book.
 
         .. include:: /_includes/usable-by/users.rst

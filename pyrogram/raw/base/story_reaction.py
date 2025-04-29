@@ -1,0 +1,13 @@
+# # # # # # # # # # # # # # # # # # # # # # # #
+#               !!! WARNING !!!               #
+#          This is a generated file!          #
+# All changes made in this file will be lost! #
+# # # # # # # # # # # # # # # # # # # # # # # #
+
+from pyrogram import raw
+
+type StoryReaction = (
+    raw.types.StoryReaction
+    | raw.types.StoryReactionPublicForward
+    | raw.types.StoryReactionPublicRepost
+)

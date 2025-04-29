@@ -17,6 +17,7 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import pyrogram
+
 from ..object import Object
 
 
@@ -41,7 +42,7 @@ class PollOption(Object):
         client: "pyrogram.Client" = None,
         text: str,
         voter_count: int,
-        data: bytes
+        data: bytes,
     ):
         super().__init__(client)
 

@@ -16,9 +16,9 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional
 
 from pyrogram import raw
+
 from ..object import Object
 
 
@@ -56,9 +56,9 @@ class Invoice(Object):
         description: str,
         currency: str,
         total_amount: int,
-        start_parameter: Optional[str] = None,
-        is_shipping_address_requested: Optional[bool] = None,
-        is_test: Optional[bool] = None
+        start_parameter: str | None = None,
+        is_shipping_address_requested: bool | None = None,
+        is_test: bool | None = None,
     ):
         super().__init__(client)
 
@@ -78,8 +78,12 @@ class Invoice(Object):
             currency=invoice.currency,
             total_amount=invoice.total_amount,
             start_parameter=invoice.start_param or None,
-            is_shipping_address_requested=getattr(invoice, "shipping_address_requested", None),
+            is_shipping_address_requested=getattr(
+                invoice,
+                "shipping_address_requested",
+                None,
+            ),
             is_test=getattr(invoice, "test", None),
-            client=client
+            client=client,
             # TODO: Add photo and extended media
         )

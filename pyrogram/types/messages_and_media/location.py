@@ -17,8 +17,8 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import pyrogram
-
 from pyrogram import raw
+
 from ..object import Object
 
 
@@ -38,7 +38,7 @@ class Location(Object):
         *,
         client: "pyrogram.Client" = None,
         longitude: float,
-        latitude: float
+        latitude: float,
     ):
         super().__init__(client)
 
@@ -51,5 +51,5 @@ class Location(Object):
             return Location(
                 longitude=geo_point.long,
                 latitude=geo_point.lat,
-                client=client
+                client=client,
             )

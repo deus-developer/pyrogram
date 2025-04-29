@@ -17,6 +17,7 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrogram import raw, types, utils
+
 from ..object import Object
 
 
@@ -52,7 +53,7 @@ class GiftCode(Object):
         slug: str,
         via_giveaway: bool = None,
         is_unclaimed: bool = None,
-        boosted_chat: "types.Chat" = None
+        boosted_chat: "types.Chat" = None,
     ):
         super().__init__()
 
@@ -64,14 +65,14 @@ class GiftCode(Object):
 
     @staticmethod
     def _parse(client, giftcode: "raw.types.MessageActionGiftCode", chats):
-        peer = chats.get(utils.get_raw_peer_id(getattr(giftcode, "boost_peer")))
+        peer = chats.get(utils.get_raw_peer_id(giftcode.boost_peer))
 
         return GiftCode(
             months=giftcode.months,
             slug=giftcode.slug,
-            via_giveaway=getattr(giftcode, "via_giveaway"),
-            is_unclaimed=getattr(giftcode, "unclaimed"),
-            boosted_chat=types.Chat._parse_chat(client, peer) if peer else None
+            via_giveaway=giftcode.via_giveaway,
+            is_unclaimed=giftcode.unclaimed,
+            boosted_chat=types.Chat._parse_chat(client, peer) if peer else None,
         )
 
     @property

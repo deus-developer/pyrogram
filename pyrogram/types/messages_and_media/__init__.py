@@ -34,9 +34,9 @@ from .game import Game
 from .general_forum_topic_hidden import GeneralTopicHidden
 from .general_forum_topic_unhidden import GeneralTopicUnhidden
 from .gift_code import GiftCode
-from .invoice import Invoice
 from .giveaway import Giveaway
 from .giveaway_result import GiveawayResult
+from .invoice import Invoice
 from .location import Location
 from .message import Message
 from .message_entity import MessageEntity
@@ -78,8 +78,8 @@ __all__ = [
     "GeneralTopicUnhidden",
     "GiftCode",
     "Giveaway",
-    "Invoice",
     "GiveawayResult",
+    "Invoice",
     "Location",
     "Message",
     "MessageEntity",
