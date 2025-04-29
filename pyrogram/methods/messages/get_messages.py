@@ -117,3 +117,35 @@ class GetMessages:
         messages = await utils.parse_messages(self, r, replies=replies)
 
         return messages if is_iterable else messages[0] if messages else None
+
+    async def get_callback_query_message(
+        self: "pyrogram.Client",
+        chat_id: Union[int, str],
+        message_id: int,
+        query_id: int,
+        replies: int = 1
+    ) -> types.Message | None:
+        peer = await self.resolve_peer(chat_id)
+
+        if replies < 0:
+            replies = (1 << 31) - 1
+
+        message_ids: list[raw.base.InputMessage] = [
+            raw.types.InputMessageCallbackQuery(
+                id=message_id,
+                query_id=query_id
+            )
+        ]
+
+        if isinstance(peer, raw.types.InputPeerChannel):
+            rpc = raw.functions.channels.GetMessages(channel=peer, id=message_ids)
+        else:
+            rpc = raw.functions.messages.GetMessages(id=message_ids)
+
+        r = await self.invoke(rpc, sleep_threshold=-1)
+
+        messages = await utils.parse_messages(self, r, replies=replies)
+
+        for message in filter(None, messages):
+            return message
+        return None

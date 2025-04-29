@@ -515,7 +515,7 @@ class Message(Object, Update):
             "types.ForceReply"
         ] = None,
         reactions: List["types.Reaction"] = None,
-        raw: "raw.types.Message" = None
+        raw: "raw.base.Message" = None
     ):
         super().__init__(client)
 
