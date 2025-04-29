@@ -22,11 +22,13 @@ from typing import (
     BinaryIO,
     Optional,
     Union,
+    assert_never,
 )
 
 import pyrogram
 from pyrogram import enums, raw, types, utils
 
+from ...utils import get_channel_id
 from ..object import Object
 
 
@@ -310,132 +312,182 @@ class Chat(Object):
         self.raw = raw
 
     @staticmethod
-    def _parse_user_chat(client, user: raw.types.User) -> "Chat":
-        peer_id = user.id
-
-        return Chat(
-            id=peer_id,
-            type=enums.ChatType.BOT if user.bot else enums.ChatType.PRIVATE,
-            is_verified=getattr(user, "verified", None),
-            is_restricted=getattr(user, "restricted", None),
-            is_scam=getattr(user, "scam", None),
-            is_fake=getattr(user, "fake", None),
-            is_support=getattr(user, "support", None),
-            is_stories_hidden=getattr(user, "stories_hidden", None),
-            is_stories_unavailable=getattr(user, "stories_unavailable", None),
-            is_business_bot=getattr(user, "bot_business", None),
-            username=user.username
-            or (user.usernames[0].username if user.usernames else None),
-            usernames=types.List([types.Username._parse(r) for r in user.usernames])
-            or None,
-            first_name=user.first_name,
-            last_name=user.last_name,
-            photo=types.ChatPhoto._parse(client, user.photo, peer_id, user.access_hash),
-            restrictions=types.List(
-                [types.Restriction._parse(r) for r in user.restriction_reason],
+    def _parse_user_chat(
+        client, user: raw.types.User | raw.types.UserEmpty | None,
+    ) -> "Chat | None":
+        if user is None:
+            return None
+        if isinstance(user, raw.types.UserEmpty):
+            return Chat(
+                id=user.id,
+                type=enums.ChatType.PRIVATE,
+                raw=user,
+                client=client,
             )
-            or None,
-            dc_id=getattr(getattr(user, "photo", None), "dc_id", None),
-            reply_color=types.ChatColor._parse(getattr(user, "color", None)),
-            profile_color=types.ChatColor._parse_profile_color(
-                getattr(user, "profile_color", None),
-            ),
-            raw=user,
-            client=client,
-        )
+        if isinstance(user, raw.types.User):
+            return Chat(
+                id=user.id,
+                type=enums.ChatType.BOT if user.bot else enums.ChatType.PRIVATE,
+                is_verified=user.verified,
+                is_restricted=user.restricted,
+                is_scam=user.scam,
+                is_fake=user.fake,
+                is_support=user.support,
+                is_stories_hidden=user.stories_hidden,
+                is_stories_unavailable=user.stories_unavailable,
+                is_business_bot=user.bot_business,
+                username=user.username
+                or (user.usernames[0].username if user.usernames else None),
+                usernames=types.List([types.Username._parse(r) for r in user.usernames])
+                or None,
+                first_name=user.first_name,
+                last_name=user.last_name,
+                photo=types.ChatPhoto._parse(
+                    client, user.photo, user.id, user.access_hash,
+                ),
+                restrictions=types.List(
+                    [types.Restriction._parse(r) for r in user.restriction_reason],
+                )
+                or None,
+                dc_id=getattr(user.photo, "dc_id", None),
+                reply_color=types.ChatColor._parse(user.color),
+                profile_color=types.ChatColor._parse_profile_color(
+                    user.profile_color,
+                ),
+                raw=user,
+                client=client,
+            )
+        assert_never(user)
 
     @staticmethod
-    def _parse_chat_chat(client, chat: raw.types.Chat) -> "Chat":
-        peer_id = -chat.id
-        usernames = getattr(chat, "usernames", [])
-        admin_rights = getattr(chat, "admin_rights", None)
-
-        return Chat(
-            id=peer_id,
-            type=enums.ChatType.GROUP,
-            title=chat.title,
-            is_creator=getattr(chat, "creator", None),
-            is_admin=True if admin_rights else None,
-            is_deactivated=getattr(chat, "deactivated", None),
-            usernames=types.List([types.Username._parse(r) for r in usernames]) or None,
-            photo=types.ChatPhoto._parse(
-                client,
-                getattr(chat, "photo", None),
-                peer_id,
-                0,
-            ),
-            permissions=types.ChatPermissions._parse(
-                getattr(chat, "default_banned_rights", None),
-            ),
-            members_count=getattr(chat, "participants_count", None),
-            dc_id=getattr(getattr(chat, "photo", None), "dc_id", None),
-            has_protected_content=getattr(chat, "noforwards", None),
-            raw=chat,
-            client=client,
-        )
+    def _parse_chat_chat(
+        client, chat: raw.types.Chat | raw.types.ChatEmpty | raw.types.ChatForbidden,
+    ) -> "Chat | None":
+        if chat is None:
+            return None
+        if isinstance(chat, raw.types.ChatEmpty):
+            return Chat(
+                id=-chat.id,
+                type=enums.ChatType.GROUP,
+                raw=chat,
+                client=client,
+            )
+        if isinstance(chat, raw.types.ChatForbidden):
+            return Chat(
+                id=-chat.id,
+                type=enums.ChatType.GROUP,
+                title=chat.title,
+                raw=chat,
+                client=client,
+            )
+        if isinstance(chat, raw.types.Chat):
+            return Chat(
+                id=-chat.id,
+                type=enums.ChatType.GROUP,
+                title=chat.title,
+                is_creator=chat.creator,
+                is_admin=True if chat.admin_rights else None,
+                is_deactivated=chat.deactivated,
+                usernames=None,
+                photo=types.ChatPhoto._parse(
+                    client,
+                    chat.photo,
+                    -chat.id,
+                    0,
+                ),
+                permissions=types.ChatPermissions._parse(
+                    chat.default_banned_rights,
+                ),
+                members_count=chat.participants_count,
+                dc_id=getattr(chat.photo, "dc_id", None),
+                has_protected_content=chat.noforwards,
+                raw=chat,
+                client=client,
+            )
+        assert_never(chat)
 
     @staticmethod
-    def _parse_channel_chat(client, channel: raw.types.Channel) -> "Chat":
-        peer_id = utils.get_channel_id(channel.id)
-        restriction_reason = getattr(channel, "restriction_reason", [])
-        usernames = getattr(channel, "usernames", [])
-        admin_rights = getattr(channel, "admin_rights", None)
-
-        return Chat(
-            id=peer_id,
-            type=enums.ChatType.SUPERGROUP
-            if getattr(channel, "megagroup", None)
-            else enums.ChatType.CHANNEL,
-            is_forum=getattr(channel, "forum", None)
-            if getattr(channel, "megagroup", None)
-            else None,
-            is_verified=getattr(channel, "verified", None),
-            is_restricted=getattr(channel, "restricted", None),
-            is_creator=getattr(channel, "creator", None),
-            is_admin=True if admin_rights else None,
-            is_scam=getattr(channel, "scam", None),
-            is_fake=getattr(channel, "fake", None),
-            is_stories_hidden=getattr(channel, "stories_hidden", None),
-            is_stories_unavailable=getattr(channel, "stories_unavailable", None),
-            title=channel.title,
-            username=getattr(channel, "username", None),
-            usernames=types.List([types.Username._parse(r) for r in usernames]) or None,
-            photo=types.ChatPhoto._parse(
-                client,
-                getattr(channel, "photo", None),
-                peer_id,
-                getattr(channel, "access_hash", 0),
-            ),
-            restrictions=types.List(
-                [types.Restriction._parse(r) for r in restriction_reason],
+    def _parse_channel_chat(
+        client, channel: raw.types.Channel | raw.types.ChannelForbidden | None,
+    ) -> "Chat | None":
+        if channel is None:
+            return None
+        if isinstance(channel, raw.types.ChannelForbidden):
+            return Chat(
+                id=get_channel_id(channel.id),
+                type=enums.ChatType.SUPERGROUP
+                if channel.megagroup
+                else enums.ChatType.CHANNEL,
+                title=channel.title,
+                raw=channel,
+                client=client,
             )
-            or None,
-            permissions=types.ChatPermissions._parse(
-                getattr(channel, "default_banned_rights", None),
-            ),
-            members_count=getattr(channel, "participants_count", None),
-            dc_id=getattr(getattr(channel, "photo", None), "dc_id", None),
-            has_protected_content=getattr(channel, "noforwards", None),
-            level=getattr(channel, "level", None),
-            reply_color=types.ChatColor._parse(getattr(channel, "color", None)),
-            profile_color=types.ChatColor._parse(
-                getattr(channel, "profile_color", None),
-            ),
-            raw=channel,
-            client=client,
-        )
+        if isinstance(channel, raw.types.Channel):
+            return Chat(
+                id=utils.get_channel_id(channel.id),
+                type=enums.ChatType.SUPERGROUP
+                if channel.megagroup
+                else enums.ChatType.CHANNEL,
+                is_forum=channel.forum if channel.megagroup else None,
+                is_verified=channel.verified,
+                is_restricted=channel.restricted,
+                is_creator=channel.creator,
+                is_admin=True if channel.admin_rights else None,
+                is_scam=channel.scam,
+                is_fake=channel.fake,
+                is_stories_hidden=channel.stories_hidden,
+                is_stories_unavailable=channel.stories_unavailable,
+                title=channel.title,
+                username=channel.username,
+                usernames=types.List(
+                    [types.Username._parse(r) for r in channel.usernames],
+                )
+                or None,
+                photo=types.ChatPhoto._parse(
+                    client,
+                    channel.photo,
+                    get_channel_id(channel.id),
+                    channel.access_hash,
+                ),
+                restrictions=types.List(
+                    [types.Restriction._parse(r) for r in channel.restriction_reason],
+                )
+                or None,
+                permissions=types.ChatPermissions._parse(channel.default_banned_rights),
+                members_count=channel.participants_count,
+                dc_id=getattr(channel.photo, "dc_id", None),
+                has_protected_content=channel.noforwards,
+                level=channel.level,
+                reply_color=types.ChatColor._parse(channel.color),
+                profile_color=types.ChatColor._parse(
+                    channel.profile_color,
+                ),
+                raw=channel,
+                client=client,
+            )
+        assert_never(channel)
 
     @staticmethod
     def _parse(
         client: "pyrogram.Client",
         message: raw.types.Message | raw.types.MessageService | raw.types.MessageEmpty,
         is_chat: bool = True,
-    ) -> "Chat":
+    ) -> "Chat | None":
         from_id: raw.base.Peer | None = None
-        if not isinstance(message, raw.types.MessageEmpty):
-            from_id = message.from_id
+        peer_id: raw.base.Peer | None = None
 
-        peer_id = message.peer_id
+        if message is None:
+            return None
+        if isinstance(message, raw.types.MessageEmpty):
+            peer_id = message.peer_id
+        elif isinstance(message, raw.types.MessageService) or isinstance(
+            message, raw.types.Message,
+        ):
+            peer_id = message.peer_id
+            from_id = message.from_id
+        else:
+            assert_never(message)
+
         chat_id = (peer_id or from_id) if is_chat else (from_id or peer_id)
         entity = client.entity_cache.get_by_peer_id(peer=chat_id)
         return Chat._parse_chat(client, entity)
@@ -604,23 +656,32 @@ class Chat(Object):
     @staticmethod
     def _parse_chat(
         client,
-        chat: raw.types.Chat | raw.types.User | raw.types.Channel | None,
+        chat: raw.base.Chat | raw.base.User | None,
     ) -> "Chat | None":
         if chat is None:
             return None
-        if isinstance(chat, raw.types.Chat):
+        if isinstance(
+            chat, raw.types.Chat | raw.types.ChatEmpty | raw.types.ChatForbidden,
+        ):
             return Chat._parse_chat_chat(client, chat)
-        if isinstance(chat, raw.types.User):
+        if isinstance(chat, raw.types.User | raw.types.UserEmpty):
             return Chat._parse_user_chat(client, chat)
-        return Chat._parse_channel_chat(client, chat)
+        if isinstance(chat, raw.types.Channel | raw.types.ChannelForbidden):
+            return Chat._parse_channel_chat(client, chat)
+        assert_never(chat)
 
     @property
-    def full_name(self) -> str:
-        return (
-            " ".join(filter(None, [self.first_name, self.last_name]))
-            or self.title
-            or None
-        )
+    def full_name(self) -> str | None:
+        if self.title:
+            return self.title
+
+        if self.first_name and self.last_name:
+            return f"{self.first_name} {self.last_name}"
+
+        if self.first_name:
+            return self.first_name
+
+        return None
 
     async def archive(self):
         """Bound method *archive* of :obj:`~pyrogram.types.Chat`.

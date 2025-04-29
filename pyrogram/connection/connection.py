@@ -18,8 +18,8 @@
 
 import asyncio
 import logging
+from typing import Any
 
-from ..session.internals import DataCenter
 from .transport import TCP, TCPAbridged
 
 log = logging.getLogger(__name__)
@@ -30,53 +30,102 @@ class Connection:
 
     def __init__(
         self,
-        dc_id: int,
-        test_mode: bool,
+        address: tuple[str, int],
         ipv6: bool,
-        proxy: dict,
-        media: bool = False,
+        proxy: dict[str, Any] | None,
         protocol_factory: type[TCP] = TCPAbridged,
     ) -> None:
-        self.dc_id = dc_id
-        self.test_mode = test_mode
+        self.hostname, self.port = address
         self.ipv6 = ipv6
         self.proxy = proxy
-        self.media = media
         self.protocol_factory = protocol_factory
-
-        self.address = DataCenter(dc_id, test_mode, ipv6, media)
         self.protocol: TCP | None = None
 
-    async def connect(self) -> None:
-        for i in range(Connection.MAX_CONNECTION_ATTEMPTS):
-            self.protocol = self.protocol_factory(ipv6=self.ipv6, proxy=self.proxy)
+        log.debug(
+            "Initialized connection | host=%s port=%d ipv6=%s proxy=%s protocol=%s",
+            self.hostname,
+            self.port,
+            self.ipv6,
+            self.proxy,
+            self.protocol_factory.__name__,
+        )
 
+    async def connect(self) -> None:
+        for attempt in range(Connection.MAX_CONNECTION_ATTEMPTS):
+            self.protocol = self.protocol_factory(ipv6=self.ipv6, proxy=self.proxy)
             try:
-                log.info("Connecting...")
-                await self.protocol.connect(self.address)
+                log.info(
+                    "Connecting (%d/%d) | host=%s port=%d ipv6=%s",
+                    attempt + 1,
+                    Connection.MAX_CONNECTION_ATTEMPTS,
+                    self.hostname,
+                    self.port,
+                    self.ipv6,
+                )
+                await self.protocol.connect((self.hostname, self.port))
             except OSError as e:
-                log.warning("Unable to connect due to network issues: %s", e)
+                log.warning(
+                    "Connection failed (%d/%d) | host=%s port=%d ipv6=%s error=%s",
+                    attempt + 1,
+                    Connection.MAX_CONNECTION_ATTEMPTS,
+                    self.hostname,
+                    self.port,
+                    self.ipv6,
+                    e,
+                )
                 await self.protocol.close()
                 await asyncio.sleep(1)
             else:
                 log.info(
-                    "Connected! %s DC%s%s - IPv%s",
-                    "Test" if self.test_mode else "Production",
-                    self.dc_id,
-                    " (media)" if self.media else "",
-                    "6" if self.ipv6 else "4",
+                    "Connection established | host=%s port=%d ipv6=%s protocol=%s",
+                    self.hostname,
+                    self.port,
+                    self.ipv6,
+                    self.protocol_factory.__name__,
                 )
                 break
         else:
-            log.warning("Connection failed! Trying again...")
-            raise ConnectionError
+            log.error(
+                "All connection attempts failed | host=%s port=%d ipv6=%s",
+                self.hostname,
+                self.port,
+                self.ipv6,
+            )
+            raise ConnectionError(f"Failed to connect to {self.hostname}:{self.port}")
 
     async def close(self) -> None:
-        await self.protocol.close()
-        log.info("Disconnected")
+        if self.protocol:
+            await self.protocol.close()
+            log.info(
+                "Connection closed | host=%s port=%d ipv6=%s",
+                self.hostname,
+                self.port,
+                self.ipv6,
+            )
 
     async def send(self, data: bytes) -> None:
+        if not self.protocol:
+            raise ConnectionError("No active connection")
+
+        log.debug(
+            "Sending %d bytes | host=%s port=%d ipv6=%s",
+            len(data),
+            self.hostname,
+            self.port,
+            self.ipv6,
+        )
         await self.protocol.send(data)
 
     async def recv(self) -> bytes | None:
-        return await self.protocol.recv()
+        if not self.protocol:
+            raise ConnectionError("No active connection")
+
+        data = await self.protocol.recv()
+        log.debug(
+            "Received %d bytes | host=%s port=%d ipv6=%s",
+            len(data) if data else 0,
+            self.hostname,
+            self.port,
+            self.ipv6,
+        )
+        return data

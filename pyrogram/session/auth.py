@@ -19,78 +19,120 @@
 import asyncio
 import logging
 import time
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 from hashlib import sha1
 from io import BytesIO
 from os import urandom
+from typing import (
+    Any,
+    overload,
+)
 
-import pyrogram
 from pyrogram import raw
 from pyrogram.connection import Connection
 from pyrogram.crypto import aes, prime, rsa
 from pyrogram.errors import SecurityCheckMismatch
 from pyrogram.raw.core import Int, Long, TLObject
 
-from .internals import MsgId
+from ..connection.transport import TCP
+from .internals import (
+    MsgId,
+)
 
 log = logging.getLogger(__name__)
 
 
-class Auth:
-    MAX_RETRIES = 5
+@overload
+async def invoke(
+    connection: Connection, data: raw.functions.ReqPqMulti,
+) -> raw.base.ResPQ: ...
 
-    def __init__(self, client: "pyrogram.Client", dc_id: int, test_mode: bool):
-        self.dc_id = dc_id
-        self.test_mode = test_mode
-        self.ipv6 = client.ipv6
-        self.proxy = client.proxy
-        self.connection_factory = client.connection_factory
-        self.protocol_factory = client.protocol_factory
 
-        self.connection: Connection | None = None
+@overload
+async def invoke(
+    connection: Connection, data: raw.functions.ReqDHParams,
+) -> raw.base.ServerDHParams: ...
 
-    @staticmethod
-    def pack(data: TLObject) -> bytes:
-        return bytes(8) + Long(MsgId()) + Int(len(data.write())) + data.write()
 
-    @staticmethod
-    def unpack(b: BytesIO):
-        b.seek(20)  # Skip auth_key_id (8), message_id (8) and message_length (4)
-        return TLObject.read(b)
+@overload
+async def invoke(
+    connection: Connection, data: raw.functions.SetClientDHParams,
+) -> raw.base.SetClientDHParamsAnswer: ...
 
-    async def invoke(self, data: TLObject):
-        data = self.pack(data)
-        await self.connection.send(data)
-        response = BytesIO(await self.connection.recv())
 
-        return self.unpack(response)
+async def invoke(connection: Connection, data: TLObject) -> TLObject:
+    outgoing_packet = bytes(8) + Long(MsgId()) + Int(len(data.write())) + data.write()
 
-    async def create(self):
-        """https://core.telegram.org/mtproto/auth_key
-        https://core.telegram.org/mtproto/samples-auth_key
-        """
-        retries_left = self.MAX_RETRIES
+    await connection.send(outgoing_packet)
+    incoming_packet = await connection.recv()
 
-        # The server may close the connection at any time, causing the auth key creation to fail.
-        # If that happens, just try again up to MAX_RETRIES times.
-        while True:
-            self.connection = self.connection_factory(
-                dc_id=self.dc_id,
-                test_mode=self.test_mode,
-                ipv6=self.ipv6,
-                proxy=self.proxy,
-                media=False,
-                protocol_factory=self.protocol_factory,
-            )
+    with BytesIO(incoming_packet) as buffer:
+        buffer.read(20)  # Skip auth_key_id (8), message_id (8) and message_length (4)
+        return TLObject.read(buffer)
 
-            try:
-                log.info("Start creating a new auth key on DC%s", self.dc_id)
 
-                await self.connection.connect()
+@asynccontextmanager
+async def new_connection(
+    connection_factory: type[Connection],
+    address: tuple[str, int],
+    ipv6: bool,
+    proxy: dict[str, Any] | None,
+    protocol_factory: type[TCP],
+) -> AsyncIterator[Connection]:
+    connection = connection_factory(
+        address=address,
+        ipv6=ipv6,
+        proxy=proxy,
+        protocol_factory=protocol_factory,
+    )
+    await connection.connect()
+
+    try:
+        yield connection
+    finally:
+        await connection.close()
+
+
+async def do_authentication(
+    connection_factory: type[Connection],
+    address: tuple[str, int],
+    ipv6: bool,
+    proxy: dict[str, Any] | None,
+    protocol_factory: type[TCP],
+    max_retries: int = 5,
+) -> bytes:
+    """https://core.telegram.org/mtproto/auth_key
+    https://core.telegram.org/mtproto/samples-auth_key
+    """
+    retries_left = max_retries
+
+    # The server may close the connection at any time, causing the auth key creation to fail.
+    # If that happens, just try again up to MAX_RETRIES times.
+    while True:
+        try:
+            async with new_connection(
+                connection_factory=connection_factory,
+                address=address,
+                ipv6=ipv6,
+                proxy=proxy,
+                protocol_factory=protocol_factory,
+            ) as connection:
+                log.info(
+                    "Start creating a new auth key on %s:%d", address[0], address[1],
+                )
+
+                await connection.connect()
 
                 # Step 1; Step 2
-                nonce = int.from_bytes(urandom(16), "little", signed=True)
+                nonce = int.from_bytes(urandom(16), byteorder="little", signed=True)
                 log.debug("Send req_pq: %s", nonce)
-                res_pq = await self.invoke(raw.functions.ReqPqMulti(nonce=nonce))
+
+                res_pq = await invoke(connection, raw.functions.ReqPqMulti(nonce=nonce))
+                SecurityCheckMismatch.check(
+                    isinstance(res_pq, raw.types.ResPQ), "res_pq is raw.types.ResPQ",
+                )
+
                 log.debug("Got ResPq: %s", res_pq.server_nonce)
                 log.debug(
                     "Server public key fingerprints: %s",
@@ -107,7 +149,7 @@ class Auth:
                     raise Exception("Public key not found")
 
                 # Step 3
-                pq = int.from_bytes(res_pq.pq, "big")
+                pq = int.from_bytes(res_pq.pq, byteorder="big")
                 log.debug("Start PQ factorization: %s", pq)
                 start = time.time()
                 g = prime.decompose(pq)
@@ -121,12 +163,12 @@ class Auth:
 
                 # Step 4
                 server_nonce = res_pq.server_nonce
-                new_nonce = int.from_bytes(urandom(32), "little", signed=True)
+                new_nonce = int.from_bytes(urandom(32), byteorder="little", signed=True)
 
                 data = raw.types.PQInnerData(
                     pq=res_pq.pq,
-                    p=p.to_bytes(4, "big"),
-                    q=q.to_bytes(4, "big"),
+                    p=p.to_bytes(length=4, byteorder="big"),
+                    q=q.to_bytes(length=4, byteorder="big"),
                     nonce=nonce,
                     server_nonce=server_nonce,
                     new_nonce=new_nonce,
@@ -141,21 +183,30 @@ class Auth:
 
                 # Step 5. TODO: Handle "server_DH_params_fail". Code assumes response is ok
                 log.debug("Send req_DH_params")
-                server_dh_params = await self.invoke(
+                server_dh_params = await invoke(
+                    connection,
                     raw.functions.ReqDHParams(
                         nonce=nonce,
                         server_nonce=server_nonce,
-                        p=p.to_bytes(4, "big"),
-                        q=q.to_bytes(4, "big"),
+                        p=p.to_bytes(length=4, byteorder="big"),
+                        q=q.to_bytes(length=4, byteorder="big"),
                         public_key_fingerprint=public_key_fingerprint,
                         encrypted_data=encrypted_data,
                     ),
                 )
+                SecurityCheckMismatch.check(
+                    isinstance(server_dh_params, raw.types.ServerDHParamsOk),
+                    "server_dh_params is raw.types.ServerDHParamsOk",
+                )
 
                 encrypted_answer = server_dh_params.encrypted_answer
 
-                server_nonce = server_nonce.to_bytes(16, "little", signed=True)
-                new_nonce = new_nonce.to_bytes(32, "little", signed=True)
+                server_nonce = server_nonce.to_bytes(
+                    length=16, byteorder="little", signed=True,
+                )
+                new_nonce = new_nonce.to_bytes(
+                    length=32, byteorder="little", signed=True,
+                )
 
                 tmp_aes_key = (
                     sha1(new_nonce + server_nonce).digest()
@@ -168,7 +219,9 @@ class Auth:
                     + new_nonce[:4]
                 )
 
-                server_nonce = int.from_bytes(server_nonce, "little", signed=True)
+                server_nonce = int.from_bytes(
+                    server_nonce, byteorder="little", signed=True,
+                )
 
                 answer_with_hash = aes.ige256_decrypt(
                     encrypted_answer,
@@ -210,12 +263,17 @@ class Auth:
                 )
 
                 log.debug("Send set_client_DH_params")
-                set_client_dh_params_answer = await self.invoke(
+                set_client_dh_params_answer = await invoke(
+                    connection,
                     raw.functions.SetClientDHParams(
                         nonce=nonce,
                         server_nonce=server_nonce,
                         encrypted_data=encrypted_data,
                     ),
+                )
+                SecurityCheckMismatch.check(
+                    isinstance(set_client_dh_params_answer, raw.types.DhGenOk),
+                    "set_client_dh_params_answer is raw.types.DhGenOk",
                 )
 
                 # TODO: Handle "auth_key_aux_hash" if the previous step fails
@@ -306,17 +364,14 @@ class Auth:
                     "Done auth key exchange: %s",
                     set_client_dh_params_answer.__class__.__name__,
                 )
-            except Exception as e:
-                log.info("Retrying due to %s: %s", type(e).__name__, e)
+        except Exception as e:
+            log.info("Retrying due to %s: %s", type(e).__name__, e)
 
-                if retries_left:
-                    retries_left -= 1
-                else:
-                    raise e
-
-                await asyncio.sleep(1)
-                continue
+            if retries_left:
+                retries_left -= 1
             else:
-                return auth_key
-            finally:
-                await self.connection.close()
+                raise e
+
+            await asyncio.sleep(1)
+        else:
+            return auth_key

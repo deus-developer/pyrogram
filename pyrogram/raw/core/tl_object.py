@@ -26,6 +26,7 @@ from ..all import objects
 class TLObject:
     __slots__: list[str] = []
 
+    ID = 0x0
     QUALNAME = "Base"
 
     @classmethod

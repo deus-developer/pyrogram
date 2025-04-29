@@ -20,7 +20,6 @@ import pyrogram
 from pyrogram import raw
 from pyrogram.errors import AuthBytesInvalid
 from pyrogram.session import Session
-from pyrogram.session.auth import Auth
 
 
 async def get_session(client: "pyrogram.Client", dc_id: int) -> Session:
@@ -28,11 +27,13 @@ async def get_session(client: "pyrogram.Client", dc_id: int) -> Session:
         if client.media_sessions.get(dc_id):
             return client.media_sessions[dc_id]
 
+        auth_key = await client.do_new_authentication(dc_id=dc_id, media=True)
+
         session = client.media_sessions[dc_id] = Session(
             client,
             dc_id,
-            await Auth(client, dc_id, await client.storage.test_mode()).create(),
-            await client.storage.test_mode(),
+            auth_key,
+            client.test_mode,
             is_media=True,
         )
 

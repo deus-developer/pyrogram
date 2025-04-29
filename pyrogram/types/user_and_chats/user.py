@@ -29,7 +29,6 @@ from ..update import Update
 
 class Link(str):
     HTML = "<a href={url}>{text}</a>"
-    MARKDOWN = "[{text}]({url})"
 
     def __init__(self, url: str, text: str, style: enums.ParseMode):
         super().__init__()
@@ -41,9 +40,8 @@ class Link(str):
     @staticmethod
     def format(url: str, text: str, style: enums.ParseMode):
         if style == enums.ParseMode.MARKDOWN:
-            fmt = Link.MARKDOWN
-        else:
-            fmt = Link.HTML
+            raise NotImplementedError
+        fmt = Link.HTML
 
         return fmt.format(url=url, text=html.escape(text))
 

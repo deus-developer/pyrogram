@@ -52,7 +52,7 @@ from pyrogram.errors import (
 )
 from pyrogram.handlers.handler import Handler
 from pyrogram.methods import Methods
-from pyrogram.session import Auth, Session
+from pyrogram.session import Session, do_authentication
 from pyrogram.storage import FileStorage, MemoryStorage, Storage
 from pyrogram.types import TermsOfService, User
 from pyrogram.utils import ainput
@@ -64,7 +64,10 @@ from .entity_cache import EntityCache
 from .file_id import FileId, FileType, ThumbnailSource
 from .mime_types import mime_types
 from .parser import Parser
-from .session.internals import MsgId
+from .session.internals import (
+    DataCenter,
+    MsgId,
+)
 
 log = logging.getLogger(__name__)
 
@@ -753,6 +756,16 @@ class Client(Methods):
         elif isinstance(updates, raw.types.UpdatesTooLong):
             log.info(updates)
 
+    async def do_new_authentication(self, dc_id: int, media: bool = False) -> bytes:
+        return await do_authentication(
+            connection_factory=self.connection_factory,
+            address=DataCenter(dc_id, self.test_mode, self.ipv6, media),
+            ipv6=self.ipv6,
+            proxy=self.proxy,
+            protocol_factory=self.protocol_factory,
+            max_retries=5,
+        )
+
     async def load_session(self):
         await self.storage.open()
 
@@ -774,17 +787,15 @@ class Client(Methods):
 
             await self.storage.api_id(self.api_id)
 
-            await self.storage.dc_id(2)
+            dc_id = 2
+            await self.storage.dc_id(dc_id)
             await self.storage.date(0)
 
             await self.storage.test_mode(self.test_mode)
-            await self.storage.auth_key(
-                await Auth(
-                    self,
-                    await self.storage.dc_id(),
-                    await self.storage.test_mode(),
-                ).create(),
-            )
+
+            auth_key = await self.do_new_authentication(dc_id=dc_id)
+
+            await self.storage.auth_key(auth_key)
             await self.storage.user_id(None)
             await self.storage.is_bot(None)
         # Needed for migration from storage v2 to v3
@@ -1061,10 +1072,13 @@ class Client(Methods):
             try:
                 session = self.media_sessions.get(dc_id)
                 if not session:
+                    auth_key = await self.do_new_authentication(
+                        dc_id=dc_id,
+                    )
                     session = self.media_sessions[dc_id] = Session(
                         self,
                         dc_id,
-                        await Auth(self, dc_id, await self.storage.test_mode()).create()
+                        auth_key
                         if dc_id != await self.storage.dc_id()
                         else await self.storage.auth_key(),
                         await self.storage.test_mode(),
@@ -1141,11 +1155,7 @@ class Client(Methods):
                     cdn_session = Session(
                         self,
                         r.dc_id,
-                        await Auth(
-                            self,
-                            r.dc_id,
-                            await self.storage.test_mode(),
-                        ).create(),
+                        await self.do_new_authentication(dc_id=r.dc_id),
                         await self.storage.test_mode(),
                         is_media=True,
                         is_cdn=True,

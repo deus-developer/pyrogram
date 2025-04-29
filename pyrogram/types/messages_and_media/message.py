@@ -650,10 +650,6 @@ class Message(Object, Update):
                 client=client,
             )
 
-        # from_id = utils.get_raw_peer_id(message.from_id)
-        # peer_id = utils.get_raw_peer_id(message.peer_id)
-        # user_id = from_id or peer_id
-
         from_entity, peer_entity = await client.gather_resolve_peers_cached(
             message.from_id,
             message.peer_id,

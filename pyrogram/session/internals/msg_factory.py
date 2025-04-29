@@ -23,7 +23,9 @@ from pyrogram.raw.types import HttpWait, MsgsAck
 from .msg_id import MsgId
 from .seq_no import SeqNo
 
-not_content_related = (Ping, HttpWait, MsgsAck, MsgContainer)
+not_content_related = frozenset(
+    tl_object.ID for tl_object in (Ping, HttpWait, MsgsAck, MsgContainer)
+)
 
 
 class MsgFactory:
@@ -34,6 +36,6 @@ class MsgFactory:
         return Message(
             body,
             MsgId(),
-            self.seq_no(not isinstance(body, not_content_related)),
+            self.seq_no(body.ID not in not_content_related),
             len(body),
         )

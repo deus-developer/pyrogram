@@ -21,7 +21,7 @@ import logging
 import pyrogram
 from pyrogram import raw, types
 from pyrogram.errors import NetworkMigrate, PhoneMigrate
-from pyrogram.session import Auth, Session
+from pyrogram.session import Session
 
 log = logging.getLogger(__name__)
 
@@ -110,18 +110,17 @@ class SendCode:
             except (PhoneMigrate, NetworkMigrate) as e:
                 await self.session.stop()
 
-                await self.storage.dc_id(e.value)
-                await self.storage.auth_key(
-                    await Auth(
-                        self,
-                        await self.storage.dc_id(),
-                        await self.storage.test_mode(),
-                    ).create(),
+                auth_key = await self.do_new_authentication(
+                    dc_id=e.value,
                 )
+
+                await self.storage.dc_id(e.value)
+                await self.storage.auth_key(auth_key)
+
                 self.session = Session(
                     self,
-                    await self.storage.dc_id(),
-                    await self.storage.auth_key(),
+                    e.value,
+                    auth_key,
                     await self.storage.test_mode(),
                 )
 
