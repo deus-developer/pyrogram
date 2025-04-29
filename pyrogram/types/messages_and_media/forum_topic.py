@@ -19,7 +19,8 @@
 from datetime import datetime
 
 import pyrogram
-from pyrogram import types, raw, utils
+from pyrogram import raw, types, utils
+
 from ..object import Object
 
 
@@ -94,7 +95,7 @@ class ForumTopic(Object):
         is_pinned: bool = None,
         is_short: bool = None,
         is_hidden: bool = None,
-        is_deleted: bool = None
+        is_deleted: bool = None,
     ):
         super().__init__()
 
@@ -116,7 +117,13 @@ class ForumTopic(Object):
         self.is_deleted = is_deleted
 
     @staticmethod
-    def _parse(client: "pyrogram.Client", forum_topic: "raw.types.ForumTopic", messages: dict = {},  users: dict = {}, chats: dict = {}) -> "ForumTopic":
+    def _parse(
+        client: "pyrogram.Client",
+        forum_topic: "raw.types.ForumTopic",
+        messages: dict = {},
+        users: dict = {},
+        chats: dict = {},
+    ) -> "ForumTopic":
         if isinstance(forum_topic, raw.types.ForumTopicDeleted):
             return ForumTopic(id=forum_topic.id, is_deleted=True)
 
@@ -136,7 +143,9 @@ class ForumTopic(Object):
             id=forum_topic.id,
             title=forum_topic.title,
             date=utils.timestamp_to_datetime(forum_topic.date),
-            icon_color=format(forum_topic.icon_color, "x") if getattr(forum_topic, "icon_color", None) else None,
+            icon_color=format(forum_topic.icon_color, "x")
+            if getattr(forum_topic, "icon_color", None)
+            else None,
             icon_emoji_id=getattr(forum_topic, "icon_emoji_id", None),
             creator=creator,
             top_message=messages.get(getattr(forum_topic, "top_message", None)),

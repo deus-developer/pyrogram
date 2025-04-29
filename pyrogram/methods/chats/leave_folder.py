@@ -25,7 +25,7 @@ class LeaveFolder:
     async def leave_folder(
         self: "pyrogram.Client",
         link: str,
-        keep_chats: bool = True
+        keep_chats: bool = True,
     ) -> bool:
         """Leave a folder by its invite link.
 
@@ -53,7 +53,10 @@ class LeaveFolder:
                 # leave folder
                 app.leave_folder("t.me/addlist/ebXQ0Q0I3RnGQ")
         """
-        match = re.match(r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/(?:addlist/|\+))([\w-]+)$", link)
+        match = re.match(
+            r"^(?:https?://)?(?:www\.)?(?:t(?:elegram)?\.(?:org|me|dog)/(?:addlist/|\+))([\w-]+)$",
+            link,
+        )
 
         if match:
             slug = match.group(1)
@@ -62,22 +65,18 @@ class LeaveFolder:
         else:
             raise ValueError("Invalid folder invite link")
 
-        r = await self.invoke(
-            raw.functions.chatlists.CheckChatlistInvite(
-                slug=slug
-            )
-        )
+        r = await self.invoke(raw.functions.chatlists.CheckChatlistInvite(slug=slug))
 
         await self.invoke(
             raw.functions.chatlists.LeaveChatlist(
-                chatlist=raw.types.InputChatlistDialogFilter(
-                    filter_id=r.filter_id
-                ),
+                chatlist=raw.types.InputChatlistDialogFilter(filter_id=r.filter_id),
                 peers=[
                     await self.resolve_peer(utils.get_peer_id(id))
                     for id in r.already_peers
-                ] if not keep_chats else [],
-            )
+                ]
+                if not keep_chats
+                else [],
+            ),
         )
 
         return True

@@ -16,7 +16,8 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Callable, Optional, Union
+from collections.abc import Callable
+from typing import Union
 
 import pyrogram
 from pyrogram.filters import Filter
@@ -25,7 +26,7 @@ from pyrogram.filters import Filter
 class OnUserStatus:
     def on_user_status(
         self: Union["OnUserStatus", Filter, None] = None,
-        filters: Optional[Filter] = None,
+        filters: Filter | None = None,
         group: int = 0,
     ) -> Callable:
         """Decorator for handling user status updates.
@@ -42,7 +43,10 @@ class OnUserStatus:
 
         def decorator(func: Callable) -> Callable:
             if isinstance(self, pyrogram.Client):
-                self.add_handler(pyrogram.handlers.UserStatusHandler(func, filters), group)
+                self.add_handler(
+                    pyrogram.handlers.UserStatusHandler(func, filters),
+                    group,
+                )
             elif isinstance(self, Filter) or self is None:
                 if not hasattr(func, "handlers"):
                     func.handlers = []
@@ -50,8 +54,8 @@ class OnUserStatus:
                 func.handlers.append(
                     (
                         pyrogram.handlers.UserStatusHandler(func, self),
-                        group if filters is None else filters
-                    )
+                        group if filters is None else filters,
+                    ),
                 )
 
             return func

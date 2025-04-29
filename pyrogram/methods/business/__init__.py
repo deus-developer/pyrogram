@@ -19,7 +19,5 @@
 from .get_business_connection import GetBusinessConnection
 
 
-class Business(
-    GetBusinessConnection
-):
+class Business(GetBusinessConnection):
     pass

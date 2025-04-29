@@ -17,13 +17,11 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from typing import List
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
-from pyrogram.errors import PhoneMigrate, NetworkMigrate
-from pyrogram.session import Session, Auth
+from pyrogram import raw, types
+from pyrogram.errors import NetworkMigrate, PhoneMigrate
+from pyrogram.session import Auth, Session
 
 log = logging.getLogger(__name__)
 
@@ -37,7 +35,7 @@ class SendCode:
         allow_app_hash: bool = None,
         allow_missed_call: bool = None,
         allow_firebase: bool = None,
-        logout_tokens: List[bytes] = None,
+        logout_tokens: list[bytes] = None,
         token: str = None,
         app_sandbox: bool = None,
     ) -> "types.SentCode":
@@ -105,9 +103,9 @@ class SendCode:
                             allow_firebase=allow_firebase,
                             logout_tokens=logout_tokens,
                             token=token,
-                            app_sandbox=app_sandbox
-                        )
-                    )
+                            app_sandbox=app_sandbox,
+                        ),
+                    ),
                 )
             except (PhoneMigrate, NetworkMigrate) as e:
                 await self.session.stop()
@@ -115,13 +113,16 @@ class SendCode:
                 await self.storage.dc_id(e.value)
                 await self.storage.auth_key(
                     await Auth(
-                        self, await self.storage.dc_id(),
-                        await self.storage.test_mode()
-                    ).create()
+                        self,
+                        await self.storage.dc_id(),
+                        await self.storage.test_mode(),
+                    ).create(),
                 )
                 self.session = Session(
-                    self, await self.storage.dc_id(),
-                    await self.storage.auth_key(), await self.storage.test_mode()
+                    self,
+                    await self.storage.dc_id(),
+                    await self.storage.auth_key(),
+                    await self.storage.test_mode(),
                 )
 
                 await self.session.start()

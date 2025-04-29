@@ -16,20 +16,19 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from abc import ABC, abstractmethod
 import base64
 import struct
-from typing import List, Tuple
+from abc import ABC, abstractmethod
 
 
 class Storage(ABC):
-    """
-    Abstract class for storage engines.
+    """Abstract class for storage engines.
 
     Parameters:
         name (``str``):
             The name of the session.
     """
+
     OLD_SESSION_STRING_FORMAT = ">B?256sI?"
     OLD_SESSION_STRING_FORMAT_64 = ">B?256sQ?"
     SESSION_STRING_SIZE = 351
@@ -61,9 +60,8 @@ class Storage(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def update_peers(self, peers: List[Tuple[int, int, str, List[str], str]]):
-        """
-        Update the peers table with the provided information.
+    async def update_peers(self, peers: list[tuple[int, int, str, list[str], str]]):
+        """Update the peers table with the provided information.
 
         Parameters:
             peers (``List[Tuple[int, int, str, List[str], str]]``): A list of tuples containing the
@@ -78,7 +76,7 @@ class Storage(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def update_state(self, update_state: Tuple[int, int, int, int, int] = object):
+    async def update_state(self, update_state: tuple[int, int, int, int, int] = object):
         """Get or set the update state of the current session.
 
         Parameters:
@@ -205,7 +203,7 @@ class Storage(ABC):
             await self.test_mode(),
             await self.auth_key(),
             await self.user_id(),
-            await self.is_bot()
+            await self.is_bot(),
         )
 
         return base64.urlsafe_b64encode(packed).decode().rstrip("=")

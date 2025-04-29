@@ -22,11 +22,7 @@ from pyrogram.handlers.handler import Handler
 
 
 class AddHandler:
-    def add_handler(
-        self: "pyrogram.Client",
-        handler: "Handler",
-        group: int = 0
-    ):
+    def add_handler(self: "pyrogram.Client", handler: "Handler", group: int = 0):
         """Register an update handler.
 
         You can register multiple handlers, but at most one handler within a group will be used for a single update.
@@ -50,8 +46,10 @@ class AddHandler:
                 from pyrogram import Client
                 from pyrogram.handlers import MessageHandler
 
+
                 async def hello(client, message):
                     print(message)
+
 
                 app = Client("my_account")
 

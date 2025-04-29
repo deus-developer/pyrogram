@@ -18,7 +18,9 @@
 
 from .bot_command import BotCommand
 from .bot_command_scope import BotCommandScope
-from .bot_command_scope_all_chat_administrators import BotCommandScopeAllChatAdministrators
+from .bot_command_scope_all_chat_administrators import (
+    BotCommandScopeAllChatAdministrators,
+)
 from .bot_command_scope_all_group_chats import BotCommandScopeAllGroupChats
 from .bot_command_scope_all_private_chats import BotCommandScopeAllPrivateChats
 from .bot_command_scope_chat import BotCommandScopeChat
@@ -52,22 +54,6 @@ from .shipping_address import ShippingAddress
 from .web_app_info import WebAppInfo
 
 __all__ = [
-    "CallbackGame",
-    "CallbackQuery",
-    "ForceReply",
-    "GameHighScore",
-    "InlineKeyboardButton",
-    "InlineKeyboardMarkup",
-    "KeyboardButton",
-    "ReplyKeyboardMarkup",
-    "ReplyKeyboardRemove",
-    "RequestChannelInfo",
-    "RequestChatInfo",
-    "RequestUserInfo",
-    "RequestPollInfo",
-    "RequestedChats",
-    "LabeledPrice",
-    "LoginUrl",
     "BotCommand",
     "BotCommandScope",
     "BotCommandScopeAllChatAdministrators",
@@ -77,13 +63,29 @@ __all__ = [
     "BotCommandScopeChatAdministrators",
     "BotCommandScopeChatMember",
     "BotCommandScopeDefault",
-    "WebAppInfo",
+    "CallbackGame",
+    "CallbackQuery",
+    "ForceReply",
+    "GameHighScore",
+    "InlineKeyboardButton",
+    "InlineKeyboardMarkup",
+    "KeyboardButton",
+    "LabeledPrice",
+    "LoginUrl",
     "MenuButton",
     "MenuButtonCommands",
+    "MenuButtonDefault",
     "MenuButtonWebApp",
     "OrderInfo",
     "PreCheckoutQuery",
-    "MenuButtonDefault",
+    "ReplyKeyboardMarkup",
+    "ReplyKeyboardRemove",
+    "RequestChannelInfo",
+    "RequestChatInfo",
+    "RequestPollInfo",
+    "RequestUserInfo",
+    "RequestedChats",
     "SentWebAppMessage",
-    "ShippingAddress"
+    "ShippingAddress",
+    "WebAppInfo",
 ]

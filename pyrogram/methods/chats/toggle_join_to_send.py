@@ -16,18 +16,16 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import errors
+from pyrogram import errors, raw
 
 
 class ToggleJoinToSend:
     async def toggle_join_to_send(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        enabled: bool = False
+        chat_id: int | str,
+        enabled: bool = False,
     ) -> bool:
         """Enable or disable guest users' ability to send messages in a supergroup.
 
@@ -56,8 +54,8 @@ class ToggleJoinToSend:
             r = await self.invoke(
                 raw.functions.channels.ToggleJoinToSend(
                     channel=await self.resolve_peer(chat_id),
-                    enabled=enabled
-                )
+                    enabled=enabled,
+                ),
             )
 
             return bool(r)

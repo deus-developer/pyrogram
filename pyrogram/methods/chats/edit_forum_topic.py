@@ -16,21 +16,20 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
+
 import pyrogram
 from pyrogram import raw
-from pyrogram import types
-from typing import Union
 
 
 class EditForumTopic:
     async def edit_forum_topic(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         topic_id: int,
         title: str = None,
         icon_emoji_id: int = None,
         closed: bool = None,
-        hidden: bool = None
+        hidden: bool = None,
     ) -> bool:
         """Edit a forum topic.
 
@@ -61,7 +60,7 @@ class EditForumTopic:
         Example:
             .. code-block:: python
 
-                await app.edit_forum_topic(chat_id,topic_id,"New Topic Title")
+                await app.edit_forum_topic(chat_id, topic_id, "New Topic Title")
         """
         await self.invoke(
             raw.functions.channels.EditForumTopic(
@@ -70,8 +69,8 @@ class EditForumTopic:
                 title=title,
                 icon_emoji_id=icon_emoji_id,
                 closed=closed,
-                hidden=hidden
-            )
+                hidden=hidden,
+            ),
         )
 
         return True

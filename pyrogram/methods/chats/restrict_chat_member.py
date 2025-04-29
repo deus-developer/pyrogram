@@ -17,20 +17,18 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Union
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
+from pyrogram import raw, types, utils
 
 
 class RestrictChatMember:
     async def restrict_chat_member(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        user_id: Union[int, str],
+        chat_id: int | str,
+        user_id: int | str,
         permissions: "types.ChatPermissions",
-        until_date: datetime = utils.zero_datetime()
+        until_date: datetime = utils.zero_datetime(),
     ) -> "types.Chat":
         """Restrict a user in a supergroup.
 
@@ -68,12 +66,17 @@ class RestrictChatMember:
                 await app.restrict_chat_member(chat_id, user_id, ChatPermissions())
 
                 # Chat member muted for 24h
-                await app.restrict_chat_member(chat_id, user_id, ChatPermissions(),
-                    datetime.now() + timedelta(days=1))
+                await app.restrict_chat_member(
+                    chat_id,
+                    user_id,
+                    ChatPermissions(),
+                    datetime.now() + timedelta(days=1),
+                )
 
                 # Chat member can only send text messages
-                await app.restrict_chat_member(chat_id, user_id,
-                    ChatPermissions(can_send_messages=True))
+                await app.restrict_chat_member(
+                    chat_id, user_id, ChatPermissions(can_send_messages=True)
+                )
         """
         r = await self.invoke(
             raw.functions.channels.EditBanned(
@@ -93,8 +96,8 @@ class RestrictChatMember:
                     invite_users=not permissions.can_invite_users,
                     pin_messages=not permissions.can_pin_messages,
                     manage_topics=not permissions.can_manage_topics,
-                )
-            )
+                ),
+            ),
         )
 
         return types.Chat._parse_chat(self, r.chats[0])

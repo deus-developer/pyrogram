@@ -17,11 +17,11 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Dict, Union
+from typing import Union
 
 import pyrogram
-from pyrogram import raw, utils
-from pyrogram import types
+from pyrogram import raw, types, utils
+
 from ..object import Object
 from ..update import Update
 
@@ -62,7 +62,7 @@ class ChatMemberUpdated(Object, Update):
         old_chat_member: "types.ChatMember",
         new_chat_member: "types.ChatMember",
         invite_link: "types.ChatInviteLink" = None,
-        via_join_request: bool = None
+        via_join_request: bool = None,
     ):
         super().__init__(client)
 
@@ -77,11 +77,14 @@ class ChatMemberUpdated(Object, Update):
     @staticmethod
     def _parse(
         client: "pyrogram.Client",
-        update: Union["raw.types.UpdateChatParticipant", "raw.types.UpdateChannelParticipant"],
-        users: Dict[int, "raw.types.User"],
-        chats: Dict[int, "raw.types.Chat"]
+        update: Union[
+            "raw.types.UpdateChatParticipant",
+            "raw.types.UpdateChannelParticipant",
+        ],
+        users: dict[int, "raw.types.User"],
+        chats: dict[int, "raw.types.Chat"],
     ) -> "ChatMemberUpdated":
-        chat_id = getattr(update, "chat_id", None) or getattr(update, "channel_id")
+        chat_id = getattr(update, "chat_id", None) or update.channel_id
 
         old_chat_member = None
         new_chat_member = None
@@ -89,10 +92,20 @@ class ChatMemberUpdated(Object, Update):
         via_join_request = None
 
         if update.prev_participant:
-            old_chat_member = types.ChatMember._parse(client, update.prev_participant, users, chats)
+            old_chat_member = types.ChatMember._parse(
+                client,
+                update.prev_participant,
+                users,
+                chats,
+            )
 
         if update.new_participant:
-            new_chat_member = types.ChatMember._parse(client, update.new_participant, users, chats)
+            new_chat_member = types.ChatMember._parse(
+                client,
+                update.new_participant,
+                users,
+                chats,
+            )
 
         if update.invite:
             invite_link = types.ChatInviteLink._parse(client, update.invite, users)
@@ -108,5 +121,5 @@ class ChatMemberUpdated(Object, Update):
             new_chat_member=new_chat_member,
             invite_link=invite_link,
             via_join_request=via_join_request,
-            client=client
+            client=client,
         )

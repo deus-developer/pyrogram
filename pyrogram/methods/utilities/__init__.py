@@ -34,6 +34,6 @@ class Utilities(
     Run,
     Start,
     Stop,
-    StopTransmission
+    StopTransmission,
 ):
     pass

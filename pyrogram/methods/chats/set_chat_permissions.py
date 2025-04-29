@@ -16,17 +16,15 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class SetChatPermissions:
     async def set_chat_permissions(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         permissions: "types.ChatPermissions",
     ) -> "types.Chat":
         """Set default chat permissions for all members.
@@ -58,12 +56,10 @@ class SetChatPermissions:
                 await app.set_chat_permissions(
                     chat_id,
                     ChatPermissions(
-                        can_send_messages=True,
-                        can_send_media_messages=True
-                    )
+                        can_send_messages=True, can_send_media_messages=True
+                    ),
                 )
         """
-
         r = await self.invoke(
             raw.functions.messages.EditChatDefaultBannedRights(
                 peer=await self.resolve_peer(chat_id),
@@ -81,8 +77,8 @@ class SetChatPermissions:
                     invite_users=not permissions.can_invite_users,
                     pin_messages=not permissions.can_pin_messages,
                     manage_topics=not permissions.can_manage_topics,
-                )
-            )
+                ),
+            ),
         )
 
         return types.Chat._parse_chat(self, r.chats[0])

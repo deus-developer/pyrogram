@@ -24,8 +24,7 @@ class Connect:
     async def connect(
         self: "pyrogram.Client",
     ) -> bool:
-        """
-        Connect the client to Telegram servers.
+        """Connect the client to Telegram servers.
 
         Returns:
             ``bool``: On success, in case the passed-in session is authorized, True is returned. Otherwise, in case
@@ -40,8 +39,10 @@ class Connect:
         await self.load_session()
 
         self.session = Session(
-            self, await self.storage.dc_id(),
-            await self.storage.auth_key(), await self.storage.test_mode()
+            self,
+            await self.storage.dc_id(),
+            await self.storage.auth_key(),
+            await self.storage.test_mode(),
         )
 
         await self.session.start()

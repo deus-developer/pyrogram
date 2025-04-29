@@ -19,15 +19,15 @@
 from typing import Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import enums
+from pyrogram import enums, raw
+
 
 class UpdateColor:
     async def update_color(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         color: Union["enums.ReplyColor", "enums.ProfileColor"],
-        background_emoji_id: int = None
+        background_emoji_id: int = None,
     ) -> bool:
         """Update color
 
@@ -60,8 +60,8 @@ class UpdateColor:
                 raw.functions.account.UpdateColor(
                     for_profile=isinstance(color, enums.ProfileColor),
                     color=color.value,
-                    background_emoji_id=background_emoji_id
-                )
+                    background_emoji_id=background_emoji_id,
+                ),
             )
         else:
             r = await self.invoke(
@@ -69,8 +69,8 @@ class UpdateColor:
                     channel=peer,
                     for_profile=isinstance(color, enums.ProfileColor),
                     color=color.value,
-                    background_emoji_id=background_emoji_id
-                )
+                    background_emoji_id=background_emoji_id,
+                ),
             )
 
         return bool(r)

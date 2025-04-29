@@ -16,18 +16,16 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union, List, Optional
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class GetSimilarChannels:
     async def get_similar_channels(
         self: "pyrogram.Client",
-        chat_id: Union[int, str]
-    ) -> Optional[List["types.Chat"]]:
+        chat_id: int | str,
+    ) -> list["types.Chat"] | None:
         """Get similar channels.
 
         .. include:: /_includes/usable-by/users.rst
@@ -49,11 +47,13 @@ class GetSimilarChannels:
 
         if isinstance(chat, raw.types.InputPeerChannel):
             r = await self.invoke(
-                raw.functions.channels.GetChannelRecommendations(
-                    channel=chat
-                )
+                raw.functions.channels.GetChannelRecommendations(channel=chat),
             )
 
-            return types.List([types.Chat._parse_channel_chat(self, chat) for chat in r.chats]) or None
-        else:
-            raise ValueError(f'The chat_id "{chat_id}" belongs to a user or chat')
+            return (
+                types.List(
+                    [types.Chat._parse_channel_chat(self, chat) for chat in r.chats],
+                )
+                or None
+            )
+        raise ValueError(f'The chat_id "{chat_id}" belongs to a user or chat')

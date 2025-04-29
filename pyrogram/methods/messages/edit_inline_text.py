@@ -19,9 +19,8 @@
 from typing import Optional
 
 import pyrogram
-from pyrogram import raw, enums
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import enums, raw, types, utils
+
 from .inline_session import get_session
 
 
@@ -32,7 +31,7 @@ class EditInlineText:
         text: str,
         parse_mode: Optional["enums.ParseMode"] = None,
         disable_web_page_preview: bool = None,
-        reply_markup: "types.InlineKeyboardMarkup" = None
+        reply_markup: "types.InlineKeyboardMarkup" = None,
     ) -> bool:
         """Edit the text of inline messages.
 
@@ -68,10 +67,9 @@ class EditInlineText:
 
                 # Take the same text message, remove the web page preview only
                 await app.edit_inline_text(
-                    inline_message_id, message.text,
-                    disable_web_page_preview=True)
+                    inline_message_id, message.text, disable_web_page_preview=True
+                )
         """
-
         unpacked = utils.unpack_inline_message_id(inline_message_id)
         dc_id = unpacked.dc_id
 
@@ -82,7 +80,7 @@ class EditInlineText:
                 id=unpacked,
                 no_webpage=disable_web_page_preview or None,
                 reply_markup=await reply_markup.write(self) if reply_markup else None,
-                **await self.parser.parse(text, parse_mode)
+                **await self.parser.parse(text, parse_mode),
             ),
-            sleep_threshold=self.sleep_threshold
+            sleep_threshold=self.sleep_threshold,
         )

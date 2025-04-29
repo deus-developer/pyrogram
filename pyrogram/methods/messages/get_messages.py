@@ -17,12 +17,11 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from typing import Union, List, Iterable
+from collections.abc import Iterable
+from typing import Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
-from pyrogram import utils
+from pyrogram import raw, types, utils
 
 log = logging.getLogger(__name__)
 
@@ -33,11 +32,11 @@ log = logging.getLogger(__name__)
 class GetMessages:
     async def get_messages(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        message_ids: Union[int, Iterable[int]] = None,
-        reply_to_message_ids: Union[int, Iterable[int]] = None,
-        replies: int = 1
-    ) -> Union["types.Message", List["types.Message"]]:
+        chat_id: int | str,
+        message_ids: int | Iterable[int] = None,
+        reply_to_message_ids: int | Iterable[int] = None,
+        replies: int = 1,
+    ) -> Union["types.Message", list["types.Message"]]:
         """Get one or more messages from a chat by using message identifiers.
 
         You can retrieve up to 200 messages at once.
@@ -90,13 +89,17 @@ class GetMessages:
             ValueError: In case of invalid arguments.
         """
         ids, ids_type = (
-            (message_ids, raw.types.InputMessageID) if message_ids
-            else (reply_to_message_ids, raw.types.InputMessageReplyTo) if reply_to_message_ids
+            (message_ids, raw.types.InputMessageID)
+            if message_ids
+            else (reply_to_message_ids, raw.types.InputMessageReplyTo)
+            if reply_to_message_ids
             else (None, None)
         )
 
         if ids is None:
-            raise ValueError("No argument supplied. Either pass message_ids or reply_to_message_ids")
+            raise ValueError(
+                "No argument supplied. Either pass message_ids or reply_to_message_ids",
+            )
 
         peer = await self.resolve_peer(chat_id)
 
@@ -120,10 +123,10 @@ class GetMessages:
 
     async def get_callback_query_message(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         message_id: int,
         query_id: int,
-        replies: int = 1
+        replies: int = 1,
     ) -> types.Message | None:
         peer = await self.resolve_peer(chat_id)
 
@@ -131,10 +134,7 @@ class GetMessages:
             replies = (1 << 31) - 1
 
         message_ids: list[raw.base.InputMessage] = [
-            raw.types.InputMessageCallbackQuery(
-                id=message_id,
-                query_id=query_id
-            )
+            raw.types.InputMessageCallbackQuery(id=message_id, query_id=query_id),
         ]
 
         if isinstance(peer, raw.types.InputPeerChannel):

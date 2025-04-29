@@ -17,32 +17,32 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import Union, List, Optional
+from typing import Optional
 
 import pyrogram
-from pyrogram import types, utils, raw, enums
+from pyrogram import enums, raw, types, utils
 
 
 class CopyMediaGroup:
     async def copy_media_group(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        from_chat_id: Union[int, str],
+        chat_id: int | str,
+        from_chat_id: int | str,
         message_id: int,
-        captions: Union[List[str], str] = None,
-        has_spoilers: Union[List[bool], bool] = None,
+        captions: list[str] | str = None,
+        has_spoilers: list[bool] | bool = None,
         disable_notification: bool = None,
         message_thread_id: int = None,
         reply_to_message_id: int = None,
-        reply_to_chat_id: Union[int, str] = None,
+        reply_to_chat_id: int | str = None,
         reply_to_story_id: int = None,
         quote_text: str = None,
         parse_mode: Optional["enums.ParseMode"] = None,
-        quote_entities: List["types.MessageEntity"] = None,
+        quote_entities: list["types.MessageEntity"] = None,
         quote_offset: int = None,
         schedule_date: datetime = None,
         show_above_text: bool = None,
-    ) -> List["types.Message"]:
+    ) -> list["types.Message"]:
         """Copy a media group by providing one of the message ids.
 
         .. include:: /_includes/usable-by/users-bots.rst
@@ -116,12 +116,22 @@ class CopyMediaGroup:
                 # Copy a media group
                 await app.copy_media_group(to_chat, from_chat, 123)
 
-                await app.copy_media_group(to_chat, from_chat, 123, captions="single caption")
+                await app.copy_media_group(
+                    to_chat, from_chat, 123, captions="single caption"
+                )
 
-                await app.copy_media_group(to_chat, from_chat, 123,
-                    captions=["caption 1", None, ""])
+                await app.copy_media_group(
+                    to_chat, from_chat, 123, captions=["caption 1", None, ""]
+                )
         """
-        quote_text, quote_entities = (await utils.parse_text_entities(self, quote_text, parse_mode, quote_entities)).values()
+        quote_text, quote_entities = (
+            await utils.parse_text_entities(
+                self,
+                quote_text,
+                parse_mode,
+                quote_entities,
+            )
+        ).values()
 
         media_group = await self.get_media_group(from_chat_id, message_id)
         multi_media = []
@@ -142,8 +152,7 @@ class CopyMediaGroup:
                 file_id=file_id,
                 has_spoiler=(
                     has_spoilers[i]
-                    if isinstance(has_spoilers, list)
-                    and i < len(has_spoilers)
+                    if isinstance(has_spoilers, list) and i < len(has_spoilers)
                     else (
                         has_spoilers
                         if isinstance(has_spoilers, bool)
@@ -156,11 +165,19 @@ class CopyMediaGroup:
                     media=media,
                     random_id=self.rnd_id(),
                     **await self.parser.parse(
-                        captions[i] if isinstance(captions, list) and i < len(captions) and captions[i] else
-                        captions if isinstance(captions, str) and i == 0 else
-                        message.caption if message.caption and message.caption != "None" and not type(
-                            captions) is str else "")
-                )
+                        captions[i]
+                        if isinstance(captions, list)
+                        and i < len(captions)
+                        and captions[i]
+                        else captions
+                        if isinstance(captions, str) and i == 0
+                        else message.caption
+                        if message.caption
+                        and message.caption != "None"
+                        and type(captions) is not str
+                        else "",
+                    ),
+                ),
             )
 
         r = await self.invoke(
@@ -171,28 +188,38 @@ class CopyMediaGroup:
                 reply_to=utils.get_reply_to(
                     reply_to_message_id=reply_to_message_id,
                     message_thread_id=message_thread_id,
-                    reply_to_peer=await self.resolve_peer(reply_to_chat_id) if reply_to_chat_id else None,
+                    reply_to_peer=await self.resolve_peer(reply_to_chat_id)
+                    if reply_to_chat_id
+                    else None,
                     reply_to_story_id=reply_to_story_id,
                     quote_text=quote_text,
                     quote_entities=quote_entities,
                     quote_offset=quote_offset,
                 ),
                 schedule_date=utils.datetime_to_timestamp(schedule_date),
-                invert_media=show_above_text
+                invert_media=show_above_text,
             ),
-            sleep_threshold=60
+            sleep_threshold=60,
         )
 
         return await utils.parse_messages(
             self,
             raw.types.messages.Messages(
-                messages=[m.message for m in filter(
-                    lambda u: isinstance(u, (raw.types.UpdateNewMessage,
-                                             raw.types.UpdateNewChannelMessage,
-                                             raw.types.UpdateNewScheduledMessage)),
-                    r.updates
-                )],
+                messages=[
+                    m.message
+                    for m in filter(
+                        lambda u: isinstance(
+                            u,
+                            (
+                                raw.types.UpdateNewMessage,
+                                raw.types.UpdateNewChannelMessage,
+                                raw.types.UpdateNewScheduledMessage,
+                            ),
+                        ),
+                        r.updates,
+                    )
+                ],
                 users=r.users,
-                chats=r.chats
-            )
+                chats=r.chats,
+            ),
         )

@@ -17,11 +17,10 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
-from typing import List
 
 import pyrogram
-from pyrogram import errors, raw, utils
-from pyrogram import types
+from pyrogram import errors, raw, types, utils
+
 from ..object import Object
 
 
@@ -75,14 +74,14 @@ class GiveawayResult(Object):
         quantity: int,
         winners_count: int,
         unclaimed_count: int,
-        winners: List["types.User"],
+        winners: list["types.User"],
         months: int,
         until_date: datetime,
         launch_message_id: int,
         launch_message: "types.Message" = None,
         description: str = None,
         only_new_subscribers: bool = None,
-        is_refunded: bool = None
+        is_refunded: bool = None,
     ):
         super().__init__(client)
 
@@ -104,7 +103,7 @@ class GiveawayResult(Object):
         client,
         giveaway_result: "raw.types.MessageMediaGiveawayResults",
         users: dict,
-        chats: dict
+        chats: dict,
     ) -> "GiveawayResult":
         launch_message = None
 
@@ -112,17 +111,23 @@ class GiveawayResult(Object):
             launch_message = await client.get_messages(
                 utils.get_channel_id(giveaway_result.channel_id),
                 giveaway_result.launch_msg_id,
-                replies=0
+                replies=0,
             )
         except (errors.ChannelPrivate, errors.ChannelInvalid):
             pass
 
         return GiveawayResult(
-            chat=types.Chat._parse_channel_chat(client, chats[giveaway_result.channel_id]),
+            chat=types.Chat._parse_channel_chat(
+                client,
+                chats[giveaway_result.channel_id],
+            ),
             quantity=giveaway_result.winners_count + giveaway_result.unclaimed_count,
             winners_count=giveaway_result.winners_count,
             unclaimed_count=giveaway_result.unclaimed_count,
-            winners=types.List(types.User._parse(client, users.get(i)) for i in giveaway_result.winners) or None,
+            winners=types.List(
+                types.User._parse(client, users.get(i)) for i in giveaway_result.winners
+            )
+            or None,
             months=giveaway_result.months,
             until_date=utils.timestamp_to_datetime(giveaway_result.until_date),
             launch_message_id=giveaway_result.launch_msg_id,
@@ -130,5 +135,5 @@ class GiveawayResult(Object):
             is_refunded=getattr(giveaway_result, "refunded", None),
             launch_message=launch_message,
             description=getattr(giveaway_result, "prize_description", None) or None,
-            client=client
+            client=client,
         )

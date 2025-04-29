@@ -29,10 +29,11 @@ from .get_pinned_stories import GetPinnedStories
 from .get_stories import GetStories
 from .get_stories_archive import GetStoriesArchive
 from .hide_stories import HideStories
-from .view_stories import ViewStories
 from .pin_stories import PinStories
 from .read_stories import ReadStories
 from .send_story import SendStory
+from .view_stories import ViewStories
+
 
 class Stories(
     CanSendStory,

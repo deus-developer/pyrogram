@@ -16,19 +16,18 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import List, Union, Iterable
+from collections.abc import Iterable
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class DeleteStories:
     async def delete_stories(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        story_ids: Union[int, Iterable[int]],
-    ) -> List[int]:
+        chat_id: int | str,
+        story_ids: int | Iterable[int],
+    ) -> list[int]:
         """Delete stories.
 
         .. include:: /_includes/usable-by/users.rst
@@ -60,8 +59,8 @@ class DeleteStories:
         r = await self.invoke(
             raw.functions.stories.DeleteStories(
                 peer=await self.resolve_peer(chat_id),
-                id=ids
-            )
+                id=ids,
+            ),
         )
 
         return types.List(r)

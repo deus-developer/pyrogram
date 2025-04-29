@@ -16,17 +16,15 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class GetChatMenuButton:
     async def get_chat_menu_button(
         self: "pyrogram.Client",
-        chat_id: Union[int, str] = None,
+        chat_id: int | str = None,
     ) -> "types.MenuButton":
         """Get the current value of the bot's menu button in a private chat, or the default menu button.
 
@@ -37,19 +35,18 @@ class GetChatMenuButton:
                 Unique identifier (int) or username (str) of the target chat.
                 If not specified, default bot's menu button will be returned.
         """
-
         if chat_id:
             r = await self.invoke(
                 raw.functions.bots.GetBotMenuButton(
                     user_id=await self.resolve_peer(chat_id),
-                )
+                ),
             )
         else:
-            r = (await self.invoke(
-                raw.functions.users.GetFullUser(
-                    id=raw.types.InputUserSelf()
+            r = (
+                await self.invoke(
+                    raw.functions.users.GetFullUser(id=raw.types.InputUserSelf()),
                 )
-            )).full_user.bot_info.menu_button
+            ).full_user.bot_info.menu_button
 
         if isinstance(r, raw.types.BotMenuButtonCommands):
             return types.MenuButtonCommands()
@@ -60,7 +57,5 @@ class GetChatMenuButton:
         if isinstance(r, raw.types.BotMenuButton):
             return types.MenuButtonWebApp(
                 text=r.text,
-                web_app=types.WebAppInfo(
-                    url=r.url
-                )
+                web_app=types.WebAppInfo(url=r.url),
             )

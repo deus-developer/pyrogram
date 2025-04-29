@@ -16,18 +16,16 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Union
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import types
+from pyrogram import raw, types
 
 
 class SetChatTTL:
     async def set_chat_ttl(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        ttl_seconds: int
+        chat_id: int | str,
+        ttl_seconds: int,
     ) -> "types.Message":
         """Set the time-to-live for the chat.
 
@@ -58,12 +56,14 @@ class SetChatTTL:
             raw.functions.messages.SetHistoryTTL(
                 peer=await self.resolve_peer(chat_id),
                 period=ttl_seconds,
-            )
+            ),
         )
 
         for i in r.updates:
-            if isinstance(i, (raw.types.UpdateNewMessage,
-                              raw.types.UpdateNewChannelMessage)):
+            if isinstance(
+                i,
+                (raw.types.UpdateNewMessage, raw.types.UpdateNewChannelMessage),
+            ):
                 return await types.Message._parse(
                     self,
                     i.message,

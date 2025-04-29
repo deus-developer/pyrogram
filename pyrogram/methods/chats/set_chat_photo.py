@@ -17,21 +17,20 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from typing import Union, BinaryIO
+from typing import BinaryIO
 
 import pyrogram
-from pyrogram import raw
-from pyrogram import utils
+from pyrogram import raw, utils
 from pyrogram.file_id import FileType
 
 
 class SetChatPhoto:
     async def set_chat_photo(
         self: "pyrogram.Client",
-        chat_id: Union[int, str],
+        chat_id: int | str,
         *,
-        photo: Union[str, BinaryIO] = None,
-        video: Union[str, BinaryIO] = None,
+        photo: str | BinaryIO = None,
+        video: str | BinaryIO = None,
         video_start_ts: float = None,
     ) -> bool:
         """Set a new chat photo or video (H.264/MPEG-4 AVC video, max 5 seconds).
@@ -106,14 +105,11 @@ class SetChatPhoto:
                 raw.functions.messages.EditChatPhoto(
                     chat_id=peer.chat_id,
                     photo=photo,
-                )
+                ),
             )
         elif isinstance(peer, raw.types.InputPeerChannel):
             await self.invoke(
-                raw.functions.channels.EditPhoto(
-                    channel=peer,
-                    photo=photo
-                )
+                raw.functions.channels.EditPhoto(channel=peer, photo=photo),
             )
         else:
             raise ValueError(f'The chat_id "{chat_id}" belongs to a user')

@@ -53,10 +53,9 @@ class DeleteBotCommands:
                 # Delete commands
                 await app.delete_bot_commands()
         """
-
         return await self.invoke(
             raw.functions.bots.ResetBotCommands(
                 scope=await scope.write(self),
                 lang_code=language_code,
-            )
+            ),
         )
