@@ -1068,20 +1068,24 @@ class Client(Methods):
             offset_bytes = abs(offset) * chunk_size
 
             dc_id = file_id.dc_id
+            self_dc_id = await self.storage.dc_id()
 
             try:
                 session = self.media_sessions.get(dc_id)
                 if not session:
-                    auth_key = await self.do_new_authentication(
-                        dc_id=dc_id,
-                    )
+                    if self_dc_id == dc_id:
+                        auth_key = await self.storage.auth_key()
+                    else:
+                        auth_key = await self.do_new_authentication(
+                            dc_id=dc_id,
+                            media=True
+                        )
+
                     session = self.media_sessions[dc_id] = Session(
                         self,
                         dc_id,
-                        auth_key
-                        if dc_id != await self.storage.dc_id()
-                        else await self.storage.auth_key(),
-                        await self.storage.test_mode(),
+                        auth_key,
+                        self.test_mode,
                         is_media=True,
                     )
                     await session.start()
@@ -1156,7 +1160,7 @@ class Client(Methods):
                         self,
                         r.dc_id,
                         await self.do_new_authentication(dc_id=r.dc_id),
-                        await self.storage.test_mode(),
+                        self.test_mode,
                         is_media=True,
                         is_cdn=True,
                     )
