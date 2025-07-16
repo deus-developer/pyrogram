@@ -37,7 +37,7 @@ class GetMessages:
         message_ids: Union[int, Iterable[int]] = None,
         reply_to_message_ids: Union[int, Iterable[int]] = None,
         replies: int = 1
-    ) -> Union["types.Message", List["types.Message"]]:
+    ) -> Union["types.Message", List["types.Message"], None]:
         """Get one or more messages from a chat by using message identifiers.
 
         You can retrieve up to 200 messages at once.
@@ -115,8 +115,13 @@ class GetMessages:
         r = await self.invoke(rpc, sleep_threshold=-1)
 
         messages = await utils.parse_messages(self, r, replies=replies)
+        if is_iterable:
+            return messages
 
-        return messages if is_iterable else messages[0] if messages else None
+        for message in messages:
+            return message
+
+        return None
 
     async def get_input_message(self: "pyrogram.Client", chat_id: int, message_id: raw.base.InputMessage, replies: int = 0) -> types.Message | None:
         peer = await self.resolve_peer(chat_id)
