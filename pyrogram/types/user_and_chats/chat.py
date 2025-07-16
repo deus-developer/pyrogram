@@ -396,11 +396,17 @@ class Chat(Object):
         is_chat: bool
     ) -> "Chat":
         from_id: int | None = None
-        if not isinstance(message, raw.types.MessageEmpty):
+        if isinstance(message, raw.types.MessageEmpty):
+            if message.peer_id is None:
+                raise RuntimeError("unexpected empty message with empty peer id")
+        else:
             from_id = utils.get_raw_peer_id(message.from_id)
 
         peer_id = utils.get_raw_peer_id(message.peer_id)
         chat_id = (peer_id or from_id) if is_chat else (from_id or peer_id)
+
+        if chat_id is None:
+            raise RuntimeError("unexpected empty chat id")
 
         if isinstance(message.peer_id, raw.types.PeerUser):
             return Chat._parse_user_chat(client, users[chat_id])

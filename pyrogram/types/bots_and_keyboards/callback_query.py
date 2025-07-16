@@ -97,8 +97,29 @@ class CallbackQuery(Object, Update):
 
             message = client.message_cache[(chat_id, message_id)]
 
-            if not message:
-                message = await client.get_messages(chat_id, message_id)
+            if message is None:
+                message = await client.get_callback_query_message(
+                    chat_id=chat_id,
+                    message_id=message_id,
+                    callback_query_id=callback_query.query_id,
+                )
+
+            if message is None:
+                message = await client.get_message(
+                    chat_id=chat_id,
+                    message_id=message_id,
+                )
+
+            if message is None:
+                chat = await client.get_chat(chat_id)
+                message = types.Message(
+                    id=message_id,
+                    chat=chat,
+                    empty=True,
+                    business_connection_id=None,
+                    raw=raw.types.MessageEmpty(id=message_id, peer_id=callback_query.peer),
+                    client=client,
+                )
         elif isinstance(callback_query, raw.types.UpdateInlineBotCallbackQuery):
             inline_message_id = utils.pack_inline_message_id(callback_query.msg_id)
 

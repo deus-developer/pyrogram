@@ -117,3 +117,56 @@ class GetMessages:
         messages = await utils.parse_messages(self, r, replies=replies)
 
         return messages if is_iterable else messages[0] if messages else None
+
+    async def get_input_message(self: "pyrogram.Client", chat_id: int, message_id: raw.base.InputMessage, replies: int = 0) -> types.Message | None:
+        peer = await self.resolve_peer(chat_id)
+
+        if isinstance(peer, (raw.types.InputPeerChannel, raw.types.InputChannel)):
+            query = raw.functions.channels.GetMessages(
+                channel=peer,
+                id=[message_id]
+            )
+        else:
+            query = raw.functions.messages.GetMessages(
+                id=[message_id]
+            )
+
+        result = await self.invoke(query, sleep_threshold=-1)
+
+        if replies < 0:
+            replies = (1 << 31) - 1
+
+        messages = await utils.parse_messages(self, result, replies=replies)
+
+        for message in messages:
+            return message
+
+        return None
+
+    async def get_message(self: "pyrogram.Client", chat_id: int, message_id: int, replies: int = 0) -> types.Message | None:
+        return await self.get_input_message(
+            chat_id=chat_id,
+                message_id=raw.types.InputMessageID(
+                id=message_id,
+            ),
+            replies=replies,
+        )
+
+    async def get_callback_query_message(self: "pyrogram.Client", chat_id: int, message_id: int, callback_query_id: int, replies: int = 0) -> types.Message | None:
+        return await self.get_input_message(
+            chat_id=chat_id,
+                message_id=raw.types.InputMessageCallbackQuery(
+                id=message_id,
+                query_id=callback_query_id,
+            ),
+            replies=replies,
+        )
+
+    async def get_reply_to_message(self: "pyrogram.Client", chat_id: int, message_id: int, replies: int = 0) -> types.Message | None:
+        return await self.get_input_message(
+            chat_id=chat_id,
+            message_id=raw.types.InputMessageReplyTo(
+                id=message_id,
+            ),
+            replies=replies,
+        )
