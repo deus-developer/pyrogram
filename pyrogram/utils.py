@@ -144,7 +144,7 @@ async def parse_messages(
             message,
             users,
             chats,
-            topis,
+            topics,
             replies=0,
             business_connection_id=business_connection_id,
         )
