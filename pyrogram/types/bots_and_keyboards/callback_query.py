@@ -111,7 +111,7 @@ class CallbackQuery(Object, Update):
                 )
 
             if message is None:
-                chat = await client.get_chat(chat_id)
+                chat = await client.get_chat(chat_id, force_full=False)
                 message = types.Message(
                     id=message_id,
                     chat=chat,
